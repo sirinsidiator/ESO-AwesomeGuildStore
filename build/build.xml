@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<project name="AwesomeGuildStore" default="copyToAddonFolder" basedir=".">
+	<property name="version" value="0" />
+
+	<property name="addonhome" location="${user.home}/Documents/Elder Scrolls Online/liveeu/AddOns" />
+	<property name="addondir" location="${addonhome}/${ant.project.name}" />
+	<property name="srcdir" location="${basedir}/../src" />
+	<property name="tempdir" location="${basedir}/../temp" />
+	<property name="targetdir" location="${basedir}/../target" />
+
+	<target name="copyToAddonFolder">
+		<delete dir="${addondir}" />
+		<copy todir="${addondir}">
+			<fileset dir="${srcdir}" />
+		</copy>
+		<replace file="${addondir}/${ant.project.name}.txt" token="VERSION_NUMBER" value="development" />
+	</target>
+
+	<target name="createArchive">
+		<delete includeemptydirs="true" dir="${tempdir}" />
+		<buildnumber file="build.number" />
+
+		<copy todir="${tempdir}/${ant.project.name}">
+			<fileset dir="${srcdir}" />
+		</copy>
+
+		<replace file="${tempdir}/${ant.project.name}/${ant.project.name}.txt" token="VERSION_NUMBER" value="${version}.${build.number}" />
+
+		<zip destfile="${targetdir}/${ant.project.name}v${version}_${build.number}.zip">
+			<fileset dir="${tempdir}" />
+		</zip>
+		<delete includeemptydirs="true" dir="${tempdir}" />
+	</target>
+</project>
