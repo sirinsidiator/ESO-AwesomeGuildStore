@@ -234,11 +234,12 @@ OnAddonLoaded(function()
 	end
 
 	ZO_PreHook(TRADING_HOUSE, "ResetAllSearchData", function(self, doReset)
-		self.m_levelRangeFilterType = TRADING_HOUSE_FILTER_TYPE_LEVEL
-		self.m_levelRangeToggle:SetState(BSTATE_NORMAL, false)
-		self.m_levelRangeLabel:SetText(GetString(SI_TRADING_HOUSE_BROWSE_LEVEL_RANGE_LABEL))
-
-		if(doReset) then return end
+		if(doReset) then
+			self.m_levelRangeFilterType = TRADING_HOUSE_FILTER_TYPE_LEVEL
+			self.m_levelRangeToggle:SetState(BSTATE_NORMAL, false)
+			self.m_levelRangeLabel:SetText(GetString(SI_TRADING_HOUSE_BROWSE_LEVEL_RANGE_LABEL))
+			return
+		end
 		self:ClearSearchResults()
 		return true
 	end)
