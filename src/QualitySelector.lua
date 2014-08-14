@@ -51,15 +51,10 @@ function QualitySelector:New(parent, name)
 	selector.slider = slider
 
 	ZO_PreHook(TRADING_HOUSE.m_search, "InternalExecuteSearch", function(self)
-		local values = {}
 		local min, max = slider:GetRangeValue()
-		for i = min, max do
-			if i == 1 then
-				table.insert(values, ITEM_QUALITY_TRASH)
-			end
-			table.insert(values, i)
-		end
-		self.m_filters[TRADING_HOUSE_FILTER_TYPE_QUALITY].values = values
+		if min == 1 then min = ITEM_QUALITY_TRASH end
+		if min == max then max = nil end
+		self.m_filters[TRADING_HOUSE_FILTER_TYPE_QUALITY].values = {min, max}
 	end)
 
 	local normalButton = CreateButtonControl(container, name .. "NormalQualityButton", "AwesomeGuildStore/images/qualitybuttons/normal_%s.dds", GetString(SI_TRADING_HOUSE_BROWSE_QUALITY_NORMAL), function()
