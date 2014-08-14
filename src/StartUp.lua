@@ -135,6 +135,41 @@ local function ReselectLastGuild()
 	return guildId
 end
 
+local function CreateSettingsDialog()
+	local LAM = LibStub("LibAddonMenu-2.0")
+	local panelData = {
+		type = "panel",
+		name = "Awesome Guild Store",
+	}
+	LAM:RegisterAddonPanel("AwesomeGuildStoreOptions", panelData)
+	local optionsData = {
+		[1] = {
+			type = "checkbox",
+			name = "Use awesome level range slider",
+			tooltip = "Adds a useful slider for level range selection",
+			getFunc = function() return saveData.replaceLevelFilter end,
+			setFunc = function(value) saveData.replaceLevelFilter = value end,
+			warning = "Only is applied after you reload the UI"
+		},
+		[2] = {
+			type = "checkbox",
+			name = "Use awesome quality selector",
+			tooltip = "Replaces the default dropdown quality selection with a range selection",
+			getFunc = function() return saveData.replaceQualityFilter end,
+			setFunc = function(value) saveData.replaceQualityFilter = value end,
+			warning = "Only is applied after you reload the UI"
+		},
+		[3] = {
+			type = "checkbox",
+			name = "Remember filters between store visits",
+			tooltip = "Leaves the store filters set during a play session instead of clearing it when you close the guild store window",
+			getFunc = function() return saveData.replaceQualityFilter end,
+			setFunc = function(value) saveData.replaceQualityFilter = value end,
+		},
+	}
+	LAM:RegisterOptionControls("AwesomeGuildStoreOptions", optionsData)
+end
+
 OnAddonLoaded(function()
 	AwesomeGuildStore_Data = AwesomeGuildStore_Data or {}
 	saveData = AwesomeGuildStore_Data[GetDisplayName()] or ZO_ShallowTableCopy(defaultData)
@@ -202,4 +237,6 @@ OnAddonLoaded(function()
 		self:ClearSearchResults()
 		return true
 	end)
+
+	CreateSettingsDialog()
 end)
