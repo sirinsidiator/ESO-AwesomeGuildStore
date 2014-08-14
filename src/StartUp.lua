@@ -83,17 +83,6 @@ local function InitializeFilters(control)
 	if(filtersInitialized) then return end
 
 	local common = control:GetNamedChild("Common")
-	local resetButton = CreateControlFromVirtual(ADDON_NAME .. "FilterResetButton", common, "ZO_DefaultButton")
-	resetButton:SetAnchor(TOP, common, TOP, 0, 250)
-	resetButton:SetText("reset")
-	resetButton:SetHandler("OnMouseUp",function(control, button, isInside)
-		if(button == 1 and isInside) then
-			local originalClearSearchResults = TRADING_HOUSE.ClearSearchResults
-			TRADING_HOUSE.ClearSearchResults = function() end
-			TRADING_HOUSE:ResetAllSearchData(true)
-			TRADING_HOUSE.ClearSearchResults = originalClearSearchResults
-		end
-	end)
 
 	if(saveData.replaceLevelFilter) then
 		levelSelector = AwesomeGuildStore.LevelSelector:New(common, ADDON_NAME .. "LevelRange")
@@ -114,6 +103,40 @@ local function InitializeFilters(control)
 		qualityControl:SetAnchor(TOPLEFT, common, TOPLEFT, 0, 350)
 		qualityControl:SetHidden(true)
 	end
+
+	local searchButton = CreateControlFromVirtual(ADDON_NAME .. "StartSearchButton", common, "ZO_DefaultButton")
+	local parent = qualitySelector and qualitySelector.control or common
+	searchButton:SetWidth(common:GetWidth())
+	searchButton:SetAnchor(TOP, parent, BOTTOM, 0, 25)
+	searchButton:SetText(GetString(SI_TRADING_HOUSE_DO_SEARCH))
+	searchButton:SetHandler("OnMouseUp",function(control, button, isInside)
+		if(button == 1 and isInside) then
+			if(TRADING_HOUSE:CanSearch()) then
+				TRADING_HOUSE:DoSearch()
+			end
+		end
+	end)
+
+	ZO_PreHook(TRADING_HOUSE, "DoSearch", function(self)
+		searchButton:SetEnabled(false)
+	end)
+
+	RegisterForEvent(EVENT_TRADING_HOUSE_SEARCH_COOLDOWN_UPDATE, function(_, cooldownMilliseconds)
+		if(cooldownMilliseconds ~= 0) then return end
+		searchButton:SetEnabled(true)
+	end)
+
+	local resetButton = CreateControlFromVirtual(ADDON_NAME .. "FilterResetButton", common, "ZO_DefaultButton")
+	resetButton:SetAnchor(TOP, searchButton, BOTTOM, 0, 10)
+	resetButton:SetText("reset")
+	resetButton:SetHandler("OnMouseUp",function(control, button, isInside)
+		if(button == 1 and isInside) then
+			local originalClearSearchResults = TRADING_HOUSE.ClearSearchResults
+			TRADING_HOUSE.ClearSearchResults = function() end
+			TRADING_HOUSE:ResetAllSearchData(true)
+			TRADING_HOUSE.ClearSearchResults = originalClearSearchResults
+		end
+	end)
 
 	filtersInitialized = true
 end
@@ -140,6 +163,7 @@ local function CreateSettingsDialog()
 	local panelData = {
 		type = "panel",
 		name = "Awesome Guild Store",
+		registerForDefaults = true
 	}
 	LAM:RegisterAddonPanel("AwesomeGuildStoreOptions", panelData)
 	local optionsData = {
@@ -149,7 +173,8 @@ local function CreateSettingsDialog()
 			tooltip = "Adds a useful slider for level range selection",
 			getFunc = function() return saveData.replaceLevelFilter end,
 			setFunc = function(value) saveData.replaceLevelFilter = value end,
-			warning = "Only is applied after you reload the UI"
+			warning = "Only is applied after you reload the UI",
+			default = defaultData.replaceLevelFilter
 		},
 		[2] = {
 			type = "checkbox",
@@ -157,14 +182,16 @@ local function CreateSettingsDialog()
 			tooltip = "Replaces the default dropdown quality selection with a range selection",
 			getFunc = function() return saveData.replaceQualityFilter end,
 			setFunc = function(value) saveData.replaceQualityFilter = value end,
-			warning = "Only is applied after you reload the UI"
+			warning = "Only is applied after you reload the UI",
+			default = defaultData.replaceQualityFilter
 		},
 		[3] = {
 			type = "checkbox",
 			name = "Remember filters between store visits",
 			tooltip = "Leaves the store filters set during a play session instead of clearing it when you close the guild store window",
-			getFunc = function() return saveData.replaceQualityFilter end,
-			setFunc = function(value) saveData.replaceQualityFilter = value end,
+			getFunc = function() return saveData.keepFiltersOnClose end,
+			setFunc = function(value) saveData.keepFiltersOnClose = value end,
+			default = defaultData.keepFiltersOnClose
 		},
 	}
 	LAM:RegisterOptionControls("AwesomeGuildStoreOptions", optionsData)
@@ -235,6 +262,7 @@ OnAddonLoaded(function()
 			if(doReset) then return end
 		end
 		self:ClearSearchResults()
+		if(not saveData.keepFiltersOnClose) then return end
 		return true
 	end)
 
