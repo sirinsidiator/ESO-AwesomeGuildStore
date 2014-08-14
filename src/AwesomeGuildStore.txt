@@ -12,5 +12,6 @@
 
 StartUp.lua
 MinMaxRangeSlider.lua
+LevelSelector.lua
 QualitySelector.lua
 AwesomeGuildStore.xml

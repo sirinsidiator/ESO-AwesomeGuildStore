@@ -4,6 +4,7 @@ AwesomeGuildStore.MinMaxRangeSlider = MinMaxRangeSlider
 function MinMaxRangeSlider:New(parent, name, x, y, width, height)
 	local slider = ZO_Object.New(self)
 	slider.min, slider.max, slider.step, slider.interval = 1, 2, 1, 0
+	slider.minRange = 0
 	slider.enabled = true
 
 	local control = CreateControlFromVirtual(name, parent, "AwesomeGuildStoreMinMaxRangeSliderTemplate")
@@ -29,7 +30,7 @@ function MinMaxRangeSlider:New(parent, name, x, y, width, height)
 	slider.offsetX = minSlider:GetWidth() / 2
 	slider:SetMinMax(1, 2)
 	slider:SetStepSize(1)
-	slider:SetRange(1, 2)
+	slider:SetRangeValue(1, 2)
 
 	slider:InitializeHandlers()
 
@@ -125,8 +126,8 @@ end
 function MinMaxRangeSlider:SetMinValue(value)
 	if(value < self.min) then
 		value = self.min
-	elseif(value > self.maxSlider.value) then
-		value = self.maxSlider.value
+	elseif(value > self.maxSlider.value - self.minRange) then
+		value = self.maxSlider.value - self.minRange
 	end
 	local x = self.x + self.offsetX + (value - self.step) * self.interval + self.minSlider.offset
 
@@ -134,14 +135,14 @@ function MinMaxRangeSlider:SetMinValue(value)
 	self.minSlider:ClearAnchors()
 	self.minSlider:SetAnchor(TOPCENTER, self.control, TOPLEFT, x, 0)
 	self.minSlider.oldX = x
-	self:OnValueChanged(self:GetRange())
+	self:OnValueChanged(self:GetRangeValue())
 end
 
 function MinMaxRangeSlider:SetMaxValue(value)
 	if(value > self.max) then
 		value = self.max
-	elseif(value < self.minSlider.value) then
-		value = self.minSlider.value
+	elseif(value < self.minSlider.value + self.minRange) then
+		value = self.minSlider.value + self.minRange
 	end
 	local x = self.x + self.offsetX + (value - self.step) * self.interval + self.maxSlider.offset
 
@@ -149,17 +150,17 @@ function MinMaxRangeSlider:SetMaxValue(value)
 	self.maxSlider:ClearAnchors()
 	self.maxSlider:SetAnchor(TOPCENTER, self.control, TOPLEFT, x, 0)
 	self.maxSlider.oldX = x
-	self:OnValueChanged(self:GetRange())
+	self:OnValueChanged(self:GetRangeValue())
 end
 
 function MinMaxRangeSlider:SetMinMax(min, max)
 	self.min = min
 	self.max = max
 	self:SetStepSize(self:GetStepSize())
-	self:SetRange(self:GetRange())
+	self:SetRangeValue(self:GetRangeValue())
 end
 
-function MinMaxRangeSlider:SetRange(minValue, maxValue)
+function MinMaxRangeSlider:SetRangeValue(minValue, maxValue)
 	self:SetMaxValue(maxValue)
 	self:SetMinValue(minValue)
 	if(self.maxSlider.value ~= maxValue) then
@@ -167,7 +168,20 @@ function MinMaxRangeSlider:SetRange(minValue, maxValue)
 	end
 end
 
-function MinMaxRangeSlider:GetRange()
+function MinMaxRangeSlider:GetRangeValue()
+	return self.minSlider.value, self.maxSlider.value
+end
+
+function MinMaxRangeSlider:SetMinRange(value)
+	self.minRange = value
+	self:SetRangeValue(self:GetRangeValue())
+end
+
+function MinMaxRangeSlider:GetMinRange(value)
+	return self.minRange
+end
+
+function MinMaxRangeSlider:GetRangeValue()
 	return self.minSlider.value, self.maxSlider.value
 end
 

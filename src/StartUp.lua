@@ -25,13 +25,20 @@ end
 
 -----------------------------------------------------------------------------------------
 
-local QualitySelector
+local defaultData = {
+	version = 2,
+	lastGuildName = "",
+	replaceQualityFilter = true,
+	replaceLevelFilter = true,
+	keepFiltersOnClose = true
+}
 
 local comboBox
 local guildSelector
 local entryByGuildId
 local filtersInitialized
 local saveData
+local levelSelector
 local qualitySelector
 
 function AwesomeGuildStore.InitializeGuildSelector(control)
@@ -88,15 +95,25 @@ local function InitializeFilters(control)
 		end
 	end)
 
-	local common = control:GetNamedChild("Common")
-	qualitySelector = QualitySelector:New(common, ADDON_NAME .. "QualityButtons")
-	qualitySelector.control:ClearAnchors()
-	qualitySelector.control:SetAnchor(TOPLEFT, common:GetNamedChild("MinLevel"), BOTTOMLEFT, 0, 10)
+	if(saveData.replaceLevelFilter) then
+		levelSelector = AwesomeGuildStore.LevelSelector:New(common, ADDON_NAME .. "LevelRange")
+		levelSelector.slider.control:ClearAnchors()
+		levelSelector.slider.control:SetAnchor(TOPLEFT, common:GetNamedChild("LevelRangeToggle"), BOTTOMLEFT, 0, 5)
+		local minLevel = common:GetNamedChild("MinLevel")
+		minLevel:ClearAnchors()
+		minLevel:SetAnchor(TOPLEFT, levelSelector.slider.control, BOTTOMLEFT, 0, 5)
+	end
 
-	local qualityControl = common:GetNamedChild("Quality")
-	qualityControl:ClearAnchors()
-	qualityControl:SetAnchor(TOPLEFT, common, TOPLEFT, 0, 350)
-	qualityControl:SetHidden(true)
+	if(saveData.replaceQualityFilter) then
+		qualitySelector = AwesomeGuildStore.QualitySelector:New(common, ADDON_NAME .. "QualityButtons")
+		qualitySelector.control:ClearAnchors()
+		qualitySelector.control:SetAnchor(TOPLEFT, common:GetNamedChild("MinLevel"), BOTTOMLEFT, 0, 10)
+
+		local qualityControl = common:GetNamedChild("Quality")
+		qualityControl:ClearAnchors()
+		qualityControl:SetAnchor(TOPLEFT, common, TOPLEFT, 0, 350)
+		qualityControl:SetHidden(true)
+	end
 
 	filtersInitialized = true
 end
@@ -120,10 +137,15 @@ end
 
 OnAddonLoaded(function()
 	AwesomeGuildStore_Data = AwesomeGuildStore_Data or {}
-	saveData = AwesomeGuildStore_Data[GetDisplayName()] or { version = 1 }
+	saveData = AwesomeGuildStore_Data[GetDisplayName()] or ZO_ShallowTableCopy(defaultData)
 	AwesomeGuildStore_Data[GetDisplayName()] = saveData
 
-	QualitySelector = AwesomeGuildStore.QualitySelector
+	if(saveData.version == 1 ) then
+		saveData.replaceQualityFilter = true
+		saveData.replaceLevelFilter = true
+		saveData.keepFiltersOnClose = true
+		saveData.version = 2
+	end
 
 	local title = TRADING_HOUSE.m_control:GetNamedChild("Title")
 	local titleLabel = title:GetNamedChild("Label")
@@ -169,12 +191,13 @@ OnAddonLoaded(function()
 	end
 
 	ZO_PreHook(TRADING_HOUSE, "ResetAllSearchData", function(self, doReset)
-		if(doReset) then
+		if(doReset or not saveData.keepFiltersOnClose) then
 			self.m_levelRangeFilterType = TRADING_HOUSE_FILTER_TYPE_LEVEL
 			self.m_levelRangeToggle:SetState(BSTATE_NORMAL, false)
 			self.m_levelRangeLabel:SetText(GetString(SI_TRADING_HOUSE_BROWSE_LEVEL_RANGE_LABEL))
-			qualitySelector:Reset()
-			return
+			if(levelSelector) then levelSelector:Reset() end
+			if(qualitySelector) then qualitySelector:Reset() end
+			if(doReset) then return end
 		end
 		self:ClearSearchResults()
 		return true

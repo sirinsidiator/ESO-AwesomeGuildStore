@@ -3,8 +3,6 @@ local BUTTON_X = -7
 local BUTTON_Y = 46
 local BUTTON_SPACING = 7.5
 
-local ButtonGroup = AwesomeGuildStore.ButtonGroup
-local ToggleButton = AwesomeGuildStore.ToggleButton
 local MinMaxRangeSlider = AwesomeGuildStore.MinMaxRangeSlider
 
 local QualitySelector = ZO_Object:Subclass()
@@ -49,12 +47,12 @@ function QualitySelector:New(parent, name)
 
 	local slider = MinMaxRangeSlider:New(container, name .. "QualitySlider", 0, 30, 195, 16)
 	slider:SetMinMax(1, 5)
-	slider:SetRange(1, 5)
-	self.slider = slider
+	slider:SetRangeValue(1, 5)
+	selector.slider = slider
 
 	ZO_PreHook(TRADING_HOUSE.m_search, "InternalExecuteSearch", function(self)
 		local values = {}
-		local min, max = slider:GetRange()
+		local min, max = slider:GetRangeValue()
 		for i = min, max do
 			if i == 1 then
 				table.insert(values, ITEM_QUALITY_TRASH)
@@ -65,27 +63,27 @@ function QualitySelector:New(parent, name)
 	end)
 
 	local normalButton = CreateButtonControl(container, name .. "NormalQualityButton", "AwesomeGuildStore/images/qualitybuttons/normal_%s.dds", GetString(SI_TRADING_HOUSE_BROWSE_QUALITY_NORMAL), function()
-		slider:SetRange(1, 1)
+		slider:SetRangeValue(1, 1)
 	end)
 	normalButton:SetAnchor(TOPLEFT, container, TOPLEFT, BUTTON_X, BUTTON_Y)
 
 	local magicButton = CreateButtonControl(container, name .. "MagicQualityButton", "AwesomeGuildStore/images/qualitybuttons/magic_%s.dds", GetString(SI_TRADING_HOUSE_BROWSE_QUALITY_MAGIC), function()
-		slider:SetRange(2, 2)
+		slider:SetRangeValue(2, 2)
 	end)
 	magicButton:SetAnchor(TOPLEFT, container, TOPLEFT, BUTTON_X + (BUTTON_SIZE + BUTTON_SPACING), BUTTON_Y)
 
 	local arcaneButton = CreateButtonControl(container, name .. "ArcaneQualityButton", "AwesomeGuildStore/images/qualitybuttons/arcane_%s.dds", GetString(SI_TRADING_HOUSE_BROWSE_QUALITY_ARCANE), function()
-		slider:SetRange(3, 3)
+		slider:SetRangeValue(3, 3)
 	end)
 	arcaneButton:SetAnchor(TOPLEFT, container, TOPLEFT, BUTTON_X + (BUTTON_SIZE + BUTTON_SPACING) * 2, BUTTON_Y)
 
 	local artifactButton = CreateButtonControl(container, name .. "ArtifactQualityButton", "AwesomeGuildStore/images/qualitybuttons/artifact_%s.dds", GetString(SI_TRADING_HOUSE_BROWSE_QUALITY_ARTIFACT), function()
-		slider:SetRange(4, 4)
+		slider:SetRangeValue(4, 4)
 	end)
 	artifactButton:SetAnchor(TOPLEFT, container, TOPLEFT, BUTTON_X + (BUTTON_SIZE + BUTTON_SPACING) * 3, BUTTON_Y)
 
 	local legendaryButton = CreateButtonControl(container, name .. "LegendaryQualityButton", "AwesomeGuildStore/images/qualitybuttons/legendary_%s.dds", GetString(SI_TRADING_HOUSE_BROWSE_QUALITY_LEGENDARY), function()
-		slider:SetRange(5, 5)
+		slider:SetRangeValue(5, 5)
 	end)
 	legendaryButton:SetAnchor(TOPLEFT, container, TOPLEFT, BUTTON_X + (BUTTON_SIZE + BUTTON_SPACING) * 4, BUTTON_Y)
 
@@ -93,5 +91,5 @@ function QualitySelector:New(parent, name)
 end
 
 function QualitySelector:Reset()
-	self.slider:SetRange(1, 5)
+	self.slider:SetRangeValue(1, 5)
 end
