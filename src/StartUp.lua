@@ -125,6 +125,10 @@ local function InitializeFilters(control)
 		qualityControl:ClearAnchors()
 		qualityControl:SetAnchor(TOPLEFT, common, TOPLEFT, 0, 350)
 		qualityControl:SetHidden(true)
+	elseif(saveData.replaceLevelFilter) then
+		local qualityControl = common:GetNamedChild("Quality")
+		qualityControl:ClearAnchors()
+		qualityControl:SetAnchor(TOPLEFT, common:GetNamedChild("LevelRangeToggle"), BOTTOMLEFT, 0, 10)
 	end
 
 	local searchButton = CreateControlFromVirtual(ADDON_NAME .. "StartSearchButton", common, "ZO_DefaultButton")
