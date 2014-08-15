@@ -9,7 +9,7 @@ function LevelSelector:New(parent, name)
 	local setFromTextBox = false
 	local minLevelBox = parent:GetNamedChild("MinLevelBox")
 	local maxLevelBox = parent:GetNamedChild("MaxLevelBox")
-	local slider = MinMaxRangeSlider:New(parent, name .. "QualitySlider", 0, 0, 195, 16)
+	local slider = MinMaxRangeSlider:New(parent, name .. "LevelSlider", 0, 0, 195, 16)
 	slider:SetMinMax(1, 50)
 	slider:SetMinRange(1)
 	slider:SetRangeValue(1, 50)

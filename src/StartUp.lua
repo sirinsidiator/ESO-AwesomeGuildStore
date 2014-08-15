@@ -26,8 +26,9 @@ end
 -----------------------------------------------------------------------------------------
 
 local defaultData = {
-	version = 2,
+	version = 3,
 	lastGuildName = "",
+	replacePriceFilter = true,
 	replaceQualityFilter = true,
 	replaceLevelFilter = true,
 	keepFiltersOnClose = true
@@ -38,6 +39,7 @@ local guildSelector
 local entryByGuildId
 local filtersInitialized
 local saveData
+local priceSelector
 local levelSelector
 local qualitySelector
 
@@ -83,6 +85,15 @@ local function InitializeFilters(control)
 	if(filtersInitialized) then return end
 
 	local common = control:GetNamedChild("Common")
+
+	if(saveData.replacePriceFilter) then
+		priceSelector = AwesomeGuildStore.PriceSelector:New(common, ADDON_NAME .. "PriceRange")
+		priceSelector.slider.control:ClearAnchors()
+		priceSelector.slider.control:SetAnchor(TOPLEFT, common:GetNamedChild("PriceRangeLabel"), BOTTOMLEFT, 0, 5)
+		local minPrice = common:GetNamedChild("MinPrice")
+		minPrice:ClearAnchors()
+		minPrice:SetAnchor(TOPLEFT, priceSelector.slider.control, BOTTOMLEFT, 0, 5)
+	end
 
 	if(saveData.replaceLevelFilter) then
 		levelSelector = AwesomeGuildStore.LevelSelector:New(common, ADDON_NAME .. "LevelRange")
@@ -169,6 +180,15 @@ local function CreateSettingsDialog()
 	local optionsData = {
 		[1] = {
 			type = "checkbox",
+			name = "Use awesome price range slider",
+			tooltip = "Adds a useful slider for price range selection",
+			getFunc = function() return saveData.replacePriceFilter end,
+			setFunc = function(value) saveData.replacePriceFilter = value end,
+			warning = "Only is applied after you reload the UI",
+			default = defaultData.replacePriceFilter
+		},
+		[2] = {
+			type = "checkbox",
 			name = "Use awesome level range slider",
 			tooltip = "Adds a useful slider for level range selection",
 			getFunc = function() return saveData.replaceLevelFilter end,
@@ -176,7 +196,7 @@ local function CreateSettingsDialog()
 			warning = "Only is applied after you reload the UI",
 			default = defaultData.replaceLevelFilter
 		},
-		[2] = {
+		[3] = {
 			type = "checkbox",
 			name = "Use awesome quality selector",
 			tooltip = "Replaces the default dropdown quality selection with a range selection",
@@ -185,7 +205,7 @@ local function CreateSettingsDialog()
 			warning = "Only is applied after you reload the UI",
 			default = defaultData.replaceQualityFilter
 		},
-		[3] = {
+		[4] = {
 			type = "checkbox",
 			name = "Remember filters between store visits",
 			tooltip = "Leaves the store filters set during a play session instead of clearing it when you close the guild store window",
@@ -202,11 +222,15 @@ OnAddonLoaded(function()
 	saveData = AwesomeGuildStore_Data[GetDisplayName()] or ZO_ShallowTableCopy(defaultData)
 	AwesomeGuildStore_Data[GetDisplayName()] = saveData
 
-	if(saveData.version == 1 ) then
+	if(saveData.version == 1) then
 		saveData.replaceQualityFilter = true
 		saveData.replaceLevelFilter = true
 		saveData.keepFiltersOnClose = true
 		saveData.version = 2
+	end
+	if(saveData.version == 2) then
+		saveData.replacePriceFilter = true
+		saveData.version = 3
 	end
 
 	local title = TRADING_HOUSE.m_control:GetNamedChild("Title")
