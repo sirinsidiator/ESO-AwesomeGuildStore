@@ -97,17 +97,29 @@ local function InitializeFilters(control)
 
 	if(saveData.replaceLevelFilter) then
 		levelSelector = AwesomeGuildStore.LevelSelector:New(common, ADDON_NAME .. "LevelRange")
-		levelSelector.slider.control:ClearAnchors()
-		levelSelector.slider.control:SetAnchor(TOPLEFT, common:GetNamedChild("LevelRangeToggle"), BOTTOMLEFT, 0, 5)
+		local minPrice = common:GetNamedChild("MinPrice")
 		local minLevel = common:GetNamedChild("MinLevel")
+		local levelRangeLabel = common:GetNamedChild("LevelRangeLabel")
+		local levelRangeToggle = common:GetNamedChild("LevelRangeToggle")
+
+		levelRangeLabel:ClearAnchors()
+		levelRangeLabel:SetAnchor(TOPLEFT, minPrice, BOTTOMLEFT, 0, 10)
+
+		levelSelector.slider.control:ClearAnchors()
+		levelSelector.slider.control:SetAnchor(TOPLEFT, levelRangeLabel, BOTTOMLEFT, 0, 5)
+
+		levelRangeToggle:ClearAnchors()
+		levelRangeToggle:SetAnchor(TOPLEFT, levelSelector.slider.control, BOTTOMLEFT, 0, 5)
+
 		minLevel:ClearAnchors()
-		minLevel:SetAnchor(TOPLEFT, levelSelector.slider.control, BOTTOMLEFT, 0, 5)
+		minLevel:SetAnchor(LEFT, levelRangeToggle, RIGHT, 0, 0)
 	end
 
 	if(saveData.replaceQualityFilter) then
 		qualitySelector = AwesomeGuildStore.QualitySelector:New(common, ADDON_NAME .. "QualityButtons")
 		qualitySelector.control:ClearAnchors()
-		qualitySelector.control:SetAnchor(TOPLEFT, common:GetNamedChild("MinLevel"), BOTTOMLEFT, 0, 10)
+		local parent = levelSelector and common:GetNamedChild("LevelRangeToggle") or common:GetNamedChild("MinLevel")
+		qualitySelector.control:SetAnchor(TOPLEFT, parent, BOTTOMLEFT, 0, 10)
 
 		local qualityControl = common:GetNamedChild("Quality")
 		qualityControl:ClearAnchors()
@@ -137,9 +149,16 @@ local function InitializeFilters(control)
 		searchButton:SetEnabled(true)
 	end)
 
-	local resetButton = CreateControlFromVirtual(ADDON_NAME .. "FilterResetButton", common, "ZO_DefaultButton")
-	resetButton:SetAnchor(TOP, searchButton, BOTTOM, 0, 10)
-	resetButton:SetText("reset")
+	local RESET_BUTTON_SIZE = 24
+	local RESET_BUTTON_TEXTURE = "EsoUI/Art/Buttons/decline_%s.dds"
+
+	local resetButton = CreateControlFromVirtual(ADDON_NAME .. "FilterResetButton", control, "ZO_DefaultButton")
+	resetButton:SetNormalTexture(RESET_BUTTON_TEXTURE:format("up"))
+	resetButton:SetPressedTexture(RESET_BUTTON_TEXTURE:format("down"))
+	resetButton:SetMouseOverTexture(RESET_BUTTON_TEXTURE:format("over"))
+	resetButton:SetEndCapWidth(0)
+	resetButton:SetDimensions(RESET_BUTTON_SIZE, RESET_BUTTON_SIZE)
+	resetButton:SetAnchor(TOPRIGHT, control:GetNamedChild("Header"), TOPLEFT, 196, 0)
 	resetButton:SetHandler("OnMouseUp",function(control, button, isInside)
 		if(button == 1 and isInside) then
 			local originalClearSearchResults = TRADING_HOUSE.ClearSearchResults
@@ -147,6 +166,14 @@ local function InitializeFilters(control)
 			TRADING_HOUSE:ResetAllSearchData(true)
 			TRADING_HOUSE.ClearSearchResults = originalClearSearchResults
 		end
+	end)
+	resetButton:SetHandler("OnMouseEnter", function()
+		InitializeTooltip(InformationTooltip)
+		ZO_Tooltips_SetupDynamicTooltipAnchors(InformationTooltip, resetButton)
+		SetTooltipText(InformationTooltip, "reset all filters")
+	end)
+	resetButton:SetHandler("OnMouseExit", function()
+		ClearTooltip(InformationTooltip)
 	end)
 
 	filtersInitialized = true
@@ -278,10 +305,12 @@ OnAddonLoaded(function()
 
 	ZO_PreHook(TRADING_HOUSE, "ResetAllSearchData", function(self, doReset)
 		if(doReset or not saveData.keepFiltersOnClose) then
-			self.m_levelRangeFilterType = TRADING_HOUSE_FILTER_TYPE_LEVEL
-			self.m_levelRangeToggle:SetState(BSTATE_NORMAL, false)
-			self.m_levelRangeLabel:SetText(GetString(SI_TRADING_HOUSE_BROWSE_LEVEL_RANGE_LABEL))
-			if(levelSelector) then levelSelector:Reset() end
+			if(priceSelector) then priceSelector:Reset() end
+			if(levelSelector) then levelSelector:Reset() else
+				self.m_levelRangeFilterType = TRADING_HOUSE_FILTER_TYPE_LEVEL
+				self.m_levelRangeToggle:SetState(BSTATE_NORMAL, false)
+				self.m_levelRangeLabel:SetText(GetString(SI_TRADING_HOUSE_BROWSE_LEVEL_RANGE_LABEL))
+			end
 			if(qualitySelector) then qualitySelector:Reset() end
 			if(doReset) then return end
 		end

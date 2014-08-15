@@ -3,6 +3,8 @@ local UPPER_LIMIT = 2100000000
 local values = { LOWER_LIMIT, 10, 50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000, 50000, 100000, UPPER_LIMIT }
 local MIN_VALUE = 1
 local MAX_VALUE = #values
+local RESET_BUTTON_SIZE = 18
+local RESET_BUTTON_TEXTURE = "EsoUI/Art/Buttons/decline_%s.dds"
 
 local function ToNearestLinear(value)
 	for i, range in ipairs(values) do
@@ -57,13 +59,13 @@ function PriceSelector:New(parent, name)
 	end
 
 	slider.OnValueChanged = function(self, min, max)
+		selector.resetButton:SetHidden(selector:IsDefault())
 		if(setFromTextBox) then return end
 		UpdateTextBoxFromSlider()
 	end
 
 	minPriceBox:SetHandler("OnTextChanged", UpdateSliderFromTextBox)
 	maxPriceBox:SetHandler("OnTextChanged", UpdateSliderFromTextBox)
-	UpdateTextBoxFromSlider()
 
 	ZO_PreHook(TRADING_HOUSE.m_search, "InternalExecuteSearch", function(self)
 		local min = minPriceBox:GetText()
@@ -78,6 +80,31 @@ function PriceSelector:New(parent, name)
 		self.m_filters[TRADING_HOUSE_FILTER_TYPE_PRICE].values = {min, max}
 	end)
 
+	local resetButton = CreateControlFromVirtual(name .. "ResetButton", parent, "ZO_DefaultButton")
+	resetButton:SetNormalTexture(RESET_BUTTON_TEXTURE:format("up"))
+	resetButton:SetPressedTexture(RESET_BUTTON_TEXTURE:format("down"))
+	resetButton:SetMouseOverTexture(RESET_BUTTON_TEXTURE:format("over"))
+	resetButton:SetEndCapWidth(0)
+	resetButton:SetDimensions(RESET_BUTTON_SIZE, RESET_BUTTON_SIZE)
+	resetButton:SetAnchor(TOPRIGHT, parent:GetNamedChild("PriceRangeLabel"), TOPLEFT, 196, 0)
+	resetButton:SetHidden(true)
+	resetButton:SetHandler("OnMouseUp",function(control, button, isInside)
+		if(button == 1 and isInside) then
+			selector:Reset()
+		end
+	end)
+	resetButton:SetHandler("OnMouseEnter", function()
+		InitializeTooltip(InformationTooltip)
+		ZO_Tooltips_SetupDynamicTooltipAnchors(InformationTooltip, resetButton)
+		SetTooltipText(InformationTooltip, "reset price range")
+	end)
+	resetButton:SetHandler("OnMouseExit", function()
+		ClearTooltip(InformationTooltip)
+	end)
+	selector.resetButton = resetButton
+
+	UpdateTextBoxFromSlider()
+
 	return selector
 end
 
@@ -86,4 +113,9 @@ function PriceSelector:Reset()
 	zo_callLater(function()
 		self.slider:SetRangeValue(MIN_VALUE, MAX_VALUE)
 	end, 1)
+end
+
+function PriceSelector:IsDefault()
+	local min, max = self.slider:GetRangeValue()
+	return (min == MIN_VALUE and max == MAX_VALUE)
 end
