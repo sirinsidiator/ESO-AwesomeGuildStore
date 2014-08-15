@@ -65,6 +65,18 @@ function LevelSelector:New(parent, name)
 	levelRangeToggle:SetNormalTexture("EsoUI/Art/LFG/LFG_normalDungeon_up.dds")
 	levelRangeToggle:SetMouseOverTexture("EsoUI/Art/LFG/LFG_normalDungeon_over.dds")
 
+	ZO_PreHook(TRADING_HOUSE.m_search, "InternalExecuteSearch", function(self)
+		local min = tonumber(minLevelBox:GetText())
+		local max = tonumber(maxLevelBox:GetText())
+		local isLevel = (TRADING_HOUSE.m_levelRangeFilterType == TRADING_HOUSE_FILTER_TYPE_LEVEL)
+		local filter = self.m_filters[isLevel and TRADING_HOUSE_FILTER_TYPE_LEVEL or TRADING_HOUSE_FILTER_TYPE_VETERAN_LEVEL]
+		if((isLevel and min == MIN_LEVEL and max == MAX_LEVEL) or (not isLevel and min == MIN_RANK and max == MAX_RANK)) then
+			filter.values = {}
+		else
+			filter.values = {min, max}
+		end
+	end)
+
 	local resetButton = CreateControlFromVirtual(name .. "ResetButton", parent, "ZO_DefaultButton")
 	resetButton:SetNormalTexture(RESET_BUTTON_TEXTURE:format("up"))
 	resetButton:SetPressedTexture(RESET_BUTTON_TEXTURE:format("down"))
