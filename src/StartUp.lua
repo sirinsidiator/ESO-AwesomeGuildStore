@@ -23,11 +23,13 @@ local function OnAddonLoaded(callback)
 	end)
 end
 
+AwesomeGuildStore.RegisterForEvent = RegisterForEvent
 -----------------------------------------------------------------------------------------
 
 local defaultData = {
 	version = 3,
 	lastGuildName = "",
+	replaceCategoryFilter = true,
 	replacePriceFilter = true,
 	replaceQualityFilter = true,
 	replaceLevelFilter = true,
@@ -42,6 +44,7 @@ local saveData
 local priceSelector
 local levelSelector
 local qualitySelector
+local categoryFilter
 
 function AwesomeGuildStore.InitializeGuildSelector(control)
 	local comboBoxControl = GetControl(control, "ComboBox")
@@ -85,6 +88,17 @@ local function InitializeFilters(control)
 	if(filtersInitialized) then return end
 
 	local common = control:GetNamedChild("Common")
+
+	if(saveData.replaceCategoryFilter) then
+		local header = control:GetNamedChild("Header")
+		control:GetNamedChild("ItemCategory"):SetHidden(true)
+		categoryFilter = AwesomeGuildStore.CategorySelector:New(control, ADDON_NAME .. "ItemCategory")
+		categoryFilter.control:ClearAnchors()
+		categoryFilter.control:SetAnchor(TOPLEFT, header, TOPRIGHT, 70, -20)
+
+		local itemPane = ZO_TradingHouse:GetNamedChild("ItemPane")
+		itemPane:SetAnchor(TOPLEFT, categoryFilter.control, BOTTOMLEFT, 0, 20)
+	end
 
 	if(saveData.replacePriceFilter) then
 		priceSelector = AwesomeGuildStore.PriceSelector:New(common, ADDON_NAME .. "PriceRange")
@@ -144,7 +158,7 @@ local function InitializeFilters(control)
 		end
 	end)
 
-	ZO_PreHook(TRADING_HOUSE, "DoSearch", function(self)
+	ZO_PreHook("ExecuteTradingHouseSearch", function(self)
 		searchButton:SetEnabled(false)
 	end)
 
@@ -173,7 +187,8 @@ local function InitializeFilters(control)
 	end)
 	resetButton:SetHandler("OnMouseEnter", function()
 		InitializeTooltip(InformationTooltip)
-		ZO_Tooltips_SetupDynamicTooltipAnchors(InformationTooltip, resetButton)
+		InformationTooltip:ClearAnchors()
+		InformationTooltip:SetOwner(resetButton, BOTTOM, 5, 0)
 		SetTooltipText(InformationTooltip, "reset all filters")
 	end)
 	resetButton:SetHandler("OnMouseExit", function()
@@ -211,6 +226,15 @@ local function CreateSettingsDialog()
 	local optionsData = {
 		[1] = {
 			type = "checkbox",
+			name = "Use awesome category selection",
+			tooltip = "Replaces the default dropdown selection with lots of tiny buttons",
+			getFunc = function() return saveData.replaceCategoryFilter end,
+			setFunc = function(value) saveData.replaceCategoryFilter = value end,
+			warning = "Only is applied after you reload the UI",
+			default = defaultData.replaceCategoryFilter
+		},
+		[2] = {
+			type = "checkbox",
 			name = "Use awesome price range slider",
 			tooltip = "Adds a useful slider for price range selection",
 			getFunc = function() return saveData.replacePriceFilter end,
@@ -218,7 +242,7 @@ local function CreateSettingsDialog()
 			warning = "Only is applied after you reload the UI",
 			default = defaultData.replacePriceFilter
 		},
-		[2] = {
+		[3] = {
 			type = "checkbox",
 			name = "Use awesome level range slider",
 			tooltip = "Adds a useful slider for level range selection",
@@ -227,7 +251,7 @@ local function CreateSettingsDialog()
 			warning = "Only is applied after you reload the UI",
 			default = defaultData.replaceLevelFilter
 		},
-		[3] = {
+		[4] = {
 			type = "checkbox",
 			name = "Use awesome quality selector",
 			tooltip = "Replaces the default dropdown quality selection with a range selection",
@@ -236,7 +260,7 @@ local function CreateSettingsDialog()
 			warning = "Only is applied after you reload the UI",
 			default = defaultData.replaceQualityFilter
 		},
-		[4] = {
+		[5] = {
 			type = "checkbox",
 			name = "Remember filters between store visits",
 			tooltip = "Leaves the store filters set during a play session instead of clearing it when you close the guild store window",
@@ -262,6 +286,10 @@ OnAddonLoaded(function()
 	if(saveData.version == 2) then
 		saveData.replacePriceFilter = true
 		saveData.version = 3
+	end
+	if(saveData.version == 3) then
+		saveData.replaceCategoryFilter = true
+		saveData.version = 4
 	end
 
 	local title = TRADING_HOUSE.m_control:GetNamedChild("Title")
@@ -309,6 +337,7 @@ OnAddonLoaded(function()
 
 	ZO_PreHook(TRADING_HOUSE, "ResetAllSearchData", function(self, doReset)
 		if(doReset or not saveData.keepFiltersOnClose) then
+			if(categoryFilter) then categoryFilter:Reset() end
 			if(priceSelector) then priceSelector:Reset() end
 			if(levelSelector) then levelSelector:Reset() else
 				self.m_levelRangeFilterType = TRADING_HOUSE_FILTER_TYPE_LEVEL
