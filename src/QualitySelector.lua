@@ -11,27 +11,41 @@ local QualitySelector = ZO_Object:Subclass()
 AwesomeGuildStore.QualitySelector = QualitySelector
 
 local function CreateButtonControl(parent, name, textureName, tooltipText, callback)
-	local button = CreateControlFromVirtual(name .. "NormalQualityButton", parent, "ZO_DefaultButton")
-	button:SetNormalTexture(textureName:format("up"))
-	button:SetPressedTexture(textureName:format("down"))
-	button:SetMouseOverTexture("AwesomeGuildStore/images/qualitybuttons/over.dds")
-	button:SetEndCapWidth(0)
-	button:SetDimensions(BUTTON_SIZE, BUTTON_SIZE)
-	button:SetHandler("OnMouseUp", function(control, button, isInside)
-		if(button == 1 and isInside) then
-			callback()
+	local buttonControl = CreateControlFromVirtual(name .. "NormalQualityButton", parent, "ZO_DefaultButton")
+	buttonControl:SetNormalTexture(textureName:format("up"))
+	buttonControl:SetPressedTexture(textureName:format("down"))
+	buttonControl:SetMouseOverTexture("AwesomeGuildStore/images/qualitybuttons/over.dds")
+	buttonControl:SetEndCapWidth(0)
+	buttonControl:SetDimensions(BUTTON_SIZE, BUTTON_SIZE)
+	buttonControl:SetHandler("OnMouseDoubleClick", function(control, button)
+		callback(3)
+	end)
+	buttonControl:SetHandler("OnMouseUp", function(control, button, isInside)
+		if(isInside) then
+			callback(button)
+			if(button == 2) then
+				-- the mouse down event does not fire for right click and the button does not show any click behavior at all
+				-- we emulate it by changing the texture for a bit and playing the click sound manually
+				buttonControl:SetNormalTexture(textureName:format("down"))
+				buttonControl:SetMouseOverTexture("")
+				zo_callLater(function()
+					buttonControl:SetNormalTexture(textureName:format("up"))
+					buttonControl:SetMouseOverTexture("AwesomeGuildStore/images/qualitybuttons/over.dds")
+				end, 100)
+				PlaySound("Click")
+			end
 		end
 	end)
-	button:SetHandler("OnMouseEnter", function()
+	buttonControl:SetHandler("OnMouseEnter", function()
 		InitializeTooltip(InformationTooltip)
 		InformationTooltip:ClearAnchors()
-		InformationTooltip:SetOwner(button, BOTTOM, 5, 0)
+		InformationTooltip:SetOwner(buttonControl, BOTTOM, 5, 0)
 		SetTooltipText(InformationTooltip, tooltipText)
 	end)
-	button:SetHandler("OnMouseExit", function()
+	buttonControl:SetHandler("OnMouseExit", function()
 		ClearTooltip(InformationTooltip)
 	end)
-	return button
+	return buttonControl
 end
 
 function QualitySelector:New(parent, name)
@@ -61,28 +75,41 @@ function QualitySelector:New(parent, name)
 		self.m_filters[TRADING_HOUSE_FILTER_TYPE_QUALITY].values = {min, max}
 	end)
 
-	local normalButton = CreateButtonControl(container, name .. "NormalQualityButton", "AwesomeGuildStore/images/qualitybuttons/normal_%s.dds", GetString(SI_TRADING_HOUSE_BROWSE_QUALITY_NORMAL), function()
-		slider:SetRangeValue(1, 1)
+	local function SafeSetRangeValue(button, value)
+		local min, max = slider:GetRangeValue()
+		if(button == 1) then
+			if(value > max) then slider:SetMaxValue(value) end
+			slider:SetMinValue(value)
+		elseif(button == 2) then
+			if(value < min) then slider:SetMinValue(value) end
+			slider:SetMaxValue(value) 
+		elseif(button == 3) then
+			slider:SetRangeValue(value, value)
+		end
+	end
+
+	local normalButton = CreateButtonControl(container, name .. "NormalQualityButton", "AwesomeGuildStore/images/qualitybuttons/normal_%s.dds", GetString(SI_TRADING_HOUSE_BROWSE_QUALITY_NORMAL), function(button)
+		SafeSetRangeValue(button, 1)
 	end)
 	normalButton:SetAnchor(TOPLEFT, container, TOPLEFT, BUTTON_X, BUTTON_Y)
 
-	local magicButton = CreateButtonControl(container, name .. "MagicQualityButton", "AwesomeGuildStore/images/qualitybuttons/magic_%s.dds", GetString(SI_TRADING_HOUSE_BROWSE_QUALITY_MAGIC), function()
-		slider:SetRangeValue(2, 2)
+	local magicButton = CreateButtonControl(container, name .. "MagicQualityButton", "AwesomeGuildStore/images/qualitybuttons/magic_%s.dds", GetString(SI_TRADING_HOUSE_BROWSE_QUALITY_MAGIC), function(button)
+		SafeSetRangeValue(button, 2)
 	end)
 	magicButton:SetAnchor(TOPLEFT, container, TOPLEFT, BUTTON_X + (BUTTON_SIZE + BUTTON_SPACING), BUTTON_Y)
 
-	local arcaneButton = CreateButtonControl(container, name .. "ArcaneQualityButton", "AwesomeGuildStore/images/qualitybuttons/arcane_%s.dds", GetString(SI_TRADING_HOUSE_BROWSE_QUALITY_ARCANE), function()
-		slider:SetRangeValue(3, 3)
+	local arcaneButton = CreateButtonControl(container, name .. "ArcaneQualityButton", "AwesomeGuildStore/images/qualitybuttons/arcane_%s.dds", GetString(SI_TRADING_HOUSE_BROWSE_QUALITY_ARCANE), function(button)
+		SafeSetRangeValue(button, 3)
 	end)
 	arcaneButton:SetAnchor(TOPLEFT, container, TOPLEFT, BUTTON_X + (BUTTON_SIZE + BUTTON_SPACING) * 2, BUTTON_Y)
 
-	local artifactButton = CreateButtonControl(container, name .. "ArtifactQualityButton", "AwesomeGuildStore/images/qualitybuttons/artifact_%s.dds", GetString(SI_TRADING_HOUSE_BROWSE_QUALITY_ARTIFACT), function()
-		slider:SetRangeValue(4, 4)
+	local artifactButton = CreateButtonControl(container, name .. "ArtifactQualityButton", "AwesomeGuildStore/images/qualitybuttons/artifact_%s.dds", GetString(SI_TRADING_HOUSE_BROWSE_QUALITY_ARTIFACT), function(button)
+		SafeSetRangeValue(button, 4)
 	end)
 	artifactButton:SetAnchor(TOPLEFT, container, TOPLEFT, BUTTON_X + (BUTTON_SIZE + BUTTON_SPACING) * 3, BUTTON_Y)
 
-	local legendaryButton = CreateButtonControl(container, name .. "LegendaryQualityButton", "AwesomeGuildStore/images/qualitybuttons/legendary_%s.dds", GetString(SI_TRADING_HOUSE_BROWSE_QUALITY_LEGENDARY), function()
-		slider:SetRangeValue(5, 5)
+	local legendaryButton = CreateButtonControl(container, name .. "LegendaryQualityButton", "AwesomeGuildStore/images/qualitybuttons/legendary_%s.dds", GetString(SI_TRADING_HOUSE_BROWSE_QUALITY_LEGENDARY), function(button)
+		SafeSetRangeValue(button, 5)
 	end)
 	legendaryButton:SetAnchor(TOPLEFT, container, TOPLEFT, BUTTON_X + (BUTTON_SIZE + BUTTON_SPACING) * 4, BUTTON_Y)
 
