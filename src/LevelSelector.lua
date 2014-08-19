@@ -18,7 +18,7 @@ function LevelSelector:New(parent, name)
 	local maxLevelBox = parent:GetNamedChild("MaxLevelBox")
 	local slider = MinMaxRangeSlider:New(parent, name .. "LevelSlider", 0, 0, 195, 16)
 	slider:SetMinMax(MIN_LEVEL, MAX_LEVEL)
-	slider:SetMinRange(1)
+	--slider:SetMinRange(1)
 	slider:SetRangeValue(MIN_LEVEL, MAX_LEVEL)
 	selector.slider = slider
 
@@ -73,6 +73,7 @@ function LevelSelector:New(parent, name)
 		if((isLevel and min == MIN_LEVEL and max == MAX_LEVEL) or (not isLevel and min == MIN_RANK and max == MAX_RANK)) then
 			filter.values = {}
 		else
+			if(min == max) then max = nil end
 			filter.values = {min, max}
 		end
 	end)
