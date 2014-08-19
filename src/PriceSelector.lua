@@ -1,3 +1,6 @@
+local L = AwesomeGuildStore.Localization
+local MinMaxRangeSlider = AwesomeGuildStore.MinMaxRangeSlider
+
 local LOWER_LIMIT = 1
 local UPPER_LIMIT = 2100000000
 local values = { LOWER_LIMIT, 10, 50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000, 50000, 100000, UPPER_LIMIT }
@@ -15,8 +18,6 @@ end
 
 local PriceSelector = ZO_Object:Subclass()
 AwesomeGuildStore.PriceSelector = PriceSelector
-
-local MinMaxRangeSlider = AwesomeGuildStore.MinMaxRangeSlider
 
 function PriceSelector:New(parent, name)
 	local selector = ZO_Object.New(self)
@@ -80,24 +81,26 @@ function PriceSelector:New(parent, name)
 		self.m_filters[TRADING_HOUSE_FILTER_TYPE_PRICE].values = {min, max}
 	end)
 
+	local priceRangeLabel = parent:GetNamedChild("PriceRangeLabel")
 	local resetButton = CreateControlFromVirtual(name .. "ResetButton", parent, "ZO_DefaultButton")
 	resetButton:SetNormalTexture(RESET_BUTTON_TEXTURE:format("up"))
 	resetButton:SetPressedTexture(RESET_BUTTON_TEXTURE:format("down"))
 	resetButton:SetMouseOverTexture(RESET_BUTTON_TEXTURE:format("over"))
 	resetButton:SetEndCapWidth(0)
 	resetButton:SetDimensions(RESET_BUTTON_SIZE, RESET_BUTTON_SIZE)
-	resetButton:SetAnchor(TOPRIGHT, parent:GetNamedChild("PriceRangeLabel"), TOPLEFT, 196, 0)
+	resetButton:SetAnchor(TOPRIGHT, priceRangeLabel, TOPLEFT, 196, 0)
 	resetButton:SetHidden(true)
 	resetButton:SetHandler("OnMouseUp",function(control, button, isInside)
 		if(button == 1 and isInside) then
 			selector:Reset()
 		end
 	end)
+	local text = L["RESET_FILTER_LABEL_TEMPLATE"]:format(priceRangeLabel:GetText():gsub(":", ""))
 	resetButton:SetHandler("OnMouseEnter", function()
 		InitializeTooltip(InformationTooltip)
 		InformationTooltip:ClearAnchors()
 		InformationTooltip:SetOwner(resetButton, BOTTOM, 5, 0)
-		SetTooltipText(InformationTooltip, "reset price range")
+		SetTooltipText(InformationTooltip, text)
 	end)
 	resetButton:SetHandler("OnMouseExit", function()
 		ClearTooltip(InformationTooltip)

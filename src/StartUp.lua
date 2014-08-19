@@ -36,6 +36,7 @@ local defaultData = {
 	keepFiltersOnClose = true
 }
 
+local L
 local comboBox
 local guildSelector
 local entryByGuildId
@@ -149,7 +150,7 @@ local function InitializeFilters(control)
 	local parent = qualitySelector and qualitySelector.control or common
 	searchButton:SetWidth(common:GetWidth())
 	searchButton:SetAnchor(TOP, parent, BOTTOM, 0, 25)
-	searchButton:SetText(GetString(SI_TRADING_HOUSE_DO_SEARCH))
+	searchButton:SetText(L["START_SEARCH_LABEL"])
 	searchButton:SetHandler("OnMouseUp",function(control, button, isInside)
 		if(button == 1 and isInside) then
 			if(TRADING_HOUSE:CanSearch()) then
@@ -189,7 +190,7 @@ local function InitializeFilters(control)
 		InitializeTooltip(InformationTooltip)
 		InformationTooltip:ClearAnchors()
 		InformationTooltip:SetOwner(resetButton, BOTTOM, 5, 0)
-		SetTooltipText(InformationTooltip, "reset all filters")
+		SetTooltipText(InformationTooltip, L["RESET_ALL_FILTERS_LABEL"])
 	end)
 	resetButton:SetHandler("OnMouseExit", function()
 		ClearTooltip(InformationTooltip)
@@ -226,44 +227,44 @@ local function CreateSettingsDialog()
 	local optionsData = {
 		[1] = {
 			type = "checkbox",
-			name = "Use awesome category selection",
-			tooltip = "Replaces the default dropdown selection with lots of tiny buttons",
+			name = L["SETTINGS_REPLACE_CATEGORY_FILTER_LABEL"],
+			tooltip = L["SETTINGS_REPLACE_CATEGORY_FILTER_DESCRIPTION"],
 			getFunc = function() return saveData.replaceCategoryFilter end,
 			setFunc = function(value) saveData.replaceCategoryFilter = value end,
-			warning = "Only is applied after you reload the UI",
+			warning = L["SETTINGS_REQUIRES_RELOADUI_WARNING"],
 			default = defaultData.replaceCategoryFilter
 		},
 		[2] = {
 			type = "checkbox",
-			name = "Use awesome price range slider",
-			tooltip = "Adds a useful slider for price range selection",
+			name = L["SETTINGS_REPLACE_PRICE_FILTER_LABEL"],
+			tooltip = L["SETTINGS_REPLACE_PRICE_FILTER_DESCRIPTION"],
 			getFunc = function() return saveData.replacePriceFilter end,
 			setFunc = function(value) saveData.replacePriceFilter = value end,
-			warning = "Only is applied after you reload the UI",
+			warning = L["SETTINGS_REQUIRES_RELOADUI_WARNING"],
 			default = defaultData.replacePriceFilter
 		},
 		[3] = {
 			type = "checkbox",
-			name = "Use awesome level range slider",
-			tooltip = "Adds a useful slider for level range selection",
+			name = L["SETTINGS_REPLACE_LEVEL_FILTER_LABEL"],
+			tooltip = L["SETTINGS_REPLACE_LEVEL_FILTER_DESCRIPTION"],
 			getFunc = function() return saveData.replaceLevelFilter end,
 			setFunc = function(value) saveData.replaceLevelFilter = value end,
-			warning = "Only is applied after you reload the UI",
+			warning = L["SETTINGS_REQUIRES_RELOADUI_WARNING"],
 			default = defaultData.replaceLevelFilter
 		},
 		[4] = {
 			type = "checkbox",
-			name = "Use awesome quality selector",
-			tooltip = "Replaces the default dropdown quality selection with a range selection",
+			name = L["SETTINGS_REPLACE_QUALITY_FILTER_LABEL"],
+			tooltip = L["SETTINGS_REPLACE_QUALITY_FILTER_DESCRIPTION"],
 			getFunc = function() return saveData.replaceQualityFilter end,
 			setFunc = function(value) saveData.replaceQualityFilter = value end,
-			warning = "Only is applied after you reload the UI",
+			warning = L["SETTINGS_REQUIRES_RELOADUI_WARNING"],
 			default = defaultData.replaceQualityFilter
 		},
 		[5] = {
 			type = "checkbox",
-			name = "Remember filters between store visits",
-			tooltip = "Leaves the store filters set during a play session instead of clearing it when you close the guild store window",
+			name = L["SETTINGS_KEEP_FILTERS_ON_CLOSE_LABEL"],
+			tooltip = L["SETTINGS_KEEP_FILTERS_ON_CLOSE_DESCRIPTION"],
 			getFunc = function() return saveData.keepFiltersOnClose end,
 			setFunc = function(value) saveData.keepFiltersOnClose = value end,
 			default = defaultData.keepFiltersOnClose
@@ -276,6 +277,8 @@ OnAddonLoaded(function()
 	AwesomeGuildStore_Data = AwesomeGuildStore_Data or {}
 	saveData = AwesomeGuildStore_Data[GetDisplayName()] or ZO_ShallowTableCopy(defaultData)
 	AwesomeGuildStore_Data[GetDisplayName()] = saveData
+
+	L = AwesomeGuildStore.Localization
 
 	if(saveData.version == 1) then
 		saveData.replaceQualityFilter = true

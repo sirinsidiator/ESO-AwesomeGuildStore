@@ -1,11 +1,12 @@
+local L = AwesomeGuildStore.Localization
+local MinMaxRangeSlider = AwesomeGuildStore.MinMaxRangeSlider
+
 local BUTTON_SIZE = 36
 local BUTTON_X = -7
 local BUTTON_Y = 46
 local BUTTON_SPACING = 7.5
 local RESET_BUTTON_SIZE = 18
 local RESET_BUTTON_TEXTURE = "EsoUI/Art/Buttons/decline_%s.dds"
-
-local MinMaxRangeSlider = AwesomeGuildStore.MinMaxRangeSlider
 
 local QualitySelector = ZO_Object:Subclass()
 AwesomeGuildStore.QualitySelector = QualitySelector
@@ -57,7 +58,7 @@ function QualitySelector:New(parent, name)
 
 	local label = container:CreateControl(name .. "Label", CT_LABEL)
 	label:SetFont("ZoFontWinH4")
-	label:SetText("Quality Range:")
+	label:SetText(L["QUALITY_SELECTOR_TITLE"])
 	label:SetAnchor(TOPLEFT, container, TOPLEFT, 0, 0)
 
 	local slider = MinMaxRangeSlider:New(container, name .. "QualitySlider", 0, 30, 195, 16)
@@ -88,27 +89,27 @@ function QualitySelector:New(parent, name)
 		end
 	end
 
-	local normalButton = CreateButtonControl(container, name .. "NormalQualityButton", "AwesomeGuildStore/images/qualitybuttons/normal_%s.dds", GetString(SI_TRADING_HOUSE_BROWSE_QUALITY_NORMAL), function(button)
+	local normalButton = CreateButtonControl(container, name .. "NormalQualityButton", "AwesomeGuildStore/images/qualitybuttons/normal_%s.dds", L["NORMAL_QUALITY_LABEL"], function(button)
 		SafeSetRangeValue(button, 1)
 	end)
 	normalButton:SetAnchor(TOPLEFT, container, TOPLEFT, BUTTON_X, BUTTON_Y)
 
-	local magicButton = CreateButtonControl(container, name .. "MagicQualityButton", "AwesomeGuildStore/images/qualitybuttons/magic_%s.dds", GetString(SI_TRADING_HOUSE_BROWSE_QUALITY_MAGIC), function(button)
+	local magicButton = CreateButtonControl(container, name .. "MagicQualityButton", "AwesomeGuildStore/images/qualitybuttons/magic_%s.dds", L["MAGIC_QUALITY_LABEL"], function(button)
 		SafeSetRangeValue(button, 2)
 	end)
 	magicButton:SetAnchor(TOPLEFT, container, TOPLEFT, BUTTON_X + (BUTTON_SIZE + BUTTON_SPACING), BUTTON_Y)
 
-	local arcaneButton = CreateButtonControl(container, name .. "ArcaneQualityButton", "AwesomeGuildStore/images/qualitybuttons/arcane_%s.dds", GetString(SI_TRADING_HOUSE_BROWSE_QUALITY_ARCANE), function(button)
+	local arcaneButton = CreateButtonControl(container, name .. "ArcaneQualityButton", "AwesomeGuildStore/images/qualitybuttons/arcane_%s.dds", L["ARCANE_QUALITY_LABEL"], function(button)
 		SafeSetRangeValue(button, 3)
 	end)
 	arcaneButton:SetAnchor(TOPLEFT, container, TOPLEFT, BUTTON_X + (BUTTON_SIZE + BUTTON_SPACING) * 2, BUTTON_Y)
 
-	local artifactButton = CreateButtonControl(container, name .. "ArtifactQualityButton", "AwesomeGuildStore/images/qualitybuttons/artifact_%s.dds", GetString(SI_TRADING_HOUSE_BROWSE_QUALITY_ARTIFACT), function(button)
+	local artifactButton = CreateButtonControl(container, name .. "ArtifactQualityButton", "AwesomeGuildStore/images/qualitybuttons/artifact_%s.dds", L["ARTIFACT_QUALITY_LABEL"], function(button)
 		SafeSetRangeValue(button, 4)
 	end)
 	artifactButton:SetAnchor(TOPLEFT, container, TOPLEFT, BUTTON_X + (BUTTON_SIZE + BUTTON_SPACING) * 3, BUTTON_Y)
 
-	local legendaryButton = CreateButtonControl(container, name .. "LegendaryQualityButton", "AwesomeGuildStore/images/qualitybuttons/legendary_%s.dds", GetString(SI_TRADING_HOUSE_BROWSE_QUALITY_LEGENDARY), function(button)
+	local legendaryButton = CreateButtonControl(container, name .. "LegendaryQualityButton", "AwesomeGuildStore/images/qualitybuttons/legendary_%s.dds", L["LEGENDARY_QUALITY_LABEL"], function(button)
 		SafeSetRangeValue(button, 5)
 	end)
 	legendaryButton:SetAnchor(TOPLEFT, container, TOPLEFT, BUTTON_X + (BUTTON_SIZE + BUTTON_SPACING) * 4, BUTTON_Y)
@@ -126,11 +127,12 @@ function QualitySelector:New(parent, name)
 			selector:Reset()
 		end
 	end)
+	local text = L["RESET_FILTER_LABEL_TEMPLATE"]:format(label:GetText():gsub(":", ""))
 	resetButton:SetHandler("OnMouseEnter", function()
 		InitializeTooltip(InformationTooltip)
 		InformationTooltip:ClearAnchors()
 		InformationTooltip:SetOwner(resetButton, BOTTOM, 5, 0)
-		SetTooltipText(InformationTooltip, "reset quality range")
+		SetTooltipText(InformationTooltip, text)
 	end)
 	resetButton:SetHandler("OnMouseExit", function()
 		ClearTooltip(InformationTooltip)

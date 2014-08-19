@@ -1,3 +1,6 @@
+local L = AwesomeGuildStore.Localization
+local MinMaxRangeSlider = AwesomeGuildStore.MinMaxRangeSlider
+
 local MIN_LEVEL = 1
 local MAX_LEVEL = 50
 local MIN_RANK = 1
@@ -7,8 +10,6 @@ local RESET_BUTTON_TEXTURE = "EsoUI/Art/Buttons/decline_%s.dds"
 
 local LevelSelector = ZO_Object:Subclass()
 AwesomeGuildStore.LevelSelector = LevelSelector
-
-local MinMaxRangeSlider = AwesomeGuildStore.MinMaxRangeSlider
 
 function LevelSelector:New(parent, name)
 	local selector = ZO_Object.New(self)
@@ -78,24 +79,26 @@ function LevelSelector:New(parent, name)
 		end
 	end)
 
+	local levelRangeLabel = parent:GetNamedChild("LevelRangeLabel")
 	local resetButton = CreateControlFromVirtual(name .. "ResetButton", parent, "ZO_DefaultButton")
 	resetButton:SetNormalTexture(RESET_BUTTON_TEXTURE:format("up"))
 	resetButton:SetPressedTexture(RESET_BUTTON_TEXTURE:format("down"))
 	resetButton:SetMouseOverTexture(RESET_BUTTON_TEXTURE:format("over"))
 	resetButton:SetEndCapWidth(0)
 	resetButton:SetDimensions(RESET_BUTTON_SIZE, RESET_BUTTON_SIZE)
-	resetButton:SetAnchor(TOPRIGHT, parent:GetNamedChild("LevelRangeLabel"), TOPLEFT, 196, 0)
+	resetButton:SetAnchor(TOPRIGHT, levelRangeLabel, TOPLEFT, 196, 0)
 	resetButton:SetHidden(true)
 	resetButton:SetHandler("OnMouseUp",function(control, button, isInside)
 		if(button == 1 and isInside) then
 			selector:Reset()
 		end
 	end)
+	local text = L["RESET_FILTER_LABEL_TEMPLATE"]:format(levelRangeLabel:GetText():gsub(":", ""))
 	resetButton:SetHandler("OnMouseEnter", function()
 		InitializeTooltip(InformationTooltip)
 		InformationTooltip:ClearAnchors()
 		InformationTooltip:SetOwner(resetButton, BOTTOM, 5, 0)
-		SetTooltipText(InformationTooltip, "reset level range")
+		SetTooltipText(InformationTooltip, text)
 	end)
 	resetButton:SetHandler("OnMouseExit", function()
 		ClearTooltip(InformationTooltip)

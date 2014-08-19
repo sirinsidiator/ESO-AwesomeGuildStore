@@ -26,6 +26,7 @@ lib/LibAddonMenu-2.0/controls/header.lua
 lib/LibAddonMenu-2.0/controls/slider.lua
 lib/LibAddonMenu-2.0/controls/texture.lua
 StartUp.lua
+Localization.lua
 MinMaxRangeSlider.lua
 ButtonGroup.lua
 ToggleButton.lua
