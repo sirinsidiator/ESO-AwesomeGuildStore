@@ -26,6 +26,8 @@ function MinMaxRangeSlider:New(parent, name, x, y, width, height)
 
 	slider.rangeSlider = control:GetNamedChild("RangeSlider")
 
+	slider.fullRange = control:GetNamedChild("FullRange")
+
 	slider.x, slider.y = x, y
 	slider.offsetX = minSlider:GetWidth() / 2
 	slider:SetMinMax(1, 2)
@@ -121,6 +123,45 @@ function MinMaxRangeSlider:InitializeHandlers()
 	self.rangeSlider:SetHandler("OnDragStart", OnRangeDragStart)
 	self.rangeSlider:SetHandler("OnMouseUp", OnRangeDragStop)
 	self.rangeSlider:SetHandler("OnUpdate", OnRangeUpdate)
+
+	self.fullRange:SetHandler("OnMouseDown", function(control, button)
+		local offset = control:GetScreenRect() - self.interval/2 - self.minSlider.offset
+		control.pressedValue = PositionToValue(GetUIMousePosition() - offset)
+		control.isPressed = true
+		control.lastUpdateTime = GetFrameTimeSeconds()
+		control.updateCount = 0
+		control.moveDistance = 1
+	end)
+	self.fullRange:SetHandler("OnMouseUp", function(control, button)
+		control.isPressed = false
+	end)
+	self.fullRange:SetHandler("OnUpdate", function(control, time)
+		if(control.isPressed and time - control.lastUpdateTime > 0.15) then
+			local min, max = self:GetRangeValue()
+			local avg = math.floor((min + max) / 2)
+
+			if(control.pressedValue < min) then
+				local value = min - control.moveDistance
+				self:SetMinValue((value < control.pressedValue) and control.pressedValue or value)
+			elseif(control.pressedValue > min and control.pressedValue < avg) then
+				local value = min + control.moveDistance
+				self:SetMinValue((value > control.pressedValue) and control.pressedValue or value)
+			elseif(control.pressedValue > avg and control.pressedValue < max) then
+				local value = max - control.moveDistance
+				self:SetMaxValue((value < control.pressedValue) and control.pressedValue or value)
+			elseif(control.pressedValue > max) then
+				local value = max + control.moveDistance
+				self:SetMaxValue((value > control.pressedValue) and control.pressedValue or value)
+			end
+
+			control.lastUpdateTime = time
+			control.updateCount = control.updateCount + 1
+			if(control.updateCount > 2) then
+				control.moveDistance = control.moveDistance * 2
+				control.updateCount = 0
+			end
+		end
+	end)
 end
 
 function MinMaxRangeSlider:SetMinValue(value)
