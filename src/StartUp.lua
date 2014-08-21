@@ -160,13 +160,35 @@ local function InitializeFilters(control)
 		end
 	end)
 
+	local loadingBlocker = ZO_TradingHouseItemPaneSearchResults:CreateControl("Loading", CT_BACKDROP)
+	loadingBlocker:SetAnchor(TOPLEFT, ZO_TradingHouseItemPaneSearchResults, TOPLEFT, -10, -10)
+	loadingBlocker:SetAnchor(BOTTOMRIGHT, ZO_TradingHouseItemPaneSearchResults, BOTTOMRIGHT, 10, 10)
+	loadingBlocker:SetHidden(true)
+	loadingBlocker:SetMouseEnabled(true)
+	loadingBlocker:SetDrawLayer(1)
+	loadingBlocker:SetIntegralWrapping(true)
+	loadingBlocker:SetCenterTexture("EsoUI/Art/ChatWindow/chat_BG_center.dds")
+	loadingBlocker:SetEdgeTexture("EsoUI/Art/ChatWindow/chat_BG_edge.dds", 256, 256, 32)
+	loadingBlocker:SetInsets(32, 32, -32, -32)
+	local loadingIcon = CreateControlFromVirtual(ADDON_NAME .. "LoadingIcon", control, "AwesomeGuildStoreLoadingTemplate")
+	loadingIcon:SetParent(loadingBlocker)
+	loadingIcon:SetAnchor(CENTER, loadingBlocker, CENTER, 0, 0)
+	loadingIcon.animation = ANIMATION_MANAGER:CreateTimelineFromVirtual("LoadIconAnimation", loadingIcon:GetNamedChild("Icon"))
+
 	ZO_PreHook("ExecuteTradingHouseSearch", function(self)
 		searchButton:SetEnabled(false)
+		loadingBlocker:SetHidden(false)
+		loadingIcon.animation:PlayForward()
 	end)
 
 	RegisterForEvent(EVENT_TRADING_HOUSE_SEARCH_COOLDOWN_UPDATE, function(_, cooldownMilliseconds)
 		if(cooldownMilliseconds ~= 0) then return end
 		searchButton:SetEnabled(true)
+	end)
+
+	RegisterForEvent(EVENT_TRADING_HOUSE_SEARCH_RESULTS_RECEIVED , function()
+		loadingBlocker:SetHidden(true)
+		loadingIcon.animation:Stop()
 	end)
 
 	local RESET_BUTTON_SIZE = 24

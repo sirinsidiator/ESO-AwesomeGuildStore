@@ -71,7 +71,7 @@
 					</Controls>
 				</Control>
 				<Texture name="$(parent)Glow" textureFile="AwesomeGuildStore/images/minmaxsliderglow.dds" level="1">
-					<Dimensions y="10" /> 
+					<Dimensions y="10" />
 					<Anchor point="LEFT" relativeTo="$(parent)MinSlider" relativePoint="RIGHT" offsetX="-6" />
 					<Anchor point="RIGHT" relativeTo="$(parent)MaxSlider" relativePoint="LEFT" offsetX="6" />
 				</Texture>
@@ -85,6 +85,15 @@
 					<Anchor point="RIGHT" />
 					<Dimensions y="8" />
 				</Backdrop>
+			</Controls>
+		</Control>
+
+		<Control name="AwesomeGuildStoreLoadingTemplate" virtual="true">
+			<Controls>
+				<Texture name="$(parent)Icon" textureFile="EsoUI/Art/Miscellaneous/wait_icon.dds" layer="OVERLAY">
+					<Anchor point="CENTER" />
+					<Dimensions x="32" y="32" />
+				</Texture>
 			</Controls>
 		</Control>
 	</Controls>
