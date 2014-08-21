@@ -46,6 +46,7 @@ local priceSelector
 local levelSelector
 local qualitySelector
 local categoryFilter
+local searchButton
 
 function AwesomeGuildStore.InitializeGuildSelector(control)
 	local comboBoxControl = GetControl(control, "ComboBox")
@@ -146,7 +147,7 @@ local function InitializeFilters(control)
 		qualityControl:SetAnchor(TOPLEFT, common:GetNamedChild("LevelRangeToggle"), BOTTOMLEFT, 0, 10)
 	end
 
-	local searchButton = CreateControlFromVirtual(ADDON_NAME .. "StartSearchButton", common, "ZO_DefaultButton")
+	searchButton = CreateControlFromVirtual(ADDON_NAME .. "StartSearchButton", common, "ZO_DefaultButton")
 	local parent = qualitySelector and qualitySelector.control or common
 	searchButton:SetWidth(common:GetWidth())
 	searchButton:SetAnchor(TOP, parent, BOTTOM, 0, 25)
@@ -299,8 +300,43 @@ OnAddonLoaded(function()
 	local titleLabel = title:GetNamedChild("Label")
 	CreateControlFromVirtual(ADDON_NAME .. "GuildSelector", title, ADDON_NAME .. "GuildSelectorTemplate")
 
+	local isSearchDisabled = false
+	local keybindButtonDescriptor, oldEnabled, oldCallback
+
+	local function DisableKeybindStripSearchButton()
+		local keybindStripButton = KEYBIND_STRIP.keybinds["UI_SHORTCUT_SECONDARY"]
+		if(keybindStripButton and isSearchDisabled and not keybindButtonDescriptor) then
+			keybindButtonDescriptor = keybindStripButton.keybindButtonDescriptor
+			oldEnabled = keybindButtonDescriptor.enabled
+			oldCallback = keybindButtonDescriptor.callback
+
+			keybindButtonDescriptor.enabled = false
+			keybindButtonDescriptor.callback = function() end
+			KEYBIND_STRIP:UpdateKeybindButton(keybindButtonDescriptor)
+		end
+	end
+
+	local function EnableKeybindStripSearchButton()
+		if(keybindButtonDescriptor and isSearchDisabled) then
+			keybindButtonDescriptor.enabled = oldEnabled
+			keybindButtonDescriptor.callback = oldCallback
+			KEYBIND_STRIP:UpdateKeybindButton(keybindButtonDescriptor)
+			keybindButtonDescriptor = nil
+		end
+	end
+
+	RegisterForEvent(EVENT_OPEN_TRADING_HOUSE, function()
+		isSearchDisabled = true
+		searchButton:SetEnabled(false)
+		DisableKeybindStripSearchButton()
+	end)
+
 	RegisterForEvent(EVENT_TRADING_HOUSE_STATUS_RECEIVED, function()
 		local guildId = GetSelectedTradingHouseGuildId()
+
+		if(GetTradingHouseCooldownRemaining() == 0) then searchButton:SetEnabled(true) end
+		EnableKeybindStripSearchButton()
+		isSearchDisabled = false
 
 		if not guildId then -- it's a trader when guildId is nil
 			titleLabel:SetHidden(false)
@@ -318,6 +354,7 @@ OnAddonLoaded(function()
 	end)
 
 	ZO_PreHook(TRADING_HOUSE, "UpdateForGuildChange", function()
+		DisableKeybindStripSearchButton()
 		local guildId = GetSelectedTradingHouseGuildId()
 		if(guildId) then
 			local _, guildName = GetCurrentTradingHouseGuildDetails()
