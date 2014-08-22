@@ -96,5 +96,12 @@
 				</Texture>
 			</Controls>
 		</Control>
+
+		<Backdrop name="AwesomeGuildStoreNameFilterTemplate" inherits="ZO_EditBackdrop" virtual="true">
+			<Dimensions x="180" />
+			<Controls>
+				<EditBox name="$(parent)Box" inherits="ZO_DefaultEditForBackdrop ZO_EditDefaultText" />
+			</Controls>
+		</Backdrop>
 	</Controls>
 </GuiXml>

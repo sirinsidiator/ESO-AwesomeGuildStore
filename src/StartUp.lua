@@ -47,6 +47,7 @@ local levelSelector
 local qualitySelector
 local categoryFilter
 local searchButton
+local nameFilter
 
 function AwesomeGuildStore.InitializeGuildSelector(control)
 	local comboBoxControl = GetControl(control, "ComboBox")
@@ -218,6 +219,8 @@ local function InitializeFilters(control)
 	resetButton:SetHandler("OnMouseExit", function()
 		ClearTooltip(InformationTooltip)
 	end)
+
+	nameFilter = AwesomeGuildStore.ItemNameQuickFilter:New(ZO_TradingHouseItemPaneSearchSortBy, ADDON_NAME .. "NameFilterInput", 90, 2)
 
 	filtersInitialized = true
 end
@@ -407,6 +410,7 @@ OnAddonLoaded(function()
 				self.m_levelRangeLabel:SetText(GetString(SI_TRADING_HOUSE_BROWSE_LEVEL_RANGE_LABEL))
 			end
 			if(qualitySelector) then qualitySelector:Reset() end
+			if(nameFilter) then nameFilter:Reset() end
 			if(doReset) then return end
 		end
 		self:ClearSearchResults()

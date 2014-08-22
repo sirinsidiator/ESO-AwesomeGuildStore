@@ -34,4 +34,5 @@ CategorySelector.lua
 PriceSelector.lua
 LevelSelector.lua
 QualitySelector.lua
+ItemNameQuickFilter.lua
 AwesomeGuildStore.xml

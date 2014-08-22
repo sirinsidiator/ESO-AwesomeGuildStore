@@ -130,6 +130,10 @@ local localization = {
 
 		QUALITY_SELECTOR_TITLE = "Quality Range:",
 
+		ITEM_NAME_QUICK_FILTER_TEXT = "Filter Item Name",
+		ITEM_NAME_QUICK_FILTER_RESET = "Reset Item Name Filter",
+		ITEM_NAME_QUICK_FILTER_ITEMCOUNT_TEMPLATE = GetString(SI_TRADING_HOUSE_RESULT_COUNT) .. " (<<2>>)",
+
 		WARNING_SUBFILTER_LIMIT = "Cannot filter for more than 8 at a time",
 
 		SETTINGS_REQUIRES_RELOADUI_WARNING = "Only is applied after you reload the UI",
@@ -158,6 +162,9 @@ local localization = {
 		RESET_FILTER_LABEL_TEMPLATE = "%s zurücksetzen",
 
 		QUALITY_SELECTOR_TITLE = "Qualität:",
+
+		ITEM_NAME_QUICK_FILTER_TEXT = "Nach Namen filtern",
+		ITEM_NAME_QUICK_FILTER_RESET = "Namesfilter zurücksetzen",
 
 		WARNING_SUBFILTER_LIMIT = "Kann nur nach 8 gleichzeitig filtern",
 
