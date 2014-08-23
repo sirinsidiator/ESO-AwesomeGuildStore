@@ -67,6 +67,8 @@ function PriceSelector:New(parent, name)
 
 	minPriceBox:SetHandler("OnTextChanged", UpdateSliderFromTextBox)
 	maxPriceBox:SetHandler("OnTextChanged", UpdateSliderFromTextBox)
+	self.minPriceBox = minPriceBox
+	self.maxPriceBox = maxPriceBox
 
 	ZO_PreHook(TRADING_HOUSE.m_search, "InternalExecuteSearch", function(self)
 		local min = minPriceBox:GetText()
@@ -122,4 +124,18 @@ end
 function PriceSelector:IsDefault()
 	local min, max = self.slider:GetRangeValue()
 	return (min == MIN_VALUE and max == MAX_VALUE)
+end
+
+function PriceSelector:Serialize()
+	local min = tonumber(self.minPriceBox:GetText()) or "-"
+	local max = tonumber(self.maxPriceBox:GetText()) or "-"
+	return min .. ";" .. max
+end
+
+function PriceSelector:Deserialize(state)
+	local min, max = zo_strsplit(";", state)
+	min = tonumber(min) or LOWER_LIMIT
+	max = tonumber(max) or UPPER_LIMIT
+	self.minPriceBox:SetText(min <= LOWER_LIMIT and "" or min)
+	self.maxPriceBox:SetText(max >= UPPER_LIMIT and "" or max)
 end

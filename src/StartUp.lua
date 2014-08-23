@@ -26,6 +26,8 @@ end
 AwesomeGuildStore.RegisterForEvent = RegisterForEvent
 -----------------------------------------------------------------------------------------
 
+local SAVE_VERSION = 1
+local SAVE_TEMPLATE = "%d:%s:%s:%s:%s:%s"
 local defaultData = {
 	version = 3,
 	lastGuildName = "",
@@ -33,7 +35,8 @@ local defaultData = {
 	replacePriceFilter = true,
 	replaceQualityFilter = true,
 	replaceLevelFilter = true,
-	keepFiltersOnClose = true
+	keepFiltersOnClose = true,
+	lastSearch = SAVE_TEMPLATE:format(SAVE_VERSION, "-", "-", "-", "-", "-")
 }
 
 local L
@@ -85,6 +88,28 @@ local function InitializeGuildSelector(lastGuildId)
 	end
 
 	OnGuildChanged(comboBox, selectedEntry.name, selectedEntry)
+end
+
+local function Serialize()
+	local categoryState = categoryFilter and categoryFilter:Serialize() or "-"
+	local priceState = priceSelector and priceSelector:Serialize() or "-"
+	local levelState = levelSelector and levelSelector:Serialize() or "-"
+	local qualityState = qualitySelector and qualitySelector:Serialize() or "-"
+	local nameState = nameFilter and nameFilter:Serialize() or "-"
+
+	local state = SAVE_TEMPLATE:format(SAVE_VERSION, categoryState, priceState, levelState, qualityState, nameState)
+	return state
+end
+
+local function Deserialize(state)
+	local version, categoryState, priceState, levelState, qualityState, nameState = zo_strsplit(":", state)
+	if(tonumber(version) == SAVE_VERSION) then
+		if(categoryFilter and categoryState ~= "-") then categoryFilter:Deserialize(categoryState) end
+		if(priceSelector and priceState ~= "-") then priceSelector:Deserialize(priceState) end
+		if(levelSelector and levelState ~= "-") then levelSelector:Deserialize(levelState) end
+		if(qualitySelector and qualityState ~= "-") then qualitySelector:Deserialize(qualityState) end
+		if(nameFilter and nameState ~= "-") then nameFilter:Deserialize(nameState) end
+	end
 end
 
 local function InitializeFilters(control)
@@ -180,6 +205,7 @@ local function InitializeFilters(control)
 		searchButton:SetEnabled(false)
 		loadingBlocker:SetHidden(false)
 		loadingIcon.animation:PlayForward()
+		saveData.lastSearch = Serialize()
 	end)
 
 	RegisterForEvent(EVENT_TRADING_HOUSE_SEARCH_COOLDOWN_UPDATE, function(_, cooldownMilliseconds)
@@ -221,6 +247,10 @@ local function InitializeFilters(control)
 	end)
 
 	nameFilter = AwesomeGuildStore.ItemNameQuickFilter:New(ZO_TradingHouseItemPaneSearchSortBy, ADDON_NAME .. "NameFilterInput", 90, 2)
+
+	if(saveData.keepFiltersOnClose) then
+		Deserialize(saveData.lastSearch)
+	end
 
 	filtersInitialized = true
 end
@@ -319,6 +349,10 @@ OnAddonLoaded(function()
 	if(saveData.version == 3) then
 		saveData.replaceCategoryFilter = true
 		saveData.version = 4
+	end
+	if(saveData.version == 4) then
+		saveData.lastSearch = SAVE_TEMPLATE:format(SAVE_VERSION, "-", "-", "-", "-", "-")
+		saveData.version = 5
 	end
 
 	local title = TRADING_HOUSE.m_control:GetNamedChild("Title")

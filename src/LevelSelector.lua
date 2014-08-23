@@ -125,3 +125,22 @@ function LevelSelector:IsDefault()
 	local min, max = self.slider:GetRangeValue()
 	return (TRADING_HOUSE.m_levelRangeFilterType == TRADING_HOUSE_FILTER_TYPE_LEVEL and min == MIN_LEVEL and max == MAX_LEVEL)
 end
+
+function LevelSelector:Serialize()
+	local min, max = self.slider:GetRangeValue()
+	local vr = (TRADING_HOUSE.m_levelRangeFilterType ~= TRADING_HOUSE_FILTER_TYPE_LEVEL) and "1" or "0"
+	return vr .. ";" .. tostring(min) .. ";" .. tostring(max)
+end
+
+function LevelSelector:Deserialize(state)
+	local vr, min, max = zo_strsplit(";", state)
+	assert(vr and min and max)
+
+	local isNormal = (vr == "0")
+	local isNormalActive = (TRADING_HOUSE.m_levelRangeFilterType == TRADING_HOUSE_FILTER_TYPE_LEVEL)
+	if((isNormal and not isNormalActive) or (not isNormal and isNormalActive)) then
+		TRADING_HOUSE:ToggleLevelRangeMode()
+	end
+
+	self.slider:SetRangeValue(tonumber(min), tonumber(max))
+end

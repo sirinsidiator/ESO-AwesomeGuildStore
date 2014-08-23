@@ -83,7 +83,7 @@ function QualitySelector:New(parent, name)
 			slider:SetMinValue(value)
 		elseif(button == 2) then
 			if(value < min) then slider:SetMinValue(value) end
-			slider:SetMaxValue(value) 
+			slider:SetMaxValue(value)
 		elseif(button == 3) then
 			slider:SetRangeValue(value, value)
 		end
@@ -149,4 +149,15 @@ end
 function QualitySelector:IsDefault()
 	local min, max = self.slider:GetRangeValue()
 	return (min == 1 and max == 5)
+end
+
+function QualitySelector:Serialize()
+	local min, max = self.slider:GetRangeValue()
+	return tostring(min) .. ";" .. tostring(max)
+end
+
+function QualitySelector:Deserialize(state)
+	local min, max = zo_strsplit(";", state)
+	assert(min and max)
+	self.slider:SetRangeValue(tonumber(min), tonumber(max))
 end

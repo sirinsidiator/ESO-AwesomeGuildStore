@@ -92,3 +92,11 @@ end
 function ItemNameQuickFilter:Reset()
 	self.inputBox:SetText("")
 end
+
+function ItemNameQuickFilter:Serialize()
+	return self.inputBox:GetText()
+end
+
+function ItemNameQuickFilter:Deserialize(searchterm)
+	self.inputBox:SetText(searchterm)
+end

@@ -980,6 +980,7 @@ function CategorySelector:CreateSubfilterButton(group, index, buttonPreset, subf
 		return true
 	end
 	button.value = buttonPreset.value
+	button.index = index
 	group:AddButton(button)
 	return button
 end
@@ -1029,6 +1030,7 @@ function CategorySelector:CreateCategoryButton(group, category, preset)
 			return true
 		end
 	end
+	button.value = category
 	if(preset.isDefault) then
 		group.defaultButton = button
 		button:Press()
@@ -1069,6 +1071,7 @@ function CategorySelector:CreateSubcategoryButton(group, subcategory, preset)
 	button.HandleRelease = function(control, fromGroup)
 		return fromGroup
 	end
+	button.value = subcategory
 	if(preset.isDefault) then
 		group.defaultButton = button
 		button:Press()
@@ -1085,4 +1088,72 @@ function CategorySelector:Reset()
 	for _, subfilter in pairs(self.subfilters) do
 		subfilter:ReleaseAllButtons()
 	end
+end
+
+-- category[;subcategory[;(subfilterId,subfilterState)*]]
+function CategorySelector:Serialize()
+	local category = self.category
+	local state = tostring(category)
+
+	local subcategory = self.subcategory[category]
+	if(subcategory) then
+		state = state .. ";" .. tostring(subcategory)
+
+		local subfilters = FILTER_PRESETS[category].subcategories[subcategory].subfilters
+		if(subfilters) then
+			for _, subfilterId in ipairs(subfilters) do
+				local buttonGroup = self.subfilters[subfilterId]
+				if(buttonGroup) then
+					local subfilterValues = 0
+					for _, button in pairs(buttonGroup.buttons) do
+						if(button:IsPressed()) then
+							subfilterValues = subfilterValues + math.pow(2, button.index)
+						end
+					end
+					if(subfilterValues > 0) then
+						state = state .. ";" .. tostring(subfilterId) .. "," .. tostring(subfilterValues)
+					end
+				end
+			end
+		end
+	end
+
+	return state
+end
+
+function CategorySelector:Deserialize(state)
+	local values = {zo_strsplit(";", state)}
+
+	for index, value in ipairs(values) do
+		if(index == 1) then
+			for _, button in pairs(self.mainGroup.buttons) do
+				if(button.value == tonumber(value)) then button:Press() break end
+			end
+		elseif(index == 2) then
+			for _, button in pairs(self.group[self.category].buttons) do
+				if(button.value == tonumber(value)) then button:Press() break end
+			end
+		else
+			local subfilterId, subfilterValues = zo_strsplit(",", value)
+			local buttonGroup = self.subfilters[tonumber(subfilterId)]
+			assert(subfilterId and subfilterValues and buttonGroup)
+			subfilterValues = tonumber(subfilterValues)
+			local buttonValue = 0
+			while subfilterValues > 0 do
+				for _, button in pairs(buttonGroup.buttons) do
+					if(buttonValue == button.index) then
+						if(math.mod(subfilterValues, 2) == 1) then
+							button:Press()
+						else
+							button:Release()
+						end
+						break
+					end
+				end
+				subfilterValues = math.floor(subfilterValues / 2)
+				buttonValue = buttonValue + 1
+			end
+		end
+	end
+	local category = self.category
 end
