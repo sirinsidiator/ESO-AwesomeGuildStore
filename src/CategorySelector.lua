@@ -834,6 +834,7 @@ AwesomeGuildStore.CategorySelector = CategorySelector
 
 function CategorySelector:New(parent, name)
 	local selector = ZO_Object.New(self)
+	selector.callbackName = name .. "Changed"
 
 	local container = parent:CreateControl(name .. "Container", CT_CONTROL)
 	container:SetResizeToFitDescendents(true)
@@ -973,10 +974,12 @@ function CategorySelector:CreateSubfilterButton(group, index, buttonPreset, subf
 			ZO_Alert(UI_ALERT_CATEGORY_ERROR, SOUNDS.GENERAL_ALERT_ERROR, L["WARNING_SUBFILTER_LIMIT"])
 			return false
 		end
+		self:HandleChange()
 		return true
 	end
 	button.HandleRelease = function(control, fromGroup)
 		group.resetButton:SetHidden(group.pressedButtonCount == 1)
+		self:HandleChange()
 		return true
 	end
 	button.value = buttonPreset.value
@@ -1020,6 +1023,7 @@ function CategorySelector:CreateCategoryButton(group, category, preset)
 			self.group[category].control:SetHidden(false)
 		end
 		self:UpdateSubfilterVisibility()
+		self:HandleChange()
 		return true
 	end
 	button.HandleRelease = function(control, fromGroup)
@@ -1066,6 +1070,7 @@ function CategorySelector:CreateSubcategoryButton(group, subcategory, preset)
 		group.label:SetText(preset.label)
 		self.subcategory[group.category] = subcategory
 		self:UpdateSubfilterVisibility()
+		self:HandleChange()
 		return true
 	end
 	button.HandleRelease = function(control, fromGroup)
@@ -1078,6 +1083,15 @@ function CategorySelector:CreateSubcategoryButton(group, subcategory, preset)
 	end
 	group:AddButton(button)
 	return button
+end
+
+function CategorySelector:HandleChange()
+	if(not self.fireChangeCallback) then
+		self.fireChangeCallback = zo_callLater(function()
+			self.fireChangeCallback = nil
+			CALLBACK_MANAGER:FireCallbacks(self.callbackName, self)
+		end, 100)
+	end
 end
 
 function CategorySelector:Reset()

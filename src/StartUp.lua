@@ -36,7 +36,7 @@ local defaultData = {
 	replaceQualityFilter = true,
 	replaceLevelFilter = true,
 	keepFiltersOnClose = true,
-	lastSearch = SAVE_TEMPLATE:format(SAVE_VERSION, "-", "-", "-", "-", "-")
+	lastState = SAVE_TEMPLATE:format(SAVE_VERSION, "-", "-", "-", "-", "-")
 }
 
 local L
@@ -90,15 +90,15 @@ local function InitializeGuildSelector(lastGuildId)
 	OnGuildChanged(comboBox, selectedEntry.name, selectedEntry)
 end
 
+local categoryState, priceState, levelState, qualityState, nameState
 local function Serialize()
-	local categoryState = categoryFilter and categoryFilter:Serialize() or "-"
-	local priceState = priceSelector and priceSelector:Serialize() or "-"
-	local levelState = levelSelector and levelSelector:Serialize() or "-"
-	local qualityState = qualitySelector and qualitySelector:Serialize() or "-"
-	local nameState = nameFilter and nameFilter:Serialize() or "-"
+	categoryState = categoryFilter and categoryFilter:Serialize() or "-"
+	priceState = priceSelector and priceSelector:Serialize() or "-"
+	levelState = levelSelector and levelSelector:Serialize() or "-"
+	qualityState = qualitySelector and qualitySelector:Serialize() or "-"
+	nameState = nameFilter and nameFilter:Serialize() or "-"
 
-	local state = SAVE_TEMPLATE:format(SAVE_VERSION, categoryState, priceState, levelState, qualityState, nameState)
-	return state
+	return SAVE_TEMPLATE:format(SAVE_VERSION, categoryState, priceState, levelState, qualityState, nameState)
 end
 
 local function Deserialize(state)
@@ -110,6 +110,10 @@ local function Deserialize(state)
 		if(qualitySelector and qualityState ~= "-") then qualitySelector:Deserialize(qualityState) end
 		if(nameFilter and nameState ~= "-") then nameFilter:Deserialize(nameState) end
 	end
+end
+
+local function SaveCurrentState()
+	saveData.lastState = SAVE_TEMPLATE:format(SAVE_VERSION, categoryState, priceState, levelState, qualityState, nameState)
 end
 
 local function InitializeFilters(control)
@@ -126,6 +130,11 @@ local function InitializeFilters(control)
 
 		local itemPane = ZO_TradingHouse:GetNamedChild("ItemPane")
 		itemPane:SetAnchor(TOPLEFT, categoryFilter.control, BOTTOMLEFT, 0, 20)
+
+		CALLBACK_MANAGER:RegisterCallback(categoryFilter.callbackName, function(filter)
+			categoryState = filter:Serialize()
+			SaveCurrentState()
+		end)
 	end
 
 	if(saveData.replacePriceFilter) then
@@ -135,6 +144,11 @@ local function InitializeFilters(control)
 		local minPrice = common:GetNamedChild("MinPrice")
 		minPrice:ClearAnchors()
 		minPrice:SetAnchor(TOPLEFT, priceSelector.slider.control, BOTTOMLEFT, 0, 5)
+
+		CALLBACK_MANAGER:RegisterCallback(priceSelector.callbackName, function(filter)
+			priceState = filter:Serialize()
+			SaveCurrentState()
+		end)
 	end
 
 	if(saveData.replaceLevelFilter) then
@@ -155,6 +169,11 @@ local function InitializeFilters(control)
 
 		minLevel:ClearAnchors()
 		minLevel:SetAnchor(LEFT, levelRangeToggle, RIGHT, 0, 0)
+
+		CALLBACK_MANAGER:RegisterCallback(levelSelector.callbackName, function(filter)
+			levelState = filter:Serialize()
+			SaveCurrentState()
+		end)
 	end
 
 	if(saveData.replaceQualityFilter) then
@@ -167,6 +186,11 @@ local function InitializeFilters(control)
 		qualityControl:ClearAnchors()
 		qualityControl:SetAnchor(TOPLEFT, common, TOPLEFT, 0, 350)
 		qualityControl:SetHidden(true)
+
+		CALLBACK_MANAGER:RegisterCallback(qualitySelector.callbackName, function(filter)
+			qualityState = filter:Serialize()
+			SaveCurrentState()
+		end)
 	elseif(saveData.replaceLevelFilter) then
 		local qualityControl = common:GetNamedChild("Quality")
 		qualityControl:ClearAnchors()
@@ -205,7 +229,6 @@ local function InitializeFilters(control)
 		searchButton:SetEnabled(false)
 		loadingBlocker:SetHidden(false)
 		loadingIcon.animation:PlayForward()
-		saveData.lastSearch = Serialize()
 	end)
 
 	RegisterForEvent(EVENT_TRADING_HOUSE_SEARCH_COOLDOWN_UPDATE, function(_, cooldownMilliseconds)
@@ -248,9 +271,15 @@ local function InitializeFilters(control)
 
 	nameFilter = AwesomeGuildStore.ItemNameQuickFilter:New(ZO_TradingHouseItemPaneSearchSortBy, ADDON_NAME .. "NameFilterInput", 90, 2)
 
+	CALLBACK_MANAGER:RegisterCallback(nameFilter.callbackName, function(filter)
+		nameState = filter:Serialize()
+		SaveCurrentState()
+	end)
+
 	if(saveData.keepFiltersOnClose) then
-		Deserialize(saveData.lastSearch)
+		Deserialize(saveData.lastState)
 	end
+	Serialize()
 
 	filtersInitialized = true
 end
@@ -351,7 +380,7 @@ OnAddonLoaded(function()
 		saveData.version = 4
 	end
 	if(saveData.version == 4) then
-		saveData.lastSearch = SAVE_TEMPLATE:format(SAVE_VERSION, "-", "-", "-", "-", "-")
+		saveData.lastState = SAVE_TEMPLATE:format(SAVE_VERSION, "-", "-", "-", "-", "-")
 		saveData.version = 5
 	end
 
@@ -445,6 +474,7 @@ OnAddonLoaded(function()
 			end
 			if(qualitySelector) then qualitySelector:Reset() end
 			if(nameFilter) then nameFilter:Reset() end
+			saveData.lastState = defaultData.lastState
 			if(doReset) then return end
 		end
 		self:ClearSearchResults()

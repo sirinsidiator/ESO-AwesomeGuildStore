@@ -13,6 +13,7 @@ AwesomeGuildStore.LevelSelector = LevelSelector
 
 function LevelSelector:New(parent, name)
 	local selector = ZO_Object.New(self)
+	selector.callbackName = name .. "Changed"
 
 	local setFromTextBox = false
 	local togglingRangeMode = false
@@ -32,6 +33,7 @@ function LevelSelector:New(parent, name)
 	}
 
 	slider.OnValueChanged = function(self, min, max)
+		selector:HandleChange()
 		selector.resetButton:SetHidden(selector:IsDefault())
 		if(not togglingRangeMode) then
 			selector.min[TRADING_HOUSE.m_levelRangeFilterType] = min
@@ -124,6 +126,15 @@ function LevelSelector:New(parent, name)
 	UpdateTextBoxFromSlider()
 
 	return selector
+end
+
+function LevelSelector:HandleChange()
+	if(not self.fireChangeCallback) then
+		self.fireChangeCallback = zo_callLater(function()
+			self.fireChangeCallback = nil
+			CALLBACK_MANAGER:FireCallbacks(self.callbackName, self)
+		end, 100)
+	end
 end
 
 function LevelSelector:Reset()

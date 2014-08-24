@@ -51,6 +51,7 @@ end
 
 function QualitySelector:New(parent, name)
 	local selector = ZO_Object.New(self)
+	selector.callbackName = name .. "Changed"
 
 	local container = parent:CreateControl(name .. "Container", CT_CONTROL)
 	container:SetDimensions(195, 100)
@@ -65,6 +66,7 @@ function QualitySelector:New(parent, name)
 	slider:SetMinMax(1, 5)
 	slider:SetRangeValue(1, 5)
 	slider.OnValueChanged = function(self, min, max)
+		selector:HandleChange()
 		selector.resetButton:SetHidden(selector:IsDefault())
 	end
 	selector.slider = slider
@@ -140,6 +142,15 @@ function QualitySelector:New(parent, name)
 	selector.resetButton = resetButton
 
 	return selector
+end
+
+function QualitySelector:HandleChange()
+	if(not self.fireChangeCallback) then
+		self.fireChangeCallback = zo_callLater(function()
+			self.fireChangeCallback = nil
+			CALLBACK_MANAGER:FireCallbacks(self.callbackName, self)
+		end, 100)
+	end
 end
 
 function QualitySelector:Reset()

@@ -14,6 +14,7 @@ function ItemNameQuickFilter:New(parent, name, x, y)
 end
 
 function ItemNameQuickFilter:Initialize(parent, name, x, y)
+	self.callbackName = name .. "Changed"
 	local input = CreateControlFromVirtual(name, parent, "AwesomeGuildStoreNameFilterTemplate")
 	input:SetAnchor(TOPLEFT, parent, TOPLEFT, x, y)
 
@@ -43,6 +44,7 @@ function ItemNameQuickFilter:Initialize(parent, name, x, y)
 	local inputBox = input:GetNamedChild("Box")
 	ZO_EditDefaultText_Initialize(inputBox, L["ITEM_NAME_QUICK_FILTER_TEXT"])
 	inputBox:SetHandler("OnTextChanged", function(control)
+		self:HandleChange()
 		ZO_EditDefaultText_OnTextChanged(inputBox)
 		TRADING_HOUSE:RebuildSearchResultsPage()
 		resetButton:SetHidden(inputBox:GetText() == "")
@@ -86,6 +88,15 @@ function ItemNameQuickFilter:Initialize(parent, name, x, y)
 			self.m_resultCount:SetText(zo_strformat(L["ITEM_NAME_QUICK_FILTER_ITEMCOUNT_TEMPLATE"], itemCount, filteredItemCount))
 			GetTradingHouseSearchResultItemInfo = originalGetTradingHouseSearchResultItemInfo
 		end
+	end
+end
+
+function ItemNameQuickFilter:HandleChange()
+	if(not self.fireChangeCallback) then
+		self.fireChangeCallback = zo_callLater(function()
+			self.fireChangeCallback = nil
+			CALLBACK_MANAGER:FireCallbacks(self.callbackName, self)
+		end, 100)
 	end
 end
 

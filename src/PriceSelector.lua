@@ -21,6 +21,7 @@ AwesomeGuildStore.PriceSelector = PriceSelector
 
 function PriceSelector:New(parent, name)
 	local selector = ZO_Object.New(self)
+	selector.callbackName = name .. "Changed"
 
 	local setFromTextBox = false
 	local minPriceBox = parent:GetNamedChild("MinPriceBox")
@@ -60,6 +61,7 @@ function PriceSelector:New(parent, name)
 	end
 
 	slider.OnValueChanged = function(self, min, max)
+		selector:HandleChange()
 		selector.resetButton:SetHidden(selector:IsDefault())
 		if(setFromTextBox) then return end
 		UpdateTextBoxFromSlider()
@@ -112,6 +114,15 @@ function PriceSelector:New(parent, name)
 	UpdateTextBoxFromSlider()
 
 	return selector
+end
+
+function PriceSelector:HandleChange()
+	if(not self.fireChangeCallback) then
+		self.fireChangeCallback = zo_callLater(function()
+			self.fireChangeCallback = nil
+			CALLBACK_MANAGER:FireCallbacks(self.callbackName, self)
+		end, 100)
+	end
 end
 
 function PriceSelector:Reset()

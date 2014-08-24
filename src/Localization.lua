@@ -146,7 +146,7 @@ local localization = {
 		SETTINGS_REPLACE_QUALITY_FILTER_LABEL = "Use awesome quality selector",
 		SETTINGS_REPLACE_QUALITY_FILTER_DESCRIPTION = "Replaces the default dropdown quality selection with a range selection",
 		SETTINGS_KEEP_FILTERS_ON_CLOSE_LABEL = "Remember filters between store visits",
-		SETTINGS_KEEP_FILTERS_ON_CLOSE_DESCRIPTION = "Leaves the store filters set during a play session instead of clearing it when you close the guild store window",
+		SETTINGS_KEEP_FILTERS_ON_CLOSE_DESCRIPTION = "Leaves the store filters set during a play session instead of clearing it when you close the guild store window and restores the last active state when the UI is loaded",
 	},
 	de = {
 		FILTER_SUBCATEGORY_GLYPHS = "Glyphe",
@@ -178,7 +178,7 @@ local localization = {
 		SETTINGS_REPLACE_QUALITY_FILTER_LABEL = "Qualitätsauswahl ersetzen",
 		SETTINGS_REPLACE_QUALITY_FILTER_DESCRIPTION = "Ersetzt die normale Qualitätsauswahl mit einem Schieberegler",
 		SETTINGS_KEEP_FILTERS_ON_CLOSE_LABEL = "Filtereinstellungen merken",
-		SETTINGS_KEEP_FILTERS_ON_CLOSE_DESCRIPTION = "Anstatt die Filter beim Schließen des Ladenfensters zurückzusetzen bleiben sie während einer Spielesitzung erhalten",
+		SETTINGS_KEEP_FILTERS_ON_CLOSE_DESCRIPTION = "Anstatt die Filter beim Schließen des Ladenfensters zurückzusetzen bleiben sie während einer Spielesitzung erhalten, außerdem werden beim Laden der UI die letzten aktiven Einstellungen wiederhergestellt",
 	},
 	fr = {
 	}
