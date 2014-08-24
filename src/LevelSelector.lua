@@ -15,16 +15,28 @@ function LevelSelector:New(parent, name)
 	local selector = ZO_Object.New(self)
 
 	local setFromTextBox = false
+	local togglingRangeMode = false
 	local minLevelBox = parent:GetNamedChild("MinLevelBox")
 	local maxLevelBox = parent:GetNamedChild("MaxLevelBox")
 	local slider = MinMaxRangeSlider:New(parent, name .. "LevelSlider", 0, 0, 195, 16)
 	slider:SetMinMax(MIN_LEVEL, MAX_LEVEL)
-	--slider:SetMinRange(1)
 	slider:SetRangeValue(MIN_LEVEL, MAX_LEVEL)
 	selector.slider = slider
+	selector.min = {
+		[TRADING_HOUSE_FILTER_TYPE_LEVEL] = MIN_LEVEL,
+		[TRADING_HOUSE_FILTER_TYPE_VETERAN_LEVEL] = MIN_RANK,
+	}
+	selector.max = {
+		[TRADING_HOUSE_FILTER_TYPE_LEVEL] = MAX_LEVEL,
+		[TRADING_HOUSE_FILTER_TYPE_VETERAN_LEVEL] = MAX_RANK,
+	}
 
 	slider.OnValueChanged = function(self, min, max)
 		selector.resetButton:SetHidden(selector:IsDefault())
+		if(not togglingRangeMode) then
+			selector.min[TRADING_HOUSE.m_levelRangeFilterType] = min
+			selector.max[TRADING_HOUSE.m_levelRangeFilterType] = max
+		end
 		if(setFromTextBox) then return end
 		minLevelBox:SetText(min)
 		maxLevelBox:SetText(max)
@@ -52,11 +64,15 @@ function LevelSelector:New(parent, name)
 	maxLevelBox:SetHandler("OnFocusLost", UpdateTextBoxFromSlider)
 
 	ZO_PreHook(TRADING_HOUSE, "ToggleLevelRangeMode", function(self)
+		togglingRangeMode = true
 		if(self.m_levelRangeFilterType == TRADING_HOUSE_FILTER_TYPE_LEVEL) then
 			slider:SetMinMax(MIN_RANK, MAX_RANK)
+			slider:SetRangeValue(selector.min[TRADING_HOUSE_FILTER_TYPE_VETERAN_LEVEL], selector.max[TRADING_HOUSE_FILTER_TYPE_VETERAN_LEVEL])
 		else
 			slider:SetMinMax(MIN_LEVEL, MAX_LEVEL)
+			slider:SetRangeValue(selector.min[TRADING_HOUSE_FILTER_TYPE_LEVEL], selector.max[TRADING_HOUSE_FILTER_TYPE_LEVEL])
 		end
+		togglingRangeMode = false
 		zo_callLater(function()
 			selector.resetButton:SetHidden(selector:IsDefault())
 		end, 1)
@@ -114,6 +130,11 @@ function LevelSelector:Reset()
 	TRADING_HOUSE.m_levelRangeFilterType = TRADING_HOUSE_FILTER_TYPE_LEVEL
 	TRADING_HOUSE.m_levelRangeToggle:SetState(BSTATE_NORMAL, false)
 	TRADING_HOUSE.m_levelRangeLabel:SetText(GetString(SI_TRADING_HOUSE_BROWSE_LEVEL_RANGE_LABEL))
+
+	self.min[TRADING_HOUSE_FILTER_TYPE_LEVEL] = MIN_LEVEL
+	self.min[TRADING_HOUSE_FILTER_TYPE_VETERAN_LEVEL] = MIN_RANK
+	self.max[TRADING_HOUSE_FILTER_TYPE_LEVEL] = MAX_LEVEL
+	self.max[TRADING_HOUSE_FILTER_TYPE_VETERAN_LEVEL] = MAX_RANK
 
 	self.slider:SetMinMax(MIN_LEVEL, MAX_LEVEL)
 	zo_callLater(function()
