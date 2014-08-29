@@ -62,9 +62,25 @@ local function mockGlobals()
 	controlPanelName = {}
 	function ZO_OptionsWindow_AddUserPanel() end
 	function ZO_OptionsWindow_InitializeControl() end
+	function GetSkillLineInfo() end
+	function GetCraftingSkillName() end
+	function LocalizeString() end
+	
+	ITEMFILTERTYPE_ALL = 1
+	ITEMFILTERTYPE_WEAPONS = 2
+	ITEMFILTERTYPE_ARMOR = 3
+	ITEMFILTERTYPE_CONSUMABLE = 4
+	ITEMFILTERTYPE_CRAFTING = 5
+	ITEMFILTERTYPE_MISCELLANEOUS = 6
+	
+	TRADING_HOUSE_FILTER_TYPE_EQUIP = 1
+	TRADING_HOUSE_FILTER_TYPE_WEAPON = 2
+	TRADING_HOUSE_FILTER_TYPE_ARMOR = 3
+	TRADING_HOUSE_FILTER_TYPE_ITEM = 4
 end
 
 mockGlobals()
+require('esoui.libraries.globals.localization')
 require('esoui.libraries.globals.globalvars')
 require('esoui.libraries.globals.globalapi')
 require('esoui.libraries.utility.baseobject')
