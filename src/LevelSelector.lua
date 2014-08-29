@@ -89,7 +89,7 @@ function LevelSelector:New(parent, name)
 		local max = tonumber(maxLevelBox:GetText())
 		local isLevel = (TRADING_HOUSE.m_levelRangeFilterType == TRADING_HOUSE_FILTER_TYPE_LEVEL)
 		local filter = self.m_filters[isLevel and TRADING_HOUSE_FILTER_TYPE_LEVEL or TRADING_HOUSE_FILTER_TYPE_VETERAN_LEVEL]
-		if((isLevel and min == MIN_LEVEL and max == MAX_LEVEL) or (not isLevel and min == MIN_RANK and max == MAX_RANK)) then
+		if(isLevel and min == MIN_LEVEL and max == MAX_LEVEL) then
 			filter.values = {}
 		else
 			if(min == max) then max = nil end
