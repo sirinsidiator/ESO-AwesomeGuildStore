@@ -30,9 +30,12 @@ Localization.lua
 MinMaxRangeSlider.lua
 ButtonGroup.lua
 ToggleButton.lua
+CategoryPresets.lua
 CategorySelector.lua
 PriceSelector.lua
 LevelSelector.lua
 QualitySelector.lua
 ItemNameQuickFilter.lua
+SearchLibrary.lua
+SearchLibrary.xml
 AwesomeGuildStore.xml

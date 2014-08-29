@@ -52,6 +52,7 @@ end
 function QualitySelector:New(parent, name)
 	local selector = ZO_Object.New(self)
 	selector.callbackName = name .. "Changed"
+	selector.type = 4
 
 	local container = parent:CreateControl(name .. "Container", CT_CONTROL)
 	container:SetDimensions(195, 100)

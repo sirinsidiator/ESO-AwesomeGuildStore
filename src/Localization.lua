@@ -136,6 +136,12 @@ local localization = {
 
 		WARNING_SUBFILTER_LIMIT = "Cannot filter for more than 8 at a time",
 
+		SEARCH_LIBRARY_TOGGLE_LABEL = "Toggle Search Library",
+		SEARCH_LIBRARY_HISTORY_LABEL = "History",
+		SEARCH_LIBRARY_FAVORITES_LABEL = "Favorites",
+		SEARCH_LIBRARY_FAVORITE_BUTTON_ADD_TOOLTIP = "Add to Favorites",
+		SEARCH_LIBRARY_FAVORITE_BUTTON_REMOVE_TOOLTIP = "Remove from Favorites",
+
 		SETTINGS_REQUIRES_RELOADUI_WARNING = "Only is applied after you reload the UI",
 		SETTINGS_REPLACE_CATEGORY_FILTER_LABEL = "Use awesome category selection",
 		SETTINGS_REPLACE_CATEGORY_FILTER_DESCRIPTION = "Replaces the default dropdown selection with lots of tiny buttons",
@@ -167,6 +173,12 @@ local localization = {
 		ITEM_NAME_QUICK_FILTER_RESET = "Namesfilter zurücksetzen",
 
 		WARNING_SUBFILTER_LIMIT = "Kann nur nach 8 gleichzeitig filtern",
+
+		SEARCH_LIBRARY_TOGGLE_LABEL = "Suchbibliothek umschalten",
+		SEARCH_LIBRARY_HISTORY_LABEL = "Verlauf",
+		SEARCH_LIBRARY_FAVORITES_LABEL = "Favoriten",
+		SEARCH_LIBRARY_FAVORITE_BUTTON_ADD_TOOLTIP = "Zu Favoriten hinzufügen",
+		SEARCH_LIBRARY_FAVORITE_BUTTON_REMOVE_TOOLTIP = "Von Favoriten entfernen",
 
 		SETTINGS_REQUIRES_RELOADUI_WARNING = "Wird erst angewandt wenn das Interface neu geladen wurde",
 		SETTINGS_REPLACE_CATEGORY_FILTER_LABEL = "Kategorieauswahl ersetzen",

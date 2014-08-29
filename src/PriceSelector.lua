@@ -22,6 +22,7 @@ AwesomeGuildStore.PriceSelector = PriceSelector
 function PriceSelector:New(parent, name)
 	local selector = ZO_Object.New(self)
 	selector.callbackName = name .. "Changed"
+	selector.type = 2
 
 	local setFromTextBox = false
 	local minPriceBox = parent:GetNamedChild("MinPriceBox")

@@ -26,17 +26,21 @@ end
 AwesomeGuildStore.RegisterForEvent = RegisterForEvent
 -----------------------------------------------------------------------------------------
 
-local SAVE_VERSION = 1
-local SAVE_TEMPLATE = "%d:%s:%s:%s:%s:%s"
 local defaultData = {
-	version = 3,
+	version = 6,
 	lastGuildName = "",
 	replaceCategoryFilter = true,
 	replacePriceFilter = true,
 	replaceQualityFilter = true,
 	replaceLevelFilter = true,
 	keepFiltersOnClose = true,
-	lastState = SAVE_TEMPLATE:format(SAVE_VERSION, "-", "-", "-", "-", "-")
+	{
+		x = 970,
+		y = 20,
+		isActive = true,
+		lastState = "1:-:-:-:-:-",
+		searches = {}
+	}
 }
 
 local L
@@ -51,6 +55,7 @@ local qualitySelector
 local categoryFilter
 local searchButton
 local nameFilter
+local searchLibrary
 
 function AwesomeGuildStore.InitializeGuildSelector(control)
 	local comboBoxControl = GetControl(control, "ComboBox")
@@ -90,34 +95,10 @@ local function InitializeGuildSelector(lastGuildId)
 	OnGuildChanged(comboBox, selectedEntry.name, selectedEntry)
 end
 
-local categoryState, priceState, levelState, qualityState, nameState
-local function Serialize()
-	categoryState = categoryFilter and categoryFilter:Serialize() or "-"
-	priceState = priceSelector and priceSelector:Serialize() or "-"
-	levelState = levelSelector and levelSelector:Serialize() or "-"
-	qualityState = qualitySelector and qualitySelector:Serialize() or "-"
-	nameState = nameFilter and nameFilter:Serialize() or "-"
-
-	return SAVE_TEMPLATE:format(SAVE_VERSION, categoryState, priceState, levelState, qualityState, nameState)
-end
-
-local function Deserialize(state)
-	local version, categoryState, priceState, levelState, qualityState, nameState = zo_strsplit(":", state)
-	if(tonumber(version) == SAVE_VERSION) then
-		if(categoryFilter and categoryState ~= "-") then categoryFilter:Deserialize(categoryState) end
-		if(priceSelector and priceState ~= "-") then priceSelector:Deserialize(priceState) end
-		if(levelSelector and levelState ~= "-") then levelSelector:Deserialize(levelState) end
-		if(qualitySelector and qualityState ~= "-") then qualitySelector:Deserialize(qualityState) end
-		if(nameFilter and nameState ~= "-") then nameFilter:Deserialize(nameState) end
-	end
-end
-
-local function SaveCurrentState()
-	saveData.lastState = SAVE_TEMPLATE:format(SAVE_VERSION, categoryState, priceState, levelState, qualityState, nameState)
-end
-
 local function InitializeFilters(control)
 	if(filtersInitialized) then return end
+
+	searchLibrary = AwesomeGuildStore.SearchLibrary:New(saveData.searchLibrary)
 
 	local common = control:GetNamedChild("Common")
 
@@ -131,10 +112,7 @@ local function InitializeFilters(control)
 		local itemPane = ZO_TradingHouse:GetNamedChild("ItemPane")
 		itemPane:SetAnchor(TOPLEFT, categoryFilter.control, BOTTOMLEFT, 0, 20)
 
-		CALLBACK_MANAGER:RegisterCallback(categoryFilter.callbackName, function(filter)
-			categoryState = filter:Serialize()
-			SaveCurrentState()
-		end)
+		searchLibrary:RegisterFilter(categoryFilter)
 	end
 
 	if(saveData.replacePriceFilter) then
@@ -145,10 +123,7 @@ local function InitializeFilters(control)
 		minPrice:ClearAnchors()
 		minPrice:SetAnchor(TOPLEFT, priceSelector.slider.control, BOTTOMLEFT, 0, 5)
 
-		CALLBACK_MANAGER:RegisterCallback(priceSelector.callbackName, function(filter)
-			priceState = filter:Serialize()
-			SaveCurrentState()
-		end)
+		searchLibrary:RegisterFilter(priceSelector)
 	end
 
 	if(saveData.replaceLevelFilter) then
@@ -170,10 +145,7 @@ local function InitializeFilters(control)
 		minLevel:ClearAnchors()
 		minLevel:SetAnchor(LEFT, levelRangeToggle, RIGHT, 0, 0)
 
-		CALLBACK_MANAGER:RegisterCallback(levelSelector.callbackName, function(filter)
-			levelState = filter:Serialize()
-			SaveCurrentState()
-		end)
+		searchLibrary:RegisterFilter(levelSelector)
 	end
 
 	if(saveData.replaceQualityFilter) then
@@ -187,10 +159,7 @@ local function InitializeFilters(control)
 		qualityControl:SetAnchor(TOPLEFT, common, TOPLEFT, 0, 350)
 		qualityControl:SetHidden(true)
 
-		CALLBACK_MANAGER:RegisterCallback(qualitySelector.callbackName, function(filter)
-			qualityState = filter:Serialize()
-			SaveCurrentState()
-		end)
+		searchLibrary:RegisterFilter(qualitySelector)
 	elseif(saveData.replaceLevelFilter) then
 		local qualityControl = common:GetNamedChild("Quality")
 		qualityControl:ClearAnchors()
@@ -231,15 +200,19 @@ local function InitializeFilters(control)
 		loadingIcon.animation:PlayForward()
 	end)
 
+	local function HideLoadingOverlay()
+		loadingBlocker:SetHidden(true)
+		loadingIcon.animation:Stop()
+	end
+
 	RegisterForEvent(EVENT_TRADING_HOUSE_SEARCH_COOLDOWN_UPDATE, function(_, cooldownMilliseconds)
 		if(cooldownMilliseconds ~= 0) then return end
 		searchButton:SetEnabled(true)
+		HideLoadingOverlay()
 	end)
 
-	RegisterForEvent(EVENT_TRADING_HOUSE_SEARCH_RESULTS_RECEIVED , function()
-		loadingBlocker:SetHidden(true)
-		loadingIcon.animation:Stop()
-	end)
+	RegisterForEvent(EVENT_TRADING_HOUSE_SEARCH_RESULTS_RECEIVED, HideLoadingOverlay)
+	RegisterForEvent(EVENT_TRADING_HOUSE_OPERATION_TIME_OUT, HideLoadingOverlay)
 
 	local RESET_BUTTON_SIZE = 24
 	local RESET_BUTTON_TEXTURE = "EsoUI/Art/Buttons/decline_%s.dds"
@@ -270,16 +243,12 @@ local function InitializeFilters(control)
 	end)
 
 	nameFilter = AwesomeGuildStore.ItemNameQuickFilter:New(ZO_TradingHouseItemPaneSearchSortBy, ADDON_NAME .. "NameFilterInput", 90, 2)
-
-	CALLBACK_MANAGER:RegisterCallback(nameFilter.callbackName, function(filter)
-		nameState = filter:Serialize()
-		SaveCurrentState()
-	end)
+	searchLibrary:RegisterFilter(nameFilter)
 
 	if(saveData.keepFiltersOnClose) then
-		Deserialize(saveData.lastState)
+		searchLibrary:Deserialize(saveData.searchLibrary.lastState)
 	end
-	Serialize()
+	searchLibrary:Serialize()
 
 	filtersInitialized = true
 end
@@ -382,6 +351,17 @@ OnAddonLoaded(function()
 	if(saveData.version == 4) then
 		saveData.lastState = SAVE_TEMPLATE:format(SAVE_VERSION, "-", "-", "-", "-", "-")
 		saveData.version = 5
+	end
+	if(saveData.version == 5) then
+		saveData.searchLibrary = {
+			x = 970,
+			y = 20,
+			isActive = true,
+			lastState = saveData.lastState,
+			searches = {}
+		}
+		saveData.lastState = nil
+		saveData.version = 6
 	end
 
 	local title = TRADING_HOUSE.m_control:GetNamedChild("Title")

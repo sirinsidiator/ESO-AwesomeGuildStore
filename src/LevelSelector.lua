@@ -14,6 +14,7 @@ AwesomeGuildStore.LevelSelector = LevelSelector
 function LevelSelector:New(parent, name)
 	local selector = ZO_Object.New(self)
 	selector.callbackName = name .. "Changed"
+	selector.type = 3
 
 	local setFromTextBox = false
 	local togglingRangeMode = false

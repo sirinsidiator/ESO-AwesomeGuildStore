@@ -19,21 +19,39 @@ function ToggleButton:New(parent, name, textureName, x, y, width, height, toolti
 			control.parent:Toggle(false)
 		end
 	end)
-	if(tooltipText) then
-		control:SetHandler("OnMouseEnter", function()
-			InitializeTooltip(InformationTooltip)
-			InformationTooltip:ClearAnchors()
-			InformationTooltip:SetOwner(control, BOTTOM, 5, 0)
-			SetTooltipText(InformationTooltip, tooltipText)
-		end)
-		control:SetHandler("OnMouseExit", function()
-			ClearTooltip(InformationTooltip)
-		end)
+	control.mouseInside = false
+	control.OnMouseEnter = function()
+		control.mouseInside = true
+		local text = button.toolTipText
+		if(not text or text == "") then return end
+		InitializeTooltip(InformationTooltip)
+		InformationTooltip:ClearAnchors()
+		InformationTooltip:SetOwner(control, BOTTOM, 5, 0)
+		SetTooltipText(InformationTooltip, text)
 	end
+	control:SetHandler("OnMouseEnter", control.OnMouseEnter)
+	control.OnMouseExit = function()
+		control.mouseInside = false
+		local text = button.toolTipText
+		if(not text or text == "") then return end
+		ClearTooltip(InformationTooltip)
+	end
+	control:SetHandler("OnMouseExit", control.OnMouseExit)
 	control.parent = button
 	button.control = control
 
+	if(tooltipText) then
+		button:SetTooltipText(tooltipText)
+	end
+
 	return button
+end
+
+function ToggleButton:SetTooltipText(text)
+	self.toolTipText = text
+	if(self.control.mouseInside) then
+		self.control:GetHandler("OnMouseEnter")()
+	end
 end
 
 function ToggleButton:Toggle(fromGroup)

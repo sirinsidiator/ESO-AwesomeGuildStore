@@ -1,0 +1,59 @@
+<GuiXml>
+	<Controls>
+		<Control name="AwesomeGuildStoreSearchLibraryRowTemplate" mouseEnabled="true" tier="MEDIUM" layer="CONTROLS" virtual="true">
+			<Dimensions x="300" y="24" />
+
+			<Controls>
+				<Texture name="$(parent)Bg" textureFile="EsoUI/Art/Miscellaneous/listItem_backdrop.dds">
+					<AnchorFill />
+					<TextureCoords left="0" right="1" top="0" bottom=".8125" />
+				</Texture>
+
+				<Texture name="$(parent)Highlight" textureFile="EsoUI/Art/Miscellaneous/listItem_highlight.dds" alpha="0">
+					<AnchorFill />
+					<TextureCoords left="0" right="1" top="0" bottom=".625" />
+				</Texture>
+
+				<Label name="$(parent)Name" font="ZoFontGameShadow" wrapMode="ELLIPSIS" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_NORMAL">
+					<Dimensions x="270" y="24" />
+					<Anchor point="LEFT" />
+				</Label>
+			</Controls>
+		</Control>
+
+		<TopLevelControl name="AwesomeGuildStoreSearchLibrary" mouseEnabled="true" hidden="true">
+			<Dimensions x="730" y="220" />
+
+			<Controls>
+				<Label name="$(parent)HistoryLabel" font="ZoFontWinH3" wrapMode="ELLIPSIS">
+					<Anchor point="TOPLEFT" offsetX="25" offsetY="10" />
+					<Dimensions x="330" y="20" />
+				</Label>
+
+				<Label name="$(parent)FavoritesLabel" font="ZoFontWinH3" wrapMode="ELLIPSIS">
+					<Anchor point="TOPLEFT" offsetX="380" offsetY="10" />
+					<Dimensions x="330" y="20" />
+				</Label>
+
+				<Control name="$(parent)History" inherits="ZO_ScrollList">
+					<Anchor point="TOPLEFT" relativeTo="$(parent)HistoryLabel" relativePoint="BOTTOMLEFT" offsetY="5" />
+					<Dimensions x="330" y="170" />
+				</Control>
+
+				<Control name="$(parent)Favorites" inherits="ZO_ScrollList">
+					<Anchor point="TOPLEFT" relativeTo="$(parent)FavoritesLabel" relativePoint="BOTTOMLEFT" offsetY="5" />
+					<Dimensions x="330" y="170" />
+				</Control>
+
+				<Backdrop name="$(parent)Bg" integralWrapping="true">
+					<Anchor point="TOPLEFT" offsetX="-4" offsetY="-4" />
+					<Anchor point="BOTTOMRIGHT" offsetX="4" offsetY="4" />
+
+					<Edge file="EsoUI/Art/ChatWindow/chat_BG_edge.dds" edgeFileWidth="256" edgeFileHeight="256" edgeSize="32" />
+					<Center file="EsoUI/Art/ChatWindow/chat_BG_center.dds" />
+					<Insets left="32" top="32" right="-32" bottom="-32" />
+				</Backdrop>
+			</Controls>
+		</TopLevelControl>
+	</Controls>
+</GuiXml>

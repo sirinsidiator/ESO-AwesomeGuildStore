@@ -15,6 +15,8 @@ end
 
 function ItemNameQuickFilter:Initialize(parent, name, x, y)
 	self.callbackName = name .. "Changed"
+	self.type = 5
+
 	local input = CreateControlFromVirtual(name, parent, "AwesomeGuildStoreNameFilterTemplate")
 	input:SetAnchor(TOPLEFT, parent, TOPLEFT, x, y)
 
