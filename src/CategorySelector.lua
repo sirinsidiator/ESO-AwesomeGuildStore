@@ -334,17 +334,17 @@ function CategorySelector:Deserialize(state)
 			local subfilterId, subfilterValues = zo_strsplit(",", value)
 			local buttonGroup = self.subfilters[tonumber(subfilterId)]
 			assert(subfilterId and subfilterValues and buttonGroup)
+			buttonGroup:ReleaseAllButtons()
 			subfilterValues = tonumber(subfilterValues)
 			local buttonValue = 0
 			while subfilterValues > 0 do
-				for _, button in pairs(buttonGroup.buttons) do
-					if(buttonValue == button.index) then
-						if(math.mod(subfilterValues, 2) == 1) then
+				local isPressed = (math.mod(subfilterValues, 2) == 1)
+				if(isPressed) then
+					for _, button in pairs(buttonGroup.buttons) do
+						if(buttonValue == button.index) then
 							button:Press()
-						else
-							button:Release()
+							break
 						end
-						break
 					end
 				end
 				subfilterValues = math.floor(subfilterValues / 2)
