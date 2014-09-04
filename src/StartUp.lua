@@ -34,7 +34,7 @@ local defaultData = {
 	replaceQualityFilter = true,
 	replaceLevelFilter = true,
 	keepFiltersOnClose = true,
-	{
+	searchLibrary = {
 		x = 970,
 		y = 20,
 		isActive = true,
@@ -349,17 +349,12 @@ OnAddonLoaded(function()
 		saveData.version = 4
 	end
 	if(saveData.version == 4) then
-		saveData.lastState = SAVE_TEMPLATE:format(SAVE_VERSION, "-", "-", "-", "-", "-")
+		saveData.lastState = defaultData.searchLibrary.lastState
 		saveData.version = 5
 	end
 	if(saveData.version == 5) then
-		saveData.searchLibrary = {
-			x = 970,
-			y = 20,
-			isActive = true,
-			lastState = saveData.lastState,
-			searches = {}
-		}
+		saveData.searchLibrary = ZO_ShallowTableCopy(defaultData.searchLibrary)
+		saveData.searchLibrary.lastState = saveData.lastState
 		saveData.lastState = nil
 		saveData.version = 6
 	end
