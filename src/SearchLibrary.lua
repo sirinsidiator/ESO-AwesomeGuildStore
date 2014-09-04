@@ -249,13 +249,17 @@ end
 
 local function GetLabelFromState(state)
 	local _, categoryState, _, _, _, nameFilter = zo_strsplit(":", state)
-	local category, subcategory = zo_strsplit(";", categoryState)
+	local label = "category filter disabled"
 
-	category = FILTER_PRESETS[tonumber(category)]
-	local label = category.label
-	if(subcategory) then
-		subcategory = category.subcategories[tonumber(subcategory)]
-		label = label .. " > " .. subcategory.label
+	if(categoryState ~= "-") then
+		local category, subcategory = zo_strsplit(";", categoryState)
+		category = FILTER_PRESETS[tonumber(category)]
+		label = category.label
+
+		if(subcategory) then
+			subcategory = category.subcategories[tonumber(subcategory)]
+			label = label .. " > " .. subcategory.label
+		end
 	end
 
 	if(nameFilter and nameFilter ~= "") then
