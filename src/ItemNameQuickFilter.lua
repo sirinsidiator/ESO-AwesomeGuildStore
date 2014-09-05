@@ -55,7 +55,8 @@ function ItemNameQuickFilter:Initialize(parent, name, x, y)
 
 	local nameFilter = ZO_StringSearch:New()
 	nameFilter:AddProcessor(ITEM_NAME_FILTER_DATA_TYPE, function(stringSearch, data, searchTerm, cache)
-		if(zo_plainstrfind(data.name:lower(), searchTerm:lower())) then
+		searchTerm = searchTerm:lower()
+		if(zo_plainstrfind(data.name:lower(), searchTerm) or zo_plainstrfind(data.setName:lower(), searchTerm) or (data.isSetItem and zo_plainstrfind("set", searchTerm))) then
 			return true
 		end
 	end)
@@ -75,6 +76,12 @@ function ItemNameQuickFilter:Initialize(parent, name, x, y)
 				if(name ~= "" and stackCount > 0) then
 					itemCount = itemCount + 1
 					data.name = name
+
+					local itemLink = GetTradingHouseSearchResultItemLink(index, LINK_STYLE_DEFAULT)
+					local isSetItem, setName = GetItemLinkSetInfo(itemLink)
+					data.setName = setName
+					data.isSetItem = isSetItem
+
 					if(nameFilter:IsMatch(searchTerm, data)) then
 						filteredItemCount = filteredItemCount + 1
 						return icon, name, quality, stackCount, sellerName, timeRemaining, purchasePrice
