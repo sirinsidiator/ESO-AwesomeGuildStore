@@ -35,6 +35,13 @@
 					<Dimensions x="330" y="20" />
 				</Label>
 
+				<Backdrop name="$(parent)LabelEdit" inherits="ZO_EditBackdrop" hidden="true" tier="HIGH" level="3">
+					<Dimensions x="250" />
+					<Controls>
+						<EditBox name="$(parent)Box" inherits="ZO_DefaultEditForBackdrop ZO_EditDefaultText" />
+					</Controls>
+				</Backdrop>
+
 				<Control name="$(parent)History" inherits="ZO_ScrollList">
 					<Anchor point="TOPLEFT" relativeTo="$(parent)HistoryLabel" relativePoint="BOTTOMLEFT" offsetY="5" />
 					<Dimensions x="330" y="170" />

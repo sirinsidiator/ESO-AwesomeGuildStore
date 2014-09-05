@@ -10,6 +10,22 @@ local HISTORY_LENGTH = 50
 local SAVE_VERSION = 1
 local SAVE_TEMPLATE = "%d:%s:%s:%s:%s:%s"
 
+local SAVE_BUTTON_TEMPLATE = {
+	name = "SaveButton",
+	texture = "AwesomeGuildStore/images/favorite_%s.dds",
+	size = 24,
+	offsetX = 0,
+	offsetY = 0
+}
+
+local EDIT_BUTTON_TEMPLATE = {
+	name = "EditButton",
+	texture = "EsoUI/Art/Buttons/edit_%s.dds",
+	size = 24,
+	offsetX = -24,
+	offsetY = 0
+}
+
 local SearchLibrary = ZO_Object:Subclass()
 AwesomeGuildStore.SearchLibrary = SearchLibrary
 
@@ -76,10 +92,72 @@ function SearchLibrary:Initialize(saveData)
 	self.searchList = saveData.searches
 	self:InitializeHistory()
 	self:InitializeFavorites()
+	self:InitializeEditBox()
 
 	if(saveData.isActive) then
 		self:Show()
 	end
+end
+
+function SearchLibrary:InitializeEditBox()
+	self.editControl = self.control:GetNamedChild("LabelEdit")
+	local editBox = self.editControl:GetNamedChild("Box")
+	editBox:SetHandler("OnFocusLost", function() self.hideEditBoxHandle = zo_callLater(function() self:HideEditBox() end, 100) end)
+	editBox:SetHandler("OnEnter", function() self:HideEditBox() self:SaveEditBoxChanges() end)
+	editBox:SetHandler("OnEscape", function() self:HideEditBox() end)
+end
+
+function SearchLibrary:ShowEditBox(rowControl, entry)
+	local editControl = self.editControl
+	local editBox = editControl:GetNamedChild("Box")
+	if(editBox.rowControl) then
+		self:HideEditBox()
+	end
+	local nameControl = rowControl:GetNamedChild("Name")
+
+	editControl:SetAnchor(LEFT, rowControl, LEFT, 0, 0)
+	nameControl:SetHidden(true)
+	editControl:SetHidden(false)
+
+	editBox.rowControl = rowControl
+	editBox.entry = entry
+	editBox:SetText(entry.label)
+	editBox:TakeFocus()
+
+	ZO_ScrollList_SetLockScrolling(self.historyControl, true)
+	ZO_ScrollList_SetLockScrolling(self.favoritesControl, true)
+end
+
+function SearchLibrary:HideEditBox()
+	if(self.hideEditBoxHandle) then
+		local name = "CallLaterFunction"..self.hideEditBoxHandle
+		EVENT_MANAGER:UnregisterForUpdate(name)
+		self.hideEditBoxHandle = nil
+	end
+
+	local editControl = self.editControl
+	local editBox = editControl:GetNamedChild("Box")
+
+	if(not editBox.rowControl) then return end
+	local nameControl = editBox.rowControl:GetNamedChild("Name")
+	editBox.rowControl.EditButton:Release(true)
+	editBox.rowControl = nil
+
+	editControl:SetHidden(true)
+	nameControl:SetHidden(false)
+	editControl:ClearAnchors()
+
+	ZO_ScrollList_SetLockScrolling(self.historyControl, false)
+	ZO_ScrollList_SetLockScrolling(self.favoritesControl, false)
+end
+
+function SearchLibrary:SaveEditBoxChanges()
+	local editControl = self.editControl
+	local editBox = editControl:GetNamedChild("Box")
+	local entry = editBox.entry
+	self:UpdateEntryLabel(entry.state, editBox:GetText())
+	if(entry.favorite) then self:RebuildFavorites() end
+	if(entry.history) then self:RebuildHistory() end
 end
 
 function SearchLibrary:RegisterFilter(filter)
@@ -118,20 +196,29 @@ function SearchLibrary:SaveCurrentState()
 	self.saveData.lastState = SAVE_TEMPLATE:format(SAVE_VERSION, state[1], state[2], state[3], state[4], state[5])
 end
 
+local function GetRowButton(rowControl, template)
+	local button = rowControl[template.name]
+	if(not button) then
+		button = ToggleButton:New(rowControl, rowControl:GetName() .. template.name, template.texture, 0, 0, template.size, template.size)
+		button.control:ClearAnchors()
+		button.control:SetAnchor(RIGHT, rowControl, RIGHT, template.offsetX, template.offsetY)
+		button.animation = ANIMATION_MANAGER:CreateTimelineFromVirtual("ShowOnMouseOverLabelAnimation", button.control)
+		rowControl[template.name] = button
+	end
+	return button
+end
+
 local function InitializeBaseRow(self, rowControl, entry, fadeFavorite)
-	local nameControl = GetControl(rowControl, "Name")
+	local nameControl = rowControl:GetNamedChild("Name")
 	nameControl:SetText(entry.label)
 
-	local saveButton = rowControl.saveButton
-	if(not saveButton) then
-		saveButton = ToggleButton:New(rowControl, rowControl:GetName() .. "SaveButton", "AwesomeGuildStore/images/favorite_%s.dds", 0, 0, 24, 24)
-		saveButton.control:ClearAnchors()
-		saveButton.control:SetAnchor(RIGHT, rowControl, RIGHT, 0, 0)
-		saveButton.animation = ANIMATION_MANAGER:CreateTimelineFromVirtual("ShowOnMouseOverLabelAnimation", saveButton.control)
-		rowControl.saveButton = saveButton
-	end
+	local saveButton = GetRowButton(rowControl, SAVE_BUTTON_TEMPLATE)
 	saveButton.control:SetAlpha((entry.favorite and not fadeFavorite) and 1 or 0)
 	saveButton:SetTooltipText(entry.favorite and L["SEARCH_LIBRARY_FAVORITE_BUTTON_REMOVE_TOOLTIP"] or L["SEARCH_LIBRARY_FAVORITE_BUTTON_ADD_TOOLTIP"])
+
+	local editButton = GetRowButton(rowControl, EDIT_BUTTON_TEMPLATE)
+	editButton.control:SetAlpha(0)
+	editButton:SetTooltipText(L["SEARCH_LIBRARY_EDIT_LABEL_BUTTON_TOOLTIP"])
 
 	local highlight = rowControl:GetNamedChild("Highlight")
 	if not highlight.animation then
@@ -140,6 +227,7 @@ local function InitializeBaseRow(self, rowControl, entry, fadeFavorite)
 
 	local function FadeIn()
 		highlight.animation:PlayForward()
+		editButton.animation:PlayForward()
 		if(not entry.favorite or fadeFavorite) then
 			saveButton.animation:PlayForward()
 		end
@@ -147,15 +235,18 @@ local function InitializeBaseRow(self, rowControl, entry, fadeFavorite)
 
 	local function FadeOut()
 		highlight.animation:PlayBackward()
+		editButton.animation:PlayBackward()
 		if(not entry.favorite or fadeFavorite) then
 			saveButton.animation:PlayBackward()
 		end
 	end
 
 	rowControl:SetHandler("OnMouseEnter", FadeIn)
+	editButton.control:SetHandler("OnMouseEnter", function() FadeIn() editButton.control.OnMouseEnter() end)
 	saveButton.control:SetHandler("OnMouseEnter", function() FadeIn() saveButton.control.OnMouseEnter() end)
 
 	rowControl:SetHandler("OnMouseExit", FadeOut)
+	editButton.control:SetHandler("OnMouseExit", function() FadeOut() editButton.control.OnMouseExit() end)
 	saveButton.control:SetHandler("OnMouseExit", function() FadeOut() saveButton.control.OnMouseExit() end)
 
 	rowControl:SetHandler("OnMouseUp", function(control, button, isInside)
@@ -166,20 +257,38 @@ local function InitializeBaseRow(self, rowControl, entry, fadeFavorite)
 	end)
 
 	if(entry.favorite) then
-		rowControl.saveButton:Press()
+		saveButton:Press()
 	end
+
+	editButton.HandlePress = function()
+		self:ShowEditBox(rowControl, entry)
+		return true
+	end
+
+	editButton.HandleRelease = function(button, fromEditBox)
+		if(not fromEditBox) then
+			self:HideEditBox()
+			self:SaveEditBoxChanges()
+		end
+		return true
+	end
+end
+
+local function ResetButton(button)
+	button.HandlePress = nil
+	button.HandleRelease = nil
+	button:Release()
+	button.control:SetHidden(false)
+	button.animation:PlayFromEnd(button.animation:GetDuration())
+	button.control:SetHandler("OnMouseEnter", nil)
+	button.control:SetHandler("OnMouseExit", nil)
 end
 
 local function DestroyBaseRow(rowControl)
 	local highlight = rowControl:GetNamedChild("Highlight")
 	highlight.animation:PlayFromEnd(highlight.animation:GetDuration())
-
-	local saveButton = rowControl.saveButton
-	saveButton.HandlePress = nil
-	saveButton.HandleRelease = nil
-	saveButton:Release()
-	saveButton.control:SetHidden(false)
-	saveButton.animation:PlayFromEnd(saveButton.animation:GetDuration())
+	ResetButton(rowControl.SaveButton)
+	ResetButton(rowControl.EditButton)
 	ZO_ObjectPool_DefaultResetControl(rowControl)
 end
 
@@ -192,19 +301,19 @@ function SearchLibrary:InitializeHistory()
 	local function InitializeHistoryRow(rowControl, entry)
 		InitializeBaseRow(self, rowControl, entry, false)
 
-		rowControl.saveButton.HandlePress = function()
+		rowControl.SaveButton.HandlePress = function()
 			self:AddFavoriteEntry(entry.state)
 			self:RebuildFavorites()
 			entry.favorite = true
-			rowControl.saveButton:SetTooltipText(L["SEARCH_LIBRARY_FAVORITE_BUTTON_REMOVE_TOOLTIP"])
+			rowControl.SaveButton:SetTooltipText(L["SEARCH_LIBRARY_FAVORITE_BUTTON_REMOVE_TOOLTIP"])
 			return true
 		end
 
-		rowControl.saveButton.HandleRelease = function()
+		rowControl.SaveButton.HandleRelease = function()
 			self:RemoveFavoriteEntry(entry.state)
 			self:RebuildFavorites()
 			entry.favorite = false
-			rowControl.saveButton:SetTooltipText(L["SEARCH_LIBRARY_FAVORITE_BUTTON_ADD_TOOLTIP"])
+			rowControl.SaveButton:SetTooltipText(L["SEARCH_LIBRARY_FAVORITE_BUTTON_ADD_TOOLTIP"])
 			return true
 		end
 	end
@@ -227,9 +336,9 @@ function SearchLibrary:InitializeFavorites()
 	local function InitializeFavoritesRow(rowControl, entry)
 		InitializeBaseRow(self, rowControl, entry, true)
 
-		rowControl.saveButton:Press()
+		rowControl.SaveButton:Press()
 
-		rowControl.saveButton.HandleRelease = function()
+		rowControl.SaveButton.HandleRelease = function()
 			self:RemoveFavoriteEntry(entry.state)
 			zo_callLater(function()
 				self:Refresh()
@@ -326,6 +435,19 @@ function SearchLibrary:RemoveFavoriteEntry(state)
 			self.historyDirty = true
 		end
 		self.favoritesDirty = true
+	end
+end
+
+function SearchLibrary:UpdateEntryLabel(state, label)
+	local entry = self:GetEntry(state)
+	if(entry) then
+		entry.label = label
+		if(entry.history) then
+			self.historyDirty = true
+		end
+		if(entry.favorite) then
+			self.favoritesDirty = true
+		end
 	end
 end
 

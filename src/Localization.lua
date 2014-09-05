@@ -141,6 +141,7 @@ local localization = {
 		SEARCH_LIBRARY_FAVORITES_LABEL = "Favorites",
 		SEARCH_LIBRARY_FAVORITE_BUTTON_ADD_TOOLTIP = "Add to Favorites",
 		SEARCH_LIBRARY_FAVORITE_BUTTON_REMOVE_TOOLTIP = "Remove from Favorites",
+		SEARCH_LIBRARY_EDIT_LABEL_BUTTON_TOOLTIP = "Rename Entry",
 
 		SETTINGS_REQUIRES_RELOADUI_WARNING = "Only is applied after you reload the UI",
 		SETTINGS_REPLACE_CATEGORY_FILTER_LABEL = "Use awesome category selection",
@@ -179,6 +180,7 @@ local localization = {
 		SEARCH_LIBRARY_FAVORITES_LABEL = "Favoriten",
 		SEARCH_LIBRARY_FAVORITE_BUTTON_ADD_TOOLTIP = "Zu Favoriten hinzufügen",
 		SEARCH_LIBRARY_FAVORITE_BUTTON_REMOVE_TOOLTIP = "Von Favoriten entfernen",
+		SEARCH_LIBRARY_EDIT_LABEL_BUTTON_TOOLTIP = "Eintrag umbenennen",
 
 		SETTINGS_REQUIRES_RELOADUI_WARNING = "Wird erst angewandt wenn das Interface neu geladen wurde",
 		SETTINGS_REPLACE_CATEGORY_FILTER_LABEL = "Kategorieauswahl ersetzen",
