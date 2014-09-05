@@ -19,61 +19,59 @@ function LevelSelector:New(parent, name)
 	local setFromTextBox = false
 	local togglingRangeMode = false
 	local minLevelBox = parent:GetNamedChild("MinLevelBox")
+	self.minLevelBox = minLevelBox
 	local maxLevelBox = parent:GetNamedChild("MaxLevelBox")
+	self.maxLevelBox = maxLevelBox
 	local slider = MinMaxRangeSlider:New(parent, name .. "LevelSlider", 0, 0, 195, 16)
 	slider:SetMinMax(MIN_LEVEL, MAX_LEVEL)
 	slider:SetRangeValue(MIN_LEVEL, MAX_LEVEL)
 	selector.slider = slider
-	selector.min = {
-		[TRADING_HOUSE_FILTER_TYPE_LEVEL] = MIN_LEVEL,
-		[TRADING_HOUSE_FILTER_TYPE_VETERAN_LEVEL] = MIN_RANK,
-	}
-	selector.max = {
-		[TRADING_HOUSE_FILTER_TYPE_LEVEL] = MAX_LEVEL,
-		[TRADING_HOUSE_FILTER_TYPE_VETERAN_LEVEL] = MAX_RANK,
-	}
+	selector.min = {}
+	selector.max = {}
 
 	slider.OnValueChanged = function(self, min, max)
 		selector:HandleChange()
 		selector.resetButton:SetHidden(selector:IsDefault())
-		if(not togglingRangeMode) then
-			selector.min[TRADING_HOUSE.m_levelRangeFilterType] = min
-			selector.max[TRADING_HOUSE.m_levelRangeFilterType] = max
-		end
 		if(setFromTextBox) then return end
 		minLevelBox:SetText(min)
 		maxLevelBox:SetText(max)
 	end
 
+	local function ValueFromText(value, limit)
+		return tonumber(value) or limit
+	end
+
 	local function UpdateSliderFromTextBox()
 		setFromTextBox = true
-		local oldMin, oldMax = slider:GetRangeValue()
-		local min = tonumber(minLevelBox:GetText()) or oldMin
-		local max = tonumber(maxLevelBox:GetText()) or oldMax
+		local isLevel = (TRADING_HOUSE.m_levelRangeFilterType == TRADING_HOUSE_FILTER_TYPE_LEVEL)
+		if(togglingRangeMode) then isLevel = not isLevel end
+		local minValue = minLevelBox:GetText()
+		local maxValue = maxLevelBox:GetText()
+		local min = ValueFromText(minValue, isLevel and MIN_LEVEL or MIN_RANK)
+		local max = ValueFromText(maxValue, isLevel and MAX_LEVEL or MAX_RANK)
+
+		if(not togglingRangeMode) then
+			selector.min[TRADING_HOUSE.m_levelRangeFilterType] = tonumber(minValue)
+			selector.max[TRADING_HOUSE.m_levelRangeFilterType] = tonumber(maxValue)
+		end
 
 		slider:SetRangeValue(min, max)
 		setFromTextBox = false
 	end
 
-	local function UpdateTextBoxFromSlider()
-		local min, max = slider:GetRangeValue()
-		minLevelBox:SetText(min)
-		maxLevelBox:SetText(max)
-	end
-
 	minLevelBox:SetHandler("OnTextChanged", UpdateSliderFromTextBox)
 	maxLevelBox:SetHandler("OnTextChanged", UpdateSliderFromTextBox)
-	minLevelBox:SetHandler("OnFocusLost", UpdateTextBoxFromSlider)
-	maxLevelBox:SetHandler("OnFocusLost", UpdateTextBoxFromSlider)
 
 	ZO_PreHook(TRADING_HOUSE, "ToggleLevelRangeMode", function(self)
 		togglingRangeMode = true
 		if(self.m_levelRangeFilterType == TRADING_HOUSE_FILTER_TYPE_LEVEL) then
 			slider:SetMinMax(MIN_RANK, MAX_RANK)
-			slider:SetRangeValue(selector.min[TRADING_HOUSE_FILTER_TYPE_VETERAN_LEVEL], selector.max[TRADING_HOUSE_FILTER_TYPE_VETERAN_LEVEL])
+			minLevelBox:SetText(selector.min[TRADING_HOUSE_FILTER_TYPE_VETERAN_LEVEL] or "")
+			maxLevelBox:SetText(selector.max[TRADING_HOUSE_FILTER_TYPE_VETERAN_LEVEL] or "")
 		else
 			slider:SetMinMax(MIN_LEVEL, MAX_LEVEL)
-			slider:SetRangeValue(selector.min[TRADING_HOUSE_FILTER_TYPE_LEVEL], selector.max[TRADING_HOUSE_FILTER_TYPE_LEVEL])
+			minLevelBox:SetText(selector.min[TRADING_HOUSE_FILTER_TYPE_LEVEL] or "")
+			maxLevelBox:SetText(selector.max[TRADING_HOUSE_FILTER_TYPE_LEVEL] or "")
 		end
 		togglingRangeMode = false
 		zo_callLater(function()
@@ -90,12 +88,17 @@ function LevelSelector:New(parent, name)
 		local max = tonumber(maxLevelBox:GetText())
 		local isLevel = (TRADING_HOUSE.m_levelRangeFilterType == TRADING_HOUSE_FILTER_TYPE_LEVEL)
 		local filter = self.m_filters[isLevel and TRADING_HOUSE_FILTER_TYPE_LEVEL or TRADING_HOUSE_FILTER_TYPE_VETERAN_LEVEL]
-		if(isLevel and min == MIN_LEVEL and max == MAX_LEVEL) then
-			filter.values = {}
-		else
-			if(min == max) then max = nil end
-			filter.values = {min, max}
+
+		if(min == nil and max == nil) then
+			return
+		elseif(min == nil) then
+			min = isLevel and MIN_LEVEL or MIN_RANK
+		elseif(max == nil) then
+			max = isLevel and MAX_LEVEL or MAX_RANK
 		end
+
+		if(min == max) then max = nil end
+		filter.values = {min, max}
 	end)
 
 	local levelRangeLabel = parent:GetNamedChild("LevelRangeLabel")
@@ -124,7 +127,10 @@ function LevelSelector:New(parent, name)
 	end)
 	selector.resetButton = resetButton
 
-	UpdateTextBoxFromSlider()
+	zo_callLater(function()
+		minLevelBox:SetText("")
+		maxLevelBox:SetText("")
+	end, 1)
 
 	return selector
 end
@@ -143,20 +149,20 @@ function LevelSelector:Reset()
 	TRADING_HOUSE.m_levelRangeToggle:SetState(BSTATE_NORMAL, false)
 	TRADING_HOUSE.m_levelRangeLabel:SetText(GetString(SI_TRADING_HOUSE_BROWSE_LEVEL_RANGE_LABEL))
 
-	self.min[TRADING_HOUSE_FILTER_TYPE_LEVEL] = MIN_LEVEL
-	self.min[TRADING_HOUSE_FILTER_TYPE_VETERAN_LEVEL] = MIN_RANK
-	self.max[TRADING_HOUSE_FILTER_TYPE_LEVEL] = MAX_LEVEL
-	self.max[TRADING_HOUSE_FILTER_TYPE_VETERAN_LEVEL] = MAX_RANK
+	self.min[TRADING_HOUSE_FILTER_TYPE_LEVEL] = nil
+	self.min[TRADING_HOUSE_FILTER_TYPE_VETERAN_LEVEL] = nil
+	self.max[TRADING_HOUSE_FILTER_TYPE_LEVEL] = nil
+	self.max[TRADING_HOUSE_FILTER_TYPE_VETERAN_LEVEL] = nil
 
 	self.slider:SetMinMax(MIN_LEVEL, MAX_LEVEL)
-	zo_callLater(function()
-		self.slider:SetRangeValue(MIN_LEVEL, MAX_LEVEL)
-	end, 1)
+	self.minLevelBox:SetText("")
+	self.maxLevelBox:SetText("")
 end
 
 function LevelSelector:IsDefault()
-	local min, max = self.slider:GetRangeValue()
-	return (TRADING_HOUSE.m_levelRangeFilterType == TRADING_HOUSE_FILTER_TYPE_LEVEL and min == MIN_LEVEL and max == MAX_LEVEL)
+	local min = self.minLevelBox:GetText()
+	local max = self.maxLevelBox:GetText()
+	return min == "" and max == ""
 end
 
 function LevelSelector:Serialize()
