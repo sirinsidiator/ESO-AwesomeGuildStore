@@ -127,10 +127,8 @@ function LevelSelector:New(parent, name)
 	end)
 	selector.resetButton = resetButton
 
-	zo_callLater(function()
-		minLevelBox:SetText("")
-		maxLevelBox:SetText("")
-	end, 1)
+	minLevelBox:SetText("")
+	maxLevelBox:SetText("")
 
 	return selector
 end
@@ -166,14 +164,14 @@ function LevelSelector:IsDefault()
 end
 
 function LevelSelector:Serialize()
-	local min, max = self.slider:GetRangeValue()
+	local min = self.minLevelBox:GetText()
+	local max = self.maxLevelBox:GetText()
 	local vr = (TRADING_HOUSE.m_levelRangeFilterType ~= TRADING_HOUSE_FILTER_TYPE_LEVEL) and "1" or "0"
 	return vr .. ";" .. tostring(min) .. ";" .. tostring(max)
 end
 
 function LevelSelector:Deserialize(state)
 	local vr, min, max = zo_strsplit(";", state)
-	assert(vr and min and max)
 
 	local isNormal = (vr == "0")
 	local isNormalActive = (TRADING_HOUSE.m_levelRangeFilterType == TRADING_HOUSE_FILTER_TYPE_LEVEL)
@@ -181,5 +179,6 @@ function LevelSelector:Deserialize(state)
 		TRADING_HOUSE:ToggleLevelRangeMode()
 	end
 
-	self.slider:SetRangeValue(tonumber(min), tonumber(max))
+	self.minLevelBox:SetText(min or "")
+	self.maxLevelBox:SetText(max or "")
 end
