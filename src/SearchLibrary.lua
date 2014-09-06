@@ -94,8 +94,42 @@ function SearchLibrary:Initialize(saveData)
 	self:InitializeFavorites()
 	self:InitializeEditBox()
 
+	local favoriteCurrentButton = ToggleButton:New(parent, control:GetName() .. "FavoriteCurrentButton", "AwesomeGuildStore/images/favorite_%s.dds", 0, 0, 28, 28, L["SEARCH_LIBRARY_FAVORITE_BUTTON_ADD_TOOLTIP"])
+	favoriteCurrentButton.control:ClearAnchors()
+	favoriteCurrentButton.control:SetAnchor(LEFT, toggleButton.control, RIGHT, 0, 0)
+	self.favoriteCurrentButton = favoriteCurrentButton
+	self:UpdateFavoriteButtonState()
+
+	favoriteCurrentButton.HandlePress = function(button, ignore)
+		if(not ignore) then
+			self:AddFavoriteEntry(saveData.lastState)
+			self:RebuildFavorites()
+		end
+		favoriteCurrentButton:SetTooltipText(L["SEARCH_LIBRARY_FAVORITE_BUTTON_REMOVE_TOOLTIP"])
+		return true
+	end
+	favoriteCurrentButton.HandleRelease = function(button, ignore)
+		if(not ignore) then
+			self:RemoveFavoriteEntry(saveData.lastState)
+			self:RebuildFavorites()
+		end
+		favoriteCurrentButton:SetTooltipText(L["SEARCH_LIBRARY_FAVORITE_BUTTON_ADD_TOOLTIP"])
+		return true
+	end
+
 	if(saveData.isActive) then
 		self:Show()
+	end
+end
+
+function SearchLibrary:UpdateFavoriteButtonState()
+	local currentEntry = self:GetEntry(self.saveData.lastState, true)
+	if(currentEntry and currentEntry.favorite) then
+		self.favoriteCurrentButton:Press(true)
+		self.favoriteCurrentButton:SetTooltipText(L["SEARCH_LIBRARY_FAVORITE_BUTTON_REMOVE_TOOLTIP"])
+	else
+		self.favoriteCurrentButton:Release(true)
+		self.favoriteCurrentButton:SetTooltipText(L["SEARCH_LIBRARY_FAVORITE_BUTTON_ADD_TOOLTIP"])
 	end
 end
 
@@ -194,6 +228,7 @@ end
 function SearchLibrary:SaveCurrentState()
 	local state = self.currentState
 	self.saveData.lastState = SAVE_TEMPLATE:format(SAVE_VERSION, state[1], state[2], state[3], state[4], state[5])
+	self:UpdateFavoriteButtonState()
 end
 
 local function GetRowButton(rowControl, template)
@@ -499,6 +534,7 @@ end
 function SearchLibrary:RebuildFavorites()
 	if(not self.favoritesDirty) then return end
 	RebuildScrollList(self.favoritesControl, self.searchList, SortBySearchCountDesc, FilterFavoriteEntires)
+	self:UpdateFavoriteButtonState()
 	self.favoritesDirty = false
 end
 
