@@ -524,10 +524,13 @@ function SearchLibrary:RebuildHistory()
 	if(not self.historyDirty) then return end
 	local scrollData = RebuildScrollList(self.historyControl, self.searchList, SortByTimeDesc, FilterHistoryEntires)
 
-	for i = HISTORY_LENGTH, #scrollData do
-		self.SearchList[scrollData[i].state].history = false
-		scrollData[i] = nil
+	for i = HISTORY_LENGTH + 1, #scrollData do
+		local entry = self:GetEntry(scrollData[i].data.state, true)
+		if(entry) then
+			entry.history = false
+		end
 	end
+
 	self.historyDirty = false
 end
 
