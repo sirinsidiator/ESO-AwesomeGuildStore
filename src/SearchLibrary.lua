@@ -216,10 +216,13 @@ end
 function SearchLibrary:Deserialize(state)
 	local version, categoryState, priceState, levelState, qualityState, nameState = zo_strsplit(":", state)
 	if(tonumber(version) == SAVE_VERSION) then
+		TRADING_HOUSE:ClearSearchResults()
 		local state = {categoryState, priceState, levelState, qualityState, nameState}
 		local filter = self.filter
 		for i = 1, 5 do
-			if(filter[i] and state[i] ~= "-") then filter[i]:Deserialize(state[i]) end
+			if(filter[i] and state[i] ~= "-") then
+				filter[i]:Deserialize(state[i])
+			end
 		end
 	end
 end

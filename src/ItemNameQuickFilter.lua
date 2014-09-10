@@ -48,10 +48,19 @@ function ItemNameQuickFilter:Initialize(parent, name, x, y)
 	inputBox:SetHandler("OnTextChanged", function(control)
 		self:HandleChange()
 		ZO_EditDefaultText_OnTextChanged(inputBox)
-		TRADING_HOUSE:RebuildSearchResultsPage()
 		resetButton:SetHidden(inputBox:GetText() == "")
+		TRADING_HOUSE:RebuildSearchResultsPage()
 	end)
 	self.inputBox = inputBox
+
+	self:InitializeFilterFunction()
+end
+
+function ItemNameQuickFilter:InitializeFilterFunction()
+	ZO_PreHook(TRADING_HOUSE, "ClearSearchResults", function(self) self.m_numItemsOnPage = 0 end)
+
+	local OriginalRebuildSearchResultsPage = TRADING_HOUSE.RebuildSearchResultsPage
+	local OriginalGetTradingHouseSearchResultItemInfo = GetTradingHouseSearchResultItemInfo
 
 	local nameFilter = ZO_StringSearch:New()
 	nameFilter:AddProcessor(ITEM_NAME_FILTER_DATA_TYPE, function(stringSearch, data, searchTerm, cache)
@@ -61,41 +70,41 @@ function ItemNameQuickFilter:Initialize(parent, name, x, y)
 		end
 	end)
 
-	local RebuildSearchResultsPage = TRADING_HOUSE.RebuildSearchResultsPage
-	TRADING_HOUSE.RebuildSearchResultsPage = function(self)
-		if(not self.m_numItemsOnPage) then return end
-		local searchTerm = inputBox:GetText()
-		local originalGetTradingHouseSearchResultItemInfo = GetTradingHouseSearchResultItemInfo
-		local itemCount, filteredItemCount = 0, 0
+	local inputBox = self.inputBox
+	local data = { name = "", setName = "", isSetItem = false, type = ITEM_NAME_FILTER_DATA_TYPE }
+	local searchTerm, itemCount, filteredItemCount
 
-		if(searchTerm ~= "") then
-			local data = { name = "", type = ITEM_NAME_FILTER_DATA_TYPE }
+	local FakeGetTradingHouseSearchResultItemInfo = function(index)
+		local icon, name, quality, stackCount, sellerName, timeRemaining, purchasePrice = OriginalGetTradingHouseSearchResultItemInfo(index)
+		if(name ~= "" and stackCount > 0) then
+			itemCount = itemCount + 1
+			data.name = name
 
-			function GetTradingHouseSearchResultItemInfo(index)
-				local icon, name, quality, stackCount, sellerName, timeRemaining, purchasePrice = originalGetTradingHouseSearchResultItemInfo(index)
-				if(name ~= "" and stackCount > 0) then
-					itemCount = itemCount + 1
-					data.name = name
+			local itemLink = GetTradingHouseSearchResultItemLink(index, LINK_STYLE_DEFAULT)
+			local isSetItem, setName = GetItemLinkSetInfo(itemLink)
+			data.setName = setName
+			data.isSetItem = isSetItem
 
-					local itemLink = GetTradingHouseSearchResultItemLink(index, LINK_STYLE_DEFAULT)
-					local isSetItem, setName = GetItemLinkSetInfo(itemLink)
-					data.setName = setName
-					data.isSetItem = isSetItem
-
-					if(nameFilter:IsMatch(searchTerm, data)) then
-						filteredItemCount = filteredItemCount + 1
-						return icon, name, quality, stackCount, sellerName, timeRemaining, purchasePrice
-					end
-				end
-				return nil, "", nil, 0
+			if(nameFilter:IsMatch(searchTerm, data)) then
+				filteredItemCount = filteredItemCount + 1
+				return icon, name, quality, stackCount, sellerName, timeRemaining, purchasePrice
 			end
 		end
-
-		RebuildSearchResultsPage(self)
+		return nil, "", nil, 0
+	end
+	TRADING_HOUSE.RebuildSearchResultsPage = function(self)
+		searchTerm = inputBox:GetText()
 
 		if(searchTerm ~= "") then
+			itemCount, filteredItemCount = 0, 0
+			GetTradingHouseSearchResultItemInfo = FakeGetTradingHouseSearchResultItemInfo
+		end
+
+		OriginalRebuildSearchResultsPage(self)
+
+		if(searchTerm ~= "") then
+			GetTradingHouseSearchResultItemInfo = OriginalGetTradingHouseSearchResultItemInfo
 			self.m_resultCount:SetText(zo_strformat(L["ITEM_NAME_QUICK_FILTER_ITEMCOUNT_TEMPLATE"], itemCount, filteredItemCount))
-			GetTradingHouseSearchResultItemInfo = originalGetTradingHouseSearchResultItemInfo
 		end
 	end
 end
