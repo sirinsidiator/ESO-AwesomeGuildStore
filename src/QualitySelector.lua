@@ -18,22 +18,23 @@ local function CreateButtonControl(parent, name, textureName, tooltipText, callb
 	buttonControl:SetMouseOverTexture("AwesomeGuildStore/images/qualitybuttons/over.dds")
 	buttonControl:SetEndCapWidth(0)
 	buttonControl:SetDimensions(BUTTON_SIZE, BUTTON_SIZE)
-	buttonControl:SetHandler("OnMouseDoubleClick", function(control, button)
-		callback(3)
-	end)
-	buttonControl:SetHandler("OnMouseUp", function(control, button, isInside)
+	buttonControl:SetHandler("OnMouseUp", function(control, button, isInside, ctrl, alt, shift)
 		if(isInside) then
-			callback(button)
-			if(button == 2) then
-				-- the mouse down event does not fire for right click and the button does not show any click behavior at all
-				-- we emulate it by changing the texture for a bit and playing the click sound manually
-				buttonControl:SetNormalTexture(textureName:format("down"))
-				buttonControl:SetMouseOverTexture("")
-				zo_callLater(function()
-					buttonControl:SetNormalTexture(textureName:format("up"))
-					buttonControl:SetMouseOverTexture("AwesomeGuildStore/images/qualitybuttons/over.dds")
-				end, 100)
-				PlaySound("Click")
+			if(shift) then
+				callback(button)
+				if(button == 2) then
+					-- the mouse down event does not fire for right click and the button does not show any click behavior at all
+					-- we emulate it by changing the texture for a bit and playing the click sound manually
+					buttonControl:SetNormalTexture(textureName:format("down"))
+					buttonControl:SetMouseOverTexture("")
+					zo_callLater(function()
+						buttonControl:SetNormalTexture(textureName:format("up"))
+						buttonControl:SetMouseOverTexture("AwesomeGuildStore/images/qualitybuttons/over.dds")
+					end, 100)
+					PlaySound("Click")
+				end
+			else
+				callback(3)
 			end
 		end
 	end)
