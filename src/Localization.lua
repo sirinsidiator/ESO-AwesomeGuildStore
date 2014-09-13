@@ -128,8 +128,17 @@ local localization = {
 		RESET_ALL_FILTERS_LABEL = "Reset All Filters",
 		RESET_FILTER_LABEL_TEMPLATE = "Reset %s Filter",
 
+		CATEGORY_TITLE = "Category",
+		SUBCATEGORY_TITLE = "Subcategory",
+
+		PRICE_SELECTOR_TITLE = GetString(SI_TRADING_HOUSE_BROWSE_PRICE_RANGE_LABEL),
+
+		LEVEL_SELECTOR_TITLE = GetString(SI_TRADING_HOUSE_BROWSE_LEVEL_RANGE_LABEL),
+		VR_SELECTOR_TITLE = GetString(SI_TRADING_HOUSE_BROWSE_VETERAN_RANK_RANGE_LABEL),
+
 		QUALITY_SELECTOR_TITLE = "Quality Range:",
 
+		ITEM_NAME_QUICK_FILTER_LABEL = "Name Filter:",
 		ITEM_NAME_QUICK_FILTER_TEXT = "Filter Item Name",
 		ITEM_NAME_QUICK_FILTER_RESET = "Reset Item Name Filter",
 		ITEM_NAME_QUICK_FILTER_ITEMCOUNT_TEMPLATE = GetString(SI_TRADING_HOUSE_RESULT_COUNT) .. " (<<2>>)",
@@ -142,6 +151,9 @@ local localization = {
 		SEARCH_LIBRARY_FAVORITE_BUTTON_ADD_TOOLTIP = "Add to Favorites",
 		SEARCH_LIBRARY_FAVORITE_BUTTON_REMOVE_TOOLTIP = "Remove from Favorites",
 		SEARCH_LIBRARY_EDIT_LABEL_BUTTON_TOOLTIP = "Rename Entry",
+
+		TOOLTIP_LESS_THAN = "under ",
+		TOOLTIP_GREATER_THAN = "over ",
 
 		SETTINGS_REQUIRES_RELOADUI_WARNING = "Only is applied after you reload the UI",
 		SETTINGS_REPLACE_CATEGORY_FILTER_LABEL = "Use awesome category selection",
@@ -168,8 +180,12 @@ local localization = {
 		RESET_ALL_FILTERS_LABEL = "Alle Filter zurücksetzen",
 		RESET_FILTER_LABEL_TEMPLATE = "%s zurücksetzen",
 
+		CATEGORY_TITLE = "Kategorie",
+		SUBCATEGORY_TITLE = "Unterkategorie",
+
 		QUALITY_SELECTOR_TITLE = "Qualität:",
 
+		ITEM_NAME_QUICK_FILTER_LABEL = "Namensfilter:",
 		ITEM_NAME_QUICK_FILTER_TEXT = "Nach Namen filtern",
 		ITEM_NAME_QUICK_FILTER_RESET = "Namesfilter zurücksetzen",
 
@@ -181,6 +197,9 @@ local localization = {
 		SEARCH_LIBRARY_FAVORITE_BUTTON_ADD_TOOLTIP = "Zu Favoriten hinzufügen",
 		SEARCH_LIBRARY_FAVORITE_BUTTON_REMOVE_TOOLTIP = "Von Favoriten entfernen",
 		SEARCH_LIBRARY_EDIT_LABEL_BUTTON_TOOLTIP = "Eintrag umbenennen",
+
+		TOOLTIP_LESS_THAN = "unter ",
+		TOOLTIP_GREATER_THAN = "über ",
 
 		SETTINGS_REQUIRES_RELOADUI_WARNING = "Wird erst angewandt wenn das Interface neu geladen wurde",
 		SETTINGS_REPLACE_CATEGORY_FILTER_LABEL = "Kategorieauswahl ersetzen",

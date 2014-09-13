@@ -363,6 +363,8 @@ OnAddonLoaded(function()
 	local titleLabel = title:GetNamedChild("Label")
 	CreateControlFromVirtual(ADDON_NAME .. "GuildSelector", title, ADDON_NAME .. "GuildSelectorTemplate")
 
+	AwesomeGuildStore.toolTip = AwesomeGuildStore.SavedSearchTooltip:New()
+
 	local isSearchDisabled = false
 	local keybindButtonDescriptor, oldEnabled, oldCallback
 
@@ -427,7 +429,6 @@ OnAddonLoaded(function()
 			saveData.lastGuildName = guildName
 		end
 	end)
-
 
 	local originalHandleTabSwitch = TRADING_HOUSE.HandleTabSwitch
 	TRADING_HOUSE.HandleTabSwitch = function(self, tabData)

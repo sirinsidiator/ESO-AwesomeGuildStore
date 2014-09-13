@@ -269,6 +269,7 @@ local function InitializeBaseRow(self, rowControl, entry, fadeFavorite)
 		if(not entry.favorite or fadeFavorite) then
 			saveButton.animation:PlayForward()
 		end
+		AwesomeGuildStore.toolTip:Show(rowControl, entry)
 	end
 
 	local function FadeOut()
@@ -277,6 +278,7 @@ local function InitializeBaseRow(self, rowControl, entry, fadeFavorite)
 		if(not entry.favorite or fadeFavorite) then
 			saveButton.animation:PlayBackward()
 		end
+		AwesomeGuildStore.toolTip:Hide()
 	end
 
 	rowControl:SetHandler("OnMouseEnter", FadeIn)
@@ -318,8 +320,8 @@ local function ResetButton(button)
 	button:Release()
 	button.control:SetHidden(false)
 	button.animation:PlayFromEnd(button.animation:GetDuration())
-	button.control:SetHandler("OnMouseEnter", nil)
-	button.control:SetHandler("OnMouseExit", nil)
+	button.control:SetHandler("OnMouseEnter", button.control.OnMouseEnter)
+	button.control:SetHandler("OnMouseExit", button.control.OnMouseExit)
 end
 
 local function DestroyBaseRow(rowControl)
