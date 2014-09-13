@@ -61,87 +61,95 @@ function SavedSearchTooltip:Show(control, entry)
 	self:SetTitle(entry.label)
 
 	-- category
-	local values = {zo_strsplit(";", categoryState)}
-	local category, subcategory
-	for index, value in ipairs(values) do
-		if(index == 1) then
-			category = FILTER_PRESETS[tonumber(value)]
-			if(category) then
-				self:AddLine(L["CATEGORY_TITLE"], category.label)
-			end
-		elseif(index == 2 and category) then
-			subcategory = category.subcategories[tonumber(value)]
-			if(subcategory) then
-				self:AddLine(L["SUBCATEGORY_TITLE"], subcategory.label)
-			end
-		elseif(subcategory) then
-			local subfilterId, subfilterValues = zo_strsplit(",", value)
-			local subfilterPreset = SUBFILTER_PRESETS[tonumber(subfilterId)]
-			if(subfilterPreset) then
-				subfilterValues = tonumber(subfilterValues)
-				local value = 0
-				local text = ""
-				while subfilterValues > 0 do
-					local isSelected = (math.mod(subfilterValues, 2) == 1)
-					if(isSelected) then
-						for index, button in ipairs(subfilterPreset.buttons) do
-							if(value == index) then
-								text = text .. button.label .. ", "
-								break
+	if(categoryState and categoryState ~= "-") then
+		local values = {zo_strsplit(";", categoryState)}
+		local category, subcategory
+		for index, value in ipairs(values) do
+			if(index == 1) then
+				category = FILTER_PRESETS[tonumber(value)]
+				if(category) then
+					self:AddLine(L["CATEGORY_TITLE"], category.label)
+				end
+			elseif(index == 2 and category) then
+				subcategory = category.subcategories[tonumber(value)]
+				if(subcategory) then
+					self:AddLine(L["SUBCATEGORY_TITLE"], subcategory.label)
+				end
+			elseif(subcategory) then
+				local subfilterId, subfilterValues = zo_strsplit(",", value)
+				local subfilterPreset = SUBFILTER_PRESETS[tonumber(subfilterId)]
+				if(subfilterPreset) then
+					subfilterValues = tonumber(subfilterValues)
+					local value = 0
+					local text = ""
+					while subfilterValues > 0 do
+						local isSelected = (math.mod(subfilterValues, 2) == 1)
+						if(isSelected) then
+							for index, button in ipairs(subfilterPreset.buttons) do
+								if(value == index) then
+									text = text .. button.label .. ", "
+									break
+								end
 							end
 						end
+						subfilterValues = math.floor(subfilterValues / 2)
+						value = value + 1
 					end
-					subfilterValues = math.floor(subfilterValues / 2)
-					value = value + 1
-				end
-				if(#text > 0) then
-					self:AddLine(subfilterPreset.label, text:sub(0, -3))
+					if(#text > 0) then
+						self:AddLine(subfilterPreset.label, text:sub(0, -3))
+					end
 				end
 			end
 		end
 	end
 
 	-- price
-	local minPrice, maxPrice = zo_strsplit(";", priceState)
-	minPrice = tonumber(minPrice)
-	maxPrice = tonumber(maxPrice)
-	local priceText = ""
-	if(minPrice and maxPrice) then
-		priceText = GetFormattedPrice(minPrice) .. " - " .. GetFormattedPrice(maxPrice)
-	elseif(minPrice) then
-		priceText = L["TOOLTIP_GREATER_THAN"] .. GetFormattedPrice(minPrice)
-	elseif(maxPrice) then
-		priceText = L["TOOLTIP_LESS_THAN"] .. GetFormattedPrice(maxPrice)
-	end
+	if(priceState and priceState ~= "-") then
+		local minPrice, maxPrice = zo_strsplit(";", priceState)
+		minPrice = tonumber(minPrice)
+		maxPrice = tonumber(maxPrice)
+		local priceText = ""
+		if(minPrice and maxPrice) then
+			priceText = GetFormattedPrice(minPrice) .. " - " .. GetFormattedPrice(maxPrice)
+		elseif(minPrice) then
+			priceText = L["TOOLTIP_GREATER_THAN"] .. GetFormattedPrice(minPrice)
+		elseif(maxPrice) then
+			priceText = L["TOOLTIP_LESS_THAN"] .. GetFormattedPrice(maxPrice)
+		end
 
-	if(priceText ~= "") then
-		self:AddLine(L["PRICE_SELECTOR_TITLE"]:sub(0, -2), priceText)
+		if(priceText ~= "") then
+			self:AddLine(L["PRICE_SELECTOR_TITLE"]:sub(0, -2), priceText)
+		end
 	end
 
 	-- level
-	local vr, minLevel, maxLevel = zo_strsplit(";", levelState)
-	local isNormal = (vr == "0")
-	minLevel = tonumber(minLevel)
-	maxLevel = tonumber(maxLevel)
-	if(minLevel or maxLevel) then
-		local label = isNormal and L["LEVEL_SELECTOR_TITLE"] or L["VR_SELECTOR_TITLE"]
-		local text = ("%d - %d"):format(minLevel or 1, maxLevel or (isNormal and 50 or 12))
-		self:AddLine(label:sub(0, -2), text)
+	if(levelState and levelState ~= "-") then
+		local vr, minLevel, maxLevel = zo_strsplit(";", levelState)
+		local isNormal = (vr == "0")
+		minLevel = tonumber(minLevel)
+		maxLevel = tonumber(maxLevel)
+		if(minLevel or maxLevel) then
+			local label = isNormal and L["LEVEL_SELECTOR_TITLE"] or L["VR_SELECTOR_TITLE"]
+			local text = ("%d - %d"):format(minLevel or 1, maxLevel or (isNormal and 50 or 12))
+			self:AddLine(label:sub(0, -2), text)
+		end
 	end
 
 	-- quality
-	local minQuality, maxQuality = zo_strsplit(";", qualityState)
-	minQuality = tonumber(minQuality)
-	maxQuality = tonumber(maxQuality)
-	if(minQuality and maxQuality and not (minQuality == 1 and maxQuality == 5)) then
-		local text = ""
-		for i = minQuality, maxQuality do
-			text = text .. QUALITY_LABEL[i] .. ", "
+	if(qualityState and qualityState ~= "-") then
+		local minQuality, maxQuality = zo_strsplit(";", qualityState)
+		minQuality = tonumber(minQuality)
+		maxQuality = tonumber(maxQuality)
+		if(minQuality and maxQuality and not (minQuality == 1 and maxQuality == 5)) then
+			local text = ""
+			for i = minQuality, maxQuality do
+				text = text .. QUALITY_LABEL[i] .. ", "
+			end
+			self:AddLine(L["QUALITY_SELECTOR_TITLE"]:sub(0, -2), text:sub(0, -3))
 		end
-		self:AddLine(L["QUALITY_SELECTOR_TITLE"]:sub(0, -2), text:sub(0, -3))
 	end
 
-	if(nameState and nameState ~= "") then
+	if(nameState and nameState ~= "" and nameState ~= "-") then
 		self:AddLine(L["ITEM_NAME_QUICK_FILTER_LABEL"]:sub(0, -2), nameState)
 	end
 
