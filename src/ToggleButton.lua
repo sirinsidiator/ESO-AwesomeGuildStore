@@ -50,7 +50,8 @@ end
 function ToggleButton:SetTooltipText(text)
 	self.toolTipText = text
 	if(self.control.mouseInside) then
-		self.control:GetHandler("OnMouseEnter")()
+		local handler = self.control:GetHandler("OnMouseEnter")
+		if(handler) then handler() end
 	end
 end
 
