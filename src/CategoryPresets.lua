@@ -401,7 +401,7 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 		x = 0,
 		y = 0,
 		size = SUBFILTER_BUTTON_SIZE,
-		perRow = 5,
+		perRow = 6,
 		filter = TRADING_HOUSE_FILTER_TYPE_TRAIT,
 		buttons = {
 			{
@@ -454,15 +454,99 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 				texture = "EsoUI/Art/Progression/progression_indexIcon_guilds_%s.dds",
 				value = ITEM_TRAIT_TYPE_WEAPON_INTRICATE,
 			},
+			{
+				label = L["SUBFILTER_WEAPON_TRAIT_NIRNHONED"],
+				texture = "EsoUI/Art/WorldMap/map_ava_tabIcon_resourceProduction_%s.dds",
+				value = ITEM_TRAIT_TYPE_WEAPON_NIRNHONED,
+			},
 		},
 	},
-	[SUBFILTER_WEAPON_ENCHANTMENTS] = {},
-	[SUBFILTER_WEAPON_ONEHANDED] = {
-		label = L["SUBFILTER_WEAPON_TYPE_LABEL"],
+	[SUBFILTER_WEAPON_ENCHANTMENTS] = {
+		label = L["SUBFILTER_WEAPON_ENCHANTMENT_LABEL"],
 		x = 0,
 		y = 90,
 		size = SUBFILTER_BUTTON_SIZE,
-		perRow = 5,
+		perRow = 6,
+		filter = TRADING_HOUSE_FILTER_TYPE_ENCHANTMENT,
+		buttons = {
+			{
+				label = GetString("SI_ENCHANTMENTSEARCHCATEGORYTYPE", ENCHANTMENT_SEARCH_CATEGORY_FIERY_WEAPON),
+				texture = "AwesomeGuildStore/images/weapon/fire_%s.dds",
+				value = ENCHANTMENT_SEARCH_CATEGORY_FIERY_WEAPON, -- deals x flame damage
+			},
+			{
+				label = GetString("SI_ENCHANTMENTSEARCHCATEGORYTYPE", ENCHANTMENT_SEARCH_CATEGORY_FROZEN_WEAPON),
+				texture = "AwesomeGuildStore/images/weapon/ice_%s.dds",
+				value = ENCHANTMENT_SEARCH_CATEGORY_FROZEN_WEAPON, -- deals x cold damage
+			},
+			{
+				label = GetString("SI_ENCHANTMENTSEARCHCATEGORYTYPE", ENCHANTMENT_SEARCH_CATEGORY_CHARGED_WEAPON),
+				texture = "AwesomeGuildStore/images/weapon/lightning_%s.dds",
+				value = ENCHANTMENT_SEARCH_CATEGORY_CHARGED_WEAPON, -- deals x shock damage
+			},
+			{
+				label = GetString("SI_ENCHANTMENTSEARCHCATEGORYTYPE", ENCHANTMENT_SEARCH_CATEGORY_POISONED_WEAPON),
+				texture = "EsoUI/Art/Campaign/overview_indexIcon_bonus_%s.dds",
+				value = ENCHANTMENT_SEARCH_CATEGORY_POISONED_WEAPON, -- deals x poison damage
+			},
+			{
+				label = GetString("SI_ENCHANTMENTSEARCHCATEGORYTYPE", ENCHANTMENT_SEARCH_CATEGORY_BEFOULED_WEAPON),
+				texture = "EsoUI/Art/Campaign/overview_indexIcon_scoring_%s.dds",
+				value = ENCHANTMENT_SEARCH_CATEGORY_BEFOULED_WEAPON, -- deals x disease damage
+			},
+			{
+				label = GetString("SI_ENCHANTMENTSEARCHCATEGORYTYPE", ENCHANTMENT_SEARCH_CATEGORY_DAMAGE_HEALTH),
+				texture = "EsoUI/Art/Progression/progression_tabIcon_combatskills_%s.dds",
+				value = ENCHANTMENT_SEARCH_CATEGORY_DAMAGE_HEALTH, -- deals x unresistable damage
+			},
+			{
+				label = GetString("SI_ENCHANTMENTSEARCHCATEGORYTYPE", ENCHANTMENT_SEARCH_CATEGORY_BERSERKER),
+				texture = "EsoUI/Art/Campaign/campaignBrowser_indexIcon_normal_%s.dds",
+				value = ENCHANTMENT_SEARCH_CATEGORY_BERSERKER, -- increase your weapon damage by x for y seconds
+			},
+			{
+				label = GetString("SI_ENCHANTMENTSEARCHCATEGORYTYPE", ENCHANTMENT_SEARCH_CATEGORY_REDUCE_POWER),
+				texture = "EsoUI/Art/Crafting/smithing_tabIcon_weaponset_%s.dds",
+				value = ENCHANTMENT_SEARCH_CATEGORY_REDUCE_POWER, -- reduce target weapon damage by x for y seconds
+			},
+			{
+				label = GetString("SI_ENCHANTMENTSEARCHCATEGORYTYPE", ENCHANTMENT_SEARCH_CATEGORY_DAMAGE_SHIELD),
+				texture = "EsoUI/Art/Guild/tabIcon_heraldry_%s.dds",
+				value = ENCHANTMENT_SEARCH_CATEGORY_DAMAGE_SHIELD, -- grants a x point damage shield for y seconds
+			},
+			{
+				label = GetString("SI_ENCHANTMENTSEARCHCATEGORYTYPE", ENCHANTMENT_SEARCH_CATEGORY_REDUCE_ARMOR),
+				texture = "EsoUI/Art/Crafting/smithing_tabIcon_armorset_%s.dds",
+				value = ENCHANTMENT_SEARCH_CATEGORY_REDUCE_ARMOR, -- reduce target's armor by x for y seconds
+			},
+			{
+				label = GetString("SI_ENCHANTMENTSEARCHCATEGORYTYPE", ENCHANTMENT_SEARCH_CATEGORY_ABSORB_MAGICKA),
+				texture = "EsoUI/Art/Inventory/inventory_tabIcon_consumables_%s.dds",
+				value = ENCHANTMENT_SEARCH_CATEGORY_ABSORB_MAGICKA, -- deals x magic damage and restores y magicka
+			},
+			{
+				label = GetString("SI_ENCHANTMENTSEARCHCATEGORYTYPE", ENCHANTMENT_SEARCH_CATEGORY_ABSORB_HEALTH),
+				texture = "EsoUI/Art/Crafting/provisioner_indexIcon_meat_%s.dds",
+				value = ENCHANTMENT_SEARCH_CATEGORY_ABSORB_HEALTH, -- deals x magic damage and restores y health
+			},
+			{
+				label = GetString("SI_ENCHANTMENTSEARCHCATEGORYTYPE", ENCHANTMENT_SEARCH_CATEGORY_ABSORB_STAMINA),
+				texture = "EsoUI/Art/Crafting/provisioner_indexIcon_beer_%s.dds",
+				value = ENCHANTMENT_SEARCH_CATEGORY_ABSORB_STAMINA, -- deals x magic damage and restores y stamina
+			},
+			{
+				label = GetString("SI_ENCHANTMENTSEARCHCATEGORYTYPE", ENCHANTMENT_SEARCH_CATEGORY_OTHER),
+				texture = "EsoUI/Art/Inventory/inventory_tabIcon_misc_%s.dds",
+				value = ENCHANTMENT_SEARCH_CATEGORY_OTHER, -- ability changing enchantments
+			},
+		},
+	},
+	[SUBFILTER_WEAPON_ONEHANDED] = {
+		label = L["SUBFILTER_WEAPON_TYPE_LABEL"],
+		x = 0,
+		y = 215,
+		size = SUBFILTER_BUTTON_SIZE,
+		perRow = 6,
 		filter = TRADING_HOUSE_FILTER_TYPE_WEAPON,
 		buttons = {
 			{
@@ -490,9 +574,9 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 	[SUBFILTER_WEAPON_TWOHANDED] = {
 		label = L["SUBFILTER_WEAPON_TYPE_LABEL"],
 		x = 0,
-		y = 90,
+		y = 215,
 		size = SUBFILTER_BUTTON_SIZE,
-		perRow = 5,
+		perRow = 6,
 		filter = TRADING_HOUSE_FILTER_TYPE_WEAPON,
 		buttons = {
 			{
@@ -515,9 +599,9 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 	[SUBFILTER_WEAPON_STAFF] = {
 		label = L["SUBFILTER_WEAPON_TYPE_LABEL"],
 		x = 0,
-		y = 90,
+		y = 215,
 		size = SUBFILTER_BUTTON_SIZE,
-		perRow = 5,
+		perRow = 6,
 		filter = TRADING_HOUSE_FILTER_TYPE_WEAPON,
 		buttons = {
 			{
@@ -540,9 +624,9 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 	[SUBFILTER_ARMOR_SLOTS] = {
 		label = L["SUBFILTER_ARMOR_TYPE_LABEL"],
 		x = 0,
-		y = 90,
+		y = 145,
 		size = SUBFILTER_BUTTON_SIZE,
-		perRow = 5,
+		perRow = 6,
 		filter = TRADING_HOUSE_FILTER_TYPE_EQUIP,
 		buttons = {
 			{
@@ -587,7 +671,7 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 		x = 0,
 		y = 0,
 		size = SUBFILTER_BUTTON_SIZE,
-		perRow = 5,
+		perRow = 6,
 		filter = TRADING_HOUSE_FILTER_TYPE_TRAIT,
 		buttons = {
 			{
@@ -640,15 +724,49 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 				texture = "EsoUI/Art/Progression/progression_indexIcon_guilds_%s.dds",
 				value = ITEM_TRAIT_TYPE_ARMOR_INTRICATE,
 			},
+			{
+				label = L["SUBFILTER_ARMOR_TRAIT_NIRNHONED"],
+				texture = "EsoUI/Art/WorldMap/map_ava_tabIcon_resourceProduction_%s.dds",
+				value = ITEM_TRAIT_TYPE_ARMOR_NIRNHONED,
+			},
 		},
 	},
-	[SUBFILTER_ARMOR_ENCHANTMENTS] = {},
+	[SUBFILTER_ARMOR_ENCHANTMENTS] = {
+		label = L["SUBFILTER_ARMOR_ENCHANTMENT_LABEL"],
+		x = 0,
+		y = 90,
+		size = SUBFILTER_BUTTON_SIZE,
+		perRow = 6,
+		filter = TRADING_HOUSE_FILTER_TYPE_ENCHANTMENT,
+		buttons = {
+			{
+				label = GetString("SI_ENCHANTMENTSEARCHCATEGORYTYPE", ENCHANTMENT_SEARCH_CATEGORY_MAGICKA),
+				texture = "EsoUI/Art/Inventory/inventory_tabIcon_consumables_%s.dds",
+				value = ENCHANTMENT_SEARCH_CATEGORY_MAGICKA, -- adds x max magicka
+			},
+			{
+				label = GetString("SI_ENCHANTMENTSEARCHCATEGORYTYPE", ENCHANTMENT_SEARCH_CATEGORY_HEALTH),
+				texture = "EsoUI/Art/Crafting/provisioner_indexIcon_meat_%s.dds",
+				value = ENCHANTMENT_SEARCH_CATEGORY_HEALTH, -- adds x max health
+			},
+			{
+				label = GetString("SI_ENCHANTMENTSEARCHCATEGORYTYPE", ENCHANTMENT_SEARCH_CATEGORY_STAMINA),
+				texture = "EsoUI/Art/Crafting/provisioner_indexIcon_beer_%s.dds",
+				value = ENCHANTMENT_SEARCH_CATEGORY_STAMINA, -- adds x max stamina
+			},
+			{
+				label = GetString("SI_ENCHANTMENTSEARCHCATEGORYTYPE", ENCHANTMENT_SEARCH_CATEGORY_OTHER),
+				texture = "EsoUI/Art/Inventory/inventory_tabIcon_misc_%s.dds",
+				value = ENCHANTMENT_SEARCH_CATEGORY_OTHER, -- ability changing enchantments
+			},
+		},
+	},
 	[SUBFILTER_JEWELRY_TRAITS] = {
 		label = L["SUBFILTER_JEWELRY_TRAIT_LABEL"],
 		x = 0,
 		y = 0,
 		size = SUBFILTER_BUTTON_SIZE,
-		perRow = 5,
+		perRow = 6,
 		filter = TRADING_HOUSE_FILTER_TYPE_TRAIT,
 		buttons = {
 			{
@@ -673,13 +791,117 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 			},
 		},
 	},
-	[SUBFILTER_JEWELRY_ENCHANTMENTS] = {},
+	[SUBFILTER_JEWELRY_ENCHANTMENTS] = {
+		label = L["SUBFILTER_JEWELRY_ENCHANTMENT_LABEL"],
+		x = 0,
+		y = 55,
+		size = SUBFILTER_BUTTON_SIZE,
+		perRow = 6,
+		filter = TRADING_HOUSE_FILTER_TYPE_ENCHANTMENT,
+		buttons = {
+			{
+				label = GetString("SI_ENCHANTMENTSEARCHCATEGORYTYPE", ENCHANTMENT_SEARCH_CATEGORY_FIRE_RESISTANT),
+				texture = "AwesomeGuildStore/images/weapon/fire_%s.dds",
+				value = ENCHANTMENT_SEARCH_CATEGORY_FIRE_RESISTANT, -- adds x flame resistance
+			},
+			{
+				label = GetString("SI_ENCHANTMENTSEARCHCATEGORYTYPE", ENCHANTMENT_SEARCH_CATEGORY_FROST_RESISTANT),
+				texture = "AwesomeGuildStore/images/weapon/ice_%s.dds",
+				value = ENCHANTMENT_SEARCH_CATEGORY_FROST_RESISTANT, -- adds x cold resistance
+			},
+			{
+				label = GetString("SI_ENCHANTMENTSEARCHCATEGORYTYPE", ENCHANTMENT_SEARCH_CATEGORY_SHOCK_RESISTANT),
+				texture = "EsoUI/Art/Repair/inventory_tabIcon_repair_%s.dds",
+				value = ENCHANTMENT_SEARCH_CATEGORY_SHOCK_RESISTANT, -- adds x shock resistance
+			},
+			{
+				label = GetString("SI_ENCHANTMENTSEARCHCATEGORYTYPE", ENCHANTMENT_SEARCH_CATEGORY_POISON_RESISTANT),
+				texture = "EsoUI/Art/Campaign/overview_indexIcon_bonus_%s.dds",
+				value = ENCHANTMENT_SEARCH_CATEGORY_POISON_RESISTANT, -- adds x poison resistance
+			},
+			{
+				label = GetString("SI_ENCHANTMENTSEARCHCATEGORYTYPE", ENCHANTMENT_SEARCH_CATEGORY_DISEASE_RESISTANT),
+				texture = "EsoUI/Art/Campaign/overview_indexIcon_scoring_%s.dds",
+				value = ENCHANTMENT_SEARCH_CATEGORY_DISEASE_RESISTANT, -- adds x disease resistance
+			},
+			{
+				label = GetString("SI_ENCHANTMENTSEARCHCATEGORYTYPE", ENCHANTMENT_SEARCH_CATEGORY_DECREASE_SPELL_DAMAGE),
+				texture = "EsoUI/Art/Campaign/campaignBrowser_indexIcon_hardcore_%s.dds",
+				value = ENCHANTMENT_SEARCH_CATEGORY_DECREASE_SPELL_DAMAGE, -- adds x spell resistance
+			},
+			{
+				label = GetString("SI_ENCHANTMENTSEARCHCATEGORYTYPE", ENCHANTMENT_SEARCH_CATEGORY_DECREASE_PHYSICAL_DAMAGE),
+				texture = "EsoUI/Art/Campaign/campaign_tabIcon_browser_%s.dds",
+				value = ENCHANTMENT_SEARCH_CATEGORY_DECREASE_PHYSICAL_DAMAGE, -- adds x armor
+			},
+			{
+				label = GetString("SI_ENCHANTMENTSEARCHCATEGORYTYPE", ENCHANTMENT_SEARCH_CATEGORY_INCREASE_SPELL_DAMAGE),
+				texture = "AwesomeGuildStore/images/weapon/lightning_%s.dds",
+				value = ENCHANTMENT_SEARCH_CATEGORY_INCREASE_SPELL_DAMAGE, -- adds x spell damage
+			},
+			{
+				label = GetString("SI_ENCHANTMENTSEARCHCATEGORYTYPE", ENCHANTMENT_SEARCH_CATEGORY_INCREASE_PHYSICAL_DAMAGE),
+				texture = "EsoUI/Art/Progression/progression_tabIcon_combatskills_%s.dds",
+				value = ENCHANTMENT_SEARCH_CATEGORY_INCREASE_PHYSICAL_DAMAGE, -- adds x weapon damage
+			},
+			{
+				label = GetString("SI_ENCHANTMENTSEARCHCATEGORYTYPE", ENCHANTMENT_SEARCH_CATEGORY_INCREASE_BASH_DAMAGE),
+				texture = "AwesomeGuildStore/images/armor/shield_%s.dds",
+				value = ENCHANTMENT_SEARCH_CATEGORY_INCREASE_BASH_DAMAGE, -- increase bash damage by x
+			},
+			{
+				label = GetString("SI_ENCHANTMENTSEARCHCATEGORYTYPE", ENCHANTMENT_SEARCH_CATEGORY_INCREASE_POTION_EFFECTIVENESS),
+				texture = "EsoUI/Art/Crafting/alchemy_tabIcon_solvent_%s.dds",
+				value = ENCHANTMENT_SEARCH_CATEGORY_INCREASE_POTION_EFFECTIVENESS, -- increase the effect of restoration potions by x
+			},
+			{
+				label = GetString("SI_ENCHANTMENTSEARCHCATEGORYTYPE", ENCHANTMENT_SEARCH_CATEGORY_REDUCE_POTION_COOLDOWN),
+				texture = "EsoUI/Art/Guild/tabIcon_history_%s.dds",
+				value = ENCHANTMENT_SEARCH_CATEGORY_REDUCE_POTION_COOLDOWN, -- reduce the cooldown of positions below this item's level by x seconds
+			},
+			{
+				label = GetString("SI_ENCHANTMENTSEARCHCATEGORYTYPE", ENCHANTMENT_SEARCH_CATEGORY_REDUCE_SPELL_COST),
+				texture = "EsoUI/Art/Progression/progression_indexIcon_world_%s.dds",
+				value = ENCHANTMENT_SEARCH_CATEGORY_REDUCE_SPELL_COST, -- reduce magicka cost of spells by x
+			},
+			{
+				label = GetString("SI_ENCHANTMENTSEARCHCATEGORYTYPE", ENCHANTMENT_SEARCH_CATEGORY_REDUCE_FEAT_COST),
+				texture = "EsoUI/Art/Guild/guildHeraldry_indexIcon_crest_%s.dds",
+				value = ENCHANTMENT_SEARCH_CATEGORY_REDUCE_FEAT_COST, -- reduce stamina cost of abilities by x
+			},
+			{
+				label = GetString("SI_ENCHANTMENTSEARCHCATEGORYTYPE", ENCHANTMENT_SEARCH_CATEGORY_REDUCE_BLOCK_AND_BASH),
+				texture = "EsoUI/Art/Guild/tabIcon_heraldry_%s.dds",
+				value = ENCHANTMENT_SEARCH_CATEGORY_REDUCE_BLOCK_AND_BASH, -- reduce cost of bash by x and reduce cost of blocking by y
+			},
+			{
+				label = GetString("SI_ENCHANTMENTSEARCHCATEGORYTYPE", ENCHANTMENT_SEARCH_CATEGORY_MAGICKA_REGEN),
+				texture = "EsoUI/Art/Inventory/inventory_tabIcon_consumables_%s.dds",
+				value = ENCHANTMENT_SEARCH_CATEGORY_MAGICKA_REGEN, -- adds x magicka recovery
+			},
+			{
+				label = GetString("SI_ENCHANTMENTSEARCHCATEGORYTYPE", ENCHANTMENT_SEARCH_CATEGORY_HEALTH_REGEN),
+				texture = "EsoUI/Art/Crafting/provisioner_indexIcon_meat_%s.dds",
+				value = ENCHANTMENT_SEARCH_CATEGORY_HEALTH_REGEN, -- adds x health recovery
+			},
+			{
+				label = GetString("SI_ENCHANTMENTSEARCHCATEGORYTYPE", ENCHANTMENT_SEARCH_CATEGORY_STAMINA_REGEN),
+				texture = "EsoUI/Art/Crafting/provisioner_indexIcon_beer_%s.dds",
+				value = ENCHANTMENT_SEARCH_CATEGORY_STAMINA_REGEN, -- adds x stamina recovery
+			},
+			{
+				label = GetString("SI_ENCHANTMENTSEARCHCATEGORYTYPE", ENCHANTMENT_SEARCH_CATEGORY_OTHER),
+				texture = "EsoUI/Art/Inventory/inventory_tabIcon_misc_%s.dds",
+				value = ENCHANTMENT_SEARCH_CATEGORY_OTHER, -- ability changing enchantments
+			},
+		},
+	},
 	[SUBFILTER_BLACKSMITHING_MATERIALS] = {
 		label = L["SUBFILTER_MATERIAL_TYPE_LABEL"],
 		x = 0,
 		y = 0,
 		size = SUBFILTER_BUTTON_SIZE,
-		perRow = 5,
+		perRow = 6,
 		filter = TRADING_HOUSE_FILTER_TYPE_ITEM,
 		buttons = {
 			{
@@ -704,7 +926,7 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 		x = 0,
 		y = 0,
 		size = SUBFILTER_BUTTON_SIZE,
-		perRow = 5,
+		perRow = 6,
 		filter = TRADING_HOUSE_FILTER_TYPE_ITEM,
 		buttons = {
 			{
@@ -729,7 +951,7 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 		x = 0,
 		y = 0,
 		size = SUBFILTER_BUTTON_SIZE,
-		perRow = 5,
+		perRow = 6,
 		filter = TRADING_HOUSE_FILTER_TYPE_ITEM,
 		buttons = {
 			{
@@ -754,7 +976,7 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 		x = 0,
 		y = 0,
 		size = SUBFILTER_BUTTON_SIZE,
-		perRow = 5,
+		perRow = 6,
 		filter = TRADING_HOUSE_FILTER_TYPE_ITEM,
 		buttons = {
 			{
@@ -774,7 +996,7 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 		x = 0,
 		y = 0,
 		size = SUBFILTER_BUTTON_SIZE,
-		perRow = 5,
+		perRow = 6,
 		filter = TRADING_HOUSE_FILTER_TYPE_ITEM,
 		buttons = {
 			{
@@ -799,7 +1021,7 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 		x = 0,
 		y = 0,
 		size = SUBFILTER_BUTTON_SIZE,
-		perRow = 5,
+		perRow = 6,
 		filter = TRADING_HOUSE_FILTER_TYPE_ITEM,
 		buttons = {
 			{

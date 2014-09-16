@@ -104,15 +104,22 @@ local function InitializeFilters(control)
 
 	if(saveData.replaceCategoryFilter) then
 		local header = control:GetNamedChild("Header")
+		header:ClearAnchors()
+		header:SetAnchor(TOPLEFT, common:GetParent(), TOPLEFT, 0, -43)
+
 		control:GetNamedChild("ItemCategory"):SetHidden(true)
 		categoryFilter = AwesomeGuildStore.CategorySelector:New(control, ADDON_NAME .. "ItemCategory")
 		categoryFilter.control:ClearAnchors()
-		categoryFilter.control:SetAnchor(TOPLEFT, header, TOPRIGHT, 70, -20)
+		categoryFilter.control:SetAnchor(TOPLEFT, header, TOPRIGHT, 70, -10)
 
 		local itemPane = ZO_TradingHouse:GetNamedChild("ItemPane")
 		itemPane:SetAnchor(TOPLEFT, categoryFilter.control, BOTTOMLEFT, 0, 20)
 
 		searchLibrary:RegisterFilter(categoryFilter)
+
+		common:ClearAnchors()
+		common:SetAnchor(TOPLEFT, common:GetParent(), TOPLEFT, 0, -10)
+		common:SetAnchor(TOPRIGHT, common:GetParent(), TOPRIGHT, 0, -10)
 	end
 
 	if(saveData.replacePriceFilter) then
@@ -167,9 +174,13 @@ local function InitializeFilters(control)
 	end
 
 	searchButton = CreateControlFromVirtual(ADDON_NAME .. "StartSearchButton", common, "ZO_DefaultButton")
-	local parent = qualitySelector and qualitySelector.control or common
 	searchButton:SetWidth(common:GetWidth())
-	searchButton:SetAnchor(TOP, parent, BOTTOM, 0, 25)
+	if(categoryFilter) then
+		searchButton:SetAnchor(TOP, common, BOTTOM, 0, 345)
+	else
+		local parent = qualitySelector and qualitySelector.control or common
+		searchButton:SetAnchor(TOP, parent, BOTTOM, 0, 25)
+	end
 	searchButton:SetText(L["START_SEARCH_LABEL"])
 	searchButton:SetHandler("OnMouseUp",function(control, button, isInside)
 		if(button == 1 and isInside) then

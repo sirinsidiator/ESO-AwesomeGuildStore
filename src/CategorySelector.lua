@@ -141,14 +141,14 @@ function CategorySelector:CreateSubfilterGroup(name, subfilterPreset)
 	local parent = self.control:GetParent()
 	local group = ButtonGroup:New(parent, name, 0, 0)
 	group.control:ClearAnchors()
-	group.control:SetAnchor(TOPLEFT, parent:GetNamedChild("Header"), BOTTOMLEFT, subfilterPreset.x, subfilterPreset.y)
+	group.control:SetAnchor(TOPLEFT, parent:GetNamedChild("Header"), BOTTOMLEFT, subfilterPreset.x, subfilterPreset.y + 260)
 	group.control:SetHidden(true)
 	group.type = subfilterPreset.filter
 	return group
 end
 
 function CategorySelector:CreateSubfilterButton(group, index, buttonPreset, subfilterPreset)
-	local x = subfilterPreset.size * (0.5 + math.mod(index - 1, subfilterPreset.perRow))
+	local x = subfilterPreset.size * (math.mod(index - 1, subfilterPreset.perRow))
 	local y = 20 + subfilterPreset.size * math.floor((index - 1) / subfilterPreset.perRow)
 	local button = ToggleButton:New(group.control, group.control:GetName() .. "Button" .. index, buttonPreset.texture, x, y, subfilterPreset.size, subfilterPreset.size, buttonPreset.label)
 	button.HandlePress = function()
