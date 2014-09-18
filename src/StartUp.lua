@@ -27,13 +27,14 @@ AwesomeGuildStore.RegisterForEvent = RegisterForEvent
 -----------------------------------------------------------------------------------------
 
 local defaultData = {
-	version = 6,
+	version = 7,
 	lastGuildName = "",
 	replaceCategoryFilter = true,
 	replacePriceFilter = true,
 	replaceQualityFilter = true,
 	replaceLevelFilter = true,
 	keepFiltersOnClose = true,
+	oldQualitySelectorBehavior = false,
 	searchLibrary = {
 		x = 970,
 		y = 20,
@@ -156,7 +157,7 @@ local function InitializeFilters(control)
 	end
 
 	if(saveData.replaceQualityFilter) then
-		qualitySelector = AwesomeGuildStore.QualitySelector:New(common, ADDON_NAME .. "QualityButtons")
+		qualitySelector = AwesomeGuildStore.QualitySelector:New(common, ADDON_NAME .. "QualityButtons", saveData)
 		qualitySelector.control:ClearAnchors()
 		local parent = levelSelector and common:GetNamedChild("LevelRangeToggle") or common:GetNamedChild("MinLevel")
 		qualitySelector.control:SetAnchor(TOPLEFT, parent, BOTTOMLEFT, 0, 10)
@@ -334,13 +335,21 @@ local function CreateSettingsDialog()
 			setFunc = function(value) saveData.keepFiltersOnClose = value end,
 			default = defaultData.keepFiltersOnClose
 		},
+		[6] = {
+			type = "checkbox",
+			name = L["SETTINGS_OLD_QUALITY_SELECTOR_BEHAVIOR_LABEL"],
+			tooltip = L["SETTINGS_OLD_QUALITY_SELECTOR_BEHAVIOR_DESCRIPTION"],
+			getFunc = function() return saveData.oldQualitySelectorBehavior end,
+			setFunc = function(value) saveData.oldQualitySelectorBehavior = value end,
+			default = defaultData.oldQualitySelectorBehavior
+		},
 	}
 	LAM:RegisterOptionControls("AwesomeGuildStoreOptions", optionsData)
 end
 
 OnAddonLoaded(function()
 	AwesomeGuildStore_Data = AwesomeGuildStore_Data or {}
-	saveData = AwesomeGuildStore_Data[GetDisplayName()] or ZO_ShallowTableCopy(defaultData)
+	saveData = AwesomeGuildStore_Data[GetDisplayName()] or ZO_DeepTableCopy(defaultData)
 	AwesomeGuildStore_Data[GetDisplayName()] = saveData
 
 	L = AwesomeGuildStore.Localization
@@ -368,6 +377,10 @@ OnAddonLoaded(function()
 		saveData.searchLibrary.lastState = saveData.lastState
 		saveData.lastState = nil
 		saveData.version = 6
+	end
+	if(saveData.version == 6) then
+		saveData.oldQualitySelectorBehavior = defaultData.oldQualitySelectorBehavior
+		saveData.version = 7
 	end
 
 	local title = TRADING_HOUSE.m_control:GetNamedChild("Title")

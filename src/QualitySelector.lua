@@ -11,16 +11,23 @@ local RESET_BUTTON_TEXTURE = "EsoUI/Art/Buttons/decline_%s.dds"
 local QualitySelector = ZO_Object:Subclass()
 AwesomeGuildStore.QualitySelector = QualitySelector
 
-local function CreateButtonControl(parent, name, textureName, tooltipText, callback)
+local function CreateButtonControl(parent, name, textureName, tooltipText, callback, saveData)
 	local buttonControl = CreateControlFromVirtual(name .. "NormalQualityButton", parent, "ZO_DefaultButton")
 	buttonControl:SetNormalTexture(textureName:format("up"))
 	buttonControl:SetPressedTexture(textureName:format("down"))
 	buttonControl:SetMouseOverTexture("AwesomeGuildStore/images/qualitybuttons/over.dds")
 	buttonControl:SetEndCapWidth(0)
 	buttonControl:SetDimensions(BUTTON_SIZE, BUTTON_SIZE)
+	buttonControl:SetHandler("OnMouseDoubleClick", function(control, button)
+		callback(3)
+	end)
 	buttonControl:SetHandler("OnMouseUp", function(control, button, isInside, ctrl, alt, shift)
 		if(isInside) then
-			if(shift) then
+			local oldBehavior = saveData.oldQualitySelectorBehavior
+			local setBoth = (oldBehavior and shift) or (not oldBehavior and not shift)
+			if(setBoth) then
+				callback(3)
+			else
 				callback(button)
 				if(button == 2) then
 					-- the mouse down event does not fire for right click and the button does not show any click behavior at all
@@ -33,8 +40,6 @@ local function CreateButtonControl(parent, name, textureName, tooltipText, callb
 					end, 100)
 					PlaySound("Click")
 				end
-			else
-				callback(3)
 			end
 		end
 	end)
@@ -50,7 +55,7 @@ local function CreateButtonControl(parent, name, textureName, tooltipText, callb
 	return buttonControl
 end
 
-function QualitySelector:New(parent, name)
+function QualitySelector:New(parent, name, saveData)
 	local selector = ZO_Object.New(self)
 	selector.callbackName = name .. "Changed"
 	selector.type = 4
@@ -95,27 +100,27 @@ function QualitySelector:New(parent, name)
 
 	local normalButton = CreateButtonControl(container, name .. "NormalQualityButton", "AwesomeGuildStore/images/qualitybuttons/normal_%s.dds", L["NORMAL_QUALITY_LABEL"], function(button)
 		SafeSetRangeValue(button, 1)
-	end)
+	end, saveData)
 	normalButton:SetAnchor(TOPLEFT, container, TOPLEFT, BUTTON_X, BUTTON_Y)
 
 	local magicButton = CreateButtonControl(container, name .. "MagicQualityButton", "AwesomeGuildStore/images/qualitybuttons/magic_%s.dds", L["MAGIC_QUALITY_LABEL"], function(button)
 		SafeSetRangeValue(button, 2)
-	end)
+	end, saveData)
 	magicButton:SetAnchor(TOPLEFT, container, TOPLEFT, BUTTON_X + (BUTTON_SIZE + BUTTON_SPACING), BUTTON_Y)
 
 	local arcaneButton = CreateButtonControl(container, name .. "ArcaneQualityButton", "AwesomeGuildStore/images/qualitybuttons/arcane_%s.dds", L["ARCANE_QUALITY_LABEL"], function(button)
 		SafeSetRangeValue(button, 3)
-	end)
+	end, saveData)
 	arcaneButton:SetAnchor(TOPLEFT, container, TOPLEFT, BUTTON_X + (BUTTON_SIZE + BUTTON_SPACING) * 2, BUTTON_Y)
 
 	local artifactButton = CreateButtonControl(container, name .. "ArtifactQualityButton", "AwesomeGuildStore/images/qualitybuttons/artifact_%s.dds", L["ARTIFACT_QUALITY_LABEL"], function(button)
 		SafeSetRangeValue(button, 4)
-	end)
+	end, saveData)
 	artifactButton:SetAnchor(TOPLEFT, container, TOPLEFT, BUTTON_X + (BUTTON_SIZE + BUTTON_SPACING) * 3, BUTTON_Y)
 
 	local legendaryButton = CreateButtonControl(container, name .. "LegendaryQualityButton", "AwesomeGuildStore/images/qualitybuttons/legendary_%s.dds", L["LEGENDARY_QUALITY_LABEL"], function(button)
 		SafeSetRangeValue(button, 5)
-	end)
+	end, saveData)
 	legendaryButton:SetAnchor(TOPLEFT, container, TOPLEFT, BUTTON_X + (BUTTON_SIZE + BUTTON_SPACING) * 4, BUTTON_Y)
 
 	local resetButton = CreateControlFromVirtual(name .. "ResetButton", parent, "ZO_DefaultButton")
