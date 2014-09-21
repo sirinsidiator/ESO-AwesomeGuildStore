@@ -29,17 +29,17 @@ local function CreateButtonControl(parent, name, textureName, tooltipText, callb
 				callback(3)
 			else
 				callback(button)
-				if(button == 2) then
-					-- the mouse down event does not fire for right click and the button does not show any click behavior at all
-					-- we emulate it by changing the texture for a bit and playing the click sound manually
-					buttonControl:SetNormalTexture(textureName:format("down"))
-					buttonControl:SetMouseOverTexture("")
-					zo_callLater(function()
-						buttonControl:SetNormalTexture(textureName:format("up"))
-						buttonControl:SetMouseOverTexture("AwesomeGuildStore/images/qualitybuttons/over.dds")
-					end, 100)
-					PlaySound("Click")
-				end
+			end
+			if(button ~= 1) then
+				-- the mouse down event does not fire for right and middle click and the button does not show any click behavior at all
+				-- we emulate it by changing the texture for a bit and playing the click sound manually
+				buttonControl:SetNormalTexture(textureName:format("down"))
+				buttonControl:SetMouseOverTexture("")
+				zo_callLater(function()
+					buttonControl:SetNormalTexture(textureName:format("up"))
+					buttonControl:SetMouseOverTexture("AwesomeGuildStore/images/qualitybuttons/over.dds")
+				end, 100)
+				PlaySound("Click")
 			end
 		end
 	end)
