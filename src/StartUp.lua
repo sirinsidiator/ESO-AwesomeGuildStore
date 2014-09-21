@@ -454,12 +454,20 @@ OnAddonLoaded(function()
 		end
 	end)
 
+	local salesCategoryFilter = nil
+
 	local originalHandleTabSwitch = TRADING_HOUSE.HandleTabSwitch
 	TRADING_HOUSE.HandleTabSwitch = function(self, tabData)
 		originalHandleTabSwitch(self, tabData)
 		local mode = tabData.descriptor
 		if(mode == "tradingHouseBrowse") then
 			InitializeFilters(self.m_browseItems)
+		elseif(mode == "tradingHouseSell") then
+			if(not salesCategoryFilter) then
+				salesCategoryFilter = AwesomeGuildStore.SalesCategorySelector:New(TRADING_HOUSE.m_postItems, ADDON_NAME .. "SalesItemCategory")
+				salesCategoryFilter.control:ClearAnchors()
+				salesCategoryFilter.control:SetAnchor(TOPLEFT, TRADING_HOUSE.m_postItems, TOPRIGHT, 70, -53)
+			end
 		end
 	end
 

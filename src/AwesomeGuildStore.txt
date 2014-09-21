@@ -32,6 +32,7 @@ ButtonGroup.lua
 ToggleButton.lua
 CategoryPresets.lua
 CategorySelector.lua
+SalesCategorySelector.lua
 PriceSelector.lua
 LevelSelector.lua
 QualitySelector.lua
