@@ -4,7 +4,7 @@ local MinMaxRangeSlider = AwesomeGuildStore.MinMaxRangeSlider
 local MIN_LEVEL = 1
 local MAX_LEVEL = 50
 local MIN_RANK = 1
-local MAX_RANK = 12
+local MAX_RANK = 14
 local RESET_BUTTON_SIZE = 18
 local RESET_BUTTON_TEXTURE = "EsoUI/Art/Buttons/decline_%s.dds"
 

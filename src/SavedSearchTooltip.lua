@@ -130,7 +130,7 @@ function SavedSearchTooltip:Show(control, entry)
 		maxLevel = tonumber(maxLevel)
 		if(minLevel or maxLevel) then
 			local label = isNormal and L["LEVEL_SELECTOR_TITLE"] or L["VR_SELECTOR_TITLE"]
-			local text = ("%d - %d"):format(minLevel or 1, maxLevel or (isNormal and 50 or 12))
+			local text = ("%d - %d"):format(minLevel or 1, maxLevel or (isNormal and 50 or 14))
 			self:AddLine(label:sub(0, -2), text)
 		end
 	end
