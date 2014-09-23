@@ -220,6 +220,8 @@ local function InitializeFilters(control)
 	RegisterForEvent(EVENT_TRADING_HOUSE_SEARCH_COOLDOWN_UPDATE, function(_, cooldownMilliseconds)
 		if(cooldownMilliseconds ~= 0) then return end
 		searchButton:SetEnabled(true)
+		TRADING_HOUSE.m_searchAllowed = true
+		TRADING_HOUSE:OnSearchCooldownUpdate(cooldownMilliseconds)
 		HideLoadingOverlay()
 	end)
 
@@ -462,6 +464,8 @@ OnAddonLoaded(function()
 		local mode = tabData.descriptor
 		if(mode == "tradingHouseBrowse") then
 			InitializeFilters(self.m_browseItems)
+			TRADING_HOUSE.m_searchAllowed = true
+			TRADING_HOUSE:OnSearchCooldownUpdate(GetTradingHouseCooldownRemaining())
 		elseif(mode == "tradingHouseSell") then
 			if(not salesCategoryFilter) then
 				salesCategoryFilter = AwesomeGuildStore.SalesCategorySelector:New(TRADING_HOUSE.m_postItems, ADDON_NAME .. "SalesItemCategory")
