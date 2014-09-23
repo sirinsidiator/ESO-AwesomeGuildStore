@@ -8,6 +8,36 @@
 	<property name="tempdir" location="${basedir}/../temp" />
 	<property name="targetdir" location="${basedir}/../target" />
 
+	<target name="getIsCustomVersion">
+		<input addproperty="buildcustom" validargs="y,n" defaultvalue="n" message="Build with custom version number?" />
+		<condition property="isCustomVersion">
+			<equals arg1="y" arg2="${buildcustom}" />
+		</condition>
+	</target>
+
+	<target name="getCustomVersion" if="isCustomVersion">
+		<loadproperties srcFile="build.number" />
+		<script language="javascript">
+			<![CDATA[
+			var buildNumber = project.getProperty("build.number");
+			project.setProperty("build.number", parseInt(buildNumber) - 1);
+			]]>
+		</script>
+		<input addproperty="finalVersion" defaultvalue="${version}.${build.number}" message="Please enter custom version number:" />
+		<script language="javascript">
+			<![CDATA[
+			var before = project.getProperty("finalVersion");
+			project.setProperty("fileVersion", before.replaceAll("\\.", "_"));
+			]]>
+		</script>
+	</target>
+
+	<target name="getVersion" unless="isCustomVersion">
+		<buildnumber file="build.number" />
+		<property name="finalVersion" value="${version}.${build.number}" />
+		<property name="fileVersion" value="${version}_${build.number}" />
+	</target>
+
 	<target name="copyToAddonFolder">
 		<delete dir="${addondir}" />
 		<copy todir="${addondir}">
@@ -16,7 +46,7 @@
 		<replace file="${addondir}/${ant.project.name}.txt" token="VERSION_NUMBER" value="development" />
 	</target>
 
-	<target name="createArchive">
+	<target name="createArchive" depends="getIsCustomVersion,getCustomVersion,getVersion">
 		<delete includeemptydirs="true" dir="${tempdir}" />
 		<buildnumber file="build.number" />
 
@@ -24,9 +54,9 @@
 			<fileset dir="${srcdir}" />
 		</copy>
 
-		<replace file="${tempdir}/${ant.project.name}/${ant.project.name}.txt" token="VERSION_NUMBER" value="${version}.${build.number}" />
+		<replace file="${tempdir}/${ant.project.name}/${ant.project.name}.txt" token="VERSION_NUMBER" value="${finalVersion}" />
 
-		<zip destfile="${targetdir}/${ant.project.name}v${version}_${build.number}.zip">
+		<zip destfile="${targetdir}/${ant.project.name}v${fileVersion}.zip">
 			<fileset dir="${tempdir}" />
 		</zip>
 		<delete includeemptydirs="true" dir="${tempdir}" />
