@@ -5,6 +5,7 @@ local MAJOR_BUTTON_SIZE = 46
 local MINOR_BUTTON_SIZE = 32
 local RESET_BUTTON_SIZE = 18
 local RESET_BUTTON_TEXTURE = "EsoUI/Art/Buttons/decline_%s.dds"
+local DEFAULT_LAYOUT = BACKPACK_TRADING_HOUSE_LAYOUT_FRAGMENT.layoutData
 
 local RegisterForEvent = AwesomeGuildStore.RegisterForEvent
 local ButtonGroup = AwesomeGuildStore.ButtonGroup
@@ -177,6 +178,7 @@ function SalesCategorySelector:CreateSubcategoryButton(group, subcategory, prese
 end
 
 local currentFilterValues = {}
+local currentLayout = DEFAULT_LAYOUT
 
 local function contains(haystack, needle)
 	for _, value in pairs(haystack) do
@@ -238,7 +240,7 @@ local BACKPACK_TRADING_HOUSE_LAYOUT_FRAGMENT_ADVANCED = ZO_BackpackLayoutFragmen
 function SalesCategorySelector:HandleChange()
 	local filters = FILTER_PRESETS[self.category].subcategories
 	local subcategory = self.subcategory[self.category]
-	local layout = BACKPACK_TRADING_HOUSE_LAYOUT_FRAGMENT_BASIC.layoutData
+	currentLayout = BACKPACK_TRADING_HOUSE_LAYOUT_FRAGMENT_BASIC.layoutData
 	if(subcategory) then
 		if(self.category == ITEMFILTERTYPE_CRAFTING and subcategory == 0) then -- ugly special cases
 			filters = ALL_CRAFTING_PRESET.filters
@@ -247,12 +249,11 @@ function SalesCategorySelector:HandleChange()
 		else
 			filters = filters[subcategory].filters
 		end
-		layout = BACKPACK_TRADING_HOUSE_LAYOUT_FRAGMENT_ADVANCED.layoutData
+		currentLayout = BACKPACK_TRADING_HOUSE_LAYOUT_FRAGMENT_ADVANCED.layoutData
 	end
 	if(filters ~= currentFilterValues) then
 		currentFilterValues = filters
-		PLAYER_INVENTORY:ApplyBackpackLayout(BACKPACK_TRADING_HOUSE_LAYOUT_FRAGMENT.layoutData) -- need to force a refresh because we reuse fragments
-		PLAYER_INVENTORY:ApplyBackpackLayout(layout)
+		self:Refresh()
 	end
 
 	if(not self.fireChangeCallback) then
@@ -261,6 +262,11 @@ function SalesCategorySelector:HandleChange()
 			CALLBACK_MANAGER:FireCallbacks(self.callbackName, self)
 		end, 100)
 	end
+end
+
+function SalesCategorySelector:Refresh()
+	PLAYER_INVENTORY:ApplyBackpackLayout(DEFAULT_LAYOUT) -- need to force a refresh because we reuse fragments
+	PLAYER_INVENTORY:ApplyBackpackLayout(currentLayout)
 end
 
 function SalesCategorySelector:Reset()

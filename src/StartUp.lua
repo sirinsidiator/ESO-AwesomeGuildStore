@@ -57,6 +57,7 @@ local categoryFilter
 local searchButton
 local nameFilter
 local searchLibrary
+local salesCategoryFilter
 
 function AwesomeGuildStore.InitializeGuildSelector(control)
 	local comboBoxControl = GetControl(control, "ComboBox")
@@ -421,6 +422,9 @@ OnAddonLoaded(function()
 		isSearchDisabled = true
 		searchButton:SetEnabled(false)
 		DisableKeybindStripSearchButton()
+		if(salesCategoryFilter) then
+			salesCategoryFilter:Reset()
+		end
 	end)
 
 	RegisterForEvent(EVENT_TRADING_HOUSE_STATUS_RECEIVED, function()
@@ -457,8 +461,6 @@ OnAddonLoaded(function()
 		end
 	end)
 
-	local salesCategoryFilter = nil
-
 	local originalHandleTabSwitch = TRADING_HOUSE.HandleTabSwitch
 	TRADING_HOUSE.HandleTabSwitch = function(self, tabData)
 		originalHandleTabSwitch(self, tabData)
@@ -472,6 +474,8 @@ OnAddonLoaded(function()
 				salesCategoryFilter = AwesomeGuildStore.SalesCategorySelector:New(TRADING_HOUSE.m_postItems, ADDON_NAME .. "SalesItemCategory")
 				salesCategoryFilter.control:ClearAnchors()
 				salesCategoryFilter.control:SetAnchor(TOPLEFT, TRADING_HOUSE.m_postItems, TOPRIGHT, 70, -53)
+			else
+				salesCategoryFilter:Refresh()
 			end
 		end
 	end
