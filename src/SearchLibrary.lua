@@ -216,7 +216,6 @@ end
 function SearchLibrary:Deserialize(state)
 	local version, categoryState, priceState, levelState, qualityState, nameState = zo_strsplit(":", state)
 	if(tonumber(version) == SAVE_VERSION) then
-		TRADING_HOUSE:ClearSearchResults()
 		local state = {categoryState, priceState, levelState, qualityState, nameState}
 		local filter = self.filter
 		for i = 1, 5 do
@@ -224,6 +223,9 @@ function SearchLibrary:Deserialize(state)
 				filter[i]:Deserialize(state[i])
 			end
 		end
+
+		TRADING_HOUSE.m_searchAllowed = true
+		TRADING_HOUSE:OnSearchCooldownUpdate(GetTradingHouseCooldownRemaining())
 	end
 end
 --|H1:book:1053:shoplink:1:4;5;15,8:1;199:0;26;29:1;5:Odra|h|h

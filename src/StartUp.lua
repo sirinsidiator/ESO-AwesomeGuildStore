@@ -98,6 +98,7 @@ end
 
 local function InitializeFilters(control)
 	if(filtersInitialized) then return end
+	TRADING_HOUSE.m_numItemsOnPage = 0
 
 	searchLibrary = AwesomeGuildStore.SearchLibrary:New(saveData.searchLibrary)
 
