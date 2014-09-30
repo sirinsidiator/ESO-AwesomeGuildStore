@@ -330,11 +330,17 @@ function CategorySelector:Deserialize(state)
 			for _, button in pairs(self.group[self.category].buttons) do
 				if(button.value == tonumber(value)) then button:Press() break end
 			end
+			local filters = FILTER_PRESETS[self.category].subcategories
+			local subcategory = self.subcategory[self.category]
+			if(subcategory) then
+				for _, subfilterId in pairs(filters[subcategory].subfilters) do
+					self.subfilters[subfilterId]:ReleaseAllButtons()
+				end
+			end
 		else
 			local subfilterId, subfilterValues = zo_strsplit(",", value)
 			local buttonGroup = self.subfilters[tonumber(subfilterId)]
 			assert(subfilterId and subfilterValues and buttonGroup)
-			buttonGroup:ReleaseAllButtons()
 			subfilterValues = tonumber(subfilterValues)
 			local buttonValue = 0
 			while subfilterValues > 0 do
@@ -352,5 +358,4 @@ function CategorySelector:Deserialize(state)
 			end
 		end
 	end
-	local category = self.category
 end
