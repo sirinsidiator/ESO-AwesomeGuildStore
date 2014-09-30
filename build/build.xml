@@ -48,7 +48,6 @@
 
 	<target name="createArchive" depends="getIsCustomVersion,getCustomVersion,getVersion">
 		<delete includeemptydirs="true" dir="${tempdir}" />
-		<buildnumber file="build.number" />
 
 		<copy todir="${tempdir}/${ant.project.name}">
 			<fileset dir="${srcdir}" />
