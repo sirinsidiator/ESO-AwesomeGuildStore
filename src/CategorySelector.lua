@@ -332,7 +332,7 @@ function CategorySelector:Deserialize(state)
 			end
 			local filters = FILTER_PRESETS[self.category].subcategories
 			local subcategory = self.subcategory[self.category]
-			if(subcategory) then
+			if(subcategory and filters[subcategory].subfilters) then
 				for _, subfilterId in pairs(filters[subcategory].subfilters) do
 					self.subfilters[subfilterId]:ReleaseAllButtons()
 				end
