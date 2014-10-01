@@ -232,7 +232,7 @@ end
 
 function SearchLibrary:SaveCurrentState()
 	local state = self.currentState
-	self.saveData.lastState = SAVE_TEMPLATE:format(SAVE_VERSION, state[1], state[2], state[3], state[4], state[5])
+	self.saveData.lastState = SAVE_TEMPLATE:format(SAVE_VERSION, state[1] or "-", state[2] or "-", state[3] or "-", state[4] or "-", state[5] or "-")
 	self:UpdateFavoriteButtonState()
 end
 
