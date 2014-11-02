@@ -22,7 +22,7 @@
 		</Control>
 
 		<TopLevelControl name="AwesomeGuildStoreSearchLibrary" mouseEnabled="true" hidden="true">
-			<Dimensions x="730" y="220" />
+			<Dimensions x="730" y="185" />
 
 			<Controls>
 				<Label name="$(parent)HistoryLabel" font="ZoFontWinH3" wrapMode="ELLIPSIS">
@@ -44,12 +44,12 @@
 
 				<Control name="$(parent)History" inherits="ZO_ScrollList">
 					<Anchor point="TOPLEFT" relativeTo="$(parent)HistoryLabel" relativePoint="BOTTOMLEFT" offsetY="5" />
-					<Dimensions x="330" y="170" />
+					<Dimensions x="330" y="135" />
 				</Control>
 
 				<Control name="$(parent)Favorites" inherits="ZO_ScrollList">
 					<Anchor point="TOPLEFT" relativeTo="$(parent)FavoritesLabel" relativePoint="BOTTOMLEFT" offsetY="5" />
-					<Dimensions x="330" y="170" />
+					<Dimensions x="330" y="135" />
 				</Control>
 
 				<Backdrop name="$(parent)Bg" integralWrapping="true">
