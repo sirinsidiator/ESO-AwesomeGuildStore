@@ -92,7 +92,7 @@ function CategorySelector:New(parent, name)
 
 	RegisterForEvent(EVENT_TRADING_HOUSE_SEARCH_RESULTS_RECEIVED, function(_, guildId, numItemsOnPage, currentPage, hasMorePages)
 		if(showTabardsInResult) then
-			TRADING_HOUSE:AddHeraldryItems(true) -- ignore the filters for now; maybe some day we will use it correctly and can let it check the requirements
+			TRADING_HOUSE:AddGuildSpecificItems(true) -- ignore the filters for now; maybe some day we will use it correctly and can let it check the requirements
 		end
 	end)
 
