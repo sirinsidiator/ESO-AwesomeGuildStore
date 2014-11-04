@@ -267,6 +267,41 @@ local function InitializeFilters(control)
 	searchLibrary:Serialize()
 
 	filtersInitialized = true
+
+	-- TODO: move somewhere else
+	local PER_UNIT_PRICE_CURRENCY_OPTIONS = {
+		showTooltips = false,
+		font = "ZoFontWinT2",
+		iconSide = RIGHT,
+	}
+
+
+	local dataType = TRADING_HOUSE.m_searchResultsList.dataTypes[1]
+	local originalSetupCallback = dataType.setupCallback
+	dataType.setupCallback = function(rowControl, result)
+		originalSetupCallback(rowControl, result)
+
+		local sellPriceControl = rowControl:GetNamedChild("SellPrice")
+		local perItemPrice = rowControl:GetNamedChild("SellPricePerItem")
+		if(not perItemPrice) then
+			local controlName = rowControl:GetName() .. "SellPricePerItem"
+			perItemPrice = rowControl:CreateControl(controlName, CT_LABEL)
+			perItemPrice:SetAnchor(TOPRIGHT, sellPriceControl, BOTTOMRIGHT, 0, 0)
+		end
+
+		if(result.stackCount > 1) then
+			local unitPrice = tonumber(string.format("%.2f", result.purchasePrice / result.stackCount))
+			ZO_CurrencyControl_SetSimpleCurrency(perItemPrice, result.currencyType, unitPrice, PER_UNIT_PRICE_CURRENCY_OPTIONS, nil, TRADING_HOUSE.m_playerMoney[result.currencyType] < result.purchasePrice)
+			perItemPrice:SetText("@" .. perItemPrice:GetText():gsub("|t.-:.-:", "|t14:14:"))
+			perItemPrice:SetHidden(false)
+			sellPriceControl:ClearAnchors()
+			sellPriceControl:SetAnchor(RIGHT, rowControl, RIGHT, -5, -10)
+		else
+			perItemPrice:SetHidden(true)
+			sellPriceControl:ClearAnchors()
+			sellPriceControl:SetAnchor(RIGHT, rowControl, RIGHT, -5, 0)
+		end
+	end
 end
 
 local function ReselectLastGuild()
