@@ -269,6 +269,11 @@ function SalesCategorySelector:Refresh()
 	PLAYER_INVENTORY:ApplyBackpackLayout(currentLayout)
 end
 
+
+RegisterForEvent(EVENT_CLOSE_TRADING_HOUSE, function()
+	PLAYER_INVENTORY:ApplyBackpackLayout(BACKPACK_DEFAULT_LAYOUT_FRAGMENT.layoutData) -- required to make guild bank and other inventories look normal when advanced filters is used
+end)
+
 function SalesCategorySelector:Reset()
 	self.mainGroup.defaultButton:Press()
 	for _, group in pairs(self.group) do
