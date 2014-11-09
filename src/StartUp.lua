@@ -27,7 +27,7 @@ AwesomeGuildStore.RegisterForEvent = RegisterForEvent
 -----------------------------------------------------------------------------------------
 
 local defaultData = {
-	version = 7,
+	version = 8,
 	lastGuildName = "",
 	replaceCategoryFilter = true,
 	replacePriceFilter = true,
@@ -35,6 +35,7 @@ local defaultData = {
 	replaceLevelFilter = true,
 	keepFiltersOnClose = true,
 	oldQualitySelectorBehavior = false,
+	displayPerUnitPrice = true,
 	searchLibrary = {
 		x = 980,
 		y = -5,
@@ -83,7 +84,11 @@ local function InitializeGuildSelector(lastGuildId)
 
 	for i = 1, GetNumTradingHouseGuilds() do
 		local guildId, guildName, guildAlliance = GetTradingHouseGuildDetails(i)
-		local entryText = zo_iconTextFormat(GetAllianceBannerIcon(guildAlliance), 24, 24, guildName)
+		local iconPath = GetAllianceBannerIcon(guildAlliance)
+		if(iconPath == nil) then
+			ZO_Alert(UI_ALERT_CATEGORY_ALERT, SOUNDS.GENERAL_ALERT_ERROR, L["INVALID_STATE"])
+		end
+		local entryText = iconPath and zo_iconTextFormat(iconPath, 24, 24, guildName) or guildName
 		local entry = comboBox:CreateItemEntry(entryText, OnGuildChanged)
 		entry.guildId = guildId
 		entry.selectedText = guildName
@@ -95,6 +100,43 @@ local function InitializeGuildSelector(lastGuildId)
 	end
 
 	OnGuildChanged(comboBox, selectedEntry.name, selectedEntry)
+end
+
+local function InitializeUnitPriceDisplay()
+	local PER_UNIT_PRICE_CURRENCY_OPTIONS = {
+		showTooltips = false,
+		font = "ZoFontWinT2",
+		iconSide = RIGHT,
+	}
+
+	local dataType = TRADING_HOUSE.m_searchResultsList.dataTypes[1]
+	local originalSetupCallback = dataType.setupCallback
+	dataType.setupCallback = function(rowControl, result)
+		originalSetupCallback(rowControl, result)
+
+		if(saveData.displayPerUnitPrice) then
+			local sellPriceControl = rowControl:GetNamedChild("SellPrice")
+			local perItemPrice = rowControl:GetNamedChild("SellPricePerItem")
+			if(not perItemPrice) then
+				local controlName = rowControl:GetName() .. "SellPricePerItem"
+				perItemPrice = rowControl:CreateControl(controlName, CT_LABEL)
+				perItemPrice:SetAnchor(TOPRIGHT, sellPriceControl, BOTTOMRIGHT, 0, 0)
+			end
+
+			if(result.stackCount > 1) then
+				local unitPrice = tonumber(string.format("%.2f", result.purchasePrice / result.stackCount))
+				ZO_CurrencyControl_SetSimpleCurrency(perItemPrice, result.currencyType, unitPrice, PER_UNIT_PRICE_CURRENCY_OPTIONS, nil, TRADING_HOUSE.m_playerMoney[result.currencyType] < result.purchasePrice)
+				perItemPrice:SetText("@" .. perItemPrice:GetText():gsub("|t.-:.-:", "|t14:14:"))
+				perItemPrice:SetHidden(false)
+				sellPriceControl:ClearAnchors()
+				sellPriceControl:SetAnchor(RIGHT, rowControl, RIGHT, -5, -10)
+			else
+				perItemPrice:SetHidden(true)
+				sellPriceControl:ClearAnchors()
+				sellPriceControl:SetAnchor(RIGHT, rowControl, RIGHT, -5, 0)
+			end
+		end
+	end
 end
 
 local function InitializeFilters(control)
@@ -268,40 +310,7 @@ local function InitializeFilters(control)
 
 	filtersInitialized = true
 
-	-- TODO: move somewhere else
-	local PER_UNIT_PRICE_CURRENCY_OPTIONS = {
-		showTooltips = false,
-		font = "ZoFontWinT2",
-		iconSide = RIGHT,
-	}
-
-
-	local dataType = TRADING_HOUSE.m_searchResultsList.dataTypes[1]
-	local originalSetupCallback = dataType.setupCallback
-	dataType.setupCallback = function(rowControl, result)
-		originalSetupCallback(rowControl, result)
-
-		local sellPriceControl = rowControl:GetNamedChild("SellPrice")
-		local perItemPrice = rowControl:GetNamedChild("SellPricePerItem")
-		if(not perItemPrice) then
-			local controlName = rowControl:GetName() .. "SellPricePerItem"
-			perItemPrice = rowControl:CreateControl(controlName, CT_LABEL)
-			perItemPrice:SetAnchor(TOPRIGHT, sellPriceControl, BOTTOMRIGHT, 0, 0)
-		end
-
-		if(result.stackCount > 1) then
-			local unitPrice = tonumber(string.format("%.2f", result.purchasePrice / result.stackCount))
-			ZO_CurrencyControl_SetSimpleCurrency(perItemPrice, result.currencyType, unitPrice, PER_UNIT_PRICE_CURRENCY_OPTIONS, nil, TRADING_HOUSE.m_playerMoney[result.currencyType] < result.purchasePrice)
-			perItemPrice:SetText("@" .. perItemPrice:GetText():gsub("|t.-:.-:", "|t14:14:"))
-			perItemPrice:SetHidden(false)
-			sellPriceControl:ClearAnchors()
-			sellPriceControl:SetAnchor(RIGHT, rowControl, RIGHT, -5, -10)
-		else
-			perItemPrice:SetHidden(true)
-			sellPriceControl:ClearAnchors()
-			sellPriceControl:SetAnchor(RIGHT, rowControl, RIGHT, -5, 0)
-		end
-	end
+	InitializeUnitPriceDisplay()
 end
 
 local function ReselectLastGuild()
@@ -382,6 +391,14 @@ local function CreateSettingsDialog()
 			setFunc = function(value) saveData.oldQualitySelectorBehavior = value end,
 			default = defaultData.oldQualitySelectorBehavior
 		},
+		[7] = {
+			type = "checkbox",
+			name = L["SETTINGS_DISPLAY_PER_UNIT_PRICE_LABEL"],
+			tooltip = L["SETTINGS_DISPLAY_PER_UNIT_PRICE_DESCRIPTION"],
+			getFunc = function() return saveData.displayPerUnitPrice end,
+			setFunc = function(value) saveData.displayPerUnitPrice = value end,
+			default = defaultData.displayPerUnitPrice
+		},
 	}
 	LAM:RegisterOptionControls("AwesomeGuildStoreOptions", optionsData)
 end
@@ -420,6 +437,10 @@ OnAddonLoaded(function()
 	if(saveData.version == 6) then
 		saveData.oldQualitySelectorBehavior = defaultData.oldQualitySelectorBehavior
 		saveData.version = 7
+	end
+	if(saveData.version == 7) then
+		saveData.displayPerUnitPrice = defaultData.displayPerUnitPrice
+		saveData.version = 8
 	end
 
 	local title = TRADING_HOUSE.m_control:GetNamedChild("Title")

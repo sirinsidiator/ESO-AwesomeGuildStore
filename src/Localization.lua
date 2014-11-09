@@ -176,6 +176,10 @@ local localization = {
 		SETTINGS_KEEP_FILTERS_ON_CLOSE_DESCRIPTION = "Leaves the store filters set during a play session instead of clearing it when you close the guild store window and restores the last active state when the UI is loaded",
 		SETTINGS_OLD_QUALITY_SELECTOR_BEHAVIOR_LABEL = "Use old quality selector behavior",
 		SETTINGS_OLD_QUALITY_SELECTOR_BEHAVIOR_DESCRIPTION = "When enabled left and right click set lower and upper quality and double or shift click sets both to the same value",
+		SETTINGS_DISPLAY_PER_UNIT_PRICE_LABEL = "Show per unit price in search results",
+		SETTINGS_DISPLAY_PER_UNIT_PRICE_DESCRIPTION = "When enabled the results of a guild store search show the per unit price of a stack below the overall price",
+		
+		INVALID_STATE = "Invalid Store State.\nThis is a bug in the game and should be fixed soon."
 	},
 	de = {
 		FILTER_SUBCATEGORY_GLYPHS = "Glyphe",
@@ -223,7 +227,11 @@ local localization = {
 		SETTINGS_KEEP_FILTERS_ON_CLOSE_LABEL = "Filtereinstellungen merken",
 		SETTINGS_KEEP_FILTERS_ON_CLOSE_DESCRIPTION = "Anstatt die Filter beim Schließen des Ladenfensters zurückzusetzen bleiben sie während einer Spielesitzung erhalten, außerdem werden beim Laden der UI die letzten aktiven Einstellungen wiederhergestellt",
 		SETTINGS_OLD_QUALITY_SELECTOR_BEHAVIOR_LABEL = "Verwende altes Qualitätsfilterverhalten",
-		SETTINGS_OLD_QUALITY_SELECTOR_BEHAVIOR_DESCRIPTION = "Wenn aktiviert setzt ein Links- und Rechtsklick die Unter- bzw. Obergrenze und Doppel- oder Shift-Klick beide Grenzen auf den selben Wert",
+		SETTINGS_OLD_QUALITY_SELECTOR_BEHAVIOR_DESCRIPTION = "Wenn aktiviert, setzt ein Links- und Rechtsklick die Unter- bzw. Obergrenze und Doppel- oder Shift-Klick beide Grenzen auf den selben Wert",
+		SETTINGS_DISPLAY_PER_UNIT_PRICE_LABEL = "Stückpreis in Suchergebnissen anzeigen",
+		SETTINGS_DISPLAY_PER_UNIT_PRICE_DESCRIPTION = "Wenn aktiviert, wird in Suchergebnissen unterhalb des Gesamtpreises eines Stapels der Stückpreis angezeigt",
+		
+		INVALID_STATE = "Ungültiger Händlerzustand.\nDas ist ein Fehler im Spiel und sollte bald behoben werden."
 	},
 	fr = {
 	}
