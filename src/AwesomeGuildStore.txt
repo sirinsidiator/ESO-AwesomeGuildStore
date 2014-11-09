@@ -27,12 +27,12 @@ lib/LibAddonMenu-2.0/controls/slider.lua
 lib/LibAddonMenu-2.0/controls/texture.lua
 StartUp.lua
 Localization.lua
+Settings.lua
 util/MinMaxRangeSlider.lua
 util/ButtonGroup.lua
 util/ToggleButton.lua
 searchfilters/CategoryPresets.lua
 searchfilters/CategorySelector.lua
-SalesCategorySelector.lua
 searchfilters/PriceSelector.lua
 searchfilters/LevelSelector.lua
 searchfilters/QualitySelector.lua
@@ -40,4 +40,5 @@ searchfilters/ItemNameQuickFilter.lua
 history/SavedSearchTooltip.lua
 history/SearchLibrary.lua
 history/SearchLibrary.xml
+SalesCategorySelector.lua
 AwesomeGuildStore.xml
