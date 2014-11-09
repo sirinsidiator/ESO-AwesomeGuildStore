@@ -57,6 +57,9 @@ end
 local function OnGuildChanged(comboBox, selectedName, selectedEntry)
 	if(SelectTradingHouseGuildId(selectedEntry.guildId)) then
 		TRADING_HOUSE:UpdateForGuildChange()
+		if(TRADING_HOUSE.m_currentMode == "tradingHouseListings") then
+			TRADING_HOUSE:RequestListings()
+		end
 	end
 end
 
