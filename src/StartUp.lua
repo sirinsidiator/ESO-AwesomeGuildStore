@@ -98,9 +98,9 @@ local function InitializeUnitPriceDisplay()
 	dataType.setupCallback = function(rowControl, result)
 		originalSetupCallback(rowControl, result)
 
+		local sellPriceControl = rowControl:GetNamedChild("SellPrice")
+		local perItemPrice = rowControl:GetNamedChild("SellPricePerItem")
 		if(saveData.displayPerUnitPrice) then
-			local sellPriceControl = rowControl:GetNamedChild("SellPrice")
-			local perItemPrice = rowControl:GetNamedChild("SellPricePerItem")
 			if(not perItemPrice) then
 				local controlName = rowControl:GetName() .. "SellPricePerItem"
 				perItemPrice = rowControl:CreateControl(controlName, CT_LABEL)
@@ -114,11 +114,13 @@ local function InitializeUnitPriceDisplay()
 				perItemPrice:SetHidden(false)
 				sellPriceControl:ClearAnchors()
 				sellPriceControl:SetAnchor(RIGHT, rowControl, RIGHT, -5, -10)
-			else
-				perItemPrice:SetHidden(true)
-				sellPriceControl:ClearAnchors()
-				sellPriceControl:SetAnchor(RIGHT, rowControl, RIGHT, -5, 0)
+				perItemPrice = nil
 			end
+		end
+		if(perItemPrice) then
+			perItemPrice:SetHidden(true)
+			sellPriceControl:ClearAnchors()
+			sellPriceControl:SetAnchor(RIGHT, rowControl, RIGHT, -5, 0)
 		end
 	end
 end
