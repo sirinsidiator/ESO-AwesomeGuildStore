@@ -43,7 +43,12 @@ function SearchLibrary:Initialize(saveData)
 	self.control = AwesomeGuildStoreSearchLibrary
 	local control = self.control
 	control:SetMovable(true)
+	control:SetResizeHandleSize(5)
 	control:SetHandler("OnMoveStop", function() self:SavePosition() end)
+	local resizing = false
+	control:SetHandler("OnResizeStart", function() resizing = true end)
+	control:SetHandler("OnUpdate", function() if(resizing) then self:HandleResize() end end)
+	control:SetHandler("OnResizeStop", function() self:HandleResize() self:SavePosition() resizing = false end)
 
 	RegisterForEvent(EVENT_OPEN_TRADING_HOUSE, function()
 		if(saveData.isActive and TRADING_HOUSE:IsInSearchMode()) then
@@ -555,12 +560,42 @@ function SearchLibrary:Refresh()
 end
 
 function SearchLibrary:LoadPosition()
-	self.control:ClearAnchors()
-	self.control:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, self.saveData.x, self.saveData.y)
+	local control, saveData = self.control, self.saveData
+	control:ClearAnchors()
+	control:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, saveData.x, saveData.y)
+	control:SetDimensions(saveData.width, saveData.height)
+	self:HandleResize()
 end
 
 function SearchLibrary:SavePosition()
-	self.saveData.x, self.saveData.y = self.control:GetScreenRect()
+	local control, saveData = self.control, self.saveData
+	saveData.x, saveData.y = control:GetScreenRect()
+	saveData.width, saveData.height = control:GetDimensions()
+end
+
+local BORDER_WIDTH_HORIZONTAL = 25
+local BORDER_WIDTH_VERTICAL = 10
+local LABEL_HEIGHT = 23
+local LABEL_MARGIN = 7
+local EDIT_CONTROLS_WIDTH = 70
+
+local function SetScrollListDimensions(control, width, height)
+	control:SetWidth(width)
+	ZO_ScrollList_SetHeight(control, height)
+	ZO_ScrollList_Commit(control)
+end
+
+function SearchLibrary:HandleResize()
+	local control = self.control
+	local width, height = control:GetDimensions()
+	local columnWidth = (width - BORDER_WIDTH_HORIZONTAL * 3) / 2
+	local columnHeight = height - (BORDER_WIDTH_VERTICAL * 2 + LABEL_HEIGHT + LABEL_MARGIN)
+
+	control:GetNamedChild("HistoryLabel"):SetWidth(columnWidth)
+	control:GetNamedChild("FavoritesLabel"):SetWidth(columnWidth)
+	control:GetNamedChild("LabelEdit"):SetWidth(columnWidth - EDIT_CONTROLS_WIDTH)
+	SetScrollListDimensions(self.historyControl, columnWidth, columnHeight)
+	SetScrollListDimensions(self.favoritesControl, columnWidth, columnHeight)
 end
 
 function SearchLibrary:Show()

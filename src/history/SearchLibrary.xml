@@ -1,7 +1,7 @@
 <GuiXml>
 	<Controls>
 		<Control name="AwesomeGuildStoreSearchLibraryRowTemplate" mouseEnabled="true" tier="MEDIUM" layer="CONTROLS" virtual="true">
-			<Dimensions x="300" y="24" />
+			<Dimensions y="24" />
 
 			<Controls>
 				<Texture name="$(parent)Bg" textureFile="EsoUI/Art/Miscellaneous/listItem_backdrop.dds">
@@ -15,24 +15,22 @@
 				</Texture>
 
 				<Label name="$(parent)Name" font="ZoFontGameShadow" wrapMode="ELLIPSIS" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_NORMAL">
-					<Dimensions x="270" y="24" />
+					<Dimensions y="24" />
 					<Anchor point="LEFT" />
+					<Anchor point="RIGHT" offsetX="-50" />
 				</Label>
 			</Controls>
 		</Control>
 
 		<TopLevelControl name="AwesomeGuildStoreSearchLibrary" mouseEnabled="true" hidden="true">
-			<Dimensions x="730" y="185" />
-
+			<DimensionConstraints minX="400" minY="150" />
 			<Controls>
 				<Label name="$(parent)HistoryLabel" font="ZoFontWinH3" wrapMode="ELLIPSIS">
 					<Anchor point="TOPLEFT" offsetX="25" offsetY="10" />
-					<Dimensions x="330" y="20" />
 				</Label>
 
 				<Label name="$(parent)FavoritesLabel" font="ZoFontWinH3" wrapMode="ELLIPSIS">
-					<Anchor point="TOPLEFT" offsetX="380" offsetY="10" />
-					<Dimensions x="330" y="20" />
+					<Anchor point="TOPLEFT" relativeTo="$(parent)HistoryLabel" relativePoint="TOPRIGHT" offsetX="25" />
 				</Label>
 
 				<Backdrop name="$(parent)LabelEdit" inherits="ZO_EditBackdrop" hidden="true" tier="HIGH" level="3">
