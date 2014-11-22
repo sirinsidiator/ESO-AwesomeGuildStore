@@ -350,7 +350,7 @@ AwesomeGuildStore.FILTER_PRESETS = {
 				texture = "EsoUI/Art/Inventory/inventory_tabIcon_all_%s.dds",
 				isDefault = true,
 				filters = {
-					[TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_GLYPH_WEAPON, ITEMTYPE_GLYPH_JEWELRY, ITEMTYPE_GLYPH_ARMOR, ITEMTYPE_SOUL_GEM, ITEMTYPE_SIEGE, ITEMTYPE_LURE, ITEMTYPE_TOOL },
+					[TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_GLYPH_WEAPON, ITEMTYPE_GLYPH_JEWELRY, ITEMTYPE_GLYPH_ARMOR, ITEMTYPE_SOUL_GEM, ITEMTYPE_SIEGE, ITEMTYPE_LURE, ITEMTYPE_TOOL, ITEMTYPE_TROPHY },
 				},
 			},
 			{
@@ -389,6 +389,13 @@ AwesomeGuildStore.FILTER_PRESETS = {
 				texture = "EsoUI/Art/Vendor/vendor_tabIcon_repair_%s.dds",
 				filters = {
 					[TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_TOOL },
+				},
+			},
+			{
+				label = L["FILTER_SUBCATEGORY_TROPHY"],
+				texture = "EsoUI/Art/Journal/journal_tabIcon_leaderboard_%s.dds",
+				filters = {
+					[TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_TROPHY },
 				},
 			},
 		},
