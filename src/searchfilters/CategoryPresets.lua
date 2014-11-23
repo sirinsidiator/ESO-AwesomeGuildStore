@@ -4,7 +4,7 @@ local SUBFILTER_BUTTON_SIZE = 32
 local SUBFILTER_WEAPON_TRAITS, SUBFILTER_WEAPON_ENCHANTMENTS, SUBFILTER_WEAPON_ONEHANDED, SUBFILTER_WEAPON_TWOHANDED, SUBFILTER_WEAPON_STAFF = 1, 2, 3, 4, 5
 local SUBFILTER_ARMOR_SLOTS, SUBFILTER_ARMOR_TRAITS, SUBFILTER_ARMOR_ENCHANTMENTS, SUBFILTER_JEWELRY_TRAITS, SUBFILTER_JEWELRY_ENCHANTMENTS = 6, 7, 8, 9, 10
 local SUBFILTER_BLACKSMITHING_MATERIALS, SUBFILTER_CLOTHING_MATERIALS, SUBFILTER_WOODWORKING_MATERIALS, SUBFILTER_ALCHEMY_MATERIALS = 11, 12, 13, 14
-local SUBFILTER_ENCHANTING_MATERIALS, SUBFILTER_GLYPHS = 15, 16
+local SUBFILTER_ENCHANTING_MATERIALS, SUBFILTER_GLYPHS, SUBFILTER_JEWELRY_TYPE, SUBFILTER_STYLE_MATERIALS = 15, 16, 17, 18
 
 AwesomeGuildStore.FILTER_PRESETS = {
 	[ITEMFILTERTYPE_ALL] = {
@@ -24,7 +24,7 @@ AwesomeGuildStore.FILTER_PRESETS = {
 				texture = "EsoUI/Art/Inventory/inventory_tabIcon_all_%s.dds",
 				isDefault = true,
 				filters = {
-					[TRADING_HOUSE_FILTER_TYPE_EQUIP] = { EQUIP_TYPE_ONE_HAND, EQUIP_TYPE_TWO_HAND }
+					[TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_WEAPON },
 				},
 				subfilters = {
 					SUBFILTER_WEAPON_TRAITS,
@@ -105,7 +105,7 @@ AwesomeGuildStore.FILTER_PRESETS = {
 				texture = "EsoUI/Art/Inventory/inventory_tabIcon_all_%s.dds",
 				isDefault = true,
 				filters = {
-					[TRADING_HOUSE_FILTER_TYPE_EQUIP] = { EQUIP_TYPE_HEAD, EQUIP_TYPE_CHEST, EQUIP_TYPE_SHOULDERS, EQUIP_TYPE_WAIST, EQUIP_TYPE_LEGS, EQUIP_TYPE_FEET, EQUIP_TYPE_HAND }
+					[TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_ARMOR, ITEMTYPE_COSTUME, ITEMTYPE_DISGUISE, ITEMTYPE_TABARD },
 				},
 				subfilters = {
 					SUBFILTER_ARMOR_SLOTS,
@@ -165,23 +165,13 @@ AwesomeGuildStore.FILTER_PRESETS = {
 				},
 			},
 			{
-				label = L["FILTER_SUBCATEGORY_RING"],
-				texture = "AwesomeGuildStore/images/armor/ring_%s.dds",
-				filters = {
-					[TRADING_HOUSE_FILTER_TYPE_EQUIP] = { EQUIP_TYPE_RING },
-				},
-				subfilters = {
-					SUBFILTER_JEWELRY_TRAITS,
-					SUBFILTER_JEWELRY_ENCHANTMENTS,
-				},
-			},
-			{
-				label = L["FILTER_SUBCATEGORY_NECK"],
+				label = L["FILTER_SUBCATEGORY_JEWELRY"],
 				texture = "AwesomeGuildStore/images/armor/neck_%s.dds",
 				filters = {
-					[TRADING_HOUSE_FILTER_TYPE_EQUIP] = { EQUIP_TYPE_NECK },
+					[TRADING_HOUSE_FILTER_TYPE_EQUIP] = { EQUIP_TYPE_RING, EQUIP_TYPE_NECK },
 				},
 				subfilters = {
+					SUBFILTER_JEWELRY_TYPE,
 					SUBFILTER_JEWELRY_TRAITS,
 					SUBFILTER_JEWELRY_ENCHANTMENTS,
 				},
@@ -321,8 +311,11 @@ AwesomeGuildStore.FILTER_PRESETS = {
 				label = L["FILTER_SUBCATEGORY_STYLE"],
 				texture = "AwesomeGuildStore/images/armor/costume_%s.dds",
 				filters = {
-					[TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_STYLE_MATERIAL },
-				}
+					[TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_STYLE_MATERIAL, ITEMTYPE_RAW_MATERIAL },
+				},
+				subfilters = {
+					SUBFILTER_STYLE_MATERIALS
+				},
 			},
 			{
 				label = L["FILTER_SUBCATEGORY_WEAPONTRAIT"],
@@ -768,10 +761,30 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 			},
 		},
 	},
+	[SUBFILTER_JEWELRY_TYPE] = {
+		label = L["SUBFILTER_JEWELRY_TYPE_LABEL"],
+		x = 0,
+		y = 0,
+		size = SUBFILTER_BUTTON_SIZE,
+		perRow = 6,
+		filter = TRADING_HOUSE_FILTER_TYPE_EQUIP,
+		buttons = {
+			{
+				label = L["SUBFILTER_JEWELRY_TYPE_RING"],
+				texture = "AwesomeGuildStore/images/armor/ring_%s.dds",
+				value = EQUIP_TYPE_RING,
+			},
+			{
+				label = L["SUBFILTER_JEWELRY_TYPE_NECK"],
+				texture = "AwesomeGuildStore/images/armor/neck_%s.dds",
+				value = EQUIP_TYPE_NECK,
+			},
+		},
+	},
 	[SUBFILTER_JEWELRY_TRAITS] = {
 		label = L["SUBFILTER_JEWELRY_TRAIT_LABEL"],
 		x = 0,
-		y = 0,
+		y = 55,
 		size = SUBFILTER_BUTTON_SIZE,
 		perRow = 6,
 		filter = TRADING_HOUSE_FILTER_TYPE_TRAIT,
@@ -801,7 +814,7 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 	[SUBFILTER_JEWELRY_ENCHANTMENTS] = {
 		label = L["SUBFILTER_JEWELRY_ENCHANTMENT_LABEL"],
 		x = 0,
-		y = 55,
+		y = 110,
 		size = SUBFILTER_BUTTON_SIZE,
 		perRow = 6,
 		filter = TRADING_HOUSE_FILTER_TYPE_ENCHANTMENT,
@@ -976,6 +989,26 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 				texture = "EsoUI/Art/WorldMap/map_ava_tabIcon_resourceProduction_%s.dds",
 				value = ITEMTYPE_WOODWORKING_BOOSTER,
 			},
+		},
+	},
+	[SUBFILTER_STYLE_MATERIALS] = {
+		label = L["SUBFILTER_MATERIAL_TYPE_LABEL"],
+		x = 0,
+		y = 0,
+		size = SUBFILTER_BUTTON_SIZE,
+		perRow = 6,
+		filter = TRADING_HOUSE_FILTER_TYPE_ITEM,
+		buttons = {
+			{
+				label = L["SUBFILTER_MATERIAL_STYLE_RAWMATERIAL"],
+				texture = "AwesomeGuildStore/images/crafting/rawmaterial_%s.dds",
+				value = ITEMTYPE_RAW_MATERIAL,
+			},
+			{
+				label = L["SUBFILTER_MATERIAL_STYLE_MATERIAL"],
+				texture = "AwesomeGuildStore/images/crafting/material_%s.dds",
+				value = ITEMTYPE_STYLE_MATERIAL,
+			}
 		},
 	},
 	[SUBFILTER_ALCHEMY_MATERIALS] = {

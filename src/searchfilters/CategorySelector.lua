@@ -63,10 +63,8 @@ function CategorySelector:New(parent, name)
 		return filters, subfilters, showTabards
 	end
 
-	local showTabardsInResult = false
 	ZO_PreHook(TRADING_HOUSE.m_search, "InternalExecuteSearch", function(self)
 		local filters, subfilters, showTabards = GetCurrentFilters()
-		showTabardsInResult = showTabards
 
 		for type, filterValues in pairs(filters) do
 			self.m_filters[type].values = ZO_ShallowTableCopy(filterValues) -- we have to copy them, otherwise they will be cleared on the next search
@@ -87,12 +85,6 @@ function CategorySelector:New(parent, name)
 					end
 				end
 			end
-		end
-	end)
-
-	RegisterForEvent(EVENT_TRADING_HOUSE_SEARCH_RESULTS_RECEIVED, function(_, guildId, numItemsOnPage, currentPage, hasMorePages)
-		if(showTabardsInResult) then
-			TRADING_HOUSE:AddGuildSpecificItems(true) -- ignore the filters for now; maybe some day we will use it correctly and can let it check the requirements
 		end
 	end)
 
@@ -253,6 +245,9 @@ function CategorySelector:CreateSubcategoryButton(group, subcategory, preset)
 		group.label:SetText(preset.label)
 		self.subcategory[group.category] = subcategory
 		self:UpdateSubfilterVisibility()
+		if(preset.showTabards) then
+			TRADING_HOUSE:AddGuildSpecificItems(true) -- add the tabard whenever we change to the costume subcategory, because this function clears the search result
+		end
 		self:HandleChange()
 		return true
 	end
