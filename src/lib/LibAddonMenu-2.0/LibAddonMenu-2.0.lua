@@ -1,4 +1,4 @@
-﻿--	LibAddonMenu-2.0 & its files © Ryan Lakanen (Seerah)	--
+--	LibAddonMenu-2.0 & its files © Ryan Lakanen (Seerah)	--
 --	All Rights Reserved										--
 --	Permission is granted to use Seerah's LibAddonMenu-2.0	--
 --	in your project. Any modifications to LibAddonMenu-2.0	--
