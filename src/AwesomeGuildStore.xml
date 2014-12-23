@@ -18,6 +18,10 @@
 						ZO_ComboBox_DropdownClicked(self)
 						end
 					</OnMouseUp>
+					
+					<OnMouseWheel>
+						AwesomeGuildStore.GuildSelectorOnMouseWheel(self, delta, ctrl, alt, shift)
+					</OnMouseWheel>
 
 					<Controls>
 						<Label name="$(parent)SelectedItemText" inherits="ZO_TooltipIfTruncatedLabel" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_SELECTED">

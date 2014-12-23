@@ -67,7 +67,7 @@ local function InitializeGuildSelector(lastGuildId)
 	comboBox:ClearItems()
 	entryByGuildId = {}
 
-	local selectedEntry
+	local selectedEntry, firstEntry, prevEntry
 
 	for i = 1, GetNumTradingHouseGuilds() do
 		local guildId, guildName, guildAlliance = GetTradingHouseGuildDetails(i)
@@ -75,18 +75,51 @@ local function InitializeGuildSelector(lastGuildId)
 		if(iconPath == nil) then
 			ZO_Alert(UI_ALERT_CATEGORY_ALERT, SOUNDS.GENERAL_ALERT_ERROR, L["INVALID_STATE"])
 		end
-		local entryText = iconPath and zo_iconTextFormat(iconPath, 24, 24, guildName) or guildName
+		local entryText = iconPath and zo_iconTextFormat(iconPath, 36, 36, guildName) or guildName
 		local entry = comboBox:CreateItemEntry(entryText, OnGuildChanged)
 		entry.guildId = guildId
 		entry.selectedText = guildName
+		entry.canSell = CanSellOnTradingHouse(guildId)
 		comboBox:AddItem(entry)
 		if(not selectedEntry or (lastGuildId and guildId == lastGuildId)) then
 			selectedEntry = entry
 		end
 		entryByGuildId[guildId] = entry
+
+		if(prevEntry) then
+			prevEntry.next = entry
+			entry.prev = prevEntry
+		end
+
+		if(i == 1) then
+			firstEntry = entry
+		end
+		prevEntry = entry
 	end
+	prevEntry.next = firstEntry
+	firstEntry.prev = prevEntry
 
 	OnGuildChanged(comboBox, selectedEntry.name, selectedEntry)
+end
+
+function AwesomeGuildStore.GuildSelectorOnMouseWheel(control, delta, ctrl, alt, shift)
+	local selectedEntry = entryByGuildId[GetSelectedTradingHouseGuildId()]
+	if(selectedEntry) then
+		local newEntry = selectedEntry
+		local sellMode = TRADING_HOUSE:IsInPostMode()
+
+		repeat
+			if(delta < 0) then
+				newEntry = newEntry.next
+			elseif(delta > 0) then
+				newEntry = newEntry.prev
+			end
+		until not sellMode or newEntry.canSell or newEntry == selectedEntry
+
+		if(newEntry ~= selectedEntry) then
+			OnGuildChanged(comboBox, newEntry.name, newEntry)
+		end
+	end
 end
 
 local function InitializeUnitPriceDisplay()
@@ -375,7 +408,7 @@ OnAddonLoaded(function()
 			titleLabel:SetHidden(false)
 			guildSelector:SetHidden(true)
 		else
-			guildId = ReselectLastGuild()
+			--guildId = ReselectLastGuild()
 			InitializeGuildSelector(guildId)
 			titleLabel:SetHidden(true)
 			guildSelector:SetHidden(false)
