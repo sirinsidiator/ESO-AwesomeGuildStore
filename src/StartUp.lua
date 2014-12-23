@@ -336,23 +336,6 @@ local function InitializeFilters(control)
 	InitializeUnitPriceDisplay()
 end
 
-local function ReselectLastGuild()
-	local guildId, guildName = GetCurrentTradingHouseGuildDetails()
-	if(saveData.lastGuildName and saveData.lastGuildName ~= guildName) then
-		for i = 1, GetNumTradingHouseGuilds() do
-			guildId, guildName = GetTradingHouseGuildDetails(i)
-			if(guildName == saveData.lastGuildName) then
-				if(SelectTradingHouseGuildId(guildId)) then
-					TRADING_HOUSE:UpdateForGuildChange()
-				end
-				break
-			end
-		end
-	end
-	_, saveData.lastGuildName = GetCurrentTradingHouseGuildDetails()
-	return guildId
-end
-
 OnAddonLoaded(function()
 	saveData = AwesomeGuildStore.InitializeSettings()
 	L = AwesomeGuildStore.Localization
@@ -408,7 +391,6 @@ OnAddonLoaded(function()
 			titleLabel:SetHidden(false)
 			guildSelector:SetHidden(true)
 		else
-			--guildId = ReselectLastGuild()
 			InitializeGuildSelector(guildId)
 			titleLabel:SetHidden(true)
 			guildSelector:SetHidden(false)
@@ -427,7 +409,6 @@ OnAddonLoaded(function()
 			if(entryByGuildId and entryByGuildId[guildId]) then
 				comboBox:SetSelectedItem(entryByGuildId[guildId].name)
 			end
-			saveData.lastGuildName = guildName
 		end
 	end)
 

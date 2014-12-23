@@ -1,7 +1,6 @@
 
 local defaultData = {
-	version = 8,
-	lastGuildName = "",
+	version = 9,
 	replaceCategoryFilter = true,
 	replacePriceFilter = true,
 	replaceQualityFilter = true,
@@ -128,6 +127,10 @@ local function UpgradeSettings(saveData)
 		saveData.searchLibrary.width = defaultData.searchLibrary.width
 		saveData.searchLibrary.height = defaultData.searchLibrary.height
 		saveData.version = 8
+	end
+	if(saveData.version == 8) then
+		saveData.lastGuildName = nil
+		saveData.version = 9
 	end
 end
 
