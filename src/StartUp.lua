@@ -412,10 +412,31 @@ OnAddonLoaded(function()
 		end
 	end)
 
+	local listingControl, infoControl, itemControl, postedItemsControl
+
 	local originalHandleTabSwitch = TRADING_HOUSE.HandleTabSwitch
 	TRADING_HOUSE.HandleTabSwitch = function(self, tabData)
 		originalHandleTabSwitch(self, tabData)
+
+		if(not listingControl) then
+			listingControl = TRADING_HOUSE.m_currentListings
+			infoControl = listingControl:GetParent()
+			itemControl = infoControl:GetNamedChild("Item")
+			postedItemsControl = TRADING_HOUSE.m_postedItemsHeader:GetParent()
+		end
+
 		local mode = tabData.descriptor
+
+		listingControl:ClearAnchors()
+		if(mode == "tradingHouseListings") then
+			listingControl:SetParent(postedItemsControl)
+			listingControl:SetAnchor(TOPLEFT, postedItemsControl, TOPLEFT, 55, -47)
+			TRADING_HOUSE:UpdateListingCounts()
+		else
+			listingControl:SetParent(infoControl)
+			listingControl:SetAnchor(TOP, itemControl, BOTTOM, 0, 15)
+		end
+
 		if(mode == "tradingHouseBrowse") then
 			InitializeFilters(self.m_browseItems)
 			TRADING_HOUSE.m_searchAllowed = true
