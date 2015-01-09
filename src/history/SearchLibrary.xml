@@ -34,7 +34,7 @@
 				</Label>
 
 				<Backdrop name="$(parent)LabelEdit" inherits="ZO_EditBackdrop" hidden="true" tier="HIGH" level="3">
-					<Dimensions x="250" />
+					<Dimensions x="230" />
 					<Controls>
 						<EditBox name="$(parent)Box" inherits="ZO_DefaultEditForBackdrop ZO_EditDefaultText" />
 					</Controls>

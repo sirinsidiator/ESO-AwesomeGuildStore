@@ -165,6 +165,7 @@ local localization = {
 		SEARCH_LIBRARY_FAVORITE_BUTTON_ADD_TOOLTIP = "Add to Favorites",
 		SEARCH_LIBRARY_FAVORITE_BUTTON_REMOVE_TOOLTIP = "Remove from Favorites",
 		SEARCH_LIBRARY_EDIT_LABEL_BUTTON_TOOLTIP = "Rename Entry",
+		SEARCH_LIBRARY_DELETE_LABEL_BUTTON_TOOLTIP = "Remove from History",
 
 		TOOLTIP_LESS_THAN = "under ",
 		TOOLTIP_GREATER_THAN = "over ",
@@ -219,6 +220,7 @@ local localization = {
 		SEARCH_LIBRARY_FAVORITE_BUTTON_ADD_TOOLTIP = "Zu Favoriten hinzufügen",
 		SEARCH_LIBRARY_FAVORITE_BUTTON_REMOVE_TOOLTIP = "Von Favoriten entfernen",
 		SEARCH_LIBRARY_EDIT_LABEL_BUTTON_TOOLTIP = "Eintrag umbenennen",
+		SEARCH_LIBRARY_DELETE_LABEL_BUTTON_TOOLTIP = "Aus Verlauf entfernen",
 
 		TOOLTIP_LESS_THAN = "unter ",
 		TOOLTIP_GREATER_THAN = "über ",

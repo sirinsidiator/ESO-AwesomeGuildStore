@@ -26,6 +26,14 @@ local EDIT_BUTTON_TEMPLATE = {
 	offsetY = 0
 }
 
+local DELETE_BUTTON_TEMPLATE = {
+	name = "DeleteButton",
+	texture = "EsoUI/Art/Buttons/cancel_%s.dds",
+	size = 24,
+	offsetX = -48,
+	offsetY = 0
+}
+
 local SearchLibrary = ZO_Object:Subclass()
 AwesomeGuildStore.SearchLibrary = SearchLibrary
 
@@ -233,7 +241,6 @@ function SearchLibrary:Deserialize(state)
 		TRADING_HOUSE:OnSearchCooldownUpdate(GetTradingHouseCooldownRemaining())
 	end
 end
---|H1:book:1053:shoplink:1:4;5;15,8:1;199:0;26;29:1;5:Odra|h|h
 
 function SearchLibrary:SaveCurrentState()
 	local state = self.currentState
@@ -289,12 +296,12 @@ local function InitializeBaseRow(self, rowControl, entry, fadeFavorite)
 	end
 
 	rowControl:SetHandler("OnMouseEnter", FadeIn)
-	editButton.control:SetHandler("OnMouseEnter", function() FadeIn() editButton.control.OnMouseEnter() end)
-	saveButton.control:SetHandler("OnMouseEnter", function() FadeIn() saveButton.control.OnMouseEnter() end)
+	editButton.control:SetHandler("OnMouseEnter", function() rowControl:GetHandler("OnMouseEnter")() editButton.control.OnMouseEnter() end)
+	saveButton.control:SetHandler("OnMouseEnter", function() rowControl:GetHandler("OnMouseEnter")() saveButton.control.OnMouseEnter() end)
 
 	rowControl:SetHandler("OnMouseExit", FadeOut)
-	editButton.control:SetHandler("OnMouseExit", function() FadeOut() editButton.control.OnMouseExit() end)
-	saveButton.control:SetHandler("OnMouseExit", function() FadeOut() saveButton.control.OnMouseExit() end)
+	editButton.control:SetHandler("OnMouseExit", function() rowControl:GetHandler("OnMouseExit")() editButton.control.OnMouseExit() end)
+	saveButton.control:SetHandler("OnMouseExit", function() rowControl:GetHandler("OnMouseExit")() saveButton.control.OnMouseExit() end)
 
 	rowControl:SetHandler("OnMouseUp", function(control, button, isInside)
 		if(button == 1 and isInside) then
@@ -347,6 +354,24 @@ function SearchLibrary:InitializeHistory()
 
 	local function InitializeHistoryRow(rowControl, entry)
 		InitializeBaseRow(self, rowControl, entry, false)
+
+		local deleteButton = GetRowButton(rowControl, DELETE_BUTTON_TEMPLATE)
+		deleteButton.control:SetAlpha(0)
+		deleteButton:SetTooltipText(L["SEARCH_LIBRARY_DELETE_LABEL_BUTTON_TOOLTIP"])
+
+		ZO_PreHookHandler(rowControl, "OnMouseEnter", function()
+			deleteButton.animation:PlayForward()
+		end)
+		ZO_PreHookHandler(rowControl, "OnMouseExit", function()
+			deleteButton.animation:PlayBackward()
+		end)
+		deleteButton.control:SetHandler("OnMouseEnter", function() rowControl:GetHandler("OnMouseEnter")() deleteButton.control.OnMouseEnter() end)
+		deleteButton.control:SetHandler("OnMouseExit", function() rowControl:GetHandler("OnMouseExit")() deleteButton.control.OnMouseExit() end)
+		deleteButton.HandlePress = function()
+			self:RemoveHistoryEntry(entry.state)
+			self:Refresh()
+			return true
+		end
 
 		rowControl.SaveButton.HandlePress = function()
 			self:AddFavoriteEntry(entry.state)
@@ -577,7 +602,7 @@ local BORDER_WIDTH_HORIZONTAL = 25
 local BORDER_WIDTH_VERTICAL = 10
 local LABEL_HEIGHT = 23
 local LABEL_MARGIN = 7
-local EDIT_CONTROLS_WIDTH = 70
+local EDIT_CONTROLS_WIDTH = 90
 
 local function SetScrollListDimensions(control, width, height)
 	control:SetWidth(width)
