@@ -401,16 +401,24 @@ OnAddonLoaded(function()
 		guildSelector:SetHidden(true)
 	end)
 
+	local function UpdateSelectedGuild()
+		local guildId = GetSelectedTradingHouseGuildId()
+		if(guildId and entryByGuildId and entryByGuildId[guildId]) then
+			comboBox:SetSelectedItem(entryByGuildId[guildId].name)
+		end
+	end
+
 	ZO_PreHook(TRADING_HOUSE, "UpdateForGuildChange", function()
 		DisableKeybindStripSearchButton()
-		local guildId = GetSelectedTradingHouseGuildId()
-		if(guildId) then
-			local _, guildName = GetCurrentTradingHouseGuildDetails()
-			if(entryByGuildId and entryByGuildId[guildId]) then
-				comboBox:SetSelectedItem(entryByGuildId[guildId].name)
-			end
-		end
+		UpdateSelectedGuild()
 	end)
+
+	local originalSelectTradingHouseGuildId = SelectTradingHouseGuildId
+	SelectTradingHouseGuildId = function(...)
+		local result = {originalSelectTradingHouseGuildId(...)}
+		UpdateSelectedGuild()
+		return unpack(result)
+	end
 
 	local listingControl, infoControl, itemControl, postedItemsControl
 
