@@ -237,10 +237,16 @@ local BACKPACK_TRADING_HOUSE_LAYOUT_FRAGMENT_ADVANCED = ZO_BackpackLayoutFragmen
 		additionalFilter = SalesCategoryFilter,
 	})
 
+-- let libFilters hook into our custom fragments to ensure compatibility with other addons
+local libFilters = LibStub("libFilters")
+libFilters:HookAdditionalFilter(LAF_GUILDSTORE, BACKPACK_TRADING_HOUSE_LAYOUT_FRAGMENT_BASIC)
+libFilters:HookAdditionalFilter(LAF_GUILDSTORE, BACKPACK_TRADING_HOUSE_LAYOUT_FRAGMENT_ADVANCED)
+
 function SalesCategorySelector:HandleChange()
 	local filters = FILTER_PRESETS[self.category].subcategories
 	local subcategory = self.subcategory[self.category]
 	currentLayout = BACKPACK_TRADING_HOUSE_LAYOUT_FRAGMENT_BASIC.layoutData
+
 	if(subcategory) then
 		if(self.category == ITEMFILTERTYPE_CRAFTING and subcategory == 0) then -- ugly special cases
 			filters = ALL_CRAFTING_PRESET.filters
@@ -268,7 +274,6 @@ function SalesCategorySelector:Refresh()
 	PLAYER_INVENTORY:ApplyBackpackLayout(DEFAULT_LAYOUT) -- need to force a refresh because we reuse fragments
 	PLAYER_INVENTORY:ApplyBackpackLayout(currentLayout)
 end
-
 
 RegisterForEvent(EVENT_CLOSE_TRADING_HOUSE, function()
 	PLAYER_INVENTORY:ApplyBackpackLayout(BACKPACK_DEFAULT_LAYOUT_FRAGMENT.layoutData) -- required to make guild bank and other inventories look normal when advanced filters is used

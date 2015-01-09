@@ -2,7 +2,7 @@
 ## Author: sirinsidiator
 ## Version: VERSION_NUMBER
 ## APIVersion: 100010
-## OptionalDependsOn: LibStub LibAddonMenu-2.0
+## OptionalDependsOn: LibStub LibAddonMenu-2.0 libFilters
 ## SavedVariables: AwesomeGuildStore_Data
 ##
 ## This Add-on is not created by, affiliated with or sponsored by ZeniMax Media Inc. or its affiliates. 
@@ -25,6 +25,7 @@ lib/LibAddonMenu-2.0/controls/editbox.lua
 lib/LibAddonMenu-2.0/controls/header.lua
 lib/LibAddonMenu-2.0/controls/slider.lua
 lib/LibAddonMenu-2.0/controls/texture.lua
+lib/libFilters/libFilters.lua
 StartUp.lua
 Localization.lua
 Settings.lua
