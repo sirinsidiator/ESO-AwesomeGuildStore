@@ -303,6 +303,7 @@ local function InitializeFilters(control)
 
 	RegisterForEvent(EVENT_TRADING_HOUSE_SEARCH_RESULTS_RECEIVED, HideLoadingOverlay)
 	RegisterForEvent(EVENT_TRADING_HOUSE_OPERATION_TIME_OUT, HideLoadingOverlay)
+	RegisterForEvent(EVENT_TRADING_HOUSE_STATUS_RECEIVED, HideLoadingOverlay)
 
 	local RESET_BUTTON_SIZE = 24
 	local RESET_BUTTON_TEXTURE = "EsoUI/Art/Buttons/decline_%s.dds"
