@@ -1,6 +1,7 @@
 
 local defaultData = {
-	version = 9,
+	version = 10,
+	lastGuildName = "",
 	replaceCategoryFilter = true,
 	replacePriceFilter = true,
 	replaceQualityFilter = true,
@@ -129,8 +130,12 @@ local function UpgradeSettings(saveData)
 		saveData.version = 8
 	end
 	if(saveData.version == 8) then
-		saveData.lastGuildName = nil
+		--saveData.lastGuildName = nil -- reverted
 		saveData.version = 9
+	end
+	if(saveData.version == 9) then
+		saveData.lastGuildName = saveData.lastGuildName or defaultData.lastGuildName
+		saveData.version = 10
 	end
 end
 

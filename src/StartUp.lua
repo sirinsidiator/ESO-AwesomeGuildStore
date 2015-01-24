@@ -111,6 +111,24 @@ local function InitializeGuildSelector(lastGuildId)
 	OnGuildChanged(comboBox, selectedEntry.name, selectedEntry)
 end
 
+local function ReselectLastGuild()
+	local guildId, guildName = GetCurrentTradingHouseGuildDetails()
+	if(saveData.lastGuildName and saveData.lastGuildName ~= guildName) then
+		for i = 1, GetNumTradingHouseGuilds() do
+			guildId, guildName = GetTradingHouseGuildDetails(i)
+			if(guildName == saveData.lastGuildName) then
+				if(SelectTradingHouseGuildId(guildId)) then
+					TRADING_HOUSE:UpdateForGuildChange()
+				end
+				break
+			end
+		end
+	end
+	local _, guildName = GetCurrentTradingHouseGuildDetails()
+	saveData.lastGuildName = guildName
+	return guildId
+end
+
 function AwesomeGuildStore.GuildSelectorOnMouseWheel(control, delta, ctrl, alt, shift)
 	local selectedEntry = entryByGuildId[GetSelectedTradingHouseGuildId()]
 	if(selectedEntry) then
@@ -481,6 +499,7 @@ OnAddonLoaded(function()
 			titleLabel:SetHidden(false)
 			guildSelector:SetHidden(true)
 		else
+			guildId = ReselectLastGuild()
 			InitializeGuildSelector(guildId)
 			titleLabel:SetHidden(true)
 			guildSelector:SetHidden(false)
@@ -496,6 +515,8 @@ OnAddonLoaded(function()
 		if(guildId and entryByGuildId and entryByGuildId[guildId]) then
 			comboBox:SetSelectedItem(entryByGuildId[guildId].name)
 		end
+		local _, guildName = GetCurrentTradingHouseGuildDetails()
+		saveData.lastGuildName = guildName
 	end
 
 	ZO_PreHook(TRADING_HOUSE, "UpdateForGuildChange", function()
