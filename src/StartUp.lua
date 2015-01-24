@@ -428,6 +428,10 @@ OnAddonLoaded(function()
 		UpdateSelectedGuild()
 		return unpack(result)
 	end
+	
+	ZO_PreHook(TRADING_HOUSE, "OnListingsRequestSuccess", function()
+		TRADING_HOUSE:UpdateListingCounts()
+	end)
 
 	local listingControl, infoControl, itemControl, postedItemsControl
 
@@ -448,7 +452,6 @@ OnAddonLoaded(function()
 		if(mode == "tradingHouseListings") then
 			listingControl:SetParent(postedItemsControl)
 			listingControl:SetAnchor(TOPLEFT, postedItemsControl, TOPLEFT, 55, -47)
-			TRADING_HOUSE:UpdateListingCounts()
 		else
 			listingControl:SetParent(infoControl)
 			listingControl:SetAnchor(TOP, itemControl, BOTTOM, 0, 15)
