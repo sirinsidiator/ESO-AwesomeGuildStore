@@ -26,6 +26,8 @@ local function CreateSettingsDialog(saveData)
 	local panelData = {
 		type = "panel",
 		name = "Awesome Guild Store",
+		author = "sirinsidiator",
+		version = "VERSION_NUMBER",
 		registerForDefaults = true
 	}
 	LAM:RegisterAddonPanel("AwesomeGuildStoreOptions", panelData)
