@@ -260,7 +260,7 @@ local function InitializeFilters(control)
 	end
 	searchButton:SetText(L["START_SEARCH_LABEL"])
 	searchButton:SetHandler("OnMouseUp",function(control, button, isInside)
-		if(button == 1 and isInside) then
+		if(control:GetState() == BSTATE_NORMAL and button == 1 and isInside) then
 			if(TRADING_HOUSE:CanSearch()) then
 				TRADING_HOUSE:DoSearch()
 			end
