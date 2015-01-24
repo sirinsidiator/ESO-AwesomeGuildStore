@@ -63,9 +63,15 @@ local function OnGuildChanged(comboBox, selectedName, selectedEntry)
 	end
 end
 
+local function SortEntriesByGuildId(entryA, entryB)
+	return entryA.guildId < entryB.guildId
+end
+
 local function InitializeGuildSelector(lastGuildId)
 	comboBox:ClearItems()
+	comboBox:SetSortsItems(false)
 	entryByGuildId = {}
+	local entries = {}
 
 	local selectedEntry, firstEntry, prevEntry
 
@@ -80,7 +86,8 @@ local function InitializeGuildSelector(lastGuildId)
 		entry.guildId = guildId
 		entry.selectedText = guildName
 		entry.canSell = CanSellOnTradingHouse(guildId)
-		comboBox:AddItem(entry)
+		table.insert(entries, entry)
+
 		if(not selectedEntry or (lastGuildId and guildId == lastGuildId)) then
 			selectedEntry = entry
 		end
@@ -99,6 +106,8 @@ local function InitializeGuildSelector(lastGuildId)
 	prevEntry.next = firstEntry
 	firstEntry.prev = prevEntry
 
+	table.sort(entries, SortEntriesByGuildId)
+	comboBox:AddItems(entries)
 	OnGuildChanged(comboBox, selectedEntry.name, selectedEntry)
 end
 
