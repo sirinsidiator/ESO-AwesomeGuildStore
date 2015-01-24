@@ -402,7 +402,21 @@ local function InitializeFilters(control)
 		end
 	end
 
+	local navBar = TRADING_HOUSE.m_nagivationBar
+	local currentPageLabel = navBar:CreateControl(ADDON_NAME .. "CurrentPageLabel", CT_LABEL)
+	currentPageLabel:SetAnchor(TOP, navBar, TOPCENTER, 0, 5)
+	currentPageLabel:SetFont("ZoFontGameLarge")
+	currentPageLabel:SetColor(ZO_DEFAULT_ENABLED_COLOR:UnpackRGBA())
+
+	local function UpdatePageLabel(page, hasNextOrPrevious)
+		page = tonumber(page) + 1
+		currentPageLabel:SetText(page)
+		currentPageLabel:SetHidden(page <= 0 or not hasNextOrPrevious)
+	end
+
 	ZO_PreHook(TRADING_HOUSE, "UpdatePagingButtons", function(self)
+		local search = self.m_search
+		UpdatePageLabel(search.m_page, search:HasNextPage() or search:HasPreviousPage())
 		if(not UpdateShowMoreRow) then return end
 		UpdateShowMoreRow()
 	end)
