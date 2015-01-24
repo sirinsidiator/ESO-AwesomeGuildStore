@@ -286,7 +286,7 @@ local function InitializeFilters(control)
 		end
 	end)
 
-	loadingBlocker = ZO_TradingHouseItemPaneSearchResults:CreateControl("Loading", CT_BACKDROP)
+	loadingBlocker = ZO_TradingHouseItemPaneSearchResults:CreateControl(ADDON_NAME .. "Loading", CT_BACKDROP)
 	loadingBlocker:SetAnchor(TOPLEFT, ZO_TradingHouseItemPaneSearchResults, TOPLEFT, -10, -10)
 	loadingBlocker:SetAnchor(BOTTOMRIGHT, ZO_TradingHouseItemPaneSearchResults, BOTTOMRIGHT, 10, 10)
 	loadingBlocker:SetHidden(true)
