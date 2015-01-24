@@ -107,5 +107,28 @@
 				<EditBox name="$(parent)Box" inherits="ZO_DefaultEditForBackdrop ZO_EditDefaultText" />
 			</Controls>
 		</Backdrop>
+		
+		<Control name="AwesomeGuildStoreShowMoreRowTemplate" mouseEnabled="true" tier="MEDIUM" layer="CONTROLS" virtual="true">
+			<Dimensions y="32" />
+
+			<Controls>
+				<Texture name="$(parent)Bg" textureFile="EsoUI/Art/Miscellaneous/listItem_backdrop.dds">
+					<AnchorFill />
+					<TextureCoords left="0" right="1" top="0" bottom=".8125" />
+				</Texture>
+
+				<Texture name="$(parent)Highlight" textureFile="EsoUI/Art/Miscellaneous/listItem_highlight.dds" alpha="0.5">
+					<AnchorFill />
+					<TextureCoords left="0" right="1" top="0" bottom=".625" />
+				</Texture>
+
+				<Label name="$(parent)Text" font="ZoFontGameShadow" verticalAlignment="CENTER" horizontalAlignment="CENTER" wrapMode="ELLIPSIS" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_NORMAL">
+					<Dimensions y="32" />
+					<Anchor point="LEFT" />
+					<Anchor point="RIGHT" />
+				</Label>
+			</Controls>
+		</Control>
+		
 	</Controls>
 </GuiXml>

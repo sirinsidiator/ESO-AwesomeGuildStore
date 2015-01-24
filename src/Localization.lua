@@ -139,6 +139,7 @@ local localization = {
 		LEGENDARY_QUALITY_LABEL = GetString(SI_TRADING_HOUSE_BROWSE_QUALITY_LEGENDARY),
 
 		START_SEARCH_LABEL = GetString(SI_TRADING_HOUSE_DO_SEARCH),
+		SEARCH_SHOW_MORE_LABEL = "Show More Results",
 		RESET_ALL_FILTERS_LABEL = "Reset All Filters",
 		RESET_FILTER_LABEL_TEMPLATE = "Reset %s Filter",
 
@@ -200,6 +201,7 @@ local localization = {
 		SUBFILTER_RUNE_TYPE_LABEL = "Runensteintyp",
 		SUBFILTER_GLYPH_TYPE_LABEL = "Glyphentyp",
 
+		SEARCH_SHOW_MORE_LABEL = "Mehr Ergebnisse anzeigen",
 		RESET_ALL_FILTERS_LABEL = "Alle Filter zurücksetzen",
 		RESET_FILTER_LABEL_TEMPLATE = "%s zurücksetzen",
 

@@ -105,6 +105,9 @@ function ItemNameQuickFilter:InitializeFilterFunction()
 		if(searchTerm ~= "") then
 			GetTradingHouseSearchResultItemInfo = OriginalGetTradingHouseSearchResultItemInfo
 			self.m_resultCount:SetText(zo_strformat(L["ITEM_NAME_QUICK_FILTER_ITEMCOUNT_TEMPLATE"], itemCount, filteredItemCount))
+
+			local shouldHide = (filteredItemCount ~= 0 or self.m_search:HasNextPage())
+			self.m_noItemsLabel:SetHidden(shouldHide)
 		end
 	end
 end
