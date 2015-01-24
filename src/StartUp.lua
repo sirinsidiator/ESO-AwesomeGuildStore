@@ -303,6 +303,7 @@ local function InitializeFilters(control)
 
 	ZO_PreHook("ExecuteTradingHouseSearch", function(self)
 		searchButton:SetEnabled(false)
+		comboBox:SetEnabled(false)
 		loadingBlocker:SetHidden(false)
 		loadingIcon.animation:PlayForward()
 	end)
@@ -315,6 +316,7 @@ local function InitializeFilters(control)
 	RegisterForEvent(EVENT_TRADING_HOUSE_SEARCH_COOLDOWN_UPDATE, function(_, cooldownMilliseconds)
 		if(cooldownMilliseconds ~= 0) then return end
 		searchButton:SetEnabled(true)
+		comboBox:SetEnabled(true)
 		TRADING_HOUSE.m_searchAllowed = true
 		TRADING_HOUSE:OnSearchCooldownUpdate(cooldownMilliseconds)
 		HideLoadingOverlay()
@@ -483,6 +485,7 @@ OnAddonLoaded(function()
 	RegisterForEvent(EVENT_OPEN_TRADING_HOUSE, function()
 		isSearchDisabled = true
 		searchButton:SetEnabled(false)
+		comboBox:SetEnabled(false)
 		loadingBlocker:SetHidden(true)
 		DisableKeybindStripSearchButton()
 		if(salesCategoryFilter) then
@@ -493,7 +496,10 @@ OnAddonLoaded(function()
 	RegisterForEvent(EVENT_TRADING_HOUSE_STATUS_RECEIVED, function()
 		local guildId = GetSelectedTradingHouseGuildId()
 
-		if(GetTradingHouseCooldownRemaining() == 0) then searchButton:SetEnabled(true) end
+		if(GetTradingHouseCooldownRemaining() == 0) then
+			searchButton:SetEnabled(true)
+			comboBox:SetEnabled(true)
+		end
 		EnableKeybindStripSearchButton()
 		isSearchDisabled = false
 
