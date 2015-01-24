@@ -365,12 +365,15 @@ function SearchLibrary:InitializeHistory()
 		ZO_PreHookHandler(rowControl, "OnMouseExit", function()
 			deleteButton.animation:PlayBackward()
 		end)
-		deleteButton.control:SetHandler("OnMouseEnter", function() rowControl:GetHandler("OnMouseEnter")() deleteButton.control.OnMouseEnter() end)
+		deleteButton.control:SetHandler("OnMouseEnter", function() rowControl:GetHandler("OnMouseEnter")() deleteButton.control.OnMouseEnter() deleteButton:Release(true) end)
 		deleteButton.control:SetHandler("OnMouseExit", function() rowControl:GetHandler("OnMouseExit")() deleteButton.control.OnMouseExit() end)
-		deleteButton.HandlePress = function()
+		deleteButton.HandlePress = function(button, fromGroup)
 			self:RemoveHistoryEntry(entry.state)
 			self:Refresh()
 			return true
+		end
+		deleteButton.HandleRelease = function(button, fromGroup)
+			return fromGroup
 		end
 
 		rowControl.SaveButton.HandlePress = function()
@@ -391,6 +394,7 @@ function SearchLibrary:InitializeHistory()
 	end
 
 	local function DestroyHistoryRow(rowControl)
+		ResetButton(rowControl.DeleteButton)
 		DestroyBaseRow(rowControl)
 	end
 
