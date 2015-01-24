@@ -43,6 +43,7 @@ local searchButton
 local nameFilter
 local searchLibrary
 local salesCategoryFilter
+local loadingBlocker
 
 function AwesomeGuildStore.InitializeGuildSelector(control)
 	local comboBoxControl = GetControl(control, "ComboBox")
@@ -285,7 +286,7 @@ local function InitializeFilters(control)
 		end
 	end)
 
-	local loadingBlocker = ZO_TradingHouseItemPaneSearchResults:CreateControl("Loading", CT_BACKDROP)
+	loadingBlocker = ZO_TradingHouseItemPaneSearchResults:CreateControl("Loading", CT_BACKDROP)
 	loadingBlocker:SetAnchor(TOPLEFT, ZO_TradingHouseItemPaneSearchResults, TOPLEFT, -10, -10)
 	loadingBlocker:SetAnchor(BOTTOMRIGHT, ZO_TradingHouseItemPaneSearchResults, BOTTOMRIGHT, 10, 10)
 	loadingBlocker:SetHidden(true)
@@ -482,6 +483,7 @@ OnAddonLoaded(function()
 	RegisterForEvent(EVENT_OPEN_TRADING_HOUSE, function()
 		isSearchDisabled = true
 		searchButton:SetEnabled(false)
+		loadingBlocker:SetHidden(true)
 		DisableKeybindStripSearchButton()
 		if(salesCategoryFilter) then
 			salesCategoryFilter:Reset()
