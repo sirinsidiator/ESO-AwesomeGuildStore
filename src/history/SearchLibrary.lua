@@ -4,7 +4,6 @@ local ToggleButton = AwesomeGuildStore.ToggleButton
 local FILTER_PRESETS = AwesomeGuildStore.FILTER_PRESETS
 local SUBFILTER_PRESETS = AwesomeGuildStore.SUBFILTER_PRESETS
 
-local BROWSE_ITEMS_MODE = "tradingHouseBrowse"
 local SEARCH_DATA_TYPE = 1
 local HISTORY_LENGTH = 50
 local SAVE_VERSION = 1
@@ -70,7 +69,7 @@ function SearchLibrary:Initialize(saveData)
 
 	ZO_PreHook(TRADING_HOUSE, "HandleTabSwitch", function(_, tabData)
 		local mode = tabData.descriptor
-		if(saveData.isActive and mode == BROWSE_ITEMS_MODE) then
+		if(saveData.isActive and mode == ZO_TRADING_HOUSE_MODE_BROWSE) then
 			self:Show()
 		else
 			self:Hide()

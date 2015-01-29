@@ -58,7 +58,7 @@ end
 local function OnGuildChanged(comboBox, selectedName, selectedEntry)
 	if(SelectTradingHouseGuildId(selectedEntry.guildId)) then
 		TRADING_HOUSE:UpdateForGuildChange()
-		if(TRADING_HOUSE.m_currentMode == "tradingHouseListings") then
+		if(TRADING_HOUSE.m_currentMode == ZO_TRADING_HOUSE_MODE_LISTINGS) then
 			TRADING_HOUSE:RequestListings()
 		end
 	end
@@ -134,7 +134,7 @@ function AwesomeGuildStore.GuildSelectorOnMouseWheel(control, delta, ctrl, alt, 
 	local selectedEntry = entryByGuildId[GetSelectedTradingHouseGuildId()]
 	if(selectedEntry) then
 		local newEntry = selectedEntry
-		local sellMode = TRADING_HOUSE:IsInPostMode()
+		local sellMode = TRADING_HOUSE:IsInSellMode()
 
 		repeat
 			if(delta < 0) then
@@ -484,9 +484,11 @@ OnAddonLoaded(function()
 
 	RegisterForEvent(EVENT_OPEN_TRADING_HOUSE, function()
 		isSearchDisabled = true
-		searchButton:SetEnabled(false)
+		if(filtersInitialized) then
+			searchButton:SetEnabled(false)
+			loadingBlocker:SetHidden(true)
+		end
 		comboBox:SetEnabled(false)
-		loadingBlocker:SetHidden(true)
 		DisableKeybindStripSearchButton()
 		if(salesCategoryFilter) then
 			salesCategoryFilter:Reset()
@@ -497,7 +499,9 @@ OnAddonLoaded(function()
 		local guildId = GetSelectedTradingHouseGuildId()
 
 		if(GetTradingHouseCooldownRemaining() == 0) then
-			searchButton:SetEnabled(true)
+			if(filtersInitialized) then
+				searchButton:SetEnabled(true)
+			end
 			comboBox:SetEnabled(true)
 		end
 		EnableKeybindStripSearchButton()
@@ -559,7 +563,7 @@ OnAddonLoaded(function()
 		local mode = tabData.descriptor
 
 		listingControl:ClearAnchors()
-		if(mode == "tradingHouseListings") then
+		if(mode == ZO_TRADING_HOUSE_MODE_LISTINGS) then
 			listingControl:SetParent(postedItemsControl)
 			listingControl:SetAnchor(TOPLEFT, postedItemsControl, TOPLEFT, 55, -47)
 		else
@@ -567,11 +571,11 @@ OnAddonLoaded(function()
 			listingControl:SetAnchor(TOP, itemControl, BOTTOM, 0, 15)
 		end
 
-		if(mode == "tradingHouseBrowse") then
+		if(mode == ZO_TRADING_HOUSE_MODE_BROWSE) then
 			InitializeFilters(self.m_browseItems)
 			TRADING_HOUSE.m_searchAllowed = true
 			TRADING_HOUSE:OnSearchCooldownUpdate(GetTradingHouseCooldownRemaining())
-		elseif(mode == "tradingHouseSell") then
+		elseif(mode == ZO_TRADING_HOUSE_MODE_SELL) then
 			if(not salesCategoryFilter) then
 				salesCategoryFilter = AwesomeGuildStore.SalesCategorySelector:New(TRADING_HOUSE.m_postItems, ADDON_NAME .. "SalesItemCategory")
 				salesCategoryFilter.control:ClearAnchors()
