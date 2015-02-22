@@ -448,6 +448,13 @@ local function InitializeFilters(control)
 end
 
 OnAddonLoaded(function()
+	if(not TRADING_HOUSE.IsInSellMode) then
+		ZO_TRADING_HOUSE_MODE_BROWSE = "tradingHouseBrowse"
+		ZO_TRADING_HOUSE_MODE_SELL = "tradingHouseSell"
+		ZO_TRADING_HOUSE_MODE_LISTINGS = "tradingHouseListings"
+		TRADING_HOUSE.IsInSellMode = TRADING_HOUSE.IsInPostMode
+	end
+
 	saveData = AwesomeGuildStore.InitializeSettings()
 	L = AwesomeGuildStore.Localization
 
