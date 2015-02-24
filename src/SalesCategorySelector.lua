@@ -119,12 +119,15 @@ function SalesCategorySelector:CreateCategoryButton(group, category, preset)
 		return true
 	end
 	button.HandleRelease = function(control, fromGroup)
-		if(fromGroup) then
-			if(self.group[category]) then
-				self.group[category].control:SetHidden(true)
+		local subCategoryGroup = self.group[category]
+		if(subCategoryGroup) then
+			if(fromGroup) then
+				subCategoryGroup.control:SetHidden(true)
+			else
+				subCategoryGroup.defaultButton:Press()
 			end
-			return true
 		end
+		return fromGroup
 	end
 	button.value = category
 	if(preset.isDefault) then
