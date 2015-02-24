@@ -205,6 +205,8 @@ local localization = {
 		SETTINGS_SHOW_SEARCH_LIBRARY_TOOLTIPS_DESCRIPTION = "When active, a tooltip with details like level and quality is shown for each entry in the search library.",
 		SETTINGS_SHOW_TRADER_TOOLTIPS_LABEL = "Trader Tooltips",
 		SETTINGS_SHOW_TRADER_TOOLTIPS_DESCRIPTION = "Show the currently hired trader for a guild that you are a member of, when hovering over the name or an entry in the drop down menu",
+		SETTINGS_AUTO_CLEAR_HISTORY_LABEL = "Auto clear history",
+		SETTINGS_AUTO_CLEAR_HISTORY_DESCRIPTION = "Automatically deletes all history entries when you open the guild store for the first time in a game session. You can undo the deletion via the menu in the search library",
 
 		INVALID_STATE = "Invalid Store State.\nThis is a bug in the game and should be fixed soon."
 	},
@@ -280,6 +282,8 @@ local localization = {
 		SETTINGS_SHOW_SEARCH_LIBRARY_TOOLTIPS_DESCRIPTION = "Wenn aktiviert, werden Kurzinfos mit Details wie Level und Qualität zu den Einträgen in der Suchbibliothek angezeigt",
 		SETTINGS_SHOW_TRADER_TOOLTIPS_LABEL = "Händler Kurzinfo",
 		SETTINGS_SHOW_TRADER_TOOLTIPS_DESCRIPTION = "Zeigt den derzeit angeheuerten Händler einer Gilde der du angehörst, wenn du die Maus über den Namen oder einen Eintrag in der Selektion bewegst",
+		SETTINGS_AUTO_CLEAR_HISTORY_LABEL = "Verlauf automatisch entleeren",
+		SETTINGS_AUTO_CLEAR_HISTORY_DESCRIPTION = "Löscht automatisch alle Einträge im Verlauf wenn du den Gildenladen zum ersten Mal während einer Spielesitzung besuchst. Du kannst die Löschung über das Menü in der Suchbibliothek rückgängig machen",
 
 		INVALID_STATE = "Ungültiger Händlerzustand.\nDas ist ein Fehler im Spiel und sollte bald behoben werden."
 	},

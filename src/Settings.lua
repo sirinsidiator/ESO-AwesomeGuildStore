@@ -25,6 +25,7 @@ local defaultData = {
 		searches = {},
 		showTooltips = true,
 		locked = true,
+		autoClearHistory = false,
 	}
 }
 
@@ -140,6 +141,14 @@ local function CreateSettingsDialog(saveData)
 			setFunc = function(value) saveData.showTraderTooltip = value end,
 			default = defaultData.showTraderTooltip
 		},
+		[13] = {
+			type = "checkbox",
+			name = L["SETTINGS_AUTO_CLEAR_HISTORY_LABEL"],
+			tooltip = L["SETTINGS_AUTO_CLEAR_HISTORY_DESCRIPTION"],
+			getFunc = function() return saveData.searchLibrary.autoClearHistory end,
+			setFunc = function(value) saveData.searchLibrary.autoClearHistory = value end,
+			default = defaultData.searchLibrary.autoClearHistory
+		},
 	}
 	LAM:RegisterOptionControls("AwesomeGuildStoreOptions", optionsData)
 	
@@ -200,6 +209,7 @@ local function UpgradeSettings(saveData)
 		saveData.sortWithoutSearch = defaultData.sortWithoutSearch
 		saveData.showTraderTooltip = defaultData.showTraderTooltip
 		saveData.searchLibrary.locked = defaultData.searchLibrary.locked
+		saveData.searchLibrary.autoClearHistory = defaultData.searchLibrary.autoClearHistory
 		saveData.version = 11
 	end
 end

@@ -103,6 +103,11 @@ function SearchLibrary:Initialize(saveData)
 	end)
 
 	self.searchList = saveData.searches
+
+	if(saveData.autoClearHistory) then
+		self:ClearHistory()
+	end
+
 	self:InitializeHistory()
 	self:InitializeFavorites()
 	self:InitializeEditBox()
