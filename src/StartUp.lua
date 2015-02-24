@@ -568,19 +568,24 @@ local function InitializeFilters(control)
 
 	ZO_PreHook(TRADING_HOUSE.m_search, "ChangeSort", function(self, sortKey, sortOrder)
 		if(TRADING_HOUSE.m_numItemsOnPage == 0 or saveData.sortWithoutSearch) then
-			self:UpdateSortOption(sortKey, sortOrder)
+			if(self.UpdateSortOption) then
+				self:UpdateSortOption(sortKey, sortOrder)
+			else -- TODO: remove after update 6 is live
+				self.m_sortField = sortKey
+				self.m_sortOrder = sortOrder
+			end
 			return true
 		end
 	end)
 
-	ZO_PreHook(TRADING_HOUSE.m_search, TRADING_HOUSE.m_search.UpdateSortOption and "UpdateSortOption" or "ChangeSort", function(self, sortKey, sortOrder) -- TODO: merge with other hook after update 6
+	ZO_PreHook(TRADING_HOUSE.m_search, TRADING_HOUSE.m_search.UpdateSortOption and "UpdateSortOption" or "ChangeSort", function(self, sortKey, sortOrder) -- TODO: merge with other hook after update 6 is live
 		saveData.sortField = sortKey
 		saveData.sortOrder = sortOrder
 	end)
 end
 
 OnAddonLoaded(function()
-	if(not TRADING_HOUSE.IsInSellMode) then
+	if(not TRADING_HOUSE.IsInSellMode) then -- TODO: remove after update 6 is live
 		ZO_TRADING_HOUSE_MODE_BROWSE = "tradingHouseBrowse"
 		ZO_TRADING_HOUSE_MODE_SELL = "tradingHouseSell"
 		ZO_TRADING_HOUSE_MODE_LISTINGS = "tradingHouseListings"
