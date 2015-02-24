@@ -488,10 +488,25 @@ local function InitializeFilters(control)
 	end
 	TRADING_HOUSE.m_search:InitializeOrderingData()
 
-	ZO_PreHook(TRADING_HOUSE.m_search, TRADING_HOUSE.m_search.UpdateSortOption and "UpdateSortOption" or "ChangeSort", function(self, sortKey, sortOrder)
+	ZO_PreHook(TRADING_HOUSE, "UpdateSortHeaders", function(self)
+		if(self.m_numItemsOnPage == 0 or saveData.sortWithoutSearch) then
+			self.m_searchSortHeaders:SetEnabled(true)
+			return true
+		end
+	end)
+
+	ZO_PreHook(TRADING_HOUSE.m_search, "ChangeSort", function(self, sortKey, sortOrder)
+		if(TRADING_HOUSE.m_numItemsOnPage == 0 or saveData.sortWithoutSearch) then
+			self:UpdateSortOption(sortKey, sortOrder)
+			return true
+		end
+	end)
+	
+	ZO_PreHook(TRADING_HOUSE.m_search, TRADING_HOUSE.m_search.UpdateSortOption and "UpdateSortOption" or "ChangeSort", function(self, sortKey, sortOrder) -- TODO: merge with other hook after update 6
 		saveData.sortField = sortKey
 		saveData.sortOrder = sortOrder
 	end)
+	
 end
 
 OnAddonLoaded(function()

@@ -11,6 +11,7 @@ local defaultData = {
 	displayPerUnitPrice = true,
 	keepSortOrderOnClose = true,
 	listWithSingleClick = true,
+	sortWithoutSearch = false,
 	sortField = TRADING_HOUSE_SORT_SALE_PRICE,
 	sortOrder = ZO_SORT_ORDER_UP,
 	searchLibrary = {
@@ -99,13 +100,21 @@ local function CreateSettingsDialog(saveData)
 		},
 		[8] = {
 			type = "checkbox",
+			name = L["SETTINGS_SORT_WITHOUT_SEARCH_LABEL"],
+			tooltip = L["SETTINGS_SORT_WITHOUT_SEARCH_DESCRIPTION"],
+			getFunc = function() return saveData.sortWithoutSearch end,
+			setFunc = function(value) saveData.sortWithoutSearch = value end,
+			default = defaultData.sortWithoutSearch
+		},
+		[9] = {
+			type = "checkbox",
 			name = L["SETTINGS_KEEP_SORTORDER_ON_CLOSE_LABEL"],
 			tooltip = L["SETTINGS_KEEP_SORTORDER_ON_CLOSE_DESCRIPTION"],
 			getFunc = function() return saveData.keepSortOrderOnClose end,
 			setFunc = function(value) saveData.keepSortOrderOnClose = value end,
 			default = defaultData.keepSortOrderOnClose
 		},
-		[9] = {
+		[10] = {
 			type = "checkbox",
 			name = L["SETTINGS_LIST_WITH_SINGLE_CLICK_LABEL"],
 			tooltip = L["SETTINGS_LIST_WITH_SINGLE_CLICK_DESCRIPTION"],
@@ -113,7 +122,7 @@ local function CreateSettingsDialog(saveData)
 			setFunc = function(value) saveData.listWithSingleClick = value end,
 			default = defaultData.listWithSingleClick
 		},
-		[10] = {
+		[11] = {
 			type = "checkbox",
 			name = L["SETTINGS_SHOW_SEARCH_LIBRARY_TOOLTIPS_LABEL"],
 			tooltip = L["SETTINGS_SHOW_SEARCH_LIBRARY_TOOLTIPS_DESCRIPTION"],
@@ -174,6 +183,7 @@ local function UpgradeSettings(saveData)
 		saveData.sortOrder = defaultData.sortOrder
 		saveData.listWithSingleClick = defaultData.listWithSingleClick
 		saveData.searchLibrary.showTooltips = defaultData.searchLibrary.showTooltips
+		saveData.sortWithoutSearch = defaultData.sortWithoutSearch
 		saveData.version = 11
 	end
 end
