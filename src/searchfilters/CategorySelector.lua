@@ -241,6 +241,11 @@ function CategorySelector:CreateSubcategoryGroup(name, category)
 	return group
 end
 
+local function ShowGuildSpecificItems()
+	TRADING_HOUSE.m_noItemsLabel:SetHidden(true) -- hide the no items found message as we will show the tabard anyways
+	TRADING_HOUSE:AddGuildSpecificItems(true) -- add the tabard whenever we change to the costume subcategory, because this function clears the search result
+end
+
 function CategorySelector:CreateSubcategoryButton(group, subcategory, preset)
 	local button = ToggleButton:New(group.control, group.control:GetName() .. "SubcategoryButton" .. subcategory, preset.texture, 170 + MINOR_BUTTON_SIZE * subcategory, 0, MINOR_BUTTON_SIZE, MINOR_BUTTON_SIZE, preset.label)
 	button.HandlePress = function()
@@ -249,13 +254,15 @@ function CategorySelector:CreateSubcategoryButton(group, subcategory, preset)
 		self.subcategory[group.category] = subcategory
 		self:UpdateSubfilterVisibility()
 		if(preset.showTabards) then
-			TRADING_HOUSE.m_noItemsLabel:SetHidden(true) -- hide the no items found message as we will show the tabard anyways
-			TRADING_HOUSE:AddGuildSpecificItems(true) -- add the tabard whenever we change to the costume subcategory, because this function clears the search result
+			ShowGuildSpecificItems()
 		end
 		self:HandleChange()
 		return true
 	end
 	button.HandleRelease = function(control, fromGroup)
+		if(not fromGroup and preset.showTabards) then
+			ShowGuildSpecificItems()
+		end
 		return fromGroup
 	end
 	button.value = subcategory
