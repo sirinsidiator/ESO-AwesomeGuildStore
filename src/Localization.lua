@@ -189,6 +189,8 @@ local localization = {
 		SETTINGS_DISPLAY_PER_UNIT_PRICE_DESCRIPTION = "When enabled the results of a guild store search show the per unit price of a stack below the overall price",
 		SETTINGS_KEEP_SORTORDER_ON_CLOSE_LABEL = "Remember sort order",
 		SETTINGS_KEEP_SORTORDER_ON_CLOSE_DESCRIPTION = "Leaves the store sort order set between play sessions instead of clearing it.",
+		SETTINGS_LIST_WITH_SINGLE_CLICK_LABEL = "Single click item listing",
+		SETTINGS_LIST_WITH_SINGLE_CLICK_DESCRIPTION = "Select items for sale with a single click in the sell tab.",
 		
 		INVALID_STATE = "Invalid Store State.\nThis is a bug in the game and should be fixed soon."
 	},
@@ -244,10 +246,12 @@ local localization = {
 		SETTINGS_KEEP_FILTERS_ON_CLOSE_DESCRIPTION = "Anstatt die Filter beim Schließen des Ladenfensters zurückzusetzen bleiben sie während einer Spielesitzung erhalten, außerdem werden beim Laden der UI die letzten aktiven Einstellungen wiederhergestellt",
 		SETTINGS_OLD_QUALITY_SELECTOR_BEHAVIOR_LABEL = "Verwende altes Qualitätsfilterverhalten",
 		SETTINGS_OLD_QUALITY_SELECTOR_BEHAVIOR_DESCRIPTION = "Wenn aktiviert, setzt ein Links- und Rechtsklick die Unter- bzw. Obergrenze und Doppel- oder Shift-Klick beide Grenzen auf den selben Wert",
-		SETTINGS_DISPLAY_PER_UNIT_PRICE_LABEL = "Stückpreis in Suchergebnissen anzeigen",
+		SETTINGS_DISPLAY_PER_UNIT_PRICE_LABEL = "Stückpreis in Ergebnissen anzeigen",
 		SETTINGS_DISPLAY_PER_UNIT_PRICE_DESCRIPTION = "Wenn aktiviert, wird in Suchergebnissen unterhalb des Gesamtpreises eines Stapels der Stückpreis angezeigt",
 		SETTINGS_KEEP_SORTORDER_ON_CLOSE_LABEL = "Sortierung merken",
 		SETTINGS_KEEP_SORTORDER_ON_CLOSE_DESCRIPTION = "Speichert die Sortierung im Ladenfensters zwischen Spielesitzungen",
+		SETTINGS_LIST_WITH_SINGLE_CLICK_LABEL = "Mit einem Klick anbieten",
+		SETTINGS_LIST_WITH_SINGLE_CLICK_DESCRIPTION = "Gegenstände werden im Verkaufsreiter mit einem Klick angeboten.",
 		
 		INVALID_STATE = "Ungültiger Händlerzustand.\nDas ist ein Fehler im Spiel und sollte bald behoben werden."
 	},

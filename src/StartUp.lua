@@ -368,7 +368,6 @@ local function InitializeFilters(control)
 		label = L["SEARCH_PREVIOUS_PAGE_LABEL"],
 		callback = function() TRADING_HOUSE.m_search:SearchPreviousPage() end,
 		updateState = function(rowControl)
---			rowControl:SetHidden(not TRADING_HOUSE.m_search:HasPreviousPage())
 			rowControl:SetEnabled(GetTradingHouseCooldownRemaining() == 0)
 		end
 	}
@@ -377,7 +376,6 @@ local function InitializeFilters(control)
 		label = L["SEARCH_SHOW_MORE_LABEL"],
 		callback = function() TRADING_HOUSE.m_search:SearchNextPage() end,
 		updateState = function(rowControl)
---			rowControl:SetHidden(not TRADING_HOUSE.m_search:HasNextPage())
 			rowControl:SetEnabled(GetTradingHouseCooldownRemaining() == 0)
 		end
 	}
@@ -513,6 +511,7 @@ OnAddonLoaded(function()
 
 	AwesomeGuildStore.toolTip = AwesomeGuildStore.SavedSearchTooltip:New()
 
+	local interceptInventoryItemClicks = false
 	local isSearchDisabled = false
 	local keybindButtonDescriptor, oldEnabled, oldCallback
 
@@ -540,6 +539,7 @@ OnAddonLoaded(function()
 
 	RegisterForEvent(EVENT_OPEN_TRADING_HOUSE, function()
 		isSearchDisabled = true
+		interceptInventoryItemClicks = false
 		if(filtersInitialized) then
 			searchButton:SetEnabled(false)
 			loadingBlocker:SetHidden(true)
@@ -576,6 +576,7 @@ OnAddonLoaded(function()
 
 	RegisterForEvent(EVENT_CLOSE_TRADING_HOUSE, function()
 		guildSelector:SetHidden(true)
+		interceptInventoryItemClicks = false
 	end)
 
 	local function UpdateSelectedGuild()
@@ -607,6 +608,7 @@ OnAddonLoaded(function()
 
 	local originalHandleTabSwitch = TRADING_HOUSE.HandleTabSwitch
 	TRADING_HOUSE.HandleTabSwitch = function(self, tabData)
+		interceptInventoryItemClicks = false
 		originalHandleTabSwitch(self, tabData)
 
 		if(not listingControl) then
@@ -639,6 +641,7 @@ OnAddonLoaded(function()
 			else
 				salesCategoryFilter:Refresh()
 			end
+			interceptInventoryItemClicks = true
 		end
 	end
 
@@ -659,5 +662,12 @@ OnAddonLoaded(function()
 		self:ClearSearchResults()
 		if(not saveData.keepFiltersOnClose) then return end
 		return true
+	end)
+
+	ZO_PreHook("ZO_InventorySlot_OnSlotClicked", function(inventorySlot, button)
+		if(interceptInventoryItemClicks and saveData.listWithSingleClick and button == 1) then
+			ZO_InventorySlot_DoPrimaryAction(inventorySlot)
+			return true
+		end
 	end)
 end)

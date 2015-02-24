@@ -10,6 +10,7 @@ local defaultData = {
 	oldQualitySelectorBehavior = false,
 	displayPerUnitPrice = true,
 	keepSortOrderOnClose = true,
+	listWithSingleClick = true,
 	sortField = TRADING_HOUSE_SORT_SALE_PRICE,
 	sortOrder = ZO_SORT_ORDER_UP,
 	searchLibrary = {
@@ -103,6 +104,14 @@ local function CreateSettingsDialog(saveData)
 			setFunc = function(value) saveData.keepSortOrderOnClose = value end,
 			default = defaultData.keepSortOrderOnClose
 		},
+		[9] = {
+			type = "checkbox",
+			name = L["SETTINGS_LIST_WITH_SINGLE_CLICK_LABEL"],
+			tooltip = L["SETTINGS_LIST_WITH_SINGLE_CLICK_DESCRIPTION"],
+			getFunc = function() return saveData.listWithSingleClick end,
+			setFunc = function(value) saveData.listWithSingleClick = value end,
+			default = defaultData.listWithSingleClick
+		},
 	}
 	LAM:RegisterOptionControls("AwesomeGuildStoreOptions", optionsData)
 end
@@ -154,6 +163,7 @@ local function UpgradeSettings(saveData)
 		saveData.keepSortOrderOnClose = defaultData.keepSortOrderOnClose
 		saveData.sortField = defaultData.sortField
 		saveData.sortOrder = defaultData.sortOrder
+		saveData.listWithSingleClick = defaultData.listWithSingleClick
 		saveData.version = 11
 	end
 end
