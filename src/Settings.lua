@@ -20,7 +20,8 @@ local defaultData = {
 		height = 185,
 		isActive = true,
 		lastState = AwesomeGuildStore.DEFAULT_SEARCH_STATE,
-		searches = {}
+		searches = {},
+		showTooltips = true,
 	}
 }
 
@@ -112,6 +113,14 @@ local function CreateSettingsDialog(saveData)
 			setFunc = function(value) saveData.listWithSingleClick = value end,
 			default = defaultData.listWithSingleClick
 		},
+		[10] = {
+			type = "checkbox",
+			name = L["SETTINGS_SHOW_SEARCH_LIBRARY_TOOLTIPS_LABEL"],
+			tooltip = L["SETTINGS_SHOW_SEARCH_LIBRARY_TOOLTIPS_DESCRIPTION"],
+			getFunc = function() return saveData.searchLibrary.showTooltips end,
+			setFunc = function(value) saveData.searchLibrary.showTooltips = value end,
+			default = defaultData.searchLibrary.showTooltips
+		},
 	}
 	LAM:RegisterOptionControls("AwesomeGuildStoreOptions", optionsData)
 end
@@ -164,6 +173,7 @@ local function UpgradeSettings(saveData)
 		saveData.sortField = defaultData.sortField
 		saveData.sortOrder = defaultData.sortOrder
 		saveData.listWithSingleClick = defaultData.listWithSingleClick
+		saveData.searchLibrary.showTooltips = defaultData.searchLibrary.showTooltips
 		saveData.version = 11
 	end
 end

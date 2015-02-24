@@ -191,6 +191,8 @@ local localization = {
 		SETTINGS_KEEP_SORTORDER_ON_CLOSE_DESCRIPTION = "Leaves the store sort order set between play sessions instead of clearing it.",
 		SETTINGS_LIST_WITH_SINGLE_CLICK_LABEL = "Single click item listing",
 		SETTINGS_LIST_WITH_SINGLE_CLICK_DESCRIPTION = "Select items for sale with a single click in the sell tab.",
+		SETTINGS_SHOW_SEARCH_LIBRARY_TOOLTIPS_LABEL = "Tooltips in Search Library",
+		SETTINGS_SHOW_SEARCH_LIBRARY_TOOLTIPS_DESCRIPTION = "When active, a tooltip with details like level and quality is shown for each entry in the search library.",
 		
 		INVALID_STATE = "Invalid Store State.\nThis is a bug in the game and should be fixed soon."
 	},
@@ -252,6 +254,8 @@ local localization = {
 		SETTINGS_KEEP_SORTORDER_ON_CLOSE_DESCRIPTION = "Speichert die Sortierung im Ladenfensters zwischen Spielesitzungen",
 		SETTINGS_LIST_WITH_SINGLE_CLICK_LABEL = "Mit einem Klick anbieten",
 		SETTINGS_LIST_WITH_SINGLE_CLICK_DESCRIPTION = "Gegenstände werden im Verkaufsreiter mit einem Klick angeboten.",
+		SETTINGS_SHOW_SEARCH_LIBRARY_TOOLTIPS_LABEL = "Kurzinfo in der Suchbibliothek",
+		SETTINGS_SHOW_SEARCH_LIBRARY_TOOLTIPS_DESCRIPTION = "Wenn aktiviert, werden Kurzinfos mit Details wie Level und Qualität zu den Einträgen in der Suchbibliothek angezeigt.",
 		
 		INVALID_STATE = "Ungültiger Händlerzustand.\nDas ist ein Fehler im Spiel und sollte bald behoben werden."
 	},

@@ -282,7 +282,9 @@ local function InitializeBaseRow(self, rowControl, entry, fadeFavorite)
 		if(not entry.favorite or fadeFavorite) then
 			saveButton.animation:PlayForward()
 		end
-		AwesomeGuildStore.toolTip:Show(rowControl, entry)
+		if(self.saveData.showTooltips) then
+			AwesomeGuildStore.toolTip:Show(rowControl, entry)
+		end
 	end
 
 	local function FadeOut()
