@@ -363,11 +363,28 @@ local function InitializeFilters(control)
 	searchLibrary:Serialize()
 
 	local SHOW_MORE_DATA_TYPE = 4 -- watch out for changes in tradinghouse.lua
-	local UpdateShowMoreRow = nil
+
+	local showPreviousPageEntry =  {
+		label = L["SEARCH_PREVIOUS_PAGE_LABEL"],
+		callback = function() TRADING_HOUSE.m_search:SearchPreviousPage() end,
+		updateState = function(rowControl)
+--			rowControl:SetHidden(not TRADING_HOUSE.m_search:HasPreviousPage())
+			rowControl:SetEnabled(GetTradingHouseCooldownRemaining() == 0)
+		end
+	}
+
+	local showNextPageEntry =  {
+		label = L["SEARCH_SHOW_MORE_LABEL"],
+		callback = function() TRADING_HOUSE.m_search:SearchNextPage() end,
+		updateState = function(rowControl)
+--			rowControl:SetHidden(not TRADING_HOUSE.m_search:HasNextPage())
+			rowControl:SetEnabled(GetTradingHouseCooldownRemaining() == 0)
+		end
+	}
 
 	ZO_ScrollList_AddDataType(TRADING_HOUSE.m_searchResultsList, SHOW_MORE_DATA_TYPE, "AwesomeGuildStoreShowMoreRowTemplate", 32, function(rowControl, entry)
 		local label = rowControl:GetNamedChild("Text")
-		label:SetText(L["SEARCH_SHOW_MORE_LABEL"])
+		label:SetText(entry.label)
 		rowControl.label = label
 
 		local highlight = rowControl:GetNamedChild("Highlight")
@@ -388,7 +405,7 @@ local function InitializeFilters(control)
 		rowControl:SetHandler("OnMouseUp", function(control, button, isInside)
 			if(rowControl.enabled and button == 1 and isInside) then
 				PlaySound("Click")
-				TRADING_HOUSE.m_search:SearchNextPage()
+				entry.callback()
 			end
 		end)
 
@@ -398,27 +415,33 @@ local function InitializeFilters(control)
 			label:SetColor((enabled and ZO_NORMAL_TEXT or ZO_DEFAULT_DISABLED_COLOR):UnpackRGBA())
 		end
 
-		UpdateShowMoreRow = function()
-			rowControl:SetHidden(not TRADING_HOUSE.m_search:HasNextPage())
-			rowControl:SetEnabled(GetTradingHouseCooldownRemaining() == 0)
-		end
-		UpdateShowMoreRow()
+		entry.updateState(rowControl)
+		rowControl.entry = entry
+		entry.rowControl = rowControl
 	end, nil, nil, function(rowControl)
 		rowControl.enabled = nil
 		rowControl.label = nil
 		rowControl.SetEnabled = nil
+		rowControl.entry.rowControl = nil
+		rowControl.entry = nil
 		ZO_ObjectPool_DefaultResetControl(rowControl)
-		UpdateShowMoreRow = nil
 	end)
 
 	local originalRebuildSearchResultsPage = TRADING_HOUSE.RebuildSearchResultsPage
 	TRADING_HOUSE.RebuildSearchResultsPage = function(self)
 		originalRebuildSearchResultsPage(self)
 
-		if(self.m_search:HasNextPage()) then
+		local hasPrev = TRADING_HOUSE.m_search:HasPreviousPage()
+		local hasNext = TRADING_HOUSE.m_search:HasNextPage()
+		if(hasPrev or hasNext) then
 			local list = self.m_searchResultsList
 			local scrollData = ZO_ScrollList_GetDataList(list)
-			scrollData[#scrollData + 1] = ZO_ScrollList_CreateDataEntry(SHOW_MORE_DATA_TYPE, {})
+			if(hasPrev) then
+				table.insert(scrollData, 1, ZO_ScrollList_CreateDataEntry(SHOW_MORE_DATA_TYPE, showPreviousPageEntry))
+			end
+			if(hasNext) then
+				scrollData[#scrollData + 1] = ZO_ScrollList_CreateDataEntry(SHOW_MORE_DATA_TYPE, showNextPageEntry)
+			end
 			ZO_ScrollList_Commit(list)
 		end
 	end
@@ -438,8 +461,8 @@ local function InitializeFilters(control)
 	ZO_PreHook(TRADING_HOUSE, "UpdatePagingButtons", function(self)
 		local search = self.m_search
 		UpdatePageLabel(search.m_page, search:HasNextPage() or search:HasPreviousPage())
-		if(not UpdateShowMoreRow) then return end
-		UpdateShowMoreRow()
+		if(showPreviousPageEntry.rowControl ~= nil) then showPreviousPageEntry.updateState(showPreviousPageEntry.rowControl) end
+		if(showNextPageEntry.rowControl ~= nil) then showNextPageEntry.updateState(showNextPageEntry.rowControl) end
 	end)
 
 	filtersInitialized = true
