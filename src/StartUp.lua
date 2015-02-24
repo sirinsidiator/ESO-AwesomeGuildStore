@@ -142,6 +142,8 @@ local function SortEntriesByGuildId(entryA, entryB)
 end
 
 local function InitializeGuildSelector(lastGuildId)
+	selectedItemText.guildId = lastGuildId
+
 	comboBox:ClearItems()
 	comboBox:SetSortsItems(false)
 	entryByGuildId = {}
