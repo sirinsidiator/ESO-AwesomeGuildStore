@@ -186,6 +186,8 @@ local localization = {
 		SETTINGS_OLD_QUALITY_SELECTOR_BEHAVIOR_DESCRIPTION = "When enabled left and right click set lower and upper quality and double or shift click sets both to the same value",
 		SETTINGS_DISPLAY_PER_UNIT_PRICE_LABEL = "Show per unit price in search results",
 		SETTINGS_DISPLAY_PER_UNIT_PRICE_DESCRIPTION = "When enabled the results of a guild store search show the per unit price of a stack below the overall price",
+		SETTINGS_KEEP_SORTORDER_ON_CLOSE_LABEL = "Remember sort order",
+		SETTINGS_KEEP_SORTORDER_ON_CLOSE_DESCRIPTION = "Leaves the store sort order set between play sessions instead of clearing it.",
 		
 		INVALID_STATE = "Invalid Store State.\nThis is a bug in the game and should be fixed soon."
 	},
@@ -242,6 +244,8 @@ local localization = {
 		SETTINGS_OLD_QUALITY_SELECTOR_BEHAVIOR_DESCRIPTION = "Wenn aktiviert, setzt ein Links- und Rechtsklick die Unter- bzw. Obergrenze und Doppel- oder Shift-Klick beide Grenzen auf den selben Wert",
 		SETTINGS_DISPLAY_PER_UNIT_PRICE_LABEL = "Stückpreis in Suchergebnissen anzeigen",
 		SETTINGS_DISPLAY_PER_UNIT_PRICE_DESCRIPTION = "Wenn aktiviert, wird in Suchergebnissen unterhalb des Gesamtpreises eines Stapels der Stückpreis angezeigt",
+		SETTINGS_KEEP_SORTORDER_ON_CLOSE_LABEL = "Sortierung merken",
+		SETTINGS_KEEP_SORTORDER_ON_CLOSE_DESCRIPTION = "Speichert die Sortierung im Ladenfensters zwischen Spielesitzungen",
 		
 		INVALID_STATE = "Ungültiger Händlerzustand.\nDas ist ein Fehler im Spiel und sollte bald behoben werden."
 	},

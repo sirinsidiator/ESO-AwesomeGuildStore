@@ -445,6 +445,32 @@ local function InitializeFilters(control)
 	filtersInitialized = true
 
 	InitializeUnitPriceDisplay()
+
+	TRADING_HOUSE.m_search.InitializeOrderingData = function(self)
+		if(saveData.keepSortOrderOnClose) then
+			self.ResetOrderingData = function() end
+			self.m_sortField = saveData.sortField
+			self.m_sortOrder = saveData.sortOrder
+
+			local sortHeader = TRADING_HOUSE.m_searchSortHeaders
+			local oldEnabled = sortHeader.enabled
+			sortHeader.enabled = true -- force it enabled for a bit, otherwise it won't update
+			sortHeader:SelectHeaderByKey(self.m_sortField, ZO_SortHeaderGroup.SUPPRESS_CALLBACKS, true)
+			if(not self.m_sortOrder) then -- call it a second time to invert the sort order
+				sortHeader:SelectHeaderByKey(self.m_sortField, ZO_SortHeaderGroup.SUPPRESS_CALLBACKS)
+			end
+			sortHeader.enabled = oldEnabled
+		else
+			self.m_sortField = TRADING_HOUSE_SORT_SALE_PRICE
+			self.m_sortOrder = ZO_SORT_ORDER_UP
+		end
+	end
+	TRADING_HOUSE.m_search:InitializeOrderingData()
+
+	ZO_PreHook(TRADING_HOUSE.m_search, TRADING_HOUSE.m_search.UpdateSortOption and "UpdateSortOption" or "ChangeSort", function(self, sortKey, sortOrder)
+		saveData.sortField = sortKey
+		saveData.sortOrder = sortOrder
+	end)
 end
 
 OnAddonLoaded(function()

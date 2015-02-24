@@ -1,6 +1,6 @@
 
 local defaultData = {
-	version = 10,
+	version = 11,
 	lastGuildName = "",
 	replaceCategoryFilter = true,
 	replacePriceFilter = true,
@@ -9,6 +9,9 @@ local defaultData = {
 	keepFiltersOnClose = true,
 	oldQualitySelectorBehavior = false,
 	displayPerUnitPrice = true,
+	keepSortOrderOnClose = true,
+	sortField = TRADING_HOUSE_SORT_SALE_PRICE,
+	sortOrder = ZO_SORT_ORDER_UP,
 	searchLibrary = {
 		x = 980,
 		y = -5,
@@ -92,6 +95,14 @@ local function CreateSettingsDialog(saveData)
 			setFunc = function(value) saveData.displayPerUnitPrice = value end,
 			default = defaultData.displayPerUnitPrice
 		},
+		[8] = {
+			type = "checkbox",
+			name = L["SETTINGS_KEEP_SORTORDER_ON_CLOSE_LABEL"],
+			tooltip = L["SETTINGS_KEEP_SORTORDER_ON_CLOSE_DESCRIPTION"],
+			getFunc = function() return saveData.keepSortOrderOnClose end,
+			setFunc = function(value) saveData.keepSortOrderOnClose = value end,
+			default = defaultData.keepSortOrderOnClose
+		},
 	}
 	LAM:RegisterOptionControls("AwesomeGuildStoreOptions", optionsData)
 end
@@ -138,6 +149,12 @@ local function UpgradeSettings(saveData)
 	if(saveData.version == 9) then
 		saveData.lastGuildName = saveData.lastGuildName or defaultData.lastGuildName
 		saveData.version = 10
+	end
+	if(saveData.version == 10) then
+		saveData.keepSortOrderOnClose = defaultData.keepSortOrderOnClose
+		saveData.sortField = defaultData.sortField
+		saveData.sortOrder = defaultData.sortOrder
+		saveData.version = 11
 	end
 end
 
