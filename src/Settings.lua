@@ -12,6 +12,7 @@ local defaultData = {
 	keepSortOrderOnClose = true,
 	listWithSingleClick = true,
 	sortWithoutSearch = false,
+	showTraderTooltip = true,
 	sortField = TRADING_HOUSE_SORT_SALE_PRICE,
 	sortOrder = ZO_SORT_ORDER_UP,
 	searchLibrary = {
@@ -130,6 +131,14 @@ local function CreateSettingsDialog(saveData)
 			setFunc = function(value) saveData.searchLibrary.showTooltips = value end,
 			default = defaultData.searchLibrary.showTooltips
 		},
+		[12] = {
+			type = "checkbox",
+			name = L["SETTINGS_SHOW_TRADER_TOOLTIPS_LABEL"],
+			tooltip = L["SETTINGS_SHOW_TRADER_TOOLTIPS_DESCRIPTION"],
+			getFunc = function() return saveData.showTraderTooltip end,
+			setFunc = function(value) saveData.showTraderTooltip = value end,
+			default = defaultData.showTraderTooltip
+		},
 	}
 	LAM:RegisterOptionControls("AwesomeGuildStoreOptions", optionsData)
 end
@@ -184,6 +193,7 @@ local function UpgradeSettings(saveData)
 		saveData.listWithSingleClick = defaultData.listWithSingleClick
 		saveData.searchLibrary.showTooltips = defaultData.searchLibrary.showTooltips
 		saveData.sortWithoutSearch = defaultData.sortWithoutSearch
+		saveData.showTraderTooltip = defaultData.showTraderTooltip
 		saveData.version = 11
 	end
 end

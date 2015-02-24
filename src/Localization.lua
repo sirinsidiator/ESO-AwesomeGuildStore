@@ -96,7 +96,7 @@ local localization = {
 		SUBFILTER_JEWELRY_TYPE_LABEL = "Jewelry Type",
 		SUBFILTER_JEWELRY_TYPE_RING = GetString("SI_EQUIPTYPE", EQUIP_TYPE_RING),
 		SUBFILTER_JEWELRY_TYPE_NECK = GetString("SI_EQUIPTYPE", EQUIP_TYPE_NECK),
-		
+
 		SUBFILTER_JEWELRY_TRAIT_LABEL = "Jewelry Trait",
 		SUBFILTER_JEWELRY_TRAIT_HEALTHY = GetString("SI_ITEMTRAITTYPE", ITEM_TRAIT_TYPE_JEWELRY_HEALTHY),
 		SUBFILTER_JEWELRY_TRAIT_ARCANE = GetString("SI_ITEMTRAITTYPE", ITEM_TRAIT_TYPE_JEWELRY_ARCANE),
@@ -188,14 +188,16 @@ local localization = {
 		SETTINGS_DISPLAY_PER_UNIT_PRICE_LABEL = "Show per unit price in search results",
 		SETTINGS_DISPLAY_PER_UNIT_PRICE_DESCRIPTION = "When enabled the results of a guild store search show the per unit price of a stack below the overall price",
 		SETTINGS_SORT_WITHOUT_SEARCH_LABEL = "Select order without search",
-		SETTINGS_SORT_WITHOUT_SEARCH_DESCRIPTION = "Allows you to change the sort order without triggering a new search. The currently shown results will only change after a manual search.",
+		SETTINGS_SORT_WITHOUT_SEARCH_DESCRIPTION = "Allows you to change the sort order without triggering a new search. The currently shown results will only change after a manual search",
 		SETTINGS_KEEP_SORTORDER_ON_CLOSE_LABEL = "Remember sort order",
 		SETTINGS_KEEP_SORTORDER_ON_CLOSE_DESCRIPTION = "Leaves the store sort order set between play sessions instead of clearing it.",
 		SETTINGS_LIST_WITH_SINGLE_CLICK_LABEL = "Single click item listing",
 		SETTINGS_LIST_WITH_SINGLE_CLICK_DESCRIPTION = "Select items for sale with a single click in the sell tab.",
 		SETTINGS_SHOW_SEARCH_LIBRARY_TOOLTIPS_LABEL = "Tooltips in Search Library",
 		SETTINGS_SHOW_SEARCH_LIBRARY_TOOLTIPS_DESCRIPTION = "When active, a tooltip with details like level and quality is shown for each entry in the search library.",
-		
+		SETTINGS_SHOW_TRADER_TOOLTIPS_LABEL = "Trader Tooltips",
+		SETTINGS_SHOW_TRADER_TOOLTIPS_DESCRIPTION = "Show the currently hired trader for a guild that you are a member of, when hovering over the name or an entry in the drop down menu",
+
 		INVALID_STATE = "Invalid Store State.\nThis is a bug in the game and should be fixed soon."
 	},
 	de = {
@@ -260,7 +262,9 @@ local localization = {
 		SETTINGS_LIST_WITH_SINGLE_CLICK_DESCRIPTION = "Gegenstände werden im Verkaufsreiter mit einem Klick angeboten",
 		SETTINGS_SHOW_SEARCH_LIBRARY_TOOLTIPS_LABEL = "Kurzinfo in der Suchbibliothek",
 		SETTINGS_SHOW_SEARCH_LIBRARY_TOOLTIPS_DESCRIPTION = "Wenn aktiviert, werden Kurzinfos mit Details wie Level und Qualität zu den Einträgen in der Suchbibliothek angezeigt",
-		
+		SETTINGS_SHOW_TRADER_TOOLTIPS_LABEL = "Händler Kurzinfo",
+		SETTINGS_SHOW_TRADER_TOOLTIPS_DESCRIPTION = "Zeigt den derzeit angeheuerten Händler einer Gilde der du angehörst, wenn du die Maus über den Namen oder einen Eintrag in der Selektion bewegst",
+
 		INVALID_STATE = "Ungültiger Händlerzustand.\nDas ist ein Fehler im Spiel und sollte bald behoben werden."
 	},
 	fr = {

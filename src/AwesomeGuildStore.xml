@@ -34,6 +34,14 @@
 								ZO_ComboBox_DropdownClicked(self:GetParent())
 								end
 							</OnMouseUp>
+
+							<OnMouseEnter>
+								AwesomeGuildStore.GuildSelectorShowTooltip(self)
+							</OnMouseEnter>
+
+							<OnMouseExit>
+								AwesomeGuildStore.GuildSelectorHideTooltip(self)
+							</OnMouseExit>
 						</Label>
 
 						<Button name="$(parent)OpenDropdown" inherits="ZO_DropdownButton">
@@ -129,6 +137,9 @@
 				</Label>
 			</Controls>
 		</Control>
-		
+
+		<Texture name="AwesomeGuildStoreTraderIcon" textureFile="EsoUI/Art/Guild/ownership_icon_guildTrader.dds" hidden="true">
+			<Dimensions x="128" y="128" />
+		</Texture>
 	</Controls>
 </GuiXml>
