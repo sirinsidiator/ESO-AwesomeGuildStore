@@ -24,6 +24,7 @@ local defaultData = {
 		lastState = AwesomeGuildStore.DEFAULT_SEARCH_STATE,
 		searches = {},
 		showTooltips = true,
+		locked = true,
 	}
 }
 
@@ -37,7 +38,7 @@ local function CreateSettingsDialog(saveData)
 		version = "VERSION_NUMBER",
 		registerForDefaults = true
 	}
-	LAM:RegisterAddonPanel("AwesomeGuildStoreOptions", panelData)
+	local panel = LAM:RegisterAddonPanel("AwesomeGuildStoreOptions", panelData)
 	local optionsData = {
 		[1] = {
 			type = "checkbox",
@@ -141,6 +142,10 @@ local function CreateSettingsDialog(saveData)
 		},
 	}
 	LAM:RegisterOptionControls("AwesomeGuildStoreOptions", optionsData)
+	
+	AwesomeGuildStore.OpenSettingsPanel = function()
+		LAM:OpenToPanel(panel)
+	end
 end
 
 local function UpgradeSettings(saveData)
@@ -194,6 +199,7 @@ local function UpgradeSettings(saveData)
 		saveData.searchLibrary.showTooltips = defaultData.searchLibrary.showTooltips
 		saveData.sortWithoutSearch = defaultData.sortWithoutSearch
 		saveData.showTraderTooltip = defaultData.showTraderTooltip
+		saveData.searchLibrary.locked = defaultData.searchLibrary.locked
 		saveData.version = 11
 	end
 end
@@ -202,6 +208,7 @@ local function InitializeSettings()
 	AwesomeGuildStore_Data = AwesomeGuildStore_Data or {}
 	local saveData = AwesomeGuildStore_Data[GetDisplayName()] or ZO_DeepTableCopy(defaultData)
 	AwesomeGuildStore_Data[GetDisplayName()] = saveData
+	AwesomeGuildStore.defaultData = defaultData
 
 	UpgradeSettings(saveData)
 	CreateSettingsDialog(saveData)

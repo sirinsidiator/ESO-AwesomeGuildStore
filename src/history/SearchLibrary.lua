@@ -49,8 +49,8 @@ function SearchLibrary:Initialize(saveData)
 
 	self.control = AwesomeGuildStoreSearchLibrary
 	local control = self.control
-	control:SetMovable(true)
-	control:SetResizeHandleSize(5)
+	control:SetMovable(not saveData.locked)
+	control:SetResizeHandleSize(not saveData.locked and 5 or 0)
 	control:SetHandler("OnMoveStop", function() self:SavePosition() end)
 	local resizing = false
 	control:SetHandler("OnResizeStart", function() resizing = true end)
@@ -93,6 +93,7 @@ function SearchLibrary:Initialize(saveData)
 		saveData.isActive = false
 		return true
 	end
+	self.toggleButton = toggleButton
 
 	ZO_PreHook(TRADING_HOUSE.m_search, "InternalExecuteSearch", function()
 		self:AddHistoryEntry(self:Serialize())
@@ -105,6 +106,7 @@ function SearchLibrary:Initialize(saveData)
 	self:InitializeHistory()
 	self:InitializeFavorites()
 	self:InitializeEditBox()
+	self:InitializeOptions()
 
 	local favoriteCurrentButton = ToggleButton:New(parent, control:GetName() .. "FavoriteCurrentButton", "AwesomeGuildStore/images/favorite_%s.dds", 0, 0, 28, 28, L["SEARCH_LIBRARY_FAVORITE_BUTTON_ADD_TOOLTIP"])
 	favoriteCurrentButton.control:ClearAnchors()
@@ -143,6 +145,41 @@ function SearchLibrary:UpdateFavoriteButtonState()
 		self.favoriteCurrentButton:Release(true)
 		self.favoriteCurrentButton:SetTooltipText(L["SEARCH_LIBRARY_FAVORITE_BUTTON_ADD_TOOLTIP"])
 	end
+end
+
+function SearchLibrary:InitializeOptions()
+	local optionsControl = self.control:GetNamedChild("Options")
+	optionsControl:SetHandler("OnClicked", function(control)
+		ClearMenu()
+
+		AddMenuItem(L["SEARCH_LIBRARY_MENU_OPEN_SETTINGS"], AwesomeGuildStore.OpenSettingsPanel)
+		AddMenuItem(L["SEARCH_LIBRARY_MENU_CLEAR_HISTORY"], function()
+			self:ClearHistory()
+			self:Refresh()
+		end)
+		AddMenuItem(L["SEARCH_LIBRARY_MENU_CLEAR_FAVORITES"], function()
+			self:ClearFavorites()
+			self:Refresh()
+		end)
+		if(self.undo) then
+			AddMenuItem(L["SEARCH_LIBRARY_MENU_UNDO_ACTION"], function()
+				if(self.undo) then
+					self.undo()
+					self:Refresh()
+				end
+			end)
+		end
+		if(self:IsLocked()) then
+			AddMenuItem(L["SEARCH_LIBRARY_MENU_UNLOCK_WINDOW"], function() self:Unlock() end)
+		else
+			AddMenuItem(L["SEARCH_LIBRARY_MENU_LOCK_WINDOW"], function() self:Lock() end)
+			AddMenuItem(L["SEARCH_LIBRARY_MENU_RESET_WINDOW"], function() self:ResetPosition() end)
+		end
+		AddMenuItem(L["SEARCH_LIBRARY_MENU_CLOSE_WINDOW"], function() self.toggleButton:Release() end)
+
+		ShowMenu(optionsControl)
+	end)
+	self.optionsControl = optionsControl
 end
 
 function SearchLibrary:InitializeEditBox()
@@ -492,6 +529,35 @@ function SearchLibrary:RemoveHistoryEntry(state)
 	if(entry) then
 		entry.history = false
 		self.historyDirty = true
+		self.undo = function()
+			entry.history = true
+			self.searchList[entry.state] = entry
+			self.historyDirty = true
+			self.undo = nil
+		end
+	end
+end
+
+function SearchLibrary:ClearHistory()
+	local removedEntries = {}
+	for state, entry in pairs(self.searchList) do
+		if(entry.history) then
+			removedEntries[#removedEntries + 1] = entry
+			entry.history = false
+			self.historyDirty = true
+		end
+	end
+
+	if(#removedEntries > 0) then
+		self.undo = function()
+			for i = 1, #removedEntries do
+				local entry = removedEntries[i]
+				entry.history = true
+				self.searchList[entry.state] = entry
+			end
+			self.historyDirty = true
+			self.undo = nil
+		end
 	end
 end
 
@@ -512,6 +578,45 @@ function SearchLibrary:RemoveFavoriteEntry(state)
 			self.historyDirty = true
 		end
 		self.favoritesDirty = true
+
+		self.undo = function()
+			entry.favorite = true
+			self.searchList[entry.state] = entry
+			if(entry.history) then
+				self.historyDirty = true
+			end
+			self.favoritesDirty = true
+			self.undo = nil
+		end
+	end
+end
+
+function SearchLibrary:ClearFavorites()
+	local removedEntries = {}
+	for state, entry in pairs(self.searchList) do
+		if(entry.favorite) then
+			removedEntries[#removedEntries + 1] = entry
+			entry.favorite = false
+			if(entry.history) then
+				self.historyDirty = true
+			end
+			self.favoritesDirty = true
+		end
+	end
+
+	if(#removedEntries > 0) then
+		self.undo = function()
+			for i = 1, #removedEntries do
+				local entry = removedEntries[i]
+				entry.favorite = true
+				if(entry.history) then
+					self.historyDirty = true
+				end
+				self.searchList[entry.state] = entry
+			end
+			self.favoritesDirty = true
+			self.undo = nil
+		end
 	end
 end
 
@@ -603,6 +708,13 @@ function SearchLibrary:SavePosition()
 	saveData.width, saveData.height = control:GetDimensions()
 end
 
+function SearchLibrary:ResetPosition()
+	local control, saveData, defaultData = self.control, self.saveData, AwesomeGuildStore.defaultData.searchLibrary
+	saveData.x, saveData.y = defaultData.x, defaultData.y
+	saveData.width, saveData.height = defaultData.width, defaultData.height
+	self:LoadPosition()
+end
+
 local BORDER_WIDTH_HORIZONTAL = 25
 local BORDER_WIDTH_VERTICAL = 10
 local LABEL_HEIGHT = 23
@@ -648,4 +760,20 @@ function SearchLibrary:Toggle()
 	else
 		self:Show()
 	end
+end
+
+function SearchLibrary:Lock()
+	self.saveData.locked = true
+	self.control:SetMovable(false)
+	self.control:SetResizeHandleSize(0)
+end
+
+function SearchLibrary:Unlock()
+	self.saveData.locked = false
+	self.control:SetMovable(true)
+	self.control:SetResizeHandleSize(5)
+end
+
+function SearchLibrary:IsLocked()
+	return self.saveData.locked
 end

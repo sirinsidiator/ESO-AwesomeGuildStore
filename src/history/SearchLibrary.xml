@@ -33,6 +33,12 @@
 					<Anchor point="TOPLEFT" relativeTo="$(parent)HistoryLabel" relativePoint="TOPRIGHT" offsetX="25" />
 				</Label>
 
+				<Button name="$(parent)Options" mouseOverBlendMode="ADD" inherits="ZO_ButtonBehaviorClickSound">
+					<Dimensions x="32" y="32" />
+					<Anchor point="TOPRIGHT" offsetX="-12" offsetY="7" />
+					<Textures normal="EsoUI/Art/ChatWindow/chat_options_up.dds" pressed="EsoUI/Art/ChatWindow/chat_options_down.dds" mouseOver="EsoUI/Art/ChatWindow/chat_options_over.dds" />
+				</Button>
+
 				<Backdrop name="$(parent)LabelEdit" inherits="ZO_EditBackdrop" hidden="true" tier="HIGH" level="3">
 					<Dimensions x="230" />
 					<Controls>

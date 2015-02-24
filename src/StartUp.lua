@@ -577,7 +577,6 @@ local function InitializeFilters(control)
 		saveData.sortField = sortKey
 		saveData.sortOrder = sortOrder
 	end)
-
 end
 
 OnAddonLoaded(function()
