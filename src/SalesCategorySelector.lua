@@ -240,12 +240,16 @@ local BACKPACK_TRADING_HOUSE_LAYOUT_FRAGMENT_ADVANCED = ZO_BackpackLayoutFragmen
 		additionalFilter = SalesCategoryFilter,
 	})
 
--- let libFilters hook into our custom fragments to ensure compatibility with other addons
-local libFilters = LibStub("libFilters")
-libFilters:HookAdditionalFilter(LAF_GUILDSTORE, BACKPACK_TRADING_HOUSE_LAYOUT_FRAGMENT_BASIC)
-libFilters:HookAdditionalFilter(LAF_GUILDSTORE, BACKPACK_TRADING_HOUSE_LAYOUT_FRAGMENT_ADVANCED)
+local function InitializeLibFilterHooks()
+	-- let libFilters hook into our custom fragments to ensure compatibility with other addons
+	local libFilters = LibStub("libFilters")
+	libFilters:HookAdditionalFilter(LAF_GUILDSTORE, BACKPACK_TRADING_HOUSE_LAYOUT_FRAGMENT_BASIC)
+	libFilters:HookAdditionalFilter(LAF_GUILDSTORE, BACKPACK_TRADING_HOUSE_LAYOUT_FRAGMENT_ADVANCED)
+	InitializeLibFilterHooks = function() end
+end
 
 function SalesCategorySelector:HandleChange()
+	InitializeLibFilterHooks()
 	local filters = FILTER_PRESETS[self.category].subcategories
 	local subcategory = self.subcategory[self.category]
 	currentLayout = BACKPACK_TRADING_HOUSE_LAYOUT_FRAGMENT_BASIC.layoutData
