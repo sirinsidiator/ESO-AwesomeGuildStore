@@ -41,5 +41,8 @@ searchfilters/ItemNameQuickFilter.lua
 history/SavedSearchTooltip.lua
 history/SearchLibrary.lua
 history/SearchLibrary.xml
+guildselector/HiredTraderTooltip.lua
+guildselector/GuildSelector.lua
+guildselector/GuildSelector.xml
 SalesCategorySelector.lua
 AwesomeGuildStore.xml

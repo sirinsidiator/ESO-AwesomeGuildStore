@@ -30,12 +30,7 @@ AwesomeGuildStore.RegisterForEvent = RegisterForEvent
 -----------------------------------------------------------------------------------------
 
 local L
-local comboBox
-local selectedItemText
-local isShowingTraderTooltip = false
 local guildSelector
-local entryByGuildId
-local guildIdByIndex
 local filtersInitialized
 local saveData
 local priceSelector
@@ -47,181 +42,6 @@ local nameFilter
 local searchLibrary
 local salesCategoryFilter
 local loadingBlocker
-
-local function GuildSelectorShowTooltip(control)
-	if(not saveData.showTraderTooltip) then return end
-
-	local traderIcon = AwesomeGuildStoreTraderIcon
-	local traderName = GetGuildOwnedKioskInfo(control.guildId)
-	if(traderName) then
-		traderIcon:SetAlpha(1)
-		traderName = zo_strformat(SI_GUILD_HIRED_TRADER, traderName)
-	else
-		traderIcon:SetAlpha(0.2)
-		traderName = GetString(SI_GUILD_NO_HIRED_TRADER)
-	end
-	traderIcon:ClearAnchors()
-	traderIcon:SetHidden(false)
-
-	local r, g, b = ZO_TOOLTIP_DEFAULT_COLOR:UnpackRGB()
-	InitializeTooltip(InformationTooltip)
-	InformationTooltip:ClearAnchors()
-	InformationTooltip:SetOwner(control, RIGHT, -5, 0)
-	InformationTooltip:AddLine(GetString(SI_GUILD_TRADER_OWNERSHIP_HEADER), "ZoFontGameBold", r, g, b)
-	InformationTooltip:AddControl(traderIcon)
-	traderIcon:SetAnchor(CENTER)
-	InformationTooltip:AddLine(traderName, "", r, g, b)
-
-	isShowingTraderTooltip = true
-end
-
-local function GuildSelectorHideTooltip(control)
-	isShowingTraderTooltip = false
-	ClearTooltip(InformationTooltip) -- looks like this automatically hides the traderIcon
-end
-
-AwesomeGuildStore.GuildSelectorShowTooltip = GuildSelectorShowTooltip
-AwesomeGuildStore.GuildSelectorHideTooltip = GuildSelectorHideTooltip
-
-function AwesomeGuildStore.InitializeGuildSelector(control)
-	local comboBoxControl = GetControl(control, "ComboBox")
-	comboBox = ZO_ComboBox_ObjectFromContainer(comboBoxControl)
-	comboBox:SetSortsItems(false)
-	comboBox:SetSelectedItemFont("ZoFontWindowTitle")
-	comboBox:SetDropdownFont("ZoFontHeader2")
-	comboBox:SetSpacing(8)
-	guildSelector = control
-
-	selectedItemText = GetControl(comboBoxControl, "SelectedItemText")
-	selectedItemText.guildId = GetSelectedTradingHouseGuildId()
-
-	local originalShow = comboBox.ShowDropdownInternal
-	comboBox.ShowDropdownInternal = function(self)
-		originalShow(self)
-		local entries = ZO_Menu.items
-		for i = 1, #entries do
-			local entry = entries[i]
-			local control = entries[i].item
-			control.guildId = guildIdByIndex[i]
-			entry.onMouseEnter = control:GetHandler("OnMouseEnter")
-			entry.onMouseExit = control:GetHandler("OnMouseExit")
-			ZO_PreHookHandler(control, "OnMouseEnter", GuildSelectorShowTooltip)
-			ZO_PreHookHandler(control, "OnMouseExit", GuildSelectorHideTooltip)
-		end
-	end
-
-	local originalHide = comboBox.HideDropdownInternal
-	comboBox.HideDropdownInternal = function(self)
-		local entries = ZO_Menu.items
-		for i = 1, #entries do
-			local entry = entries[i]
-			local control = entries[i].item
-			control:SetHandler("OnMouseEnter", entry.onMouseEnter)
-			control:SetHandler("OnMouseExit", entry.onMouseExit)
-			control.guildId = nil
-		end
-		originalHide(self)
-	end
-end
-
-local function OnGuildChanged(comboBox, selectedName, selectedEntry)
-	if(SelectTradingHouseGuildId(selectedEntry.guildId)) then
-		TRADING_HOUSE:UpdateForGuildChange()
-		if(TRADING_HOUSE.m_currentMode == ZO_TRADING_HOUSE_MODE_LISTINGS) then
-			TRADING_HOUSE:RequestListings()
-		end
-		selectedItemText.guildId = selectedEntry.guildId
-		if(isShowingTraderTooltip) then -- update the tooltip content
-			GuildSelectorShowTooltip(selectedItemText)
-		end
-	end
-end
-
-local function SortEntriesByGuildId(entryA, entryB)
-	return entryA.guildId < entryB.guildId
-end
-
-local function InitializeGuildSelector(lastGuildId)
-	selectedItemText.guildId = lastGuildId
-
-	comboBox:ClearItems()
-	comboBox:SetSortsItems(false)
-	entryByGuildId = {}
-	local entries = {}
-
-	local selectedEntry
-	for i = 1, GetNumTradingHouseGuilds() do
-		local guildId, guildName, guildAlliance = GetTradingHouseGuildDetails(i)
-		local iconPath = GetAllianceBannerIcon(guildAlliance)
-		if(iconPath == nil) then
-			ZO_Alert(UI_ALERT_CATEGORY_ALERT, SOUNDS.GENERAL_ALERT_ERROR, L["INVALID_STATE"])
-		end
-		local entryText = iconPath and zo_iconTextFormat(iconPath, 36, 36, guildName) or guildName
-		local entry = comboBox:CreateItemEntry(entryText, OnGuildChanged)
-		entry.guildId = guildId
-		entry.selectedText = guildName
-		entry.canSell = CanSellOnTradingHouse(guildId)
-		table.insert(entries, entry)
-
-		if(not selectedEntry or (lastGuildId and guildId == lastGuildId)) then
-			selectedEntry = entry
-		end
-		entryByGuildId[guildId] = entry
-	end
-
-	table.sort(entries, SortEntriesByGuildId)
-	comboBox:AddItems(entries)
-	OnGuildChanged(comboBox, selectedEntry.name, selectedEntry)
-
-	guildIdByIndex = {}
-	local prevEntry = entries[#entries]
-	for i = 1, #entries do
-		local entry = entries[i]
-		guildIdByIndex[i] = entry.guildId
-
-		prevEntry.next = entry
-		entry.prev = prevEntry
-		prevEntry = entry
-	end
-end
-
-local function ReselectLastGuild()
-	local guildId, guildName = GetCurrentTradingHouseGuildDetails()
-	if(saveData.lastGuildName and saveData.lastGuildName ~= guildName) then
-		for i = 1, GetNumTradingHouseGuilds() do
-			guildId, guildName = GetTradingHouseGuildDetails(i)
-			if(guildName == saveData.lastGuildName) then
-				if(SelectTradingHouseGuildId(guildId)) then
-					TRADING_HOUSE:UpdateForGuildChange()
-				end
-				break
-			end
-		end
-	end
-	local _, guildName = GetCurrentTradingHouseGuildDetails()
-	saveData.lastGuildName = guildName
-	return guildId
-end
-
-function AwesomeGuildStore.GuildSelectorOnMouseWheel(control, delta, ctrl, alt, shift)
-	local selectedEntry = entryByGuildId[GetSelectedTradingHouseGuildId()]
-	if(selectedEntry) then
-		local newEntry = selectedEntry
-		local sellMode = TRADING_HOUSE:IsInSellMode()
-
-		repeat
-			if(delta < 0) then
-				newEntry = newEntry.next
-			elseif(delta > 0) then
-				newEntry = newEntry.prev
-			end
-		until not sellMode or newEntry.canSell or newEntry == selectedEntry
-
-		if(newEntry ~= selectedEntry) then
-			OnGuildChanged(comboBox, newEntry.name, newEntry)
-		end
-	end
-end
 
 local function InitializeUnitPriceDisplay()
 	local PER_UNIT_PRICE_CURRENCY_OPTIONS = {
@@ -376,7 +196,7 @@ local function InitializeFilters(control)
 
 	ZO_PreHook("ExecuteTradingHouseSearch", function(self)
 		searchButton:SetEnabled(false)
-		comboBox:SetEnabled(false)
+		guildSelector:Disable()
 		loadingBlocker:SetHidden(false)
 		loadingIcon.animation:PlayForward()
 	end)
@@ -389,7 +209,7 @@ local function InitializeFilters(control)
 	RegisterForEvent(EVENT_TRADING_HOUSE_SEARCH_COOLDOWN_UPDATE, function(_, cooldownMilliseconds)
 		if(cooldownMilliseconds ~= 0) then return end
 		searchButton:SetEnabled(true)
-		comboBox:SetEnabled(true)
+		guildSelector:Enable()
 		TRADING_HOUSE.m_searchAllowed = true
 		TRADING_HOUSE:OnSearchCooldownUpdate(cooldownMilliseconds)
 		HideLoadingOverlay()
@@ -597,9 +417,7 @@ OnAddonLoaded(function()
 	saveData = AwesomeGuildStore.InitializeSettings()
 	L = AwesomeGuildStore.Localization
 
-	local title = TRADING_HOUSE.m_control:GetNamedChild("Title")
-	local titleLabel = title:GetNamedChild("Label")
-	CreateControlFromVirtual(ADDON_NAME .. "GuildSelector", title, ADDON_NAME .. "GuildSelectorTemplate")
+	local titleLabel = TRADING_HOUSE.m_control:GetNamedChild("TitleLabel")
 
 	AwesomeGuildStore.toolTip = AwesomeGuildStore.SavedSearchTooltip:New()
 
@@ -630,13 +448,16 @@ OnAddonLoaded(function()
 	end
 
 	RegisterForEvent(EVENT_OPEN_TRADING_HOUSE, function()
+		if(not guildSelector) then
+			guildSelector = AwesomeGuildStore.GuildSelector:New(saveData)
+		end
 		isSearchDisabled = true
 		interceptInventoryItemClicks = false
 		if(filtersInitialized) then
 			searchButton:SetEnabled(false)
 			loadingBlocker:SetHidden(true)
 		end
-		comboBox:SetEnabled(false)
+		guildSelector:Disable()
 		DisableKeybindStripSearchButton()
 		if(salesCategoryFilter) then
 			salesCategoryFilter:Reset()
@@ -644,53 +465,33 @@ OnAddonLoaded(function()
 	end)
 
 	RegisterForEvent(EVENT_TRADING_HOUSE_STATUS_RECEIVED, function()
-		local guildId = GetSelectedTradingHouseGuildId()
-
 		if(GetTradingHouseCooldownRemaining() == 0) then
 			if(filtersInitialized) then
 				searchButton:SetEnabled(true)
 			end
-			comboBox:SetEnabled(true)
+			guildSelector:Enable()
 		end
 		EnableKeybindStripSearchButton()
 		isSearchDisabled = false
 
-		if not guildId then -- it's a trader when guildId is nil
+		if not GetSelectedTradingHouseGuildId() then -- it's a trader when guildId is nil
 			titleLabel:SetHidden(false)
-			guildSelector:SetHidden(true)
+			guildSelector:Hide()
 		else
-			guildId = ReselectLastGuild()
-			InitializeGuildSelector(guildId)
 			titleLabel:SetHidden(true)
-			guildSelector:SetHidden(false)
+			guildSelector:SetupGuildList()
+			guildSelector:Show()
 		end
 	end)
 
 	RegisterForEvent(EVENT_CLOSE_TRADING_HOUSE, function()
-		guildSelector:SetHidden(true)
+		guildSelector:Hide()
 		interceptInventoryItemClicks = false
 	end)
 
-	local function UpdateSelectedGuild()
-		local guildId = GetSelectedTradingHouseGuildId()
-		if(guildId and entryByGuildId and entryByGuildId[guildId]) then
-			comboBox:SetSelectedItem(entryByGuildId[guildId].name)
-		end
-		local _, guildName = GetCurrentTradingHouseGuildDetails()
-		saveData.lastGuildName = guildName
-	end
-
 	ZO_PreHook(TRADING_HOUSE, "UpdateForGuildChange", function()
 		DisableKeybindStripSearchButton()
-		UpdateSelectedGuild()
 	end)
-
-	local originalSelectTradingHouseGuildId = SelectTradingHouseGuildId
-	SelectTradingHouseGuildId = function(...)
-		local result = {originalSelectTradingHouseGuildId(...)}
-		UpdateSelectedGuild()
-		return unpack(result)
-	end
 
 	ZO_PreHook(TRADING_HOUSE, "OnListingsRequestSuccess", function()
 		TRADING_HOUSE:UpdateListingCounts()

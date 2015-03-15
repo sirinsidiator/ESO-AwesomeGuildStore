@@ -1,61 +1,5 @@
 <GuiXml>
 	<Controls>
-		<Control name="AwesomeGuildStoreGuildSelectorTemplate" hidden="true" virtual="true">
-			<Dimensions x="460" y="50" />
-			<Anchor point="LEFT" offsetX="0" offsetY="0" />
-			<OnInitialized>
-				AwesomeGuildStore.InitializeGuildSelector(self)
-			</OnInitialized>
-			<Controls>
-				<Control name="$(parent)ComboBox" resizeToFitDescendents="true" mouseEnabled="true">
-					<Anchor point="LEFT" offsetX="50" />
-					<OnInitialized>
-						ZO_ComboBox:New(self)
-					</OnInitialized>
-
-					<OnMouseUp>
-						if(button == 1 and upInside) then
-						ZO_ComboBox_DropdownClicked(self)
-						end
-					</OnMouseUp>
-					
-					<OnMouseWheel>
-						AwesomeGuildStore.GuildSelectorOnMouseWheel(self, delta, ctrl, alt, shift)
-					</OnMouseWheel>
-
-					<Controls>
-						<Label name="$(parent)SelectedItemText" inherits="ZO_TooltipIfTruncatedLabel" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_SELECTED">
-							<Dimensions y="35" />
-							<DimensionConstraints maxX="450" />
-							<Anchor point="TOPLEFT" />
-
-							<OnMouseUp>
-								if(button == 1 and upInside) then
-								ZO_ComboBox_DropdownClicked(self:GetParent())
-								end
-							</OnMouseUp>
-
-							<OnMouseEnter>
-								AwesomeGuildStore.GuildSelectorShowTooltip(self)
-							</OnMouseEnter>
-
-							<OnMouseExit>
-								AwesomeGuildStore.GuildSelectorHideTooltip(self)
-							</OnMouseExit>
-						</Label>
-
-						<Button name="$(parent)OpenDropdown" inherits="ZO_DropdownButton">
-							<Dimensions x="16" y="16" />
-							<Anchor point="LEFT" relativeTo="$(parent)SelectedItemText" relativePoint="RIGHT" offsetX="3" />
-							<OnClicked>
-								ZO_ComboBox_DropdownClicked(self:GetParent())
-							</OnClicked>
-						</Button>
-					</Controls>
-				</Control>
-			</Controls>
-		</Control>
-
 		<Control name="AwesomeGuildStoreMinMaxRangeSliderTemplate" virtual="true">
 			<Dimensions x="150" y="16" />
 			<Controls>
@@ -137,9 +81,5 @@
 				</Label>
 			</Controls>
 		</Control>
-
-		<Texture name="AwesomeGuildStoreTraderIcon" textureFile="EsoUI/Art/Guild/ownership_icon_guildTrader.dds" hidden="true">
-			<Dimensions x="128" y="128" />
-		</Texture>
 	</Controls>
 </GuiXml>
