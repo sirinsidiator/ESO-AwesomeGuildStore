@@ -43,46 +43,6 @@ local searchLibrary
 local salesCategoryFilter
 local loadingBlocker
 
-local function InitializeUnitPriceDisplay()
-	local PER_UNIT_PRICE_CURRENCY_OPTIONS = {
-		showTooltips = false,
-		iconSide = RIGHT,
-	}
-	local UNIT_PRICE_FONT = "/esoui/common/fonts/univers67.otf|14|soft-shadow-thin"
-
-	local dataType = TRADING_HOUSE.m_searchResultsList.dataTypes[1]
-	local originalSetupCallback = dataType.setupCallback
-	dataType.setupCallback = function(rowControl, result)
-		originalSetupCallback(rowControl, result)
-
-		local sellPriceControl = rowControl:GetNamedChild("SellPrice")
-		local perItemPrice = rowControl:GetNamedChild("SellPricePerItem")
-		if(saveData.displayPerUnitPrice) then
-			if(not perItemPrice) then
-				local controlName = rowControl:GetName() .. "SellPricePerItem"
-				perItemPrice = rowControl:CreateControl(controlName, CT_LABEL)
-				perItemPrice:SetAnchor(TOPRIGHT, sellPriceControl, BOTTOMRIGHT, 0, 0)
-				perItemPrice:SetFont(UNIT_PRICE_FONT)
-			end
-
-			if(result.stackCount > 1) then
-				local unitPrice = tonumber(string.format("%.2f", result.purchasePrice / result.stackCount))
-				ZO_CurrencyControl_SetSimpleCurrency(perItemPrice, result.currencyType, unitPrice, PER_UNIT_PRICE_CURRENCY_OPTIONS, nil, TRADING_HOUSE.m_playerMoney[result.currencyType] < result.purchasePrice)
-				perItemPrice:SetText("@" .. perItemPrice:GetText():gsub("|t.-:.-:", "|t12:12:"))
-				perItemPrice:SetHidden(false)
-				sellPriceControl:ClearAnchors()
-				sellPriceControl:SetAnchor(RIGHT, rowControl, RIGHT, -5, -8)
-				perItemPrice = nil
-			end
-		end
-		if(perItemPrice) then
-			perItemPrice:SetHidden(true)
-			sellPriceControl:ClearAnchors()
-			sellPriceControl:SetAnchor(RIGHT, rowControl, RIGHT, -5, 0)
-		end
-	end
-end
-
 local function InitializeFilters(control)
 	if(filtersInitialized) then return end
 	TRADING_HOUSE.m_numItemsOnPage = 0
@@ -358,7 +318,7 @@ local function InitializeFilters(control)
 
 	filtersInitialized = true
 
-	InitializeUnitPriceDisplay()
+	AwesomeGuildStore.InitializeUnitPriceDisplay(saveData)
 
 	TRADING_HOUSE.m_search.InitializeOrderingData = function(self)
 		if(saveData.keepSortOrderOnClose) then
@@ -389,31 +349,16 @@ local function InitializeFilters(control)
 	end)
 
 	ZO_PreHook(TRADING_HOUSE.m_search, "ChangeSort", function(self, sortKey, sortOrder)
-		if(TRADING_HOUSE.m_numItemsOnPage == 0 or saveData.sortWithoutSearch) then
-			if(self.UpdateSortOption) then
-				self:UpdateSortOption(sortKey, sortOrder)
-			else -- TODO: remove after update 6 is live
-				self.m_sortField = sortKey
-				self.m_sortOrder = sortOrder
-			end
-			return true
-		end
-	end)
-
-	ZO_PreHook(TRADING_HOUSE.m_search, TRADING_HOUSE.m_search.UpdateSortOption and "UpdateSortOption" or "ChangeSort", function(self, sortKey, sortOrder) -- TODO: merge with other hook after update 6 is live
 		saveData.sortField = sortKey
 		saveData.sortOrder = sortOrder
+		if(TRADING_HOUSE.m_numItemsOnPage == 0 or saveData.sortWithoutSearch) then
+			self:UpdateSortOption(sortKey, sortOrder)
+			return true
+		end
 	end)
 end
 
 OnAddonLoaded(function()
-	if(not TRADING_HOUSE.IsInSellMode) then -- TODO: remove after update 6 is live
-		ZO_TRADING_HOUSE_MODE_BROWSE = "tradingHouseBrowse"
-		ZO_TRADING_HOUSE_MODE_SELL = "tradingHouseSell"
-		ZO_TRADING_HOUSE_MODE_LISTINGS = "tradingHouseListings"
-		TRADING_HOUSE.IsInSellMode = TRADING_HOUSE.IsInPostMode
-	end
-
 	saveData = AwesomeGuildStore.InitializeSettings()
 	L = AwesomeGuildStore.Localization
 

@@ -44,5 +44,6 @@ history/SearchLibrary.xml
 guildselector/HiredTraderTooltip.lua
 guildselector/GuildSelector.lua
 guildselector/GuildSelector.xml
+UnitPriceDisplay.lua
 SalesCategorySelector.lua
 AwesomeGuildStore.xml
