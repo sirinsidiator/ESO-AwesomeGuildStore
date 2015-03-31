@@ -47,4 +47,5 @@ guildselector/GuildSelector.lua
 guildselector/GuildSelector.xml
 UnitPriceDisplay.lua
 SalesCategorySelector.lua
+ListingTabWrapper.lua
 AwesomeGuildStore.xml

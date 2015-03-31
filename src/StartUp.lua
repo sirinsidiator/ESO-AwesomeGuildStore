@@ -341,6 +341,9 @@ local function InitializeFilters(control)
 			return true
 		end
 	end)
+	
+	local listingTabWrapper = AwesomeGuildStore.ListingTabWrapper:New(saveData)
+	listingTabWrapper:InitializeListingSortHeaders()
 end
 
 OnAddonLoaded(function()
