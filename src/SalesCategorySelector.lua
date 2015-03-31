@@ -223,8 +223,8 @@ local BACKPACK_TRADING_HOUSE_LAYOUT_FRAGMENT_BASIC = ZO_BackpackLayoutFragment:N
 		width = 670,
 		backpackOffsetY = 145,
 		sortByOffsetY = 114,
-		sortByHeaderWidth = 690,
-		sortByNameWidth = 382,
+		sortByHeaderWidth = 670,
+		sortByNameWidth = 352,
 		hideAlliancePoints = true,
 		additionalFilter = SalesCategoryFilter,
 	})
@@ -234,8 +234,8 @@ local BACKPACK_TRADING_HOUSE_LAYOUT_FRAGMENT_ADVANCED = ZO_BackpackLayoutFragmen
 		width = 670,
 		backpackOffsetY = 181,
 		sortByOffsetY = 149,
-		sortByHeaderWidth = 690,
-		sortByNameWidth = 382,
+		sortByHeaderWidth = 670,
+		sortByNameWidth = 352,
 		hideAlliancePoints = true,
 		additionalFilter = SalesCategoryFilter,
 	})
