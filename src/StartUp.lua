@@ -139,32 +139,14 @@ local function InitializeFilters(control)
 		end
 	end)
 
-	loadingBlocker = ZO_TradingHouseItemPaneSearchResults:CreateControl(ADDON_NAME .. "Loading", CT_BACKDROP)
-	loadingBlocker:SetAnchor(TOPLEFT, ZO_TradingHouseItemPaneSearchResults, TOPLEFT, -10, -10)
-	loadingBlocker:SetAnchor(BOTTOMRIGHT, ZO_TradingHouseItemPaneSearchResults, BOTTOMRIGHT, 10, 10)
-	loadingBlocker:SetHidden(true)
-	loadingBlocker:SetMouseEnabled(true)
-	loadingBlocker:SetDrawLayer(1)
-	loadingBlocker:SetIntegralWrapping(true)
-	loadingBlocker:SetCenterTexture("EsoUI/Art/ChatWindow/chat_BG_center.dds")
-	loadingBlocker:SetEdgeTexture("EsoUI/Art/ChatWindow/chat_BG_edge.dds", 256, 256, 32)
-	loadingBlocker:SetInsets(32, 32, -32, -32)
-	local loadingIcon = CreateControlFromVirtual(ADDON_NAME .. "LoadingIcon", control, "AwesomeGuildStoreLoadingTemplate")
-	loadingIcon:SetParent(loadingBlocker)
-	loadingIcon:SetAnchor(CENTER, loadingBlocker, CENTER, 0, 0)
-	loadingIcon.animation = ANIMATION_MANAGER:CreateTimelineFromVirtual("LoadIconAnimation", loadingIcon:GetNamedChild("Icon"))
+	loadingBlocker = AwesomeGuildStore.LoadingOverlay:New(ADDON_NAME .. "Loading")
+	loadingBlocker:SetParent(ZO_TradingHouseItemPaneSearchResults)
 
 	ZO_PreHook("ExecuteTradingHouseSearch", function(self)
 		searchButton:SetEnabled(false)
 		guildSelector:Disable()
-		loadingBlocker:SetHidden(false)
-		loadingIcon.animation:PlayForward()
+		loadingBlocker:Show()
 	end)
-
-	local function HideLoadingOverlay()
-		loadingBlocker:SetHidden(true)
-		loadingIcon.animation:Stop()
-	end
 
 	RegisterForEvent(EVENT_TRADING_HOUSE_SEARCH_COOLDOWN_UPDATE, function(_, cooldownMilliseconds)
 		if(cooldownMilliseconds ~= 0) then return end
@@ -172,9 +154,12 @@ local function InitializeFilters(control)
 		guildSelector:Enable()
 		TRADING_HOUSE.m_searchAllowed = true
 		TRADING_HOUSE:OnSearchCooldownUpdate(cooldownMilliseconds)
-		HideLoadingOverlay()
+		loadingBlocker:Hide()
 	end)
 
+	local function HideLoadingOverlay()
+		loadingBlocker:Hide()
+	end
 	RegisterForEvent(EVENT_TRADING_HOUSE_SEARCH_RESULTS_RECEIVED, HideLoadingOverlay)
 	RegisterForEvent(EVENT_TRADING_HOUSE_OPERATION_TIME_OUT, HideLoadingOverlay)
 	RegisterForEvent(EVENT_TRADING_HOUSE_STATUS_RECEIVED, HideLoadingOverlay)
@@ -362,8 +347,6 @@ OnAddonLoaded(function()
 	saveData = AwesomeGuildStore.InitializeSettings()
 	L = AwesomeGuildStore.Localization
 
-	local titleLabel = TRADING_HOUSE.m_control:GetNamedChild("TitleLabel")
-
 	AwesomeGuildStore.toolTip = AwesomeGuildStore.SavedSearchTooltip:New()
 
 	local interceptInventoryItemClicks = false
@@ -400,7 +383,7 @@ OnAddonLoaded(function()
 		interceptInventoryItemClicks = false
 		if(filtersInitialized) then
 			searchButton:SetEnabled(false)
-			loadingBlocker:SetHidden(true)
+			loadingBlocker:Hide()
 		end
 		guildSelector:Disable()
 		DisableKeybindStripSearchButton()
@@ -409,6 +392,7 @@ OnAddonLoaded(function()
 		end
 	end)
 
+	local titleLabel = TRADING_HOUSE.m_control:GetNamedChild("TitleLabel")
 	RegisterForEvent(EVENT_TRADING_HOUSE_STATUS_RECEIVED, function()
 		if(GetTradingHouseCooldownRemaining() == 0) then
 			if(filtersInitialized) then
