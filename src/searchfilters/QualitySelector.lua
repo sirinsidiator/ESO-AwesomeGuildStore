@@ -1,5 +1,6 @@
 local L = AwesomeGuildStore.Localization
 local MinMaxRangeSlider = AwesomeGuildStore.MinMaxRangeSlider
+local SimpleIconButton = AwesomeGuildStore.SimpleIconButton
 
 local BUTTON_SIZE = 36
 local BUTTON_X = -7
@@ -11,49 +12,9 @@ local RESET_BUTTON_TEXTURE = "EsoUI/Art/Buttons/decline_%s.dds"
 local QualitySelector = ZO_Object:Subclass()
 AwesomeGuildStore.QualitySelector = QualitySelector
 
-local function CreateButtonControl(parent, name, textureName, tooltipText, callback, saveData)
-	local buttonControl = CreateControlFromVirtual(name .. "NormalQualityButton", parent, "ZO_DefaultButton")
-	buttonControl:SetNormalTexture(textureName:format("up"))
-	buttonControl:SetPressedTexture(textureName:format("down"))
-	buttonControl:SetMouseOverTexture("AwesomeGuildStore/images/qualitybuttons/over.dds")
-	buttonControl:SetEndCapWidth(0)
-	buttonControl:SetDimensions(BUTTON_SIZE, BUTTON_SIZE)
-	buttonControl:SetHandler("OnMouseDoubleClick", function(control, button)
-		callback(3)
-	end)
-	buttonControl:SetHandler("OnMouseUp", function(control, button, isInside, ctrl, alt, shift)
-		if(isInside) then
-			local oldBehavior = saveData.oldQualitySelectorBehavior
-			local setBoth = (oldBehavior and shift) or (not oldBehavior and not shift)
-			if(setBoth) then
-				callback(3)
-			else
-				callback(button)
-			end
-			if(button ~= 1) then
-				-- the mouse down event does not fire for right and middle click and the button does not show any click behavior at all
-				-- we emulate it by changing the texture for a bit and playing the click sound manually
-				buttonControl:SetNormalTexture(textureName:format("down"))
-				buttonControl:SetMouseOverTexture("")
-				zo_callLater(function()
-					buttonControl:SetNormalTexture(textureName:format("up"))
-					buttonControl:SetMouseOverTexture("AwesomeGuildStore/images/qualitybuttons/over.dds")
-				end, 100)
-				PlaySound("Click")
-			end
-		end
-	end)
-	buttonControl:SetHandler("OnMouseEnter", function()
-		InitializeTooltip(InformationTooltip)
-		InformationTooltip:ClearAnchors()
-		InformationTooltip:SetOwner(buttonControl, BOTTOM, 5, 0)
-		SetTooltipText(InformationTooltip, tooltipText)
-	end)
-	buttonControl:SetHandler("OnMouseExit", function()
-		ClearTooltip(InformationTooltip)
-	end)
-	return buttonControl
-end
+local MOUSE_LEFT = 1
+local MOUSE_RIGHT = 2
+local MOUSE_MIDDLE = 3
 
 function QualitySelector:New(parent, name, saveData)
 	local selector = ZO_Object.New(self)
@@ -87,65 +48,52 @@ function QualitySelector:New(parent, name, saveData)
 
 	local function SafeSetRangeValue(button, value)
 		local min, max = slider:GetRangeValue()
-		if(button == 1) then
+		if(button == MOUSE_LEFT) then
 			if(value > max) then slider:SetMaxValue(value) end
 			slider:SetMinValue(value)
-		elseif(button == 2) then
+		elseif(button == MOUSE_RIGHT) then
 			if(value < min) then slider:SetMinValue(value) end
 			slider:SetMaxValue(value)
-		elseif(button == 3) then
+		elseif(button == MOUSE_MIDDLE) then
 			slider:SetRangeValue(value, value)
 		end
 	end
 
-	local normalButton = CreateButtonControl(container, name .. "NormalQualityButton", "AwesomeGuildStore/images/qualitybuttons/normal_%s.dds", L["NORMAL_QUALITY_LABEL"], function(button)
-		SafeSetRangeValue(button, 1)
-	end, saveData)
-	normalButton:SetAnchor(TOPLEFT, container, TOPLEFT, BUTTON_X, BUTTON_Y)
+	local folder = "AwesomeGuildStore/images/qualitybuttons/"
+	local function CreateButtonControl(name, textureName, tooltipText, value)
+		local button = SimpleIconButton:New(name, folder .. textureName, BUTTON_SIZE, tooltipText)
+		button:SetMouseOverTexture(folder .. "over.dds") -- we reuse the texture as it is the same for all quality buttons
+		button.control:SetHandler("OnMouseDoubleClick", function(control, button)
+			SafeSetRangeValue(MOUSE_MIDDLE, value)
+		end)
+		button.OnClick = function(self, mouseButton, ctrl, alt, shift)
+			local oldBehavior = saveData.oldQualitySelectorBehavior
+			local setBoth = (oldBehavior and shift) or (not oldBehavior and not shift)
+			if(setBoth) then
+				SafeSetRangeValue(MOUSE_MIDDLE, value)
+			else
+				SafeSetRangeValue(mouseButton, value)
+			end
+			return true
+		end
+		button:SetAnchor(TOPLEFT, container, TOPLEFT, BUTTON_X + (BUTTON_SIZE + BUTTON_SPACING) * (value - 1), BUTTON_Y)
+		return button
+	end
+	CreateButtonControl(name .. "NormalQualityButton", "normal_%s.dds", L["NORMAL_QUALITY_LABEL"], 1)
+	CreateButtonControl(name .. "MagicQualityButton", "magic_%s.dds", L["MAGIC_QUALITY_LABEL"], 2)
+	CreateButtonControl(name .. "ArcaneQualityButton", "arcane_%s.dds", L["ARCANE_QUALITY_LABEL"], 3)
+	CreateButtonControl(name .. "ArtifactQualityButton", "artifact_%s.dds", L["ARTIFACT_QUALITY_LABEL"], 4)
+	CreateButtonControl(name .. "LegendaryQualityButton", "legendary_%s.dds", L["LEGENDARY_QUALITY_LABEL"], 5)
 
-	local magicButton = CreateButtonControl(container, name .. "MagicQualityButton", "AwesomeGuildStore/images/qualitybuttons/magic_%s.dds", L["MAGIC_QUALITY_LABEL"], function(button)
-		SafeSetRangeValue(button, 2)
-	end, saveData)
-	magicButton:SetAnchor(TOPLEFT, container, TOPLEFT, BUTTON_X + (BUTTON_SIZE + BUTTON_SPACING), BUTTON_Y)
-
-	local arcaneButton = CreateButtonControl(container, name .. "ArcaneQualityButton", "AwesomeGuildStore/images/qualitybuttons/arcane_%s.dds", L["ARCANE_QUALITY_LABEL"], function(button)
-		SafeSetRangeValue(button, 3)
-	end, saveData)
-	arcaneButton:SetAnchor(TOPLEFT, container, TOPLEFT, BUTTON_X + (BUTTON_SIZE + BUTTON_SPACING) * 2, BUTTON_Y)
-
-	local artifactButton = CreateButtonControl(container, name .. "ArtifactQualityButton", "AwesomeGuildStore/images/qualitybuttons/artifact_%s.dds", L["ARTIFACT_QUALITY_LABEL"], function(button)
-		SafeSetRangeValue(button, 4)
-	end, saveData)
-	artifactButton:SetAnchor(TOPLEFT, container, TOPLEFT, BUTTON_X + (BUTTON_SIZE + BUTTON_SPACING) * 3, BUTTON_Y)
-
-	local legendaryButton = CreateButtonControl(container, name .. "LegendaryQualityButton", "AwesomeGuildStore/images/qualitybuttons/legendary_%s.dds", L["LEGENDARY_QUALITY_LABEL"], function(button)
-		SafeSetRangeValue(button, 5)
-	end, saveData)
-	legendaryButton:SetAnchor(TOPLEFT, container, TOPLEFT, BUTTON_X + (BUTTON_SIZE + BUTTON_SPACING) * 4, BUTTON_Y)
-
-	local resetButton = CreateControlFromVirtual(name .. "ResetButton", parent, "ZO_DefaultButton")
-	resetButton:SetNormalTexture(RESET_BUTTON_TEXTURE:format("up"))
-	resetButton:SetPressedTexture(RESET_BUTTON_TEXTURE:format("down"))
-	resetButton:SetMouseOverTexture(RESET_BUTTON_TEXTURE:format("over"))
-	resetButton:SetEndCapWidth(0)
-	resetButton:SetDimensions(RESET_BUTTON_SIZE, RESET_BUTTON_SIZE)
+	local tooltipText = L["RESET_FILTER_LABEL_TEMPLATE"]:format(label:GetText():gsub(":", ""))
+	local resetButton = SimpleIconButton:New(name .. "ResetButton", RESET_BUTTON_TEXTURE, RESET_BUTTON_SIZE, tooltipText)
 	resetButton:SetAnchor(TOPRIGHT, label, TOPLEFT, 196, 0)
 	resetButton:SetHidden(true)
-	resetButton:SetHandler("OnMouseUp",function(control, button, isInside)
-		if(button == 1 and isInside) then
+	resetButton.OnClick = function(self, mouseButton, ctrl, alt, shift)
+		if(mouseButton == MOUSE_LEFT) then
 			selector:Reset()
 		end
-	end)
-	local text = L["RESET_FILTER_LABEL_TEMPLATE"]:format(label:GetText():gsub(":", ""))
-	resetButton:SetHandler("OnMouseEnter", function()
-		InitializeTooltip(InformationTooltip)
-		InformationTooltip:ClearAnchors()
-		InformationTooltip:SetOwner(resetButton, BOTTOM, 5, 0)
-		SetTooltipText(InformationTooltip, text)
-	end)
-	resetButton:SetHandler("OnMouseExit", function()
-		ClearTooltip(InformationTooltip)
-	end)
+	end
 	selector.resetButton = resetButton
 
 	return selector

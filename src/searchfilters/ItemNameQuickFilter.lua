@@ -20,28 +20,14 @@ function ItemNameQuickFilter:Initialize(parent, name, x, y)
 	local input = CreateControlFromVirtual(name, parent, "AwesomeGuildStoreNameFilterTemplate")
 	input:SetAnchor(TOPLEFT, parent, TOPLEFT, x, y)
 
-	local resetButton = CreateControlFromVirtual(name .. "ResetButton", parent, "ZO_DefaultButton")
-	resetButton:SetNormalTexture(RESET_BUTTON_TEXTURE:format("up"))
-	resetButton:SetPressedTexture(RESET_BUTTON_TEXTURE:format("down"))
-	resetButton:SetMouseOverTexture(RESET_BUTTON_TEXTURE:format("over"))
-	resetButton:SetEndCapWidth(0)
-	resetButton:SetDimensions(RESET_BUTTON_SIZE, RESET_BUTTON_SIZE)
+	local resetButton = AwesomeGuildStore.SimpleIconButton:New(name .. "ResetButton", RESET_BUTTON_TEXTURE, RESET_BUTTON_SIZE, L["ITEM_NAME_QUICK_FILTER_RESET"])
 	resetButton:SetAnchor(TOPRIGHT, input, TOPRIGHT, -5, 5)
 	resetButton:SetHidden(true)
-	resetButton:SetHandler("OnMouseUp",function(control, button, isInside)
-		if(button == 1 and isInside) then
+	resetButton.OnClick = function(_, mouseButton, ctrl, alt, shift)
+		if(mouseButton == 1) then
 			self:Reset()
 		end
-	end)
-	resetButton:SetHandler("OnMouseEnter", function()
-		InitializeTooltip(InformationTooltip)
-		InformationTooltip:ClearAnchors()
-		InformationTooltip:SetOwner(resetButton, BOTTOM, 5, 0)
-		SetTooltipText(InformationTooltip, L["ITEM_NAME_QUICK_FILTER_RESET"])
-	end)
-	resetButton:SetHandler("OnMouseExit", function()
-		ClearTooltip(InformationTooltip)
-	end)
+	end
 
 	local inputBox = input:GetNamedChild("Box")
 	ZO_EditDefaultText_Initialize(inputBox, L["ITEM_NAME_QUICK_FILTER_TEXT"])

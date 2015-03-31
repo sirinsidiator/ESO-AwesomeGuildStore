@@ -87,29 +87,15 @@ function PriceSelector:New(parent, name)
 	end)
 
 	local priceRangeLabel = parent:GetNamedChild("PriceRangeLabel")
-	local resetButton = CreateControlFromVirtual(name .. "ResetButton", parent, "ZO_DefaultButton")
-	resetButton:SetNormalTexture(RESET_BUTTON_TEXTURE:format("up"))
-	resetButton:SetPressedTexture(RESET_BUTTON_TEXTURE:format("down"))
-	resetButton:SetMouseOverTexture(RESET_BUTTON_TEXTURE:format("over"))
-	resetButton:SetEndCapWidth(0)
-	resetButton:SetDimensions(RESET_BUTTON_SIZE, RESET_BUTTON_SIZE)
+	local tooltipText = L["RESET_FILTER_LABEL_TEMPLATE"]:format(priceRangeLabel:GetText():gsub(":", ""))
+	local resetButton = AwesomeGuildStore.SimpleIconButton:New(name .. "ResetButton", RESET_BUTTON_TEXTURE, RESET_BUTTON_SIZE, tooltipText)
 	resetButton:SetAnchor(TOPRIGHT, priceRangeLabel, TOPLEFT, 196, 0)
 	resetButton:SetHidden(true)
-	resetButton:SetHandler("OnMouseUp",function(control, button, isInside)
-		if(button == 1 and isInside) then
+	resetButton.OnClick = function(self, mouseButton, ctrl, alt, shift)
+		if(mouseButton == 1) then
 			selector:Reset()
 		end
-	end)
-	local text = L["RESET_FILTER_LABEL_TEMPLATE"]:format(priceRangeLabel:GetText():gsub(":", ""))
-	resetButton:SetHandler("OnMouseEnter", function()
-		InitializeTooltip(InformationTooltip)
-		InformationTooltip:ClearAnchors()
-		InformationTooltip:SetOwner(resetButton, BOTTOM, 5, 0)
-		SetTooltipText(InformationTooltip, text)
-	end)
-	resetButton:SetHandler("OnMouseExit", function()
-		ClearTooltip(InformationTooltip)
-	end)
+	end
 	selector.resetButton = resetButton
 
 	UpdateTextBoxFromSlider()

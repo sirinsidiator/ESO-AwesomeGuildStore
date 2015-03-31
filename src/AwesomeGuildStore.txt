@@ -32,6 +32,7 @@ Settings.lua
 util/MinMaxRangeSlider.lua
 util/ButtonGroup.lua
 util/ToggleButton.lua
+util/SimpleIconButton.lua
 util/LoadingOverlay.lua
 searchfilters/CategoryPresets.lua
 searchfilters/CategorySelector.lua

@@ -167,30 +167,14 @@ local function InitializeFilters(control)
 	local RESET_BUTTON_SIZE = 24
 	local RESET_BUTTON_TEXTURE = "EsoUI/Art/Buttons/decline_%s.dds"
 
-	local resetButton = CreateControlFromVirtual(ADDON_NAME .. "FilterResetButton", control, "ZO_DefaultButton")
-	resetButton:SetNormalTexture(RESET_BUTTON_TEXTURE:format("up"))
-	resetButton:SetPressedTexture(RESET_BUTTON_TEXTURE:format("down"))
-	resetButton:SetMouseOverTexture(RESET_BUTTON_TEXTURE:format("over"))
-	resetButton:SetEndCapWidth(0)
-	resetButton:SetDimensions(RESET_BUTTON_SIZE, RESET_BUTTON_SIZE)
+	local resetButton = AwesomeGuildStore.SimpleIconButton:New(ADDON_NAME .. "FilterResetButton", RESET_BUTTON_TEXTURE, RESET_BUTTON_SIZE, L["RESET_ALL_FILTERS_LABEL"])
 	resetButton:SetAnchor(TOPRIGHT, control:GetNamedChild("Header"), TOPLEFT, 196, 0)
-	resetButton:SetHandler("OnMouseUp",function(control, button, isInside)
-		if(button == 1 and isInside) then
-			local originalClearSearchResults = TRADING_HOUSE.ClearSearchResults
-			TRADING_HOUSE.ClearSearchResults = function() end
-			TRADING_HOUSE:ResetAllSearchData(true)
-			TRADING_HOUSE.ClearSearchResults = originalClearSearchResults
-		end
-	end)
-	resetButton:SetHandler("OnMouseEnter", function()
-		InitializeTooltip(InformationTooltip)
-		InformationTooltip:ClearAnchors()
-		InformationTooltip:SetOwner(resetButton, BOTTOM, 5, 0)
-		SetTooltipText(InformationTooltip, L["RESET_ALL_FILTERS_LABEL"])
-	end)
-	resetButton:SetHandler("OnMouseExit", function()
-		ClearTooltip(InformationTooltip)
-	end)
+	resetButton.OnClick = function()
+		local originalClearSearchResults = TRADING_HOUSE.ClearSearchResults
+		TRADING_HOUSE.ClearSearchResults = function() end
+		TRADING_HOUSE:ResetAllSearchData(true)
+		TRADING_HOUSE.ClearSearchResults = originalClearSearchResults
+	end
 
 	nameFilter = AwesomeGuildStore.ItemNameQuickFilter:New(ZO_TradingHouseItemPaneSearchSortBy, ADDON_NAME .. "NameFilterInput", 90, 2)
 	searchLibrary:RegisterFilter(nameFilter)
@@ -341,7 +325,7 @@ local function InitializeFilters(control)
 			return true
 		end
 	end)
-	
+
 	local listingTabWrapper = AwesomeGuildStore.ListingTabWrapper:New(saveData)
 	listingTabWrapper:InitializeListingSortHeaders()
 end
