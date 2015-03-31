@@ -108,6 +108,7 @@ function SearchLibrary:Initialize(saveData)
 		self:ClearHistory()
 	end
 
+	self.toolTip = AwesomeGuildStore.SavedSearchTooltip:New()
 	self:InitializeHistory()
 	self:InitializeFavorites()
 	self:InitializeEditBox()
@@ -325,7 +326,7 @@ local function InitializeBaseRow(self, rowControl, entry, fadeFavorite)
 			saveButton.animation:PlayForward()
 		end
 		if(self.saveData.showTooltips) then
-			AwesomeGuildStore.toolTip:Show(rowControl, entry)
+			self.toolTip:Show(rowControl, entry)
 		end
 	end
 
@@ -335,7 +336,7 @@ local function InitializeBaseRow(self, rowControl, entry, fadeFavorite)
 		if(not entry.favorite or fadeFavorite) then
 			saveButton.animation:PlayBackward()
 		end
-		AwesomeGuildStore.toolTip:Hide()
+		self.toolTip:Hide()
 	end
 
 	rowControl:SetHandler("OnMouseEnter", FadeIn)

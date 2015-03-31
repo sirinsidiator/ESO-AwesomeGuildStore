@@ -46,7 +46,10 @@ history/SearchLibrary.xml
 guildselector/HiredTraderTooltip.lua
 guildselector/GuildSelector.lua
 guildselector/GuildSelector.xml
-UnitPriceDisplay.lua
+wrappers/TradingHouseWrapper.lua
+wrappers/SearchTabWrapper.lua
+wrappers/SellTabWrapper.lua
+wrappers/ListingTabWrapper.lua
+wrappers/KeybindStripWrapper.lua
 SalesCategorySelector.lua
-ListingTabWrapper.lua
 AwesomeGuildStore.xml

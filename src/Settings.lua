@@ -23,7 +23,7 @@ local function InitializeSettings()
 			width = 730,
 			height = 185,
 			isActive = true,
-			lastState = AwesomeGuildStore.DEFAULT_SEARCH_STATE,
+			lastState = "1:-:-:-:-:-",
 			searches = {},
 			showTooltips = true,
 			locked = true,
