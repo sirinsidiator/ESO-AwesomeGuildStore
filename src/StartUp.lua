@@ -422,8 +422,21 @@ OnAddonLoaded(function()
 		DisableKeybindStripSearchButton()
 	end)
 
-	ZO_PreHook(TRADING_HOUSE, "OnListingsRequestSuccess", function()
-		TRADING_HOUSE:UpdateListingCounts()
+	ZO_PreHook(TRADING_HOUSE, "OnAwaitingResponse", function(self, responseType)
+		if(responseType == TRADING_HOUSE_RESULT_LISTINGS_PENDING) then
+			if(self:IsInListingsMode()) then
+				loadingBlocker:Show()
+			end
+		end
+	end)
+
+	ZO_PreHook(TRADING_HOUSE, "OnResponseReceived", function(self, responseType, result)
+		if(responseType == TRADING_HOUSE_RESULT_LISTINGS_PENDING) then
+			if(result == TRADING_HOUSE_RESULT_SUCCESS) then
+				TRADING_HOUSE:UpdateListingCounts()
+			end
+			loadingBlocker:Hide()
+		end
 	end)
 
 	local listingControl, infoControl, itemControl, postedItemsControl
@@ -446,6 +459,7 @@ OnAddonLoaded(function()
 		if(mode == ZO_TRADING_HOUSE_MODE_LISTINGS) then
 			listingControl:SetParent(postedItemsControl)
 			listingControl:SetAnchor(TOPLEFT, postedItemsControl, TOPLEFT, 55, -47)
+			loadingBlocker:SetParent(ZO_TradingHousePostedItemsList)
 		else
 			listingControl:SetParent(infoControl)
 			listingControl:SetAnchor(TOP, itemControl, BOTTOM, 0, 15)
@@ -453,6 +467,7 @@ OnAddonLoaded(function()
 
 		if(mode == ZO_TRADING_HOUSE_MODE_BROWSE) then
 			InitializeFilters(self.m_browseItems)
+			loadingBlocker:SetParent(ZO_TradingHouseItemPaneSearchResults)
 			TRADING_HOUSE.m_searchAllowed = true
 			TRADING_HOUSE:OnSearchCooldownUpdate(GetTradingHouseCooldownRemaining())
 		elseif(mode == ZO_TRADING_HOUSE_MODE_SELL) then
