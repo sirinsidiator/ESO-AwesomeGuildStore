@@ -57,8 +57,8 @@ function ItemNameQuickFilter:InitializeFilterFunction()
 	end)
 
 	local inputBox = self.inputBox
-	local data = { name = "", setName = "", isSetItem = false, type = ITEM_NAME_FILTER_DATA_TYPE }
-	local searchTerm, searchLink, itemCount, filteredItemCount
+	local data = { name = "", setName = "", isSetItem = false, itemLinkData = "", type = ITEM_NAME_FILTER_DATA_TYPE }
+	local itemCount, filteredItemCount, isMatch
 
 	local FakeGetTradingHouseSearchResultItemInfo = function(index)
 		local icon, name, quality, stackCount, sellerName, timeRemaining, purchasePrice = OriginalGetTradingHouseSearchResultItemInfo(index)
@@ -71,8 +71,9 @@ function ItemNameQuickFilter:InitializeFilterFunction()
 			local _, itemLinkData = itemLink:match("|H(.-):(.-)|h(.-)|h")
 			data.setName = setName
 			data.isSetItem = isSetItem
+			data.itemLinkData = itemLinkData
 
-			if((searchLink and itemLinkData == searchLink) or nameFilter:IsMatch(searchTerm, data)) then
+			if(isMatch(data)) then
 				filteredItemCount = filteredItemCount + 1
 				return icon, name, quality, stackCount, sellerName, timeRemaining, purchasePrice
 			end
@@ -80,11 +81,23 @@ function ItemNameQuickFilter:InitializeFilterFunction()
 		return nil, "", nil, 0
 	end
 	TRADING_HOUSE.RebuildSearchResultsPage = function(self)
-		searchTerm = inputBox:GetText()
+		local searchTerm = inputBox:GetText()
 
 		if(searchTerm ~= "") then
-			local _, itemLinkData = searchTerm:match("|H(.-):(.-)|h(.-)|h")
-			if(itemLinkData and itemLinkData ~= "") then searchLink = itemLinkData else searchLink = nil end
+			local terms = {zo_strsplit("+", searchTerm)}
+			for i = 1, #terms do
+				local term = terms[i]
+				local _, itemLinkData = term:match("|H(.-):(.-)|h(.-)|h")
+				if(itemLinkData and itemLinkData ~= "") then -- prepare itemLinks beforehand for better performance
+					terms[i] = itemLinkData
+				end
+			end
+			isMatch = function(data)
+				for i = 1, #terms do
+					local term = terms[i]
+					if(term == data.itemLinkData or nameFilter:IsMatch(term, data)) then return true end
+				end
+			end
 			itemCount, filteredItemCount = 0, 0
 			GetTradingHouseSearchResultItemInfo = FakeGetTradingHouseSearchResultItemInfo
 		end
