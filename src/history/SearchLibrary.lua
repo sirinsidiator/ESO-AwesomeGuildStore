@@ -492,6 +492,7 @@ local function GetLabelFromState(state)
 	end
 
 	if(nameFilter and nameFilter ~= "") then
+		nameFilter = nameFilter:gsub("%.", ":")
 		label = label .. ' > "' .. nameFilter .. '"'
 	end
 

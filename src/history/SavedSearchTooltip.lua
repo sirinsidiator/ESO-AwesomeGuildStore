@@ -150,6 +150,7 @@ function SavedSearchTooltip:Show(control, entry)
 	end
 
 	if(nameState and nameState ~= "" and nameState ~= "-") then
+		nameState = nameState:gsub("%.", ":")
 		self:AddLine(L["ITEM_NAME_QUICK_FILTER_LABEL"]:sub(0, -2), nameState)
 	end
 

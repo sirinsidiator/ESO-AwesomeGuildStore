@@ -58,7 +58,7 @@ function ItemNameQuickFilter:InitializeFilterFunction()
 
 	local inputBox = self.inputBox
 	local data = { name = "", setName = "", isSetItem = false, type = ITEM_NAME_FILTER_DATA_TYPE }
-	local searchTerm, itemCount, filteredItemCount
+	local searchTerm, searchLink, itemCount, filteredItemCount
 
 	local FakeGetTradingHouseSearchResultItemInfo = function(index)
 		local icon, name, quality, stackCount, sellerName, timeRemaining, purchasePrice = OriginalGetTradingHouseSearchResultItemInfo(index)
@@ -66,12 +66,13 @@ function ItemNameQuickFilter:InitializeFilterFunction()
 			itemCount = itemCount + 1
 			data.name = name
 
-			local itemLink = GetTradingHouseSearchResultItemLink(index, LINK_STYLE_DEFAULT)
+			local itemLink = GetTradingHouseSearchResultItemLink(index, LINK_STYLE_BRACKETS)
 			local isSetItem, setName = GetItemLinkSetInfo(itemLink)
+			local _, itemLinkData = itemLink:match("|H(.-):(.-)|h(.-)|h")
 			data.setName = setName
 			data.isSetItem = isSetItem
 
-			if(nameFilter:IsMatch(searchTerm, data)) then
+			if((searchLink and itemLinkData == searchLink) or nameFilter:IsMatch(searchTerm, data)) then
 				filteredItemCount = filteredItemCount + 1
 				return icon, name, quality, stackCount, sellerName, timeRemaining, purchasePrice
 			end
@@ -82,6 +83,8 @@ function ItemNameQuickFilter:InitializeFilterFunction()
 		searchTerm = inputBox:GetText()
 
 		if(searchTerm ~= "") then
+			local _, itemLinkData = searchTerm:match("|H(.-):(.-)|h(.-)|h")
+			if(itemLinkData and itemLinkData ~= "") then searchLink = itemLinkData else searchLink = nil end
 			itemCount, filteredItemCount = 0, 0
 			GetTradingHouseSearchResultItemInfo = FakeGetTradingHouseSearchResultItemInfo
 		end
@@ -112,9 +115,10 @@ function ItemNameQuickFilter:Reset()
 end
 
 function ItemNameQuickFilter:Serialize()
-	return self.inputBox:GetText()
+	return self.inputBox:GetText():gsub(":", ".")
 end
 
 function ItemNameQuickFilter:Deserialize(searchterm)
-	self.inputBox:SetText(searchterm)
+	if(not searchterm) then searchterm = "" end
+	self.inputBox:SetText(searchterm:gsub("%.", ":"))
 end
