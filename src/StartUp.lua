@@ -27,6 +27,8 @@ end
 AwesomeGuildStore.RegisterForEvent = RegisterForEvent
 -----------------------------------------------------------------------------------------
 
+AwesomeGuildStore.BeforeInitialSetupCallbackName = ADDON_NAME .. "_BeforeInitialSetup"
+AwesomeGuildStore.AfterInitialSetupCallbackName = ADDON_NAME .. "_AfterInitialSetup"
 OnAddonLoaded(function()
 	local saveData = AwesomeGuildStore.InitializeSettings()
 	local tradingHouseWrapper = AwesomeGuildStore.TradingHouseWrapper:New(saveData)

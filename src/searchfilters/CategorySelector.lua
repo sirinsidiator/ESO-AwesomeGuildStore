@@ -365,3 +365,48 @@ function CategorySelector:Deserialize(state)
 		end
 	end
 end
+
+function CategorySelector:GetTooltipText(state)
+	local values = {zo_strsplit(";", state)}
+
+	local category, subcategory
+	local lines = {}
+	for index, value in ipairs(values) do
+		if(index == 1) then
+			category = FILTER_PRESETS[tonumber(value)]
+			if(category) then
+				lines[#lines + 1] = {label = L["CATEGORY_TITLE"], text = category.label}
+			end
+		elseif(index == 2 and category) then
+			subcategory = category.subcategories[tonumber(value)]
+			if(subcategory) then
+				lines[#lines + 1] = {label = L["SUBCATEGORY_TITLE"], text = subcategory.label}
+			end
+		elseif(subcategory) then
+			local subfilterId, subfilterValues = zo_strsplit(",", value)
+			local subfilterPreset = SUBFILTER_PRESETS[tonumber(subfilterId)]
+			if(subfilterPreset) then
+				subfilterValues = tonumber(subfilterValues)
+				local value = 0
+				local text = ""
+				while subfilterValues > 0 do
+					local isSelected = (math.mod(subfilterValues, 2) == 1)
+					if(isSelected) then
+						for index, button in ipairs(subfilterPreset.buttons) do
+							if(value == index) then
+								text = text .. button.label .. ", "
+								break
+							end
+						end
+					end
+					subfilterValues = math.floor(subfilterValues / 2)
+					value = value + 1
+				end
+				if(#text > 0) then
+					lines[#lines + 1] = {label = subfilterPreset.label, text = text:sub(0, -3)}
+				end
+			end
+		end
+	end
+	return lines
+end

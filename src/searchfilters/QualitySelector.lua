@@ -127,3 +127,18 @@ function QualitySelector:Deserialize(state)
 	assert(min and max)
 	self.slider:SetRangeValue(tonumber(min), tonumber(max))
 end
+
+local QUALITY_LABEL = {L["NORMAL_QUALITY_LABEL"], L["MAGIC_QUALITY_LABEL"], L["ARCANE_QUALITY_LABEL"], L["ARTIFACT_QUALITY_LABEL"], L["LEGENDARY_QUALITY_LABEL"]}
+function QualitySelector:GetTooltipText(state)
+	local minQuality, maxQuality = zo_strsplit(";", state)
+	minQuality = tonumber(minQuality)
+	maxQuality = tonumber(maxQuality)
+	if(minQuality and maxQuality and not (minQuality == 1 and maxQuality == 5)) then
+		local text = ""
+		for i = minQuality, maxQuality do
+			text = text .. QUALITY_LABEL[i] .. ", "
+		end
+		return {{label = L["QUALITY_SELECTOR_TITLE"]:sub(0, -2), text = text:sub(0, -3)}}
+	end
+	return {}
+end

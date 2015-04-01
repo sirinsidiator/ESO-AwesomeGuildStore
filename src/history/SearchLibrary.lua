@@ -6,8 +6,7 @@ local SUBFILTER_PRESETS = AwesomeGuildStore.SUBFILTER_PRESETS
 
 local SEARCH_DATA_TYPE = 1
 local HISTORY_LENGTH = 50
-local SAVE_VERSION = 1
-local SAVE_TEMPLATE = "%d:%s:%s:%s:%s:%s"
+local SAVE_VERSION = 2
 
 local SAVE_BUTTON_TEMPLATE = {
 	name = "SaveButton",
@@ -45,6 +44,8 @@ end
 function SearchLibrary:Initialize(saveData)
 	self.saveData = saveData
 	self.filter = {}
+	self.filterByType = {}
+	self.filters = {}
 	self.currentState = {}
 
 	self.control = AwesomeGuildStoreSearchLibrary
@@ -194,6 +195,7 @@ function SearchLibrary:InitializeEditBox()
 	editBox:SetHandler("OnFocusLost", function() self.hideEditBoxHandle = zo_callLater(function() self:HideEditBox() end, 100) end)
 	editBox:SetHandler("OnEnter", function() self:HideEditBox() self:SaveEditBoxChanges() end)
 	editBox:SetHandler("OnEscape", function() self:HideEditBox() end)
+	editBox:SetMaxInputChars(350)
 end
 
 function SearchLibrary:ShowEditBox(rowControl, entry)
@@ -250,43 +252,88 @@ function SearchLibrary:SaveEditBoxChanges()
 end
 
 function SearchLibrary:RegisterFilter(filter)
-	if(not filter or not filter.type or self.filter[filter.type]) then d("AwesomeGuildStore Error: cannot register filter with search library") return end
-	self.filter[filter.type] = filter
+	if(not filter or not filter.type) then d("[AwesomeGuildStore] Warning: Invalid filter type") return end
+	if(self.filterByType[filter.type]) then d("[AwesomeGuildStore] Warning: Filter type already registered") return end
+
+	self.filters[#self.filters + 1] = filter
+	self.filterByType[filter.type] = filter
+	table.sort(self.filters, function(a, b) return a.type < b.type end)
+
 	CALLBACK_MANAGER:RegisterCallback(filter.callbackName, function(filter)
 		self.currentState[filter.type] = filter:Serialize()
 		self:SaveCurrentState()
 	end)
 end
 
+local STATE_TEMPLATE = "%d#%s"
+local function BuildStateString(filters, state)
+	local saveData = {SAVE_VERSION}
+	for i = 1, #filters do
+		local filter = filters[i]
+		local type = filter.type
+		local data = state[type]
+		if(data) then
+			saveData[#saveData + 1] = STATE_TEMPLATE:format(type, data)
+		end
+	end
+	return table.concat(saveData, "%")
+end
+
 function SearchLibrary:Serialize()
 	local state = self.currentState
-	local filter = self.filter
-	for i = 1, 5 do
-		state[i] = filter[i] and filter[i]:Serialize() or "-"
+	local filters = self.filters
+
+	for i = 1, #filters do
+		local filter = filters[i]
+		state[filter.type] = filter:Serialize()
 	end
 
-	return SAVE_TEMPLATE:format(SAVE_VERSION, state[1], state[2], state[3], state[4], state[5])
+	return BuildStateString(filters, state)
 end
 
 function SearchLibrary:Deserialize(state)
-	local version, categoryState, priceState, levelState, qualityState, nameState = zo_strsplit(":", state)
-	if(tonumber(version) == SAVE_VERSION) then
-		local state = {categoryState, priceState, levelState, qualityState, nameState}
-		local filter = self.filter
-		for i = 1, 5 do
-			if(filter[i] and state[i] ~= "-") then
-				filter[i]:Deserialize(state[i])
-			end
+	local states = {zo_strsplit("%", state)}
+	local version = tonumber(states[1])
+	if(version == SAVE_VERSION) then
+		local filters = self.filters
+		for i = 1, #filters do
+			filters[i]:Reset()
 		end
 
-		TRADING_HOUSE.m_searchAllowed = true
-		TRADING_HOUSE:OnSearchCooldownUpdate(GetTradingHouseCooldownRemaining())
+		local filterByType = self.filterByType
+		for i = 2, #states do
+			local type, data = zo_strsplit("#", states[i])
+			local filter = filterByType[tonumber(type)]
+			if(filter) then
+				filter:Deserialize(data)
+			end
+		end
+	else
+		states = {zo_strsplit(":", state)}
+		version = tonumber(states[1])
+		if(version == 1) then
+			local data = {states[2], states[3], states[4], states[5], states[6]}
+			local filter = self.filterByType
+			for i = 1, 5 do
+				if(filter[i] and data[i] ~= "-") then
+					filter[i]:Deserialize(data[i])
+				end
+			end
+			local entry = self.searchList[state]
+			if(entry) then
+				entry.state = self:Serialize()
+				self.searchList[state] = nil
+				self.searchList[entry.state] = entry
+				self.historyDirty = self.historyDirty or entry.history
+				self.favoritesDirty = self.favoritesDirty or entry.favorite
+				self:Refresh()
+			end
+		end
 	end
 end
 
 function SearchLibrary:SaveCurrentState()
-	local state = self.currentState
-	self.saveData.lastState = SAVE_TEMPLATE:format(SAVE_VERSION, state[1] or "-", state[2] or "-", state[3] or "-", state[4] or "-", state[5] or "-")
+	self.saveData.lastState = BuildStateString(self.filters, self.currentState)
 	self:UpdateFavoriteButtonState()
 end
 
@@ -326,7 +373,7 @@ local function InitializeBaseRow(self, rowControl, entry, fadeFavorite)
 			saveButton.animation:PlayForward()
 		end
 		if(self.saveData.showTooltips) then
-			self.toolTip:Show(rowControl, entry)
+			self.toolTip:Show(rowControl, entry, self.filterByType)
 		end
 	end
 
@@ -476,24 +523,25 @@ function SearchLibrary:InitializeFavorites()
 	ZO_ScrollList_AddResizeOnScreenResize(favoritesControl)
 end
 
-local function GetLabelFromState(state)
-	local _, categoryState, _, _, _, nameFilter = zo_strsplit(":", state)
+local function GetLabelFromState(self, state)
+	local states = {zo_strsplit("%", state)}
 	local label = "category filter disabled"
 
-	if(categoryState ~= "-") then
-		local category, subcategory = zo_strsplit(";", categoryState)
-		category = FILTER_PRESETS[tonumber(category)]
-		label = category.label
+	for i = 2, #states do
+		local type, data = zo_strsplit("#", states[i])
+		type = tonumber(type)
+		if(type == 1 and self.filterByType[1]) then
+			local category, subcategory = zo_strsplit(";", data)
+			category = FILTER_PRESETS[tonumber(category)]
+			label = category.label
 
-		if(subcategory) then
-			subcategory = category.subcategories[tonumber(subcategory)]
-			label = label .. " > " .. subcategory.label
+			if(subcategory) then
+				subcategory = category.subcategories[tonumber(subcategory)]
+				label = label .. " > " .. subcategory.label
+			end
+		elseif(type == 5 and data and data ~= "") then
+			label = label .. ' > "' .. data .. '"'
 		end
-	end
-
-	if(nameFilter and nameFilter ~= "") then
-		nameFilter = nameFilter:gsub("%.", ":")
-		label = label .. ' > "' .. nameFilter .. '"'
 	end
 
 	return label
@@ -504,7 +552,7 @@ function SearchLibrary:GetEntry(state, skipCreate)
 	if(not entry and not skipCreate) then
 		entry = {
 			state = state,
-			label = GetLabelFromState(state),
+			label = GetLabelFromState(self, state),
 			lastSearchTime = 0,
 			searchCount = 0,
 			history = false,

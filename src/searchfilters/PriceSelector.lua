@@ -137,3 +137,26 @@ function PriceSelector:Deserialize(state)
 	self.minPriceBox:SetText(min <= LOWER_LIMIT and "" or min)
 	self.maxPriceBox:SetText(max >= UPPER_LIMIT and "" or max)
 end
+
+local function GetFormattedPrice(price)
+	return zo_strformat(SI_FORMAT_ICON_TEXT, ZO_CurrencyControl_FormatCurrency(price), zo_iconFormat("EsoUI/Art/currency/currency_gold.dds", 16, 16))
+end
+
+function PriceSelector:GetTooltipText(state)
+	local minPrice, maxPrice = zo_strsplit(";", state)
+	minPrice = tonumber(minPrice)
+	maxPrice = tonumber(maxPrice)
+	local priceText = ""
+	if(minPrice and maxPrice) then
+		priceText = GetFormattedPrice(minPrice) .. " - " .. GetFormattedPrice(maxPrice)
+	elseif(minPrice) then
+		priceText = L["TOOLTIP_GREATER_THAN"] .. GetFormattedPrice(minPrice)
+	elseif(maxPrice) then
+		priceText = L["TOOLTIP_LESS_THAN"] .. GetFormattedPrice(maxPrice)
+	end
+
+	if(priceText ~= "") then
+		return {{label = L["PRICE_SELECTOR_TITLE"]:sub(0, -2), text = priceText}}
+	end
+	return {}
+end

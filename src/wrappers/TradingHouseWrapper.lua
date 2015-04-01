@@ -22,8 +22,10 @@ function TradingHouseWrapper:Initialize(saveData)
 	local sellTab = AwesomeGuildStore.SellTabWrapper:New(saveData)
 	self.sellTab = sellTab
 	local listingTab = AwesomeGuildStore.ListingTabWrapper:New(saveData)
+	self.listingTab = listingTab
 
-	RegisterForEvent(EVENT_OPEN_TRADING_HOUSE, function()
+	self:Wrap("OpenTradingHouse", function(originalOpenTradingHouse, ...)
+		originalOpenTradingHouse(...)
 		self:SetInterceptInventoryItemClicks(false)
 		self:DisableSearchButton()
 		self:DisableGuildSelector()
@@ -35,6 +37,7 @@ function TradingHouseWrapper:Initialize(saveData)
 		local tradingHouseManager = originalRunInitialSetup(...)
 		tradingHouse.m_numItemsOnPage = 0
 
+		CALLBACK_MANAGER:FireCallbacks(AwesomeGuildStore.BeforeInitialSetupCallbackName, self)
 		searchTab:RunInitialSetup(self)
 		sellTab:RunInitialSetup(self)
 		listingTab:RunInitialSetup(self)
@@ -42,6 +45,7 @@ function TradingHouseWrapper:Initialize(saveData)
 		self:InitializeGuildSelector()
 		self:InitializeKeybindStripWrapper()
 		self:InitializeSearchCooldown()
+		CALLBACK_MANAGER:FireCallbacks(AwesomeGuildStore.AfterInitialSetupCallbackName, self)
 		return tradingHouseManager
 	end)
 
@@ -172,6 +176,10 @@ end
 
 function TradingHouseWrapper:SetupGuildSelector()
 	self.guildSelector:SetupGuildList()
+end
+
+function TradingHouseWrapper:RegisterFilter(filter)
+	self.searchTab.searchLibrary:RegisterFilter(filter)
 end
 
 function TradingHouseWrapper:PreHook(methodName, call)

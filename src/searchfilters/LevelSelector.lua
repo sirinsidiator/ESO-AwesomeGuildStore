@@ -168,3 +168,16 @@ function LevelSelector:Deserialize(state)
 	self.minLevelBox:SetText(min or "")
 	self.maxLevelBox:SetText(max or "")
 end
+
+function LevelSelector:GetTooltipText(state)
+	local vr, minLevel, maxLevel = zo_strsplit(";", state)
+	local isNormal = (vr == "0")
+	minLevel = tonumber(minLevel)
+	maxLevel = tonumber(maxLevel)
+	if(minLevel or maxLevel) then
+		local label = isNormal and L["LEVEL_SELECTOR_TITLE"] or L["VR_SELECTOR_TITLE"]
+		local text = ("%d - %d"):format(minLevel or 1, maxLevel or (isNormal and 50 or 14))
+		return {{label = label:sub(0, -2), text = text}}
+	end
+	return {}
+end

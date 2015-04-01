@@ -26,6 +26,7 @@ function SearchTabWrapper:InitializeFilters(tradingHouseWrapper)
 	local common = browseItemsControl:GetNamedChild("Common")
 
 	local searchLibrary = AwesomeGuildStore.SearchLibrary:New(saveData.searchLibrary)
+	self.searchLibrary = searchLibrary
 
 	if(saveData.replaceCategoryFilter) then
 		local header = browseItemsControl:GetNamedChild("Header")

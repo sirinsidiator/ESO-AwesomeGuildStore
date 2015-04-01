@@ -1,0 +1,9 @@
+1 - CategorySelector
+2 - PriceSelector
+3 - LevelSelector
+4 - QualitySelector
+5 - ItemNameQuickFilter
+
+6 .. 99 - reserved
+
+100 - MasterMerchant DealSelector

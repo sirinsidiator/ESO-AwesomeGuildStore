@@ -31,6 +31,7 @@ function ItemNameQuickFilter:Initialize(parent, name, x, y)
 
 	local inputBox = input:GetNamedChild("Box")
 	ZO_EditDefaultText_Initialize(inputBox, L["ITEM_NAME_QUICK_FILTER_TEXT"])
+	inputBox:SetMaxInputChars(250)
 	inputBox:SetHandler("OnTextChanged", function(control)
 		self:HandleChange()
 		ZO_EditDefaultText_OnTextChanged(inputBox)
@@ -128,10 +129,17 @@ function ItemNameQuickFilter:Reset()
 end
 
 function ItemNameQuickFilter:Serialize()
-	return self.inputBox:GetText():gsub(":", ".")
+	return self.inputBox:GetText()
 end
 
 function ItemNameQuickFilter:Deserialize(searchterm)
 	if(not searchterm) then searchterm = "" end
-	self.inputBox:SetText(searchterm:gsub("%.", ":"))
+	self.inputBox:SetText(searchterm)
+end
+
+function ItemNameQuickFilter:GetTooltipText(state)
+	if(state and state ~= "") then
+		return {{label = L["ITEM_NAME_QUICK_FILTER_LABEL"]:sub(0, -2), text = state}}
+	end
+	return {}
 end
