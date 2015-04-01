@@ -179,7 +179,9 @@ function GuildSelector:UpdateSelectedGuild()
 	if(guildId and self.entryByGuildId[guildId]) then
 		self.comboBox:SetSelectedItem(self.entryByGuildId[guildId].name)
 	end
-	self.saveData.lastGuildName = guildName
+	if(guildId ~= 0) then
+		self.saveData.lastGuildName = guildName
+	end
 	self.selectedGuildId = guildId
 	self.selectedItemText.guildId = guildId
 end
