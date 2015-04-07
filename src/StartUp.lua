@@ -27,11 +27,12 @@ end
 AwesomeGuildStore.RegisterForEvent = RegisterForEvent
 -----------------------------------------------------------------------------------------
 
+AwesomeGuildStore.GetAPIVersion = function() return 2 end
 AwesomeGuildStore.BeforeInitialSetupCallbackName = ADDON_NAME .. "_BeforeInitialSetup"
 AwesomeGuildStore.AfterInitialSetupCallbackName = ADDON_NAME .. "_AfterInitialSetup"
 AwesomeGuildStore.OnOpenSearchTabCallbackName = ADDON_NAME .. "_OnOpenSearchTab"
 AwesomeGuildStore.OnCloseSearchTabCallbackName = ADDON_NAME .. "_OnCloseSearchTab"
 OnAddonLoaded(function()
-	local saveData = AwesomeGuildStore.InitializeSettings()
+	local saveData = AwesomeGuildStore.LoadSettings()
 	local tradingHouseWrapper = AwesomeGuildStore.TradingHouseWrapper:New(saveData)
 end)

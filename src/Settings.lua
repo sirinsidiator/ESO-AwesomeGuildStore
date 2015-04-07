@@ -1,4 +1,4 @@
-local function InitializeSettings()
+local function LoadSettings()
 	local defaultData = {
 		version = 11,
 		lastGuildName = "",
@@ -232,4 +232,4 @@ local function InitializeSettings()
 	return saveData
 end
 
-AwesomeGuildStore.InitializeSettings = InitializeSettings
+AwesomeGuildStore.LoadSettings = LoadSettings
