@@ -1,15 +1,13 @@
 local MinMaxRangeSlider = ZO_Object:Subclass()
 AwesomeGuildStore.MinMaxRangeSlider = MinMaxRangeSlider
 
-function MinMaxRangeSlider:New(parent, name, x, y, width, height)
+function MinMaxRangeSlider:New(parent, name)
 	local slider = ZO_Object.New(self)
 	slider.min, slider.max, slider.step, slider.interval = 1, 2, 1, 0
 	slider.minRange = 0
 	slider.enabled = true
 
 	local control = CreateControlFromVirtual(name, parent, "AwesomeGuildStoreMinMaxRangeSliderTemplate")
-	control:SetAnchor(TOPLEFT, parent, TOPLEFT, x, y)
-	control:SetDimensions(width, height)
 	slider.control = control
 
 	local minSlider = control:GetNamedChild("MinSlider")
@@ -28,7 +26,6 @@ function MinMaxRangeSlider:New(parent, name, x, y, width, height)
 
 	slider.fullRange = control:GetNamedChild("FullRange")
 
-	slider.x, slider.y = x, y
 	slider.offsetX = minSlider:GetWidth() / 2
 	slider:SetMinMax(1, 2)
 	slider:SetStepSize(1)
@@ -164,18 +161,41 @@ function MinMaxRangeSlider:InitializeHandlers()
 	end)
 end
 
+function MinMaxRangeSlider:UpdateMinSliderVisuals()
+	local x = self.offsetX + (self.minSlider.value - self.min + 1 - self.step) * self.interval + self.minSlider.offset
+	self.minSlider:ClearAnchors()
+	self.minSlider:SetAnchor(TOPCENTER, self.control, TOPLEFT, x, 0)
+	self.minSlider.oldX = x
+end
+
+function MinMaxRangeSlider:UpdateMaxSliderVisuals()
+	local x = self.offsetX + (self.maxSlider.value - self.min + 1 - self.step) * self.interval + self.maxSlider.offset
+	self.maxSlider:ClearAnchors()
+	self.maxSlider:SetAnchor(TOPCENTER, self.control, TOPLEFT, x, 0)
+	self.maxSlider.oldX = x
+end
+
+function MinMaxRangeSlider:UpdateVisuals()
+	self.offsetX = self.minSlider:GetWidth() / 2
+	self.interval = (self.control:GetWidth() - (self.minSlider:GetWidth() + self.maxSlider:GetWidth())) / ((self.max - self.min) * self.step)
+	self:UpdateMinSliderVisuals()
+	self:UpdateMaxSliderVisuals()
+end
+
+function MinMaxRangeSlider:SetWidth(width)
+	self.control:SetWidth(width)
+	self:UpdateVisuals()
+end
+
 function MinMaxRangeSlider:SetMinValue(value)
 	if(value < self.min) then
 		value = self.min
 	elseif(value > self.maxSlider.value - self.minRange) then
 		value = self.maxSlider.value - self.minRange
 	end
-	local x = self.x + self.offsetX + (value - self.step) * self.interval + self.minSlider.offset
 
 	self.minSlider.value = value
-	self.minSlider:ClearAnchors()
-	self.minSlider:SetAnchor(TOPCENTER, self.control, TOPLEFT, x, 0)
-	self.minSlider.oldX = x
+	self:UpdateMinSliderVisuals()
 	self:OnValueChanged(self:GetRangeValue())
 end
 
@@ -185,12 +205,9 @@ function MinMaxRangeSlider:SetMaxValue(value)
 	elseif(value < self.minSlider.value + self.minRange) then
 		value = self.minSlider.value + self.minRange
 	end
-	local x = self.x + self.offsetX + (value - self.step) * self.interval + self.maxSlider.offset
 
 	self.maxSlider.value = value
-	self.maxSlider:ClearAnchors()
-	self.maxSlider:SetAnchor(TOPCENTER, self.control, TOPLEFT, x, 0)
-	self.maxSlider.oldX = x
+	self:UpdateMaxSliderVisuals()
 	self:OnValueChanged(self:GetRangeValue())
 end
 
@@ -228,7 +245,7 @@ end
 
 function MinMaxRangeSlider:SetStepSize(step)
 	self.step = step
-	self.interval = (self.control:GetWidth() - (self.minSlider:GetWidth() + self.maxSlider:GetWidth())) / ((self.max - self.min) * self.step)
+	self:UpdateVisuals()
 end
 
 function MinMaxRangeSlider:GetStepSize()

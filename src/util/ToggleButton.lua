@@ -64,10 +64,14 @@ function ToggleButton:Toggle(fromGroup)
 end
 
 function ToggleButton:Press(fromGroup)
-	if(self:IsLocked() or self:IsPressed() or not self:HandlePress(fromGroup)) then return end
+	local canPress = (not self:IsLocked() and not self:IsPressed())
+	if(canPress and self.group) then self.group:IncrementPressedButtonCount() end
+	if(not canPress or not self:HandlePress(fromGroup)) then
+		if(canPress and self.group) then self.group:DecrementPressedButtonCount() end
+		return
+	end
 	self.control:SetState(BSTATE_PRESSED, true)
 	self.pressed = true
-	if(self.group) then self.group:IncrementPressedButtonCount() end
 end
 
 function ToggleButton:HandlePress(fromGroup)
@@ -76,10 +80,14 @@ function ToggleButton:HandlePress(fromGroup)
 end
 
 function ToggleButton:Release(fromGroup)
-	if(self:IsLocked() or not self:IsPressed() or not self:HandleRelease(fromGroup)) then return end
+	local canRelease = (not self:IsLocked() and self:IsPressed())
+	if(canRelease and self.group) then self.group:DecrementPressedButtonCount() end
+	if(not canRelease or not self:HandleRelease(fromGroup)) then
+		if(canRelease and self.group) then self.group:IncrementPressedButtonCount() end
+		return
+	end
 	self.control:SetState(BSTATE_NORMAL, true)
 	self.pressed = false
-	if(self.group) then self.group:DecrementPressedButtonCount() end
 end
 
 function ToggleButton:HandleRelease(fromGroup)

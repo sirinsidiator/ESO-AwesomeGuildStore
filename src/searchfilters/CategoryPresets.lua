@@ -1,6 +1,5 @@
 local L = AwesomeGuildStore.Localization
 
-local SUBFILTER_BUTTON_SIZE = 32
 local SUBFILTER_WEAPON_TRAITS, SUBFILTER_WEAPON_ENCHANTMENTS, SUBFILTER_WEAPON_ONEHANDED, SUBFILTER_WEAPON_TWOHANDED, SUBFILTER_WEAPON_STAFF = 1, 2, 3, 4, 5
 local SUBFILTER_ARMOR_SLOTS, SUBFILTER_ARMOR_TRAITS, SUBFILTER_ARMOR_ENCHANTMENTS, SUBFILTER_JEWELRY_TRAITS, SUBFILTER_JEWELRY_ENCHANTMENTS = 6, 7, 8, 9, 10
 local SUBFILTER_BLACKSMITHING_MATERIALS, SUBFILTER_CLOTHING_MATERIALS, SUBFILTER_WOODWORKING_MATERIALS, SUBFILTER_ALCHEMY_MATERIALS = 11, 12, 13, 14
@@ -397,11 +396,8 @@ AwesomeGuildStore.FILTER_PRESETS = {
 
 AwesomeGuildStore.SUBFILTER_PRESETS = {
 	[SUBFILTER_WEAPON_TRAITS] = {
+		type = 10,
 		label = L["SUBFILTER_WEAPON_TRAIT_LABEL"],
-		x = 0,
-		y = 0,
-		size = SUBFILTER_BUTTON_SIZE,
-		perRow = 6,
 		filter = TRADING_HOUSE_FILTER_TYPE_TRAIT,
 		buttons = {
 			{
@@ -462,11 +458,8 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 		},
 	},
 	[SUBFILTER_WEAPON_ENCHANTMENTS] = {
+		type = 11,
 		label = L["SUBFILTER_WEAPON_ENCHANTMENT_LABEL"],
-		x = 0,
-		y = 90,
-		size = SUBFILTER_BUTTON_SIZE,
-		perRow = 6,
 		filter = TRADING_HOUSE_FILTER_TYPE_ENCHANTMENT,
 		buttons = {
 			{
@@ -542,11 +535,8 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 		},
 	},
 	[SUBFILTER_WEAPON_ONEHANDED] = {
+		type = 12,
 		label = L["SUBFILTER_WEAPON_TYPE_LABEL"],
-		x = 0,
-		y = 215,
-		size = SUBFILTER_BUTTON_SIZE,
-		perRow = 6,
 		filter = TRADING_HOUSE_FILTER_TYPE_WEAPON,
 		buttons = {
 			{
@@ -572,11 +562,8 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 		},
 	},
 	[SUBFILTER_WEAPON_TWOHANDED] = {
+		type = 13,
 		label = L["SUBFILTER_WEAPON_TYPE_LABEL"],
-		x = 0,
-		y = 215,
-		size = SUBFILTER_BUTTON_SIZE,
-		perRow = 6,
 		filter = TRADING_HOUSE_FILTER_TYPE_WEAPON,
 		buttons = {
 			{
@@ -597,11 +584,8 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 		},
 	},
 	[SUBFILTER_WEAPON_STAFF] = {
+		type = 14,
 		label = L["SUBFILTER_WEAPON_TYPE_LABEL"],
-		x = 0,
-		y = 215,
-		size = SUBFILTER_BUTTON_SIZE,
-		perRow = 6,
 		filter = TRADING_HOUSE_FILTER_TYPE_WEAPON,
 		buttons = {
 			{
@@ -622,11 +606,8 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 		},
 	},
 	[SUBFILTER_ARMOR_SLOTS] = {
+		type = 15,
 		label = L["SUBFILTER_ARMOR_TYPE_LABEL"],
-		x = 0,
-		y = 145,
-		size = SUBFILTER_BUTTON_SIZE,
-		perRow = 6,
 		filter = TRADING_HOUSE_FILTER_TYPE_EQUIP,
 		buttons = {
 			{
@@ -667,11 +648,8 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 		},
 	},
 	[SUBFILTER_ARMOR_TRAITS] = {
+		type = 16,
 		label = L["SUBFILTER_ARMOR_TRAIT_LABEL"],
-		x = 0,
-		y = 0,
-		size = SUBFILTER_BUTTON_SIZE,
-		perRow = 6,
 		filter = TRADING_HOUSE_FILTER_TYPE_TRAIT,
 		buttons = {
 			{
@@ -732,11 +710,8 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 		},
 	},
 	[SUBFILTER_ARMOR_ENCHANTMENTS] = {
+		type = 17,
 		label = L["SUBFILTER_ARMOR_ENCHANTMENT_LABEL"],
-		x = 0,
-		y = 90,
-		size = SUBFILTER_BUTTON_SIZE,
-		perRow = 6,
 		filter = TRADING_HOUSE_FILTER_TYPE_ENCHANTMENT,
 		buttons = {
 			{
@@ -762,11 +737,8 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 		},
 	},
 	[SUBFILTER_JEWELRY_TYPE] = {
+		type = 18,
 		label = L["SUBFILTER_JEWELRY_TYPE_LABEL"],
-		x = 0,
-		y = 0,
-		size = SUBFILTER_BUTTON_SIZE,
-		perRow = 6,
 		filter = TRADING_HOUSE_FILTER_TYPE_EQUIP,
 		buttons = {
 			{
@@ -782,11 +754,8 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 		},
 	},
 	[SUBFILTER_JEWELRY_TRAITS] = {
+		type = 19,
 		label = L["SUBFILTER_JEWELRY_TRAIT_LABEL"],
-		x = 0,
-		y = 55,
-		size = SUBFILTER_BUTTON_SIZE,
-		perRow = 6,
 		filter = TRADING_HOUSE_FILTER_TYPE_TRAIT,
 		buttons = {
 			{
@@ -812,11 +781,8 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 		},
 	},
 	[SUBFILTER_JEWELRY_ENCHANTMENTS] = {
+		type = 20,
 		label = L["SUBFILTER_JEWELRY_ENCHANTMENT_LABEL"],
-		x = 0,
-		y = 110,
-		size = SUBFILTER_BUTTON_SIZE,
-		perRow = 6,
 		filter = TRADING_HOUSE_FILTER_TYPE_ENCHANTMENT,
 		buttons = {
 			{
@@ -917,11 +883,8 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 		},
 	},
 	[SUBFILTER_BLACKSMITHING_MATERIALS] = {
+		type = 21,
 		label = L["SUBFILTER_MATERIAL_TYPE_LABEL"],
-		x = 0,
-		y = 0,
-		size = SUBFILTER_BUTTON_SIZE,
-		perRow = 6,
 		filter = TRADING_HOUSE_FILTER_TYPE_ITEM,
 		buttons = {
 			{
@@ -942,11 +905,8 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 		},
 	},
 	[SUBFILTER_CLOTHING_MATERIALS] = {
+		type = 22,
 		label = L["SUBFILTER_MATERIAL_TYPE_LABEL"],
-		x = 0,
-		y = 0,
-		size = SUBFILTER_BUTTON_SIZE,
-		perRow = 6,
 		filter = TRADING_HOUSE_FILTER_TYPE_ITEM,
 		buttons = {
 			{
@@ -967,11 +927,8 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 		},
 	},
 	[SUBFILTER_WOODWORKING_MATERIALS] = {
+		type = 23,
 		label = L["SUBFILTER_MATERIAL_TYPE_LABEL"],
-		x = 0,
-		y = 0,
-		size = SUBFILTER_BUTTON_SIZE,
-		perRow = 6,
 		filter = TRADING_HOUSE_FILTER_TYPE_ITEM,
 		buttons = {
 			{
@@ -992,11 +949,8 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 		},
 	},
 	[SUBFILTER_STYLE_MATERIALS] = {
+		type = 24,
 		label = L["SUBFILTER_MATERIAL_TYPE_LABEL"],
-		x = 0,
-		y = 0,
-		size = SUBFILTER_BUTTON_SIZE,
-		perRow = 6,
 		filter = TRADING_HOUSE_FILTER_TYPE_ITEM,
 		buttons = {
 			{
@@ -1012,11 +966,8 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 		},
 	},
 	[SUBFILTER_ALCHEMY_MATERIALS] = {
+		type = 25,
 		label = L["SUBFILTER_INGREDIENT_TYPE_LABEL"],
-		x = 0,
-		y = 0,
-		size = SUBFILTER_BUTTON_SIZE,
-		perRow = 6,
 		filter = TRADING_HOUSE_FILTER_TYPE_ITEM,
 		buttons = {
 			{
@@ -1032,11 +983,8 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 		},
 	},
 	[SUBFILTER_ENCHANTING_MATERIALS] = {
+		type = 26,
 		label = L["SUBFILTER_RUNE_TYPE_LABEL"],
-		x = 0,
-		y = 0,
-		size = SUBFILTER_BUTTON_SIZE,
-		perRow = 6,
 		filter = TRADING_HOUSE_FILTER_TYPE_ITEM,
 		buttons = {
 			{
@@ -1057,11 +1005,8 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 		},
 	},
 	[SUBFILTER_GLYPHS] = {
+		type = 27,
 		label = L["SUBFILTER_GLYPH_TYPE_LABEL"],
-		x = 0,
-		y = 0,
-		size = SUBFILTER_BUTTON_SIZE,
-		perRow = 6,
 		filter = TRADING_HOUSE_FILTER_TYPE_ITEM,
 		buttons = {
 			{

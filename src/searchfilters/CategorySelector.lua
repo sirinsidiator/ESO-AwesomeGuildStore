@@ -6,21 +6,30 @@ local MAJOR_BUTTON_SIZE = 46
 local MINOR_BUTTON_SIZE = 32
 local RESET_BUTTON_SIZE = 18
 local RESET_BUTTON_TEXTURE = "EsoUI/Art/Buttons/decline_%s.dds"
+local MOUSE_LEFT = 1
 
 local RegisterForEvent = AwesomeGuildStore.RegisterForEvent
 local ButtonGroup = AwesomeGuildStore.ButtonGroup
 local ToggleButton = AwesomeGuildStore.ToggleButton
+local SimpleIconButton = AwesomeGuildStore.SimpleIconButton
+local CategorySubfilter = AwesomeGuildStore.CategorySubfilter
 
 local CategorySelector = ZO_Object:Subclass()
 AwesomeGuildStore.CategorySelector = CategorySelector
 
-function CategorySelector:New(parent, name)
+function CategorySelector:New(parent, name, searchTabWrapper, tradingHouseWrapper)
 	local selector = ZO_Object.New(self)
 	selector.callbackName = name .. "Changed"
 	selector.type = 1
+	selector.searchTabWrapper = searchTabWrapper
+
+	parent:GetNamedChild("ItemCategory"):SetHidden(true)
 
 	local container = parent:CreateControl(name .. "Container", CT_CONTROL)
+	container:SetAnchor(TOPLEFT, parent:GetNamedChild("Header"), TOPRIGHT, 70, -10)
 	container:SetResizeToFitDescendents(true)
+	ZO_TradingHouseItemPane:SetAnchor(TOPLEFT, container, BOTTOMLEFT, 0, 20)
+
 	selector.control = container
 	selector.group = {}
 	selector.subfilters = {}
@@ -47,7 +56,9 @@ function CategorySelector:New(parent, name)
 	end
 
 	for subfilterId, preset in pairs(SUBFILTER_PRESETS) do
-		selector.subfilters[subfilterId] = selector:CreateSubfilter(name .. "SubFilter" .. subfilterId, preset)
+		if(preset.buttons) then
+			selector.subfilters[subfilterId] = CategorySubfilter:New(name .. "Subfilter" .. subfilterId, tradingHouseWrapper, preset)
+		end
 	end
 
 	local function GetCurrentFilters()
@@ -65,24 +76,17 @@ function CategorySelector:New(parent, name)
 
 	ZO_PreHook(TRADING_HOUSE.m_search, "InternalExecuteSearch", function(self)
 		local filters, subfilters, showTabards = GetCurrentFilters()
+		local filterArray = self.m_filters
 
 		for type, filterValues in pairs(filters) do
-			self.m_filters[type].values = ZO_ShallowTableCopy(filterValues) -- we have to copy them, otherwise they will be cleared on the next search
+			filterArray[type].values = ZO_ShallowTableCopy(filterValues) -- we have to copy them, otherwise they will be cleared on the next search
 		end
 
 		if(subfilters) then
 			for _, subfilterId in ipairs(subfilters) do
-				local buttonGroup = selector.subfilters[subfilterId]
-				if(buttonGroup) then
-					local subfilterValues = {}
-					for _, button in pairs(buttonGroup.buttons) do
-						if(button:IsPressed()) then
-							table.insert(subfilterValues, button.value)
-						end
-					end
-					if(#subfilterValues > 0) then
-						self.m_filters[buttonGroup.type].values = subfilterValues
-					end
+				local subfilter = selector.subfilters[subfilterId]
+				if(subfilter) then
+					subfilter:ApplyFilterValues(filterArray)
 				end
 			end
 		end
@@ -91,90 +95,19 @@ function CategorySelector:New(parent, name)
 	return selector
 end
 
-function CategorySelector:CreateSubfilter(name, subfilterPreset)
-	if(not subfilterPreset.buttons) then return end
-	local group = self:CreateSubfilterGroup(name .. "Group", subfilterPreset)
-	group.label = group.control:CreateControl(name .. "Label", CT_LABEL)
-	group.label:SetFont("ZoFontWinH4")
-	group.label:SetText(subfilterPreset.label .. ":")
-	group.label:SetAnchor(TOPLEFT, group.control, TOPLEFT, 0, 0)
-	for index, buttonPreset in ipairs(subfilterPreset.buttons) do
-		self:CreateSubfilterButton(group, index, buttonPreset, subfilterPreset)
-	end
-
-	local resetButton = CreateControlFromVirtual(name .. "ResetButton", group.control, "ZO_DefaultButton")
-	resetButton:SetNormalTexture(RESET_BUTTON_TEXTURE:format("up"))
-	resetButton:SetPressedTexture(RESET_BUTTON_TEXTURE:format("down"))
-	resetButton:SetMouseOverTexture(RESET_BUTTON_TEXTURE:format("over"))
-	resetButton:SetEndCapWidth(0)
-	resetButton:SetDimensions(RESET_BUTTON_SIZE, RESET_BUTTON_SIZE)
-	resetButton:SetAnchor(TOPRIGHT, group.label, TOPLEFT, 196, 0)
-	resetButton:SetHidden(true)
-	resetButton:SetHandler("OnMouseUp",function(control, button, isInside)
-		if(button == 1 and isInside) then
-			group:ReleaseAllButtons()
-		end
-	end)
-	resetButton:SetHandler("OnMouseEnter", function()
-		InitializeTooltip(InformationTooltip)
-		InformationTooltip:ClearAnchors()
-		InformationTooltip:SetOwner(resetButton, BOTTOM, 5, 0)
-		SetTooltipText(InformationTooltip, L["RESET_FILTER_LABEL_TEMPLATE"]:format(subfilterPreset.label))
-	end)
-	resetButton:SetHandler("OnMouseExit", function()
-		ClearTooltip(InformationTooltip)
-	end)
-	group.resetButton = resetButton
-
-	return group
-end
-
-function CategorySelector:CreateSubfilterGroup(name, subfilterPreset)
-	local parent = self.control:GetParent()
-	local group = ButtonGroup:New(parent, name, 0, 0)
-	group.control:ClearAnchors()
-	group.control:SetAnchor(TOPLEFT, parent:GetNamedChild("Header"), BOTTOMLEFT, subfilterPreset.x, subfilterPreset.y + 260)
-	group.control:SetHidden(true)
-	group.type = subfilterPreset.filter
-	return group
-end
-
-function CategorySelector:CreateSubfilterButton(group, index, buttonPreset, subfilterPreset)
-	local x = subfilterPreset.size * (math.mod(index - 1, subfilterPreset.perRow))
-	local y = 20 + subfilterPreset.size * math.floor((index - 1) / subfilterPreset.perRow)
-	local button = ToggleButton:New(group.control, group.control:GetName() .. "Button" .. index, buttonPreset.texture, x, y, subfilterPreset.size, subfilterPreset.size, buttonPreset.label)
-	button.HandlePress = function()
-		group.resetButton:SetHidden(false)
-		if(group.pressedButtonCount == 8) then
-			ZO_Alert(UI_ALERT_CATEGORY_ERROR, SOUNDS.GENERAL_ALERT_ERROR, L["WARNING_SUBFILTER_LIMIT"])
-			return false
-		end
-		self:HandleChange()
-		return true
-	end
-	button.HandleRelease = function(control, fromGroup)
-		group.resetButton:SetHidden(group.pressedButtonCount == 1)
-		self:HandleChange()
-		return true
-	end
-	button.value = buttonPreset.value
-	button.index = index
-	group:AddButton(button)
-	return button
-end
-
 function CategorySelector:UpdateSubfilterVisibility()
 	local subfilters = FILTER_PRESETS[self.category].subcategories
 	local subcategory = self.subcategory[self.category]
 	if(subcategory) then subfilters = subfilters[subcategory].subfilters end
 
 	for _, subfilter in pairs(self.subfilters) do
-		subfilter.control:SetHidden(true)
+		self.searchTabWrapper:DetachFilter(subfilter)
 	end
 	if(subfilters) then
 		for _, subfilterId in ipairs(subfilters) do
-			if(self.subfilters[subfilterId]) then
-				self.subfilters[subfilterId].control:SetHidden(false)
+			local subfilter = self.subfilters[subfilterId]
+			if(subfilter) then
+				self.searchTabWrapper:AttachFilter(subfilter)
 			end
 		end
 	end
@@ -289,7 +222,7 @@ function CategorySelector:Reset()
 		group.defaultButton:Press()
 	end
 	for _, subfilter in pairs(self.subfilters) do
-		subfilter:ReleaseAllButtons()
+		subfilter:Reset()
 	end
 end
 
@@ -305,17 +238,10 @@ function CategorySelector:Serialize()
 		local subfilters = FILTER_PRESETS[category].subcategories[subcategory].subfilters
 		if(subfilters) then
 			for _, subfilterId in ipairs(subfilters) do
-				local buttonGroup = self.subfilters[subfilterId]
-				if(buttonGroup) then
-					local subfilterValues = 0
-					for _, button in pairs(buttonGroup.buttons) do
-						if(button:IsPressed()) then
-							subfilterValues = subfilterValues + math.pow(2, button.index)
-						end
-					end
-					if(subfilterValues > 0) then
-						state = state .. ";" .. tostring(subfilterId) .. "," .. tostring(subfilterValues)
-					end
+				local subfilter = self.subfilters[subfilterId]
+				if(subfilter) then
+					local subfilterValues = subfilter:Serialize()
+					state = state .. ";" .. tostring(subfilterId) .. "," .. tostring(subfilterValues)
 				end
 			end
 		end
@@ -340,28 +266,14 @@ function CategorySelector:Deserialize(state)
 			local subcategory = self.subcategory[self.category]
 			if(subcategory and filters[subcategory].subfilters) then
 				for _, subfilterId in pairs(filters[subcategory].subfilters) do
-					self.subfilters[subfilterId]:ReleaseAllButtons()
+					self.subfilters[subfilterId]:Reset()
 				end
 			end
 		else
 			local subfilterId, subfilterValues = zo_strsplit(",", value)
-			local buttonGroup = self.subfilters[tonumber(subfilterId)]
-			assert(subfilterId and subfilterValues and buttonGroup)
-			subfilterValues = tonumber(subfilterValues)
-			local buttonValue = 0
-			while subfilterValues > 0 do
-				local isPressed = (math.mod(subfilterValues, 2) == 1)
-				if(isPressed) then
-					for _, button in pairs(buttonGroup.buttons) do
-						if(buttonValue == button.index) then
-							button:Press()
-							break
-						end
-					end
-				end
-				subfilterValues = math.floor(subfilterValues / 2)
-				buttonValue = buttonValue + 1
-			end
+			local subfilter = self.subfilters[tonumber(subfilterId)]
+			assert(subfilterId and subfilterValues and subfilter)
+			subfilter:Deserialize(subfilterValues)
 		end
 	end
 end
@@ -384,26 +296,11 @@ function CategorySelector:GetTooltipText(state)
 			end
 		elseif(subcategory) then
 			local subfilterId, subfilterValues = zo_strsplit(",", value)
-			local subfilterPreset = SUBFILTER_PRESETS[tonumber(subfilterId)]
-			if(subfilterPreset) then
-				subfilterValues = tonumber(subfilterValues)
-				local value = 0
-				local text = ""
-				while subfilterValues > 0 do
-					local isSelected = (math.mod(subfilterValues, 2) == 1)
-					if(isSelected) then
-						for index, button in ipairs(subfilterPreset.buttons) do
-							if(value == index) then
-								text = text .. button.label .. ", "
-								break
-							end
-						end
-					end
-					subfilterValues = math.floor(subfilterValues / 2)
-					value = value + 1
-				end
-				if(#text > 0) then
-					lines[#lines + 1] = {label = subfilterPreset.label, text = text:sub(0, -3)}
+			local subfilter = self.subfilters[tonumber(subfilterId)]
+			if(subfilter) then
+				local subcategoryLines = subfilter:GetTooltipText(subfilterValues)
+				for i=1, #subcategoryLines do
+					lines[#lines + 1] = subcategoryLines[i]
 				end
 			end
 		end

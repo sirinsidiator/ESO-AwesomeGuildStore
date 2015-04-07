@@ -1,13 +1,66 @@
 local L = AwesomeGuildStore.Localization
 local MinMaxRangeSlider = AwesomeGuildStore.MinMaxRangeSlider
+local FilterBase = AwesomeGuildStore.FilterBase
+
+local PriceFilter = FilterBase:Subclass()
+AwesomeGuildStore.PriceFilter = PriceFilter
 
 local LOWER_LIMIT = 1
 local UPPER_LIMIT = 2100000000
 local values = { LOWER_LIMIT, 10, 50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000, 50000, 100000, UPPER_LIMIT }
 local MIN_VALUE = 1
 local MAX_VALUE = #values
-local RESET_BUTTON_SIZE = 18
-local RESET_BUTTON_TEXTURE = "EsoUI/Art/Buttons/decline_%s.dds"
+local LINE_SPACING = 4
+local PRICE_FITLER_TYPE_ID = 2
+
+function PriceFilter:New(name, tradingHouseWrapper, ...)
+	return FilterBase.New(self, PRICE_FITLER_TYPE_ID, name, tradingHouseWrapper, ...)
+end
+
+function PriceFilter:Initialize(name, tradingHouseWrapper)
+	self:InitializeControls(name, tradingHouseWrapper.tradingHouse)
+	self:InitializeHandlers(tradingHouseWrapper.tradingHouse)
+end
+
+function PriceFilter:InitializeControls(name, tradingHouse)
+	local common = tradingHouse.m_browseItems:GetNamedChild("Common")
+	local container = self.container
+
+	local priceRangeLabel = common:GetNamedChild("PriceRangeLabel")
+	priceRangeLabel:SetParent(container)
+	priceRangeLabel:ClearAnchors()
+	priceRangeLabel:SetAnchor(TOPLEFT, container, TOPLEFT, 0, 0)
+	priceRangeLabel:SetAnchor(TOPRIGHT, container, TOPRIGHT, 0, 0)
+
+	local minPrice = common:GetNamedChild("MinPrice")
+	minPrice:SetParent(container)
+
+	local priceRangeDivider = common:GetNamedChild("PriceRangeDivider")
+	priceRangeDivider:SetParent(container)
+
+	local maxPrice = common:GetNamedChild("MaxPrice")
+	maxPrice:SetParent(container)
+
+	local slider = MinMaxRangeSlider:New(container, name .. "Slider")
+	slider:SetMinMax(MIN_VALUE, MAX_VALUE)
+	slider:SetMinRange(1)
+	slider:SetRangeValue(MIN_VALUE, MAX_VALUE)
+	slider.control:ClearAnchors()
+	slider.control:SetAnchor(TOPLEFT, priceRangeLabel, BOTTOMLEFT, 0, LINE_SPACING)
+	slider.control:SetAnchor(TOPRIGHT, priceRangeLabel, BOTTOMRIGHT, 0, LINE_SPACING)
+	self.slider = slider
+
+	minPrice:ClearAnchors()
+	minPrice:SetAnchor(TOPLEFT, slider.control, BOTTOMLEFT, 0, LINE_SPACING)
+
+	container:SetHeight(priceRangeLabel:GetHeight() + LINE_SPACING + slider.control:GetHeight() + LINE_SPACING + minPrice:GetHeight())
+
+	self.minPriceBox = common:GetNamedChild("MinPriceBox")
+	self.maxPriceBox = common:GetNamedChild("MaxPriceBox")
+
+	local tooltipText = L["RESET_FILTER_LABEL_TEMPLATE"]:format(priceRangeLabel:GetText():gsub(":", ""))
+	self.resetButton:SetTooltipText(tooltipText)
+end
 
 local function ToNearestLinear(value)
 	for i, range in ipairs(values) do
@@ -16,31 +69,20 @@ local function ToNearestLinear(value)
 	return MAX_VALUE
 end
 
-local PriceSelector = ZO_Object:Subclass()
-AwesomeGuildStore.PriceSelector = PriceSelector
-
-function PriceSelector:New(parent, name)
-	local selector = ZO_Object.New(self)
-	selector.callbackName = name .. "Changed"
-	selector.type = 2
-
-	local setFromTextBox = false
-	local minPriceBox = parent:GetNamedChild("MinPriceBox")
-	local maxPriceBox = parent:GetNamedChild("MaxPriceBox")
-	local slider = MinMaxRangeSlider:New(parent, name .. "PriceSlider", 0, 0, 195, 16)
-	slider:SetMinMax(MIN_VALUE, MAX_VALUE)
-	slider:SetMinRange(1)
-	slider:SetRangeValue(MIN_VALUE, MAX_VALUE)
-	selector.slider = slider
-
-	local function ValueFromText(value, limit, old)
-		if(value == "") then
-			value = limit
-		else
-			value = ToNearestLinear(tonumber(value)) or old
-		end
-		return value
+local function ValueFromText(value, limit, old)
+	if(value == "") then
+		value = limit
+	else
+		value = ToNearestLinear(tonumber(value)) or old
 	end
+	return value
+end
+
+function PriceFilter:InitializeHandlers(tradingHouse)
+	local minPriceBox = self.minPriceBox
+	local maxPriceBox = self.maxPriceBox
+	local slider = self.slider
+	local setFromTextBox = false
 
 	local function UpdateSliderFromTextBox()
 		setFromTextBox = true
@@ -52,6 +94,9 @@ function PriceSelector:New(parent, name)
 		setFromTextBox = false
 	end
 
+	minPriceBox:SetHandler("OnTextChanged", UpdateSliderFromTextBox)
+	maxPriceBox:SetHandler("OnTextChanged", UpdateSliderFromTextBox)
+
 	local function UpdateTextBoxFromSlider()
 		local min, max = slider:GetRangeValue()
 		if(min == MIN_VALUE) then min = "" else min = values[min] end
@@ -61,19 +106,13 @@ function PriceSelector:New(parent, name)
 		maxPriceBox:SetText(max)
 	end
 
-	slider.OnValueChanged = function(self, min, max)
-		selector:HandleChange()
-		selector.resetButton:SetHidden(selector:IsDefault())
+	slider.OnValueChanged = function(slider, min, max)
+		self:HandleChange()
 		if(setFromTextBox) then return end
 		UpdateTextBoxFromSlider()
 	end
 
-	minPriceBox:SetHandler("OnTextChanged", UpdateSliderFromTextBox)
-	maxPriceBox:SetHandler("OnTextChanged", UpdateSliderFromTextBox)
-	self.minPriceBox = minPriceBox
-	self.maxPriceBox = maxPriceBox
-
-	ZO_PreHook(TRADING_HOUSE.m_search, "InternalExecuteSearch", function(self)
+	ZO_PreHook(tradingHouse.m_search, "InternalExecuteSearch", function(self)
 		local min = minPriceBox:GetText()
 		local max = maxPriceBox:GetText()
 		if(min == "" and max == "") then return end
@@ -86,51 +125,33 @@ function PriceSelector:New(parent, name)
 		self.m_filters[TRADING_HOUSE_FILTER_TYPE_PRICE].values = {min, max}
 	end)
 
-	local priceRangeLabel = parent:GetNamedChild("PriceRangeLabel")
-	local tooltipText = L["RESET_FILTER_LABEL_TEMPLATE"]:format(priceRangeLabel:GetText():gsub(":", ""))
-	local resetButton = AwesomeGuildStore.SimpleIconButton:New(name .. "ResetButton", RESET_BUTTON_TEXTURE, RESET_BUTTON_SIZE, tooltipText)
-	resetButton:SetAnchor(TOPRIGHT, priceRangeLabel, TOPLEFT, 196, 0)
-	resetButton:SetHidden(true)
-	resetButton.OnClick = function(self, mouseButton, ctrl, alt, shift)
-		if(mouseButton == 1) then
-			selector:Reset()
-		end
-	end
-	selector.resetButton = resetButton
-
 	UpdateTextBoxFromSlider()
-
-	return selector
 end
 
-function PriceSelector:HandleChange()
-	if(not self.fireChangeCallback) then
-		self.fireChangeCallback = zo_callLater(function()
-			self.fireChangeCallback = nil
-			CALLBACK_MANAGER:FireCallbacks(self.callbackName, self)
-		end, 100)
-	end
+function PriceFilter:SetWidth(width)
+	self.container:SetWidth(width)
+	self.slider:UpdateVisuals()
 end
 
-function PriceSelector:Reset()
+function PriceFilter:Reset()
 	self.slider:SetMinMax(MIN_VALUE, MAX_VALUE)
 	zo_callLater(function()
 		self.slider:SetRangeValue(MIN_VALUE, MAX_VALUE)
 	end, 1)
 end
 
-function PriceSelector:IsDefault()
+function PriceFilter:IsDefault()
 	local min, max = self.slider:GetRangeValue()
 	return (min == MIN_VALUE and max == MAX_VALUE)
 end
 
-function PriceSelector:Serialize()
+function PriceFilter:Serialize()
 	local min = tonumber(self.minPriceBox:GetText()) or "-"
 	local max = tonumber(self.maxPriceBox:GetText()) or "-"
 	return min .. ";" .. max
 end
 
-function PriceSelector:Deserialize(state)
+function PriceFilter:Deserialize(state)
 	local min, max = zo_strsplit(";", state)
 	min = tonumber(min) or LOWER_LIMIT
 	max = tonumber(max) or UPPER_LIMIT
@@ -142,7 +163,7 @@ local function GetFormattedPrice(price)
 	return zo_strformat(SI_FORMAT_ICON_TEXT, ZO_CurrencyControl_FormatCurrency(price), zo_iconFormat("EsoUI/Art/currency/currency_gold.dds", 16, 16))
 end
 
-function PriceSelector:GetTooltipText(state)
+function PriceFilter:GetTooltipText(state)
 	local minPrice, maxPrice = zo_strsplit(";", state)
 	minPrice = tonumber(minPrice)
 	maxPrice = tonumber(maxPrice)

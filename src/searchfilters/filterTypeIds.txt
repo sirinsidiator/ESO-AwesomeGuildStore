@@ -1,9 +1,30 @@
-1 - CategorySelector
-2 - PriceSelector
-3 - LevelSelector
-4 - QualitySelector
-5 - ItemNameQuickFilter
+1 - CategoryFilter
+2 - PriceFilter
+3 - LevelFilter
+4 - QualityFilter
+5 - TextFilter
 
-6 .. 99 - reserved
+6 .. 9 - reserved
+
+10 - WeaponTraitSubfilter
+11 - WeaponEnchantmentSubfilter
+12 - WeaponOnehandedSubfilter
+13 - WeaponTwohandedSubfilter
+14 - WeaponStaffSubfilter
+15 - ArmorSlotSubfilter
+16 - ArmorTraitSubfilter
+17 - ArmorEnchantmentSubfilter
+18 - JewelryTypeSubfilter
+19 - JewelryTraitSubfilter
+20 - JewelryEnchantmentSubfilter
+21 - BlacksmithingMaterialTypeSubfilter
+22 - ClothingMaterialTypeSubfilter
+23 - WoodworkingMaterialTypeSubfilter
+24 - StyleMaterialTypeSubfilter
+25 - AlchemyMaterialTypeSubfilter
+26 - EnchantingMaterialTypeSubfilter
+27 - GlyphTypeSubfilter
+
+28 .. 99 - reserved
 
 100 - MasterMerchant DealSelector

@@ -3,6 +3,8 @@ local L = AwesomeGuildStore.Localization
 local SearchTabWrapper = ZO_Object:Subclass()
 AwesomeGuildStore.SearchTabWrapper = SearchTabWrapper
 
+local FILTER_PANEL_WIDTH = 220
+
 function SearchTabWrapper:New(saveData)
 	local wrapper = ZO_Object.New(self)
 	wrapper.saveData = saveData
@@ -10,108 +12,188 @@ function SearchTabWrapper:New(saveData)
 end
 
 function SearchTabWrapper:RunInitialSetup(tradingHouseWrapper)
+	self:InitializeContainers(tradingHouseWrapper)
 	self:InitializeFilters(tradingHouseWrapper)
 	self:InitializeButtons(tradingHouseWrapper)
 	self:InitializeSearchSortHeaders(tradingHouseWrapper)
 	self:InitializeNavigation(tradingHouseWrapper)
 	self:InitializeUnitPriceDisplay(tradingHouseWrapper)
+	zo_callLater(function()
+		self:RefreshFilterDimensions() -- call this after the layout has been updated
+	end, 1)
+end
+
+function SearchTabWrapper:UpdateFilterAnchors()
+	local filterAreaScrollChild = self.filterAreaScrollChild
+	local count = filterAreaScrollChild:GetNumChildren()
+
+	local previousChild = filterAreaScrollChild
+	for i = 1, count do
+		local isFirst = (i == 1)
+		local filterContainer = filterAreaScrollChild:GetChild(i)
+		filterContainer:ClearAnchors()
+		filterContainer:SetAnchor(TOPLEFT, previousChild, isFirst and TOPLEFT or BOTTOMLEFT, 0, isFirst and 0 or 10)
+		previousChild = filterContainer
+	end
+end
+
+function SearchTabWrapper:AttachFilter(filter)
+	if(self.attachedFilters[filter.type]) then return end
+
+	self.attachedFilters[filter.type] = filter
+	filter:SetParent(self.filterAreaScrollChild)
+	filter:SetWidth(FILTER_PANEL_WIDTH)
+	self:UpdateFilterAnchors()
+	filter:SetHidden(false)
+end
+
+function SearchTabWrapper:DetachFilter(filter)
+	if(not self.attachedFilters[filter.type]) then return end
+
+	filter:SetHidden(true)
+	filter:SetParent(GuiRoot)
+	self:UpdateFilterAnchors()
+	self.attachedFilters[filter.type] = nil
+end
+
+function SearchTabWrapper:RefreshFilterDimensions()
+	for _, filter in pairs(self.attachedFilters) do
+		filter:SetWidth(FILTER_PANEL_WIDTH)
+	end
+end
+
+function SearchTabWrapper:InitializeContainers(tradingHouseWrapper)
+	local tradingHouse = tradingHouseWrapper.tradingHouse
+	local leftPane = tradingHouse.m_leftPane
+	local browseItemsControl = tradingHouse.m_browseItems
+	local common = browseItemsControl:GetNamedChild("Common")
+	local header = browseItemsControl:GetNamedChild("Header")
+	header:ClearAnchors()
+	header:SetAnchor(TOPLEFT, common:GetParent(), TOPLEFT, 0, -43)
+
+	common:ClearAnchors()
+	common:SetAnchor(TOPLEFT, leftPane, TOPLEFT, 0, -10)
+	common:SetAnchor(BOTTOMRIGHT, leftPane, BOTTOMRIGHT, 0, 0)
+	leftPane:SetWidth(247)
+
+	local buttonArea = WINDOW_MANAGER:CreateControl("AwesomeGuildStoreButtonArea", common, CT_CONTROL)
+	buttonArea:SetAnchor(BOTTOMLEFT, common, BOTTOMLEFT, 0, 0)
+	buttonArea:SetAnchor(BOTTOMRIGHT, common, BOTTOMIGHT, 0, 0)
+	self.buttonArea = buttonArea
+	self.nextButtonIndex = 1
+	self.attachedButtons = {}
+
+	local filterArea = CreateControlFromVirtual("AwesomeGuildStoreFilterArea", common, "ZO_ScrollContainer")
+	filterArea:ClearAnchors()
+	filterArea:SetAnchor(TOPLEFT, common, TOPLEFT, 0, 0)
+	filterArea:SetAnchor(BOTTOMRIGHT, buttonArea, TOPRIGHT, 0, -10)
+	self.filterArea = filterArea
+
+	local filterAreaScrollChild = filterArea:GetNamedChild("ScrollChild")
+	self.filterAreaScrollChild = filterAreaScrollChild
+	self.attachedFilters = {}
 end
 
 function SearchTabWrapper:InitializeFilters(tradingHouseWrapper)
-	local categoryFilter, priceSelector, levelSelector, qualitySelector, nameFilter
 	local saveData = self.saveData
 	local tradingHouse = tradingHouseWrapper.tradingHouse
-
 	local browseItemsControl = tradingHouse.m_browseItems
 	local common = browseItemsControl:GetNamedChild("Common")
 
 	local searchLibrary = AwesomeGuildStore.SearchLibrary:New(saveData.searchLibrary)
 	self.searchLibrary = searchLibrary
 
-	if(saveData.replaceCategoryFilter) then
-		local header = browseItemsControl:GetNamedChild("Header")
-		header:ClearAnchors()
-		header:SetAnchor(TOPLEFT, common:GetParent(), TOPLEFT, 0, -43)
+	local categoryFilter = AwesomeGuildStore.CategorySelector:New(browseItemsControl, "AwesomeGuildStoreItemCategory", self, tradingHouseWrapper)
+	searchLibrary:RegisterFilter(categoryFilter)
+	self.categoryFilter = categoryFilter
 
-		browseItemsControl:GetNamedChild("ItemCategory"):SetHidden(true)
-		categoryFilter = AwesomeGuildStore.CategorySelector:New(browseItemsControl, "AwesomeGuildStoreItemCategory")
-		categoryFilter.control:ClearAnchors()
-		categoryFilter.control:SetAnchor(TOPLEFT, header, TOPRIGHT, 70, -10)
+	local priceFilter = AwesomeGuildStore.PriceFilter:New("AwesomeGuildStorePriceFilter", tradingHouseWrapper)
+	self:AttachFilter(priceFilter)
+	searchLibrary:RegisterFilter(priceFilter)
+	self.priceFilter = priceFilter
 
-		local itemPane = ZO_TradingHouse:GetNamedChild("ItemPane")
-		itemPane:SetAnchor(TOPLEFT, categoryFilter.control, BOTTOMLEFT, 0, 20)
+	local levelFilter = AwesomeGuildStore.LevelFilter:New("AwesomeGuildStoreLevelFilter", tradingHouseWrapper)
+	self:AttachFilter(levelFilter)
+	searchLibrary:RegisterFilter(levelFilter)
+	self.levelFilter = levelFilter
 
-		searchLibrary:RegisterFilter(categoryFilter)
+	local qualityFilter = AwesomeGuildStore.QualityFilter:New("AwesomeGuildStoreQualityFilter", tradingHouseWrapper)
+	self:AttachFilter(qualityFilter)
+	searchLibrary:RegisterFilter(qualityFilter)
+	self.qualityFilter = qualityFilter
 
-		common:ClearAnchors()
-		common:SetAnchor(TOPLEFT, common:GetParent(), TOPLEFT, 0, -10)
-		common:SetAnchor(TOPRIGHT, common:GetParent(), TOPRIGHT, 0, -10)
-	end
-
-	if(saveData.replacePriceFilter) then
-		priceSelector = AwesomeGuildStore.PriceSelector:New(common, "AwesomeGuildStorePriceRange")
-		priceSelector.slider.control:ClearAnchors()
-		priceSelector.slider.control:SetAnchor(TOPLEFT, common:GetNamedChild("PriceRangeLabel"), BOTTOMLEFT, 0, 5)
-		local minPrice = common:GetNamedChild("MinPrice")
-		minPrice:ClearAnchors()
-		minPrice:SetAnchor(TOPLEFT, priceSelector.slider.control, BOTTOMLEFT, 0, 5)
-
-		searchLibrary:RegisterFilter(priceSelector)
-	end
-
-	if(saveData.replaceLevelFilter) then
-		levelSelector = AwesomeGuildStore.LevelSelector:New(common, "AwesomeGuildStoreLevelRange")
-		local minPrice = common:GetNamedChild("MinPrice")
-		local minLevel = common:GetNamedChild("MinLevel")
-		local levelRangeLabel = common:GetNamedChild("LevelRangeLabel")
-		local levelRangeToggle = common:GetNamedChild("LevelRangeToggle")
-
-		levelRangeLabel:ClearAnchors()
-		levelRangeLabel:SetAnchor(TOPLEFT, minPrice, BOTTOMLEFT, 0, 10)
-
-		levelSelector.slider.control:ClearAnchors()
-		levelSelector.slider.control:SetAnchor(TOPLEFT, levelRangeLabel, BOTTOMLEFT, 0, 5)
-
-		levelRangeToggle:ClearAnchors()
-		levelRangeToggle:SetAnchor(TOPLEFT, levelSelector.slider.control, BOTTOMLEFT, 0, 5)
-
-		minLevel:ClearAnchors()
-		minLevel:SetAnchor(LEFT, levelRangeToggle, RIGHT, 0, 0)
-
-		searchLibrary:RegisterFilter(levelSelector)
-	end
-
-	if(saveData.replaceQualityFilter) then
-		qualitySelector = AwesomeGuildStore.QualitySelector:New(common, "AwesomeGuildStoreQualityButtons", saveData)
-		qualitySelector.control:ClearAnchors()
-		local parent = saveData.replaceLevelFilter and common:GetNamedChild("LevelRangeToggle") or common:GetNamedChild("MinLevel")
-		qualitySelector.control:SetAnchor(TOPLEFT, parent, BOTTOMLEFT, 0, 10)
-
-		local qualityControl = common:GetNamedChild("Quality")
-		qualityControl:ClearAnchors()
-		qualityControl:SetAnchor(TOPLEFT, common, TOPLEFT, 0, 350)
-		qualityControl:SetHidden(true)
-
-		searchLibrary:RegisterFilter(qualitySelector)
-	elseif(saveData.replaceLevelFilter) then
-		local qualityControl = common:GetNamedChild("Quality")
-		qualityControl:ClearAnchors()
-		qualityControl:SetAnchor(TOPLEFT, common:GetNamedChild("LevelRangeToggle"), BOTTOMLEFT, 0, 10)
-	end
-
-	nameFilter = AwesomeGuildStore.ItemNameQuickFilter:New(ZO_TradingHouseItemPaneSearchSortBy, "AwesomeGuildStoreNameFilterInput", 90, 2)
-	searchLibrary:RegisterFilter(nameFilter)
+	local textFilter = AwesomeGuildStore.TextFilter:New("AwesomeGuildStoreTextFilter", tradingHouseWrapper)
+	self:AttachFilter(textFilter)
+	searchLibrary:RegisterFilter(textFilter)
+	self.textFilter = textFilter
 
 	if(saveData.keepFiltersOnClose) then
 		searchLibrary:Deserialize(saveData.searchLibrary.lastState)
 	end
 	searchLibrary:Serialize()
+end
 
-	self.categoryFilter = categoryFilter
-	self.priceSelector = priceSelector
-	self.levelSelector = levelSelector
-	self.qualitySelector = qualitySelector
-	self.nameFilter = nameFilter
+function SearchTabWrapper:UpdateButtonAnchors()
+	local buttonArea = self.buttonArea
+	local count = buttonArea:GetNumChildren()
+
+	local previousChild = buttonArea
+	local buttons = {}
+	local height = 0
+	for i = 1, count do
+		local button = buttonArea:GetChild(i)
+		buttons[#buttons + 1] = button
+	end
+	table.sort(buttons, function(a, b) return a.__agsIndex < b.__agsIndex end)
+	for i = 1, #buttons do
+		local button = buttons[i]
+		local isFirst = (i == 1)
+		button:ClearAnchors()
+		button:SetAnchor(TOPLEFT, previousChild, isFirst and TOPLEFT or BOTTOMLEFT, 0, isFirst and 0 or 2)
+		button:SetAnchor(TOPRIGHT, previousChild, isFirst and TOPRIGHT or BOTTOMRIGHT, 0, isFirst and 0 or 2)
+		height = height + button:GetHeight() + 2
+		previousChild = button
+	end
+	buttonArea:SetHeight(height)
+end
+
+function SearchTabWrapper:AttachButton(button)
+	if(self.attachedButtons[button:GetName()]) then return end
+
+	self.attachedButtons[button:GetName()] = button
+	button:SetParent(self.buttonArea)
+
+	-- collapse buttons when they are hidden
+	button.__agsSetHidden = button.SetHidden
+	button.__agsHeight = button:GetHeight()
+	button.SetHidden = function(button, hidden)
+		if(not button:IsHidden() and hidden) then
+			button.__agsHeight = button:GetHeight()
+			button:SetHeight(0)
+		elseif(button:IsHidden() and not hidden) then
+			button:SetHeight(button.__agsHeight)
+		end
+		button:__agsSetHidden(hidden)
+		self:UpdateButtonAnchors()
+	end
+	if(button:IsHidden() and not button:GetParent():IsHidden()) then button:SetHeight(0) end
+
+	if(not button.__agsIndex) then
+		button.__agsIndex = self.nextButtonIndex
+		self.nextButtonIndex = self.nextButtonIndex + 1
+	end
+
+	self:UpdateButtonAnchors()
+end
+
+function SearchTabWrapper:DetachButton(button)
+	if(not self.attachedButtons[button:GetName()]) then return end
+
+	button.SetHidden = button.__agsSetHidden
+	if(button:IsHidden()) then button:SetHeight(button.__agsHeight) end
+	button:SetParent(GuiRoot)
+	self:UpdateButtonAnchors()
+	self.attachedButtons[button:GetName()] = nil
 end
 
 function SearchTabWrapper:InitializeButtons(tradingHouseWrapper)
@@ -121,14 +203,7 @@ function SearchTabWrapper:InitializeButtons(tradingHouseWrapper)
 	local browseItemsControl = tradingHouse.m_browseItems
 	local common = browseItemsControl:GetNamedChild("Common")
 
-	local searchButton = CreateControlFromVirtual("AwesomeGuildStoreStartSearchButton", common, "ZO_DefaultButton")
-	searchButton:SetWidth(common:GetWidth())
-	if(saveData.replaceCategoryFilter) then
-		searchButton:SetAnchor(TOP, common, BOTTOM, 0, 345)
-	else
-		local parent = saveData.replaceQualityFilter and self.qualitySelector.control or common
-		searchButton:SetAnchor(TOP, parent, BOTTOM, 0, 25)
-	end
+	local searchButton = CreateControlFromVirtual("AwesomeGuildStoreStartSearchButton", GuiRoot, "ZO_DefaultButton")
 	searchButton:SetText(L["START_SEARCH_LABEL"])
 	searchButton:SetHandler("OnMouseUp",function(control, button, isInside)
 		if(control:GetState() == BSTATE_NORMAL and button == 1 and isInside) then
@@ -137,6 +212,7 @@ function SearchTabWrapper:InitializeButtons(tradingHouseWrapper)
 			end
 		end
 	end)
+	self:AttachButton(searchButton)
 	self.searchButton = searchButton
 
 	local RESET_BUTTON_SIZE = 24
@@ -153,16 +229,7 @@ function SearchTabWrapper:InitializeButtons(tradingHouseWrapper)
 
 	tradingHouseWrapper:PreHook("ResetAllSearchData", function(tradingHouse, doReset)
 		if(doReset or not saveData.keepFiltersOnClose) then
-			if(self.categoryFilter) then self.categoryFilter:Reset() end
-			if(self.priceSelector) then self.priceSelector:Reset() end
-			if(self.levelSelector) then self.levelSelector:Reset() else
-				tradingHouse.m_levelRangeFilterType = TRADING_HOUSE_FILTER_TYPE_LEVEL
-				tradingHouse.m_levelRangeToggle:SetState(BSTATE_NORMAL, false)
-				tradingHouse.m_levelRangeLabel:SetText(GetString(SI_TRADING_HOUSE_BROWSE_LEVEL_RANGE_LABEL))
-			end
-			if(self.qualitySelector) then self.qualitySelector:Reset() end
-			if(self.nameFilter) then self.nameFilter:Reset() end
-			saveData.lastState = DEFAULT_SEARCH_STATE
+			self.searchLibrary:ResetFilters()
 			if(doReset) then return end
 		end
 		tradingHouse:ClearSearchResults()
@@ -374,12 +441,35 @@ function SearchTabWrapper:DisableSearchButton()
 	self.searchButton:SetEnabled(false)
 end
 
+function SearchTabWrapper:RelocateButtons(tradingHouse)
+	local buttonArea = self.buttonArea
+
+	local leftPane = tradingHouse.m_leftPane
+	for i = 1, leftPane:GetNumChildren() do
+		local child = leftPane:GetChild(i)
+		if(child and child:GetType() == CT_BUTTON) then
+			self:AttachButton(child)
+		end
+	end
+
+	local common = tradingHouse.m_browseItems:GetNamedChild("Common")
+	for i = 1, common:GetNumChildren() do
+		local child = common:GetChild(i)
+		if(child and child:GetType() == CT_BUTTON) then
+			self:AttachButton(child)
+		end
+	end
+end
+
 function SearchTabWrapper:OnOpen(tradingHouseWrapper)
 	local tradingHouse = tradingHouseWrapper.tradingHouse
 	tradingHouseWrapper:SetLoadingOverlayParent(ZO_TradingHouseItemPaneSearchResults)
 	tradingHouse.m_searchAllowed = true
 	tradingHouse:OnSearchCooldownUpdate(GetTradingHouseCooldownRemaining())
+	CALLBACK_MANAGER:FireCallbacks(AwesomeGuildStore.OnOpenSearchTabCallbackName, tradingHouseWrapper)
+	self:RelocateButtons(tradingHouse)
 end
 
 function SearchTabWrapper:OnClose(tradingHouseWrapper)
+	CALLBACK_MANAGER:FireCallbacks(AwesomeGuildStore.OnCloseSearchTabCallbackName, tradingHouseWrapper)
 end

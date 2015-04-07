@@ -295,10 +295,7 @@ function SearchLibrary:Deserialize(state)
 	local states = {zo_strsplit("%", state)}
 	local version = tonumber(states[1])
 	if(version == SAVE_VERSION) then
-		local filters = self.filters
-		for i = 1, #filters do
-			filters[i]:Reset()
-		end
+		self:ResetFilters()
 
 		local filterByType = self.filterByType
 		for i = 2, #states do
@@ -329,6 +326,13 @@ function SearchLibrary:Deserialize(state)
 				self:Refresh()
 			end
 		end
+	end
+end
+
+function SearchLibrary:ResetFilters()
+	local filters = self.filters
+	for i = 1, #filters do
+		filters[i]:Reset()
 	end
 end
 

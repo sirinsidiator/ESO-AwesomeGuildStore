@@ -49,6 +49,8 @@ function TradingHouseWrapper:Initialize(saveData)
 		return tradingHouseManager
 	end)
 
+	self:PreHook("ClearSearchResults", function(self) self.m_numItemsOnPage = 0 end)
+
 	local currentTab = searchTab
 	self:Wrap("HandleTabSwitch", function(originalHandleTabSwitch, tradingHouse, tabData)
 		currentTab:OnClose(self)
@@ -180,6 +182,22 @@ end
 
 function TradingHouseWrapper:RegisterFilter(filter)
 	self.searchTab.searchLibrary:RegisterFilter(filter)
+end
+
+function TradingHouseWrapper:AttachFilter(filter)
+	self.searchTab:AttachFilter(filter)
+end
+
+function TradingHouseWrapper:DetachFilter(filter)
+	self.searchTab:DetachFilter(filter)
+end
+
+function TradingHouseWrapper:AttachButton(button)
+	self.searchTab:AttachButton(button)
+end
+
+function TradingHouseWrapper:DetachButton(button)
+	self.searchTab:DetachButton(button)
 end
 
 function TradingHouseWrapper:PreHook(methodName, call)

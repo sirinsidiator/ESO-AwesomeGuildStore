@@ -154,10 +154,9 @@ local localization = {
 
 		QUALITY_SELECTOR_TITLE = "Quality Range:",
 
-		ITEM_NAME_QUICK_FILTER_LABEL = "Name Filter:",
-		ITEM_NAME_QUICK_FILTER_TEXT = "Filter Item Name",
-		ITEM_NAME_QUICK_FILTER_RESET = "Reset Item Name Filter",
-		ITEM_NAME_QUICK_FILTER_ITEMCOUNT_TEMPLATE = GetString(SI_TRADING_HOUSE_RESULT_COUNT) .. " (<<2>>)",
+		TEXT_FILTER_TITLE = "Text Filter:",
+		TEXT_FILTER_TEXT = "Filter by text",
+		TEXT_FILTER_ITEMCOUNT_TEMPLATE = GetString(SI_TRADING_HOUSE_RESULT_COUNT) .. " (<<2>>)",
 
 		WARNING_SUBFILTER_LIMIT = "Cannot filter for more than 8 at a time",
 
@@ -232,9 +231,8 @@ local localization = {
 
 		QUALITY_SELECTOR_TITLE = "Qualität:",
 
-		ITEM_NAME_QUICK_FILTER_LABEL = "Namensfilter:",
-		ITEM_NAME_QUICK_FILTER_TEXT = "Nach Namen filtern",
-		ITEM_NAME_QUICK_FILTER_RESET = "Namesfilter zurücksetzen",
+		TEXT_FILTER_TITLE = "Textfilter:",
+		TEXT_FILTER_TEXT = "Nach Text filtern",
 
 		WARNING_SUBFILTER_LIMIT = "Kann nur nach 8 gleichzeitig filtern",
 
@@ -314,9 +312,8 @@ local localization = {
 
 		QUALITY_SELECTOR_TITLE = "Êaùecòáo:",
 
-		ITEM_NAME_QUICK_FILTER_LABEL = "Îaçáaîèe:",
-		ITEM_NAME_QUICK_FILTER_TEXT = "Oòoàpaòö ïo îaçáaîèô",
-		ITEM_NAME_QUICK_FILTER_RESET = "Càpocèòö oòàop ïo îaçáaîèô",
+		TEXT_FILTER_TITLE = "Text Filter:", -- TODO: translate
+		TEXT_FILTER_TEXT = "Filter by text", -- TODO: translate
 
 		WARNING_SUBFILTER_LIMIT = "Îeìöçü oòoàpaòö àoìee ùeí ïo 8 ñèìöòpaí",
 
