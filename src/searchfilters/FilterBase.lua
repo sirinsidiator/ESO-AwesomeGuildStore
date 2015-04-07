@@ -1,3 +1,4 @@
+local L = AwesomeGuildStore.Localization
 local SimpleIconButton = AwesomeGuildStore.SimpleIconButton
 
 local FilterBase = ZO_Object:Subclass()
@@ -31,6 +32,24 @@ function FilterBase:InitializeBase(type, name)
 	self.resetButton = resetButton
 end
 
+local localFilterLabelColor = ZO_ColorDef:New("A5D0FF")
+function FilterBase:SetLabelControl(label)
+	self.label = label
+	if(self.FilterPageResult) then -- we have a local filter here
+		label:SetColor(localFilterLabelColor:UnpackRGBA())
+		label:SetMouseEnabled(true)
+		label:SetHandler("OnMouseEnter", function()
+			InitializeTooltip(InformationTooltip)
+			InformationTooltip:ClearAnchors()
+			InformationTooltip:SetOwner(label, BOTTOM, 5, 0)
+			SetTooltipText(InformationTooltip, L["LOCAL_FILTER_EXPLANATION_TOOLTIP"])
+		end)
+		label:SetHandler("OnMouseExit", function()
+			ClearTooltip(InformationTooltip)
+		end)
+	end
+end
+
 -- the following functions are placeholders and can be overwritten
 function FilterBase:Initialize(name, tradingHouseWrapper)
 end
@@ -57,6 +76,21 @@ end
 function FilterBase:SetHidden(hidden)
 	self.container:SetHidden(hidden)
 end
+
+-- the following functions are used for filtering items on a result page and should only be implemented where necessary
+
+--function FilterBase:BeforeRebuildSearchResultsPage(tradingHouseWrapper)
+--	return true when the filter actually has work to do
+--end
+
+--function FilterBase:FilterPageResult(index, icon, name, quality, stackCount, sellerName, timeRemaining, purchasePrice)
+--	return true if the item is visible
+-- the filtering will stop on the first filter that returns false and just hide the item then
+--end
+
+--function FilterBase:AfterRebuildSearchResultsPage(tradingHouseWrapper)
+-- can be used for cleaning up
+--end
 
 -- these functions are used by the reset button
 function FilterBase:Reset()

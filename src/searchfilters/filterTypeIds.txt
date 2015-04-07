@@ -4,27 +4,29 @@
 4 - QualityFilter
 5 - TextFilter
 
-6 .. 9 - reserved
+6 .. 19 - reserved
 
-10 - WeaponTraitSubfilter
-11 - WeaponEnchantmentSubfilter
-12 - WeaponOnehandedSubfilter
-13 - WeaponTwohandedSubfilter
-14 - WeaponStaffSubfilter
-15 - ArmorSlotSubfilter
-16 - ArmorTraitSubfilter
-17 - ArmorEnchantmentSubfilter
-18 - JewelryTypeSubfilter
-19 - JewelryTraitSubfilter
-20 - JewelryEnchantmentSubfilter
-21 - BlacksmithingMaterialTypeSubfilter
-22 - ClothingMaterialTypeSubfilter
-23 - WoodworkingMaterialTypeSubfilter
-24 - StyleMaterialTypeSubfilter
-25 - AlchemyMaterialTypeSubfilter
-26 - EnchantingMaterialTypeSubfilter
-27 - GlyphTypeSubfilter
+20 - WeaponTraitSubfilter
+21 - WeaponEnchantmentSubfilter
+22 - WeaponOnehandedSubfilter
+23 - WeaponTwohandedSubfilter
+24 - WeaponStaffSubfilter
+25 - ArmorSlotSubfilter
+26 - ArmorTraitSubfilter
+27 - ArmorEnchantmentSubfilter
+28 - JewelryTypeSubfilter
+29 - JewelryTraitSubfilter
+30 - JewelryEnchantmentSubfilter
+31 - BlacksmithingMaterialTypeSubfilter
+32 - ClothingMaterialTypeSubfilter
+33 - WoodworkingMaterialTypeSubfilter
+34 - StyleMaterialTypeSubfilter
+35 - AlchemyMaterialTypeSubfilter
+36 - EnchantingMaterialTypeSubfilter
+37 - GlyphTypeSubfilter
+38 - KnownRecipeSubfilter
+39 - KnownMotifSubfilter
 
-28 .. 99 - reserved
+40 .. 99 - reserved
 
 100 - MasterMerchant DealSelector

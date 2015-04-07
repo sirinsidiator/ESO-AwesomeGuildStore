@@ -4,6 +4,7 @@ local SUBFILTER_WEAPON_TRAITS, SUBFILTER_WEAPON_ENCHANTMENTS, SUBFILTER_WEAPON_O
 local SUBFILTER_ARMOR_SLOTS, SUBFILTER_ARMOR_TRAITS, SUBFILTER_ARMOR_ENCHANTMENTS, SUBFILTER_JEWELRY_TRAITS, SUBFILTER_JEWELRY_ENCHANTMENTS = 6, 7, 8, 9, 10
 local SUBFILTER_BLACKSMITHING_MATERIALS, SUBFILTER_CLOTHING_MATERIALS, SUBFILTER_WOODWORKING_MATERIALS, SUBFILTER_ALCHEMY_MATERIALS = 11, 12, 13, 14
 local SUBFILTER_ENCHANTING_MATERIALS, SUBFILTER_GLYPHS, SUBFILTER_JEWELRY_TYPE, SUBFILTER_STYLE_MATERIALS = 15, 16, 17, 18
+local SUBFILTER_RECIPE_KNOWLEDGE, SUBFILTER_MOTIF_KNOWLEDGE = 19, 20
 
 AwesomeGuildStore.FILTER_PRESETS = {
 	[ITEMFILTERTYPE_ALL] = {
@@ -219,6 +220,9 @@ AwesomeGuildStore.FILTER_PRESETS = {
 				filters = {
 					[TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_RECIPE },
 				},
+				subfilters = {
+					SUBFILTER_RECIPE_KNOWLEDGE
+				},
 			},
 			{
 				label = L["FILTER_SUBCATEGORY_POTION"],
@@ -233,13 +237,16 @@ AwesomeGuildStore.FILTER_PRESETS = {
 				filters = {
 					[TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_RACIAL_STYLE_MOTIF },
 				},
+				subfilters = {
+					SUBFILTER_MOTIF_KNOWLEDGE
+				},
 			},
 			{
 				label = L["FILTER_SUBCATEGORY_REPAIR"],
 				texture = "EsoUI/Art/Vendor/vendor_tabIcon_repair_%s.dds",
 				filters = {
 					[TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_AVA_REPAIR },
-				}
+				},
 			}
 		}
 	},
@@ -396,7 +403,7 @@ AwesomeGuildStore.FILTER_PRESETS = {
 
 AwesomeGuildStore.SUBFILTER_PRESETS = {
 	[SUBFILTER_WEAPON_TRAITS] = {
-		type = 10,
+		type = 20,
 		label = L["SUBFILTER_WEAPON_TRAIT_LABEL"],
 		filter = TRADING_HOUSE_FILTER_TYPE_TRAIT,
 		buttons = {
@@ -458,7 +465,7 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 		},
 	},
 	[SUBFILTER_WEAPON_ENCHANTMENTS] = {
-		type = 11,
+		type = 21,
 		label = L["SUBFILTER_WEAPON_ENCHANTMENT_LABEL"],
 		filter = TRADING_HOUSE_FILTER_TYPE_ENCHANTMENT,
 		buttons = {
@@ -535,7 +542,7 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 		},
 	},
 	[SUBFILTER_WEAPON_ONEHANDED] = {
-		type = 12,
+		type = 22,
 		label = L["SUBFILTER_WEAPON_TYPE_LABEL"],
 		filter = TRADING_HOUSE_FILTER_TYPE_WEAPON,
 		buttons = {
@@ -562,7 +569,7 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 		},
 	},
 	[SUBFILTER_WEAPON_TWOHANDED] = {
-		type = 13,
+		type = 23,
 		label = L["SUBFILTER_WEAPON_TYPE_LABEL"],
 		filter = TRADING_HOUSE_FILTER_TYPE_WEAPON,
 		buttons = {
@@ -584,7 +591,7 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 		},
 	},
 	[SUBFILTER_WEAPON_STAFF] = {
-		type = 14,
+		type = 24,
 		label = L["SUBFILTER_WEAPON_TYPE_LABEL"],
 		filter = TRADING_HOUSE_FILTER_TYPE_WEAPON,
 		buttons = {
@@ -606,7 +613,7 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 		},
 	},
 	[SUBFILTER_ARMOR_SLOTS] = {
-		type = 15,
+		type = 25,
 		label = L["SUBFILTER_ARMOR_TYPE_LABEL"],
 		filter = TRADING_HOUSE_FILTER_TYPE_EQUIP,
 		buttons = {
@@ -648,7 +655,7 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 		},
 	},
 	[SUBFILTER_ARMOR_TRAITS] = {
-		type = 16,
+		type = 26,
 		label = L["SUBFILTER_ARMOR_TRAIT_LABEL"],
 		filter = TRADING_HOUSE_FILTER_TYPE_TRAIT,
 		buttons = {
@@ -710,7 +717,7 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 		},
 	},
 	[SUBFILTER_ARMOR_ENCHANTMENTS] = {
-		type = 17,
+		type = 27,
 		label = L["SUBFILTER_ARMOR_ENCHANTMENT_LABEL"],
 		filter = TRADING_HOUSE_FILTER_TYPE_ENCHANTMENT,
 		buttons = {
@@ -737,7 +744,7 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 		},
 	},
 	[SUBFILTER_JEWELRY_TYPE] = {
-		type = 18,
+		type = 28,
 		label = L["SUBFILTER_JEWELRY_TYPE_LABEL"],
 		filter = TRADING_HOUSE_FILTER_TYPE_EQUIP,
 		buttons = {
@@ -754,7 +761,7 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 		},
 	},
 	[SUBFILTER_JEWELRY_TRAITS] = {
-		type = 19,
+		type = 29,
 		label = L["SUBFILTER_JEWELRY_TRAIT_LABEL"],
 		filter = TRADING_HOUSE_FILTER_TYPE_TRAIT,
 		buttons = {
@@ -781,7 +788,7 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 		},
 	},
 	[SUBFILTER_JEWELRY_ENCHANTMENTS] = {
-		type = 20,
+		type = 30,
 		label = L["SUBFILTER_JEWELRY_ENCHANTMENT_LABEL"],
 		filter = TRADING_HOUSE_FILTER_TYPE_ENCHANTMENT,
 		buttons = {
@@ -883,7 +890,7 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 		},
 	},
 	[SUBFILTER_BLACKSMITHING_MATERIALS] = {
-		type = 21,
+		type = 31,
 		label = L["SUBFILTER_MATERIAL_TYPE_LABEL"],
 		filter = TRADING_HOUSE_FILTER_TYPE_ITEM,
 		buttons = {
@@ -905,7 +912,7 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 		},
 	},
 	[SUBFILTER_CLOTHING_MATERIALS] = {
-		type = 22,
+		type = 32,
 		label = L["SUBFILTER_MATERIAL_TYPE_LABEL"],
 		filter = TRADING_HOUSE_FILTER_TYPE_ITEM,
 		buttons = {
@@ -927,7 +934,7 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 		},
 	},
 	[SUBFILTER_WOODWORKING_MATERIALS] = {
-		type = 23,
+		type = 33,
 		label = L["SUBFILTER_MATERIAL_TYPE_LABEL"],
 		filter = TRADING_HOUSE_FILTER_TYPE_ITEM,
 		buttons = {
@@ -949,7 +956,7 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 		},
 	},
 	[SUBFILTER_STYLE_MATERIALS] = {
-		type = 24,
+		type = 34,
 		label = L["SUBFILTER_MATERIAL_TYPE_LABEL"],
 		filter = TRADING_HOUSE_FILTER_TYPE_ITEM,
 		buttons = {
@@ -966,7 +973,7 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 		},
 	},
 	[SUBFILTER_ALCHEMY_MATERIALS] = {
-		type = 25,
+		type = 35,
 		label = L["SUBFILTER_INGREDIENT_TYPE_LABEL"],
 		filter = TRADING_HOUSE_FILTER_TYPE_ITEM,
 		buttons = {
@@ -983,7 +990,7 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 		},
 	},
 	[SUBFILTER_ENCHANTING_MATERIALS] = {
-		type = 26,
+		type = 36,
 		label = L["SUBFILTER_RUNE_TYPE_LABEL"],
 		filter = TRADING_HOUSE_FILTER_TYPE_ITEM,
 		buttons = {
@@ -1005,7 +1012,7 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 		},
 	},
 	[SUBFILTER_GLYPHS] = {
-		type = 27,
+		type = 37,
 		label = L["SUBFILTER_GLYPH_TYPE_LABEL"],
 		filter = TRADING_HOUSE_FILTER_TYPE_ITEM,
 		buttons = {
@@ -1023,6 +1030,42 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 				label = L["SUBFILTER_GLYPH_TYPE_JEWELRY"],
 				texture = "AwesomeGuildStore/images/misc/jewelry_glyph_%s.dds",
 				value = ITEMTYPE_GLYPH_JEWELRY,
+			},
+		},
+	},
+	[SUBFILTER_RECIPE_KNOWLEDGE] = {
+		type = 38,
+		label = L["SUBFILTER_RECIPE_KNOWLEDGE_LABEL"],
+		class = "KnownRecipeFilter",
+		filter = 38,
+		buttons = {
+			{
+				label = L["SUBFILTER_RECIPE_KNOWLEDGE_UNKNOWN"],
+				texture = "EsoUI/Art/Campaign/overview_indexIcon_bonus_%s.dds",
+				value = 1,
+			},
+			{
+				label = L["SUBFILTER_RECIPE_KNOWLEDGE_KNOWN"],
+				texture = "EsoUI/Art/Journal/journal_tabIcon_loreLibrary_%s.dds",
+				value = 2,
+			},
+		},
+	},
+	[SUBFILTER_MOTIF_KNOWLEDGE] = {
+		type = 39,
+		label = L["SUBFILTER_MOTIF_KNOWLEDGE_LABEL"],
+		class = "KnownMotifFilter",
+		filter = 39,
+		buttons = {
+			{
+				label = L["SUBFILTER_MOTIF_KNOWLEDGE_UNKNOWN"],
+				texture = "EsoUI/Art/Campaign/overview_indexIcon_bonus_%s.dds",
+				value = 1,
+			},
+			{
+				label = L["SUBFILTER_MOTIF_KNOWLEDGE_KNOWN"],
+				texture = "EsoUI/Art/Journal/journal_tabIcon_loreLibrary_%s.dds",
+				value = 2,
 			},
 		},
 	},

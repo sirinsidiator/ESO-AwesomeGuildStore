@@ -25,7 +25,7 @@ function CategorySubfilter:Initialize(name, tradingHouseWrapper, subfilterPreset
 	label:SetText(subfilterPreset.label .. ":")
 	label:SetAnchor(TOPLEFT, container, TOPLEFT, 0, 0)
 	label:SetAnchor(TOPRIGHT, container, TOPRIGHT, 0, 0)
-	self.label = label
+	self:SetLabelControl(label)
 
 	local group = ButtonGroup:New(container, name .. "Group", 0, 0)
 	group.filterType = subfilterPreset.filter

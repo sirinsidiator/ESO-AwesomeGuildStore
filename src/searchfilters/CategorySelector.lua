@@ -57,7 +57,9 @@ function CategorySelector:New(parent, name, searchTabWrapper, tradingHouseWrappe
 
 	for subfilterId, preset in pairs(SUBFILTER_PRESETS) do
 		if(preset.buttons) then
-			selector.subfilters[subfilterId] = CategorySubfilter:New(name .. "Subfilter" .. subfilterId, tradingHouseWrapper, preset)
+			if(type(preset.class) == "string") then preset.class = AwesomeGuildStore[preset.class] end
+			local class = preset.class or CategorySubfilter
+			selector.subfilters[subfilterId] = class:New(name .. "Subfilter" .. subfilterId, tradingHouseWrapper, preset)
 		end
 	end
 

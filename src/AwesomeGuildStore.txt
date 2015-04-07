@@ -37,6 +37,8 @@ util/LoadingOverlay.lua
 searchfilters/FilterBase.lua
 searchfilters/CategoryPresets.lua
 searchfilters/CategorySubfilter.lua
+searchfilters/KnownRecipeFilter.lua
+searchfilters/KnownMotifFilter.lua
 searchfilters/CategorySelector.lua
 searchfilters/PriceFilter.lua
 searchfilters/LevelFilter.lua

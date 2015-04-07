@@ -132,6 +132,14 @@ local localization = {
 		SUBFILTER_GLYPH_TYPE_WEAPON = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_ITEMTYPE", ITEMTYPE_GLYPH_WEAPON)),
 		SUBFILTER_GLYPH_TYPE_JEWELRY = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_ITEMTYPE", ITEMTYPE_GLYPH_JEWELRY)),
 
+		SUBFILTER_RECIPE_KNOWLEDGE_LABEL = "Recipe Knowledge",
+		SUBFILTER_RECIPE_KNOWLEDGE_UNKNOWN = "Unkown Recipes",
+		SUBFILTER_RECIPE_KNOWLEDGE_KNOWN = "Known Recipes",
+
+		SUBFILTER_MOTIF_KNOWLEDGE_LABEL = "Motif Knowledge",
+		SUBFILTER_MOTIF_KNOWLEDGE_UNKNOWN = "Unkown Motifs",
+		SUBFILTER_MOTIF_KNOWLEDGE_KNOWN = "Known Motifs",
+
 		NORMAL_QUALITY_LABEL = GetString(SI_TRADING_HOUSE_BROWSE_QUALITY_NORMAL),
 		MAGIC_QUALITY_LABEL = GetString(SI_TRADING_HOUSE_BROWSE_QUALITY_MAGIC),
 		ARCANE_QUALITY_LABEL = GetString(SI_TRADING_HOUSE_BROWSE_QUALITY_ARCANE),
@@ -207,7 +215,9 @@ local localization = {
 		SETTINGS_AUTO_CLEAR_HISTORY_LABEL = "Auto clear history",
 		SETTINGS_AUTO_CLEAR_HISTORY_DESCRIPTION = "Automatically deletes all history entries when you open the guild store for the first time in a game session. You can undo the deletion via the menu in the search library",
 
-		INVALID_STATE = "Invalid Store State.\nThis is a bug in the game and should be fixed soon."
+		INVALID_STATE = "Invalid Store State.\nThis is a bug in the game and should be fixed soon.",
+
+		LOCAL_FILTER_EXPLANATION_TOOLTIP = "This filter is local and only applies to the currently visible page",
 	},
 	de = {
 		FILTER_SUBCATEGORY_GLYPHS = "Glyphe",
@@ -220,6 +230,14 @@ local localization = {
 		SUBFILTER_INGREDIENT_TYPE_LABEL = "Zutatentyp",
 		SUBFILTER_RUNE_TYPE_LABEL = "Runensteintyp",
 		SUBFILTER_GLYPH_TYPE_LABEL = "Glyphentyp",
+
+		SUBFILTER_RECIPE_KNOWLEDGE_LABEL = "Rezeptwissen",
+		SUBFILTER_RECIPE_KNOWLEDGE_UNKNOWN = "Unbekannte Rezepte",
+		SUBFILTER_RECIPE_KNOWLEDGE_KNOWN = "Bekannte Rezepte",
+
+		SUBFILTER_MOTIF_KNOWLEDGE_LABEL = "Motivwissen",
+		SUBFILTER_MOTIF_KNOWLEDGE_UNKNOWN = "Unbekannte Motive",
+		SUBFILTER_MOTIF_KNOWLEDGE_KNOWN = "Bekannte Motive",
 
 		SEARCH_PREVIOUS_PAGE_LABEL = "Vorherige Seite anzeigen",
 		SEARCH_SHOW_MORE_LABEL = "Mehr Ergebnisse anzeigen",
@@ -283,7 +301,9 @@ local localization = {
 		SETTINGS_AUTO_CLEAR_HISTORY_LABEL = "Verlauf automatisch entleeren",
 		SETTINGS_AUTO_CLEAR_HISTORY_DESCRIPTION = "Löscht automatisch alle Einträge im Verlauf wenn du den Gildenladen zum ersten Mal während einer Spielesitzung besuchst. Du kannst die Löschung über das Menü in der Suchbibliothek rückgängig machen",
 
-		INVALID_STATE = "Ungültiger Händlerzustand.\nDas ist ein Fehler im Spiel und sollte bald behoben werden."
+		INVALID_STATE = "Ungültiger Händlerzustand.\nDas ist ein Fehler im Spiel und sollte bald behoben werden.",
+
+		LOCAL_FILTER_EXPLANATION_TOOLTIP = "Dieser Filter ist lokal und wirkt nur auf der derzeit sichtbaren Seite",
 	},
 	fr = {
 	},
@@ -301,6 +321,14 @@ local localization = {
 		SUBFILTER_INGREDIENT_TYPE_LABEL = "Òèï èâpeäèeîòa",
 		SUBFILTER_RUNE_TYPE_LABEL = "Òèï póîÿ",
 		SUBFILTER_GLYPH_TYPE_LABEL = "Òèï âìèña",
+
+		SUBFILTER_RECIPE_KNOWLEDGE_LABEL = "Recipe Knowledge", -- TODO: translate
+		SUBFILTER_RECIPE_KNOWLEDGE_UNKNOWN = "Unkown Recipes", -- TODO: translate
+		SUBFILTER_RECIPE_KNOWLEDGE_KNOWN = "Known Recipes", -- TODO: translate
+
+		SUBFILTER_MOTIF_KNOWLEDGE_LABEL = "Motif Knowledge", -- TODO: translate
+		SUBFILTER_MOTIF_KNOWLEDGE_UNKNOWN = "Unkown Motifs", -- TODO: translate
+		SUBFILTER_MOTIF_KNOWLEDGE_KNOWN = "Known Motifs", -- TODO: translate
 
 		SEARCH_PREVIOUS_PAGE_LABEL = "Ïoêaçaòö ïpeä. còp.",
 		SEARCH_SHOW_MORE_LABEL = "Ïoêaçaòö àoìöúe peçóìöòaòoá",
@@ -364,7 +392,9 @@ local localization = {
 		SETTINGS_AUTO_CLEAR_HISTORY_LABEL = "Aáòooùècòêa ècòopèè",
 		SETTINGS_AUTO_CLEAR_HISTORY_DESCRIPTION = "Aáòoíaòèùecêè oùèûaeò ácô ècòopèô ïpè ïepáoí c îaùaìa èâpoáoé ceccèè áèçèòe ê òopâoáœó. Áÿíoæeòe oòíeîèòö óäaìeîèe á íeîô ècòopèè ïoècêa",
 
-		INVALID_STATE = "Oúèàêa.\nËòo àaâ èâpÿ è oî äoìæeî àÿòö ïoïpaáìeî á àìèæaéúee ápeíü."
+		INVALID_STATE = "Oúèàêa.\nËòo àaâ èâpÿ è oî äoìæeî àÿòö ïoïpaáìeî á àìèæaéúee ápeíü.",
+
+		LOCAL_FILTER_EXPLANATION_TOOLTIP = "This filter is local and only applies to the currently visible page", -- TODO: translate
 	},
 }
 

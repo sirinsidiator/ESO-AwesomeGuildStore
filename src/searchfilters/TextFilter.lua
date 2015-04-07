@@ -26,6 +26,7 @@ function TextFilter:InitializeControls(name)
 	label:SetText(L["TEXT_FILTER_TITLE"])
 	label:SetAnchor(TOPLEFT, container, TOPLEFT, 0, 0)
 	label:SetAnchor(TOPRIGHT, container, TOPRIGHT, 0, 0)
+	self:SetLabelControl(label)
 
 	local input = CreateControlFromVirtual(name .. "Input", container, "AwesomeGuildStoreNameFilterTemplate")
 	input:SetAnchor(TOPLEFT, label, BOTTOMLEFT, 0, LINE_SPACING)
@@ -47,7 +48,6 @@ function TextFilter:InitializeHandlers(tradingHouseWrapper)
 	inputBox:SetHandler("OnTextChanged", function(control)
 		ZO_EditDefaultText_OnTextChanged(inputBox)
 		self:HandleChange()
-		tradingHouse:RebuildSearchResultsPage()
 	end)
 
 	local nameFilter = ZO_StringSearch:New()
@@ -57,64 +57,46 @@ function TextFilter:InitializeHandlers(tradingHouseWrapper)
 			return true
 		end
 	end)
+	self.nameFilter = nameFilter
+	self.data = { name = "", setName = "", isSetItem = false, itemLinkData = "", type = TEXT_FILTER_DATA_TYPE }
+end
 
-	local data = { name = "", setName = "", isSetItem = false, itemLinkData = "", type = TEXT_FILTER_DATA_TYPE }
-	local itemCount, filteredItemCount, isMatch
+function TextFilter:BeforeRebuildSearchResultsPage(tradingHouseWrapper)
+	local searchTerm = self.inputBox:GetText()
+	local nameFilter = self.nameFilter
 
-	local OriginalGetTradingHouseSearchResultItemInfo = GetTradingHouseSearchResultItemInfo
-	local FakeGetTradingHouseSearchResultItemInfo = function(index)
-		local icon, name, quality, stackCount, sellerName, timeRemaining, purchasePrice = OriginalGetTradingHouseSearchResultItemInfo(index)
-		if(name ~= "" and stackCount > 0) then
-			itemCount = itemCount + 1
-			data.name = name
-
-			local itemLink = GetTradingHouseSearchResultItemLink(index, LINK_STYLE_BRACKETS)
-			local isSetItem, setName = GetItemLinkSetInfo(itemLink)
-			local _, itemLinkData = itemLink:match("|H(.-):(.-)|h(.-)|h")
-			data.setName = setName
-			data.isSetItem = isSetItem
-			data.itemLinkData = itemLinkData
-
-			if(isMatch(data)) then
-				filteredItemCount = filteredItemCount + 1
-				return icon, name, quality, stackCount, sellerName, timeRemaining, purchasePrice
+	if(searchTerm ~= "") then
+		local terms = {zo_strsplit("+", searchTerm)}
+		for i = 1, #terms do
+			local term = terms[i]
+			local _, itemLinkData = term:match("|H(.-):(.-)|h(.-)|h")
+			if(itemLinkData and itemLinkData ~= "") then -- prepare itemLinks beforehand for better performance
+				terms[i] = itemLinkData
 			end
 		end
-		return nil, "", nil, 0
-	end
-
-	tradingHouseWrapper:Wrap("RebuildSearchResultsPage", function(originalRebuildSearchResultsPage, self, ...)
-		local searchTerm = inputBox:GetText()
-
-		if(searchTerm ~= "") then
-			local terms = {zo_strsplit("+", searchTerm)}
+		self.isMatch = function(data)
 			for i = 1, #terms do
 				local term = terms[i]
-				local _, itemLinkData = term:match("|H(.-):(.-)|h(.-)|h")
-				if(itemLinkData and itemLinkData ~= "") then -- prepare itemLinks beforehand for better performance
-					terms[i] = itemLinkData
-				end
+				if(term == data.itemLinkData or nameFilter:IsMatch(term, data)) then return true end
 			end
-			isMatch = function(data)
-				for i = 1, #terms do
-					local term = terms[i]
-					if(term == data.itemLinkData or nameFilter:IsMatch(term, data)) then return true end
-				end
-			end
-			itemCount, filteredItemCount = 0, 0
-			GetTradingHouseSearchResultItemInfo = FakeGetTradingHouseSearchResultItemInfo
 		end
+		return true
+	end
+	return false
+end
 
-		originalRebuildSearchResultsPage(self, ...)
+function TextFilter:FilterPageResult(index, icon, name, quality, stackCount, sellerName, timeRemaining, purchasePrice)
+	local data = self.data
+	local itemLink = GetTradingHouseSearchResultItemLink(index, LINK_STYLE_BRACKETS)
+	local isSetItem, setName = GetItemLinkSetInfo(itemLink)
+	local _, itemLinkData = itemLink:match("|H(.-):(.-)|h(.-)|h")
 
-		if(searchTerm ~= "") then
-			GetTradingHouseSearchResultItemInfo = OriginalGetTradingHouseSearchResultItemInfo
-			self.m_resultCount:SetText(zo_strformat(L["TEXT_FILTER_ITEMCOUNT_TEMPLATE"], itemCount, filteredItemCount))
+	data.name = name
+	data.setName = setName
+	data.isSetItem = isSetItem
+	data.itemLinkData = itemLinkData
 
-			local shouldHide = (filteredItemCount ~= 0 or self.m_search:HasPreviousPage() or self.m_search:HasNextPage())
-			self.m_noItemsLabel:SetHidden(shouldHide)
-		end
-	end)
+	return self.isMatch(data)
 end
 
 function TextFilter:Reset()

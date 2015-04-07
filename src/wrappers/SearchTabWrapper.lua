@@ -13,6 +13,7 @@ end
 
 function SearchTabWrapper:RunInitialSetup(tradingHouseWrapper)
 	self:InitializeContainers(tradingHouseWrapper)
+	self:InitializePageFiltering(tradingHouseWrapper)
 	self:InitializeFilters(tradingHouseWrapper)
 	self:InitializeButtons(tradingHouseWrapper)
 	self:InitializeSearchSortHeaders(tradingHouseWrapper)
@@ -37,6 +38,10 @@ function SearchTabWrapper:UpdateFilterAnchors()
 	end
 end
 
+local function RebuildSearchResultsPage()
+	TRADING_HOUSE:RebuildSearchResultsPage()
+end
+
 function SearchTabWrapper:AttachFilter(filter)
 	if(self.attachedFilters[filter.type]) then return end
 
@@ -45,6 +50,10 @@ function SearchTabWrapper:AttachFilter(filter)
 	filter:SetWidth(FILTER_PANEL_WIDTH)
 	self:UpdateFilterAnchors()
 	filter:SetHidden(false)
+	if(filter.FilterPageResult) then
+		CALLBACK_MANAGER:RegisterCallback(filter.callbackName, RebuildSearchResultsPage)
+	end
+	RebuildSearchResultsPage()
 end
 
 function SearchTabWrapper:DetachFilter(filter)
@@ -54,6 +63,10 @@ function SearchTabWrapper:DetachFilter(filter)
 	filter:SetParent(GuiRoot)
 	self:UpdateFilterAnchors()
 	self.attachedFilters[filter.type] = nil
+	if(filter.FilterPageResult) then
+		CALLBACK_MANAGER:UnregisterCallback(filter.callbackName, RebuildSearchResultsPage)
+	end
+	RebuildSearchResultsPage()
 end
 
 function SearchTabWrapper:RefreshFilterDimensions()
@@ -92,6 +105,72 @@ function SearchTabWrapper:InitializeContainers(tradingHouseWrapper)
 	local filterAreaScrollChild = filterArea:GetNamedChild("ScrollChild")
 	self.filterAreaScrollChild = filterAreaScrollChild
 	self.attachedFilters = {}
+end
+
+function SearchTabWrapper:InitializePageFiltering(tradingHouseWrapper)
+	local filters = self.attachedFilters
+	local itemCount, filteredItemCount = 0, 0
+
+	local activeFilters
+	local function BeforeRebuildSearchResultsPage(tradingHouseWrapper)
+		activeFilters = {}
+		for _, filter in pairs(filters) do
+			if(filter.BeforeRebuildSearchResultsPage and filter:BeforeRebuildSearchResultsPage(tradingHouseWrapper) and filter.FilterPageResult) then
+				activeFilters[#activeFilters + 1] = filter
+			end
+		end
+		return (#activeFilters > 0)
+	end
+
+	local function FilterPageResult(...)
+		for i = 1, #activeFilters do
+			if(not activeFilters[i]:FilterPageResult(...)) then
+				return false
+			end
+		end
+		return true
+	end
+
+	local function AfterRebuildSearchResultsPage(tradingHouseWrapper)
+		for _, filter in pairs(filters) do
+			if(filter.AfterRebuildSearchResultsPage) then
+				filter:AfterRebuildSearchResultsPage(tradingHouseWrapper)
+			end
+		end
+	end
+
+	local OriginalGetTradingHouseSearchResultItemInfo = GetTradingHouseSearchResultItemInfo
+	local FakeGetTradingHouseSearchResultItemInfo = function(index)
+		local icon, name, quality, stackCount, sellerName, timeRemaining, purchasePrice = OriginalGetTradingHouseSearchResultItemInfo(index)
+
+		if(name ~= "" and stackCount > 0) then
+			itemCount = itemCount + 1
+			if(FilterPageResult(index, icon, name, quality, stackCount, sellerName, timeRemaining, purchasePrice)) then
+				filteredItemCount = filteredItemCount + 1
+				return icon, name, quality, stackCount, sellerName, timeRemaining, purchasePrice
+			end
+		end
+		return nil, "", nil, 0
+	end
+
+	tradingHouseWrapper:Wrap("RebuildSearchResultsPage", function(originalRebuildSearchResultsPage, self, ...)
+		local isFiltering = BeforeRebuildSearchResultsPage(tradingHouseWrapper)
+		if(isFiltering) then
+			itemCount, filteredItemCount = 0, 0
+			GetTradingHouseSearchResultItemInfo = FakeGetTradingHouseSearchResultItemInfo
+		end
+
+		originalRebuildSearchResultsPage(self, ...)
+
+		AfterRebuildSearchResultsPage(tradingHouseWrapper)
+		if(isFiltering) then
+			GetTradingHouseSearchResultItemInfo = OriginalGetTradingHouseSearchResultItemInfo
+			self.m_resultCount:SetText(zo_strformat(L["TEXT_FILTER_ITEMCOUNT_TEMPLATE"], itemCount, filteredItemCount))
+
+			local shouldHide = (filteredItemCount ~= 0 or self.m_search:HasPreviousPage() or self.m_search:HasNextPage())
+			self.m_noItemsLabel:SetHidden(shouldHide)
+		end
+	end)
 end
 
 function SearchTabWrapper:InitializeFilters(tradingHouseWrapper)
