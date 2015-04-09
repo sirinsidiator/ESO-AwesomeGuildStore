@@ -169,7 +169,7 @@ end
 function LevelFilter:IsDefault()
 	local min = self.minLevelBox:GetText()
 	local max = self.maxLevelBox:GetText()
-	return min == "" and max == ""
+	return min == "" and max == "" and self.tradingHouse.m_levelRangeFilterType == TRADING_HOUSE_FILTER_TYPE_LEVEL
 end
 
 function LevelFilter:Serialize()
