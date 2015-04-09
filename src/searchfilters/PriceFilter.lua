@@ -28,9 +28,7 @@ function PriceFilter:InitializeControls(name, tradingHouse)
 
 	local priceRangeLabel = common:GetNamedChild("PriceRangeLabel")
 	priceRangeLabel:SetParent(container)
-	priceRangeLabel:ClearAnchors()
-	priceRangeLabel:SetAnchor(TOPLEFT, container, TOPLEFT, 0, 0)
-	priceRangeLabel:SetAnchor(TOPRIGHT, container, TOPRIGHT, 0, 0)
+	self:SetLabelControl(priceRangeLabel)
 
 	local minPrice = common:GetNamedChild("MinPrice")
 	minPrice:SetParent(container)
@@ -47,7 +45,7 @@ function PriceFilter:InitializeControls(name, tradingHouse)
 	slider:SetRangeValue(MIN_VALUE, MAX_VALUE)
 	slider.control:ClearAnchors()
 	slider.control:SetAnchor(TOPLEFT, priceRangeLabel, BOTTOMLEFT, 0, LINE_SPACING)
-	slider.control:SetAnchor(TOPRIGHT, priceRangeLabel, BOTTOMRIGHT, 0, LINE_SPACING)
+	slider.control:SetAnchor(RIGHT, container, RIGHT, 0, 0)
 	self.slider = slider
 
 	minPrice:ClearAnchors()

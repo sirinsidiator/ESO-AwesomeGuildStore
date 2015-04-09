@@ -23,8 +23,6 @@ function CategorySubfilter:Initialize(name, tradingHouseWrapper, subfilterPreset
 	local label = container:CreateControl(name .. "Label", CT_LABEL)
 	label:SetFont("ZoFontWinH4")
 	label:SetText(subfilterPreset.label .. ":")
-	label:SetAnchor(TOPLEFT, container, TOPLEFT, 0, 0)
-	label:SetAnchor(TOPRIGHT, container, TOPRIGHT, 0, 0)
 	self:SetLabelControl(label)
 
 	local group = ButtonGroup:New(container, name .. "Group", 0, 0)
@@ -41,11 +39,16 @@ function CategorySubfilter:Initialize(name, tradingHouseWrapper, subfilterPreset
 				self.resetButton:SetHidden(false)
 				return false
 			end
+			if(subfilterPreset.singleButtonMode) then
+				group:ReleaseAllButtons()
+			end
 			self:HandleChange()
 			return true
 		end
 		button.HandleRelease = function(control, fromGroup)
-			self:HandleChange()
+			if(not fromGroup) then
+				self:HandleChange()
+			end
 			return true
 		end
 		button.value = buttonPreset.value
@@ -94,6 +97,7 @@ end
 
 function CategorySubfilter:Reset()
 	self.group:ReleaseAllButtons()
+	self:HandleChange()
 end
 
 function CategorySubfilter:IsDefault()

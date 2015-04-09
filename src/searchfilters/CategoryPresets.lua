@@ -468,6 +468,7 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 		type = 21,
 		label = L["SUBFILTER_WEAPON_ENCHANTMENT_LABEL"],
 		filter = TRADING_HOUSE_FILTER_TYPE_ENCHANTMENT,
+		singleButtonMode = true,
 		buttons = {
 			{
 				label = GetString("SI_ENCHANTMENTSEARCHCATEGORYTYPE", ENCHANTMENT_SEARCH_CATEGORY_FIERY_WEAPON),
@@ -720,6 +721,7 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 		type = 27,
 		label = L["SUBFILTER_ARMOR_ENCHANTMENT_LABEL"],
 		filter = TRADING_HOUSE_FILTER_TYPE_ENCHANTMENT,
+		singleButtonMode = true,
 		buttons = {
 			{
 				label = GetString("SI_ENCHANTMENTSEARCHCATEGORYTYPE", ENCHANTMENT_SEARCH_CATEGORY_MAGICKA),
@@ -747,6 +749,7 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 		type = 28,
 		label = L["SUBFILTER_JEWELRY_TYPE_LABEL"],
 		filter = TRADING_HOUSE_FILTER_TYPE_EQUIP,
+		singleButtonMode = true,
 		buttons = {
 			{
 				label = L["SUBFILTER_JEWELRY_TYPE_RING"],
@@ -791,6 +794,7 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 		type = 30,
 		label = L["SUBFILTER_JEWELRY_ENCHANTMENT_LABEL"],
 		filter = TRADING_HOUSE_FILTER_TYPE_ENCHANTMENT,
+		singleButtonMode = true,
 		buttons = {
 			{
 				label = GetString("SI_ENCHANTMENTSEARCHCATEGORYTYPE", ENCHANTMENT_SEARCH_CATEGORY_FIRE_RESISTANT),
@@ -1038,6 +1042,7 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 		label = L["SUBFILTER_RECIPE_KNOWLEDGE_LABEL"],
 		class = "KnownRecipeFilter",
 		filter = 38,
+		singleButtonMode = true,
 		buttons = {
 			{
 				label = L["SUBFILTER_RECIPE_KNOWLEDGE_UNKNOWN"],
@@ -1056,6 +1061,7 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 		label = L["SUBFILTER_MOTIF_KNOWLEDGE_LABEL"],
 		class = "KnownMotifFilter",
 		filter = 39,
+		singleButtonMode = true,
 		buttons = {
 			{
 				label = L["SUBFILTER_MOTIF_KNOWLEDGE_UNKNOWN"],

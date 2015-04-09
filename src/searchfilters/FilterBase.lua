@@ -34,7 +34,9 @@ end
 
 local localFilterLabelColor = ZO_ColorDef:New("A5D0FF")
 function FilterBase:SetLabelControl(label)
-	self.label = label
+	label:ClearAnchors()
+	label:SetAnchor(TOPLEFT, self.container, TOPLEFT, 0, 0)
+	label:SetAnchor(TOPRIGHT, self.container, TOPLRIGHT, -RESET_BUTTON_SIZE, 0)
 	if(self.FilterPageResult) then -- we have a local filter here
 		label:SetColor(localFilterLabelColor:UnpackRGBA())
 		label:SetMouseEnabled(true)
@@ -48,6 +50,7 @@ function FilterBase:SetLabelControl(label)
 			ClearTooltip(InformationTooltip)
 		end)
 	end
+	self.label = label
 end
 
 -- the following functions are placeholders and can be overwritten

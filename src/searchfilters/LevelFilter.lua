@@ -27,9 +27,7 @@ function LevelFilter:InitializeControls(name, tradingHouse)
 
 	local levelRangeLabel = common:GetNamedChild("LevelRangeLabel")
 	levelRangeLabel:SetParent(container)
-	levelRangeLabel:ClearAnchors()
-	levelRangeLabel:SetAnchor(TOPLEFT, container, TOPLEFT, 0, 0)
-	levelRangeLabel:SetAnchor(TOPRIGHT, container, TOPRIGHT, 0, 0)
+	self:SetLabelControl(levelRangeLabel)
 
 	local levelRangeToggle = common:GetNamedChild("LevelRangeToggle")
 	levelRangeToggle:SetNormalTexture("EsoUI/Art/LFG/LFG_normalDungeon_up.dds")
@@ -56,7 +54,7 @@ function LevelFilter:InitializeControls(name, tradingHouse)
 	slider:SetRangeValue(MIN_LEVEL, MAX_LEVEL)
 	slider.control:ClearAnchors()
 	slider.control:SetAnchor(TOPLEFT, levelRangeLabel, BOTTOMLEFT, 0, LINE_SPACING)
-	slider.control:SetAnchor(TOPRIGHT, levelRangeLabel, BOTTOMRIGHT, 0, LINE_SPACING)
+	slider.control:SetAnchor(RIGHT, container, RIGHT, 0, 0)
 	self.slider = slider
 
 	levelRangeToggle:SetAnchor(TOPLEFT, slider.control, BOTTOMLEFT, 0, LINE_SPACING)

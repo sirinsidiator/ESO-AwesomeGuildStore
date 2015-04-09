@@ -37,14 +37,13 @@ function QualityFilter:InitializeControls(name, tradingHouse, saveData)
 	local label = container:CreateControl(name .. "Label", CT_LABEL)
 	label:SetFont("ZoFontWinH4")
 	label:SetText(L["QUALITY_SELECTOR_TITLE"])
-	label:SetAnchor(TOPLEFT, container, TOPLEFT, 0, 0)
-	label:SetAnchor(TOPRIGHT, container, TOPRIGHT, 0, 0)
+	self:SetLabelControl(label)
 
 	local slider = MinMaxRangeSlider:New(container, name .. "Slider")
 	slider:SetMinMax(MIN_QUALITY, MAX_QUALITY)
 	slider:SetRangeValue(MIN_QUALITY, MAX_QUALITY)
 	slider.control:SetAnchor(TOPLEFT, label, BOTTOMLEFT, 0, LINE_SPACING)
-	slider.control:SetAnchor(TOPRIGHT, label, BOTTOMRIGHT, 0, LINE_SPACING)
+	slider.control:SetAnchor(RIGHT, container, RIGHT, 0, 0)
 	self.slider = slider
 
 	local function SafeSetRangeValue(button, value)
@@ -87,7 +86,7 @@ function QualityFilter:InitializeControls(name, tradingHouse, saveData)
 	self.buttons[5] = CreateButtonControl(name .. "LegendaryQualityButton", "legendary_%s.dds", L["LEGENDARY_QUALITY_LABEL"], 5)
 
 	container:SetHeight(label:GetHeight() + LINE_SPACING + slider.control:GetHeight() + LINE_SPACING + BUTTON_OFFSET_Y + BUTTON_SIZE)
-	
+
 	local tooltipText = L["RESET_FILTER_LABEL_TEMPLATE"]:format(label:GetText():gsub(":", ""))
 	self.resetButton:SetTooltipText(tooltipText)
 end
