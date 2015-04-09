@@ -2,10 +2,6 @@ local function LoadSettings()
 	local defaultData = {
 		version = 11,
 		lastGuildName = "",
-		replaceCategoryFilter = true,
-		replacePriceFilter = true,
-		replaceQualityFilter = true,
-		replaceLevelFilter = true,
 		keepFiltersOnClose = true,
 		oldQualitySelectorBehavior = false,
 		displayPerUnitPrice = true,
@@ -42,115 +38,78 @@ local function LoadSettings()
 			registerForDefaults = true
 		}
 		local panel = LAM:RegisterAddonPanel("AwesomeGuildStoreOptions", panelData)
-		local optionsData = {
-			[1] = {
-				type = "checkbox",
-				name = L["SETTINGS_REPLACE_CATEGORY_FILTER_LABEL"],
-				tooltip = L["SETTINGS_REPLACE_CATEGORY_FILTER_DESCRIPTION"],
-				getFunc = function() return saveData.replaceCategoryFilter end,
-				setFunc = function(value) saveData.replaceCategoryFilter = value end,
-				warning = L["SETTINGS_REQUIRES_RELOADUI_WARNING"],
-				default = defaultData.replaceCategoryFilter
-			},
-			[2] = {
-				type = "checkbox",
-				name = L["SETTINGS_REPLACE_PRICE_FILTER_LABEL"],
-				tooltip = L["SETTINGS_REPLACE_PRICE_FILTER_DESCRIPTION"],
-				getFunc = function() return saveData.replacePriceFilter end,
-				setFunc = function(value) saveData.replacePriceFilter = value end,
-				warning = L["SETTINGS_REQUIRES_RELOADUI_WARNING"],
-				default = defaultData.replacePriceFilter
-			},
-			[3] = {
-				type = "checkbox",
-				name = L["SETTINGS_REPLACE_LEVEL_FILTER_LABEL"],
-				tooltip = L["SETTINGS_REPLACE_LEVEL_FILTER_DESCRIPTION"],
-				getFunc = function() return saveData.replaceLevelFilter end,
-				setFunc = function(value) saveData.replaceLevelFilter = value end,
-				warning = L["SETTINGS_REQUIRES_RELOADUI_WARNING"],
-				default = defaultData.replaceLevelFilter
-			},
-			[4] = {
-				type = "checkbox",
-				name = L["SETTINGS_REPLACE_QUALITY_FILTER_LABEL"],
-				tooltip = L["SETTINGS_REPLACE_QUALITY_FILTER_DESCRIPTION"],
-				getFunc = function() return saveData.replaceQualityFilter end,
-				setFunc = function(value) saveData.replaceQualityFilter = value end,
-				warning = L["SETTINGS_REQUIRES_RELOADUI_WARNING"],
-				default = defaultData.replaceQualityFilter
-			},
-			[5] = {
-				type = "checkbox",
-				name = L["SETTINGS_KEEP_FILTERS_ON_CLOSE_LABEL"],
-				tooltip = L["SETTINGS_KEEP_FILTERS_ON_CLOSE_DESCRIPTION"],
-				getFunc = function() return saveData.keepFiltersOnClose end,
-				setFunc = function(value) saveData.keepFiltersOnClose = value end,
-				default = defaultData.keepFiltersOnClose
-			},
-			[6] = {
-				type = "checkbox",
-				name = L["SETTINGS_OLD_QUALITY_SELECTOR_BEHAVIOR_LABEL"],
-				tooltip = L["SETTINGS_OLD_QUALITY_SELECTOR_BEHAVIOR_DESCRIPTION"],
-				getFunc = function() return saveData.oldQualitySelectorBehavior end,
-				setFunc = function(value) saveData.oldQualitySelectorBehavior = value end,
-				default = defaultData.oldQualitySelectorBehavior
-			},
-			[7] = {
-				type = "checkbox",
-				name = L["SETTINGS_DISPLAY_PER_UNIT_PRICE_LABEL"],
-				tooltip = L["SETTINGS_DISPLAY_PER_UNIT_PRICE_DESCRIPTION"],
-				getFunc = function() return saveData.displayPerUnitPrice end,
-				setFunc = function(value) saveData.displayPerUnitPrice = value end,
-				default = defaultData.displayPerUnitPrice
-			},
-			[8] = {
-				type = "checkbox",
-				name = L["SETTINGS_SORT_WITHOUT_SEARCH_LABEL"],
-				tooltip = L["SETTINGS_SORT_WITHOUT_SEARCH_DESCRIPTION"],
-				getFunc = function() return saveData.sortWithoutSearch end,
-				setFunc = function(value) saveData.sortWithoutSearch = value end,
-				default = defaultData.sortWithoutSearch
-			},
-			[9] = {
-				type = "checkbox",
-				name = L["SETTINGS_KEEP_SORTORDER_ON_CLOSE_LABEL"],
-				tooltip = L["SETTINGS_KEEP_SORTORDER_ON_CLOSE_DESCRIPTION"],
-				getFunc = function() return saveData.keepSortOrderOnClose end,
-				setFunc = function(value) saveData.keepSortOrderOnClose = value end,
-				default = defaultData.keepSortOrderOnClose
-			},
-			[10] = {
-				type = "checkbox",
-				name = L["SETTINGS_LIST_WITH_SINGLE_CLICK_LABEL"],
-				tooltip = L["SETTINGS_LIST_WITH_SINGLE_CLICK_DESCRIPTION"],
-				getFunc = function() return saveData.listWithSingleClick end,
-				setFunc = function(value) saveData.listWithSingleClick = value end,
-				default = defaultData.listWithSingleClick
-			},
-			[11] = {
-				type = "checkbox",
-				name = L["SETTINGS_SHOW_SEARCH_LIBRARY_TOOLTIPS_LABEL"],
-				tooltip = L["SETTINGS_SHOW_SEARCH_LIBRARY_TOOLTIPS_DESCRIPTION"],
-				getFunc = function() return saveData.searchLibrary.showTooltips end,
-				setFunc = function(value) saveData.searchLibrary.showTooltips = value end,
-				default = defaultData.searchLibrary.showTooltips
-			},
-			[12] = {
-				type = "checkbox",
-				name = L["SETTINGS_SHOW_TRADER_TOOLTIPS_LABEL"],
-				tooltip = L["SETTINGS_SHOW_TRADER_TOOLTIPS_DESCRIPTION"],
-				getFunc = function() return saveData.showTraderTooltip end,
-				setFunc = function(value) saveData.showTraderTooltip = value end,
-				default = defaultData.showTraderTooltip
-			},
-			[13] = {
-				type = "checkbox",
-				name = L["SETTINGS_AUTO_CLEAR_HISTORY_LABEL"],
-				tooltip = L["SETTINGS_AUTO_CLEAR_HISTORY_DESCRIPTION"],
-				getFunc = function() return saveData.searchLibrary.autoClearHistory end,
-				setFunc = function(value) saveData.searchLibrary.autoClearHistory = value end,
-				default = defaultData.searchLibrary.autoClearHistory
-			},
+		local optionsData = {}
+		optionsData[#optionsData + 1] = {
+			type = "checkbox",
+			name = L["SETTINGS_KEEP_FILTERS_ON_CLOSE_LABEL"],
+			tooltip = L["SETTINGS_KEEP_FILTERS_ON_CLOSE_DESCRIPTION"],
+			getFunc = function() return saveData.keepFiltersOnClose end,
+			setFunc = function(value) saveData.keepFiltersOnClose = value end,
+			default = defaultData.keepFiltersOnClose
+		}
+		optionsData[#optionsData + 1] = {
+			type = "checkbox",
+			name = L["SETTINGS_OLD_QUALITY_SELECTOR_BEHAVIOR_LABEL"],
+			tooltip = L["SETTINGS_OLD_QUALITY_SELECTOR_BEHAVIOR_DESCRIPTION"],
+			getFunc = function() return saveData.oldQualitySelectorBehavior end,
+			setFunc = function(value) saveData.oldQualitySelectorBehavior = value end,
+			default = defaultData.oldQualitySelectorBehavior
+		}
+		optionsData[#optionsData + 1] = {
+			type = "checkbox",
+			name = L["SETTINGS_DISPLAY_PER_UNIT_PRICE_LABEL"],
+			tooltip = L["SETTINGS_DISPLAY_PER_UNIT_PRICE_DESCRIPTION"],
+			getFunc = function() return saveData.displayPerUnitPrice end,
+			setFunc = function(value) saveData.displayPerUnitPrice = value end,
+			default = defaultData.displayPerUnitPrice
+		}
+		optionsData[#optionsData + 1] = {
+			type = "checkbox",
+			name = L["SETTINGS_SORT_WITHOUT_SEARCH_LABEL"],
+			tooltip = L["SETTINGS_SORT_WITHOUT_SEARCH_DESCRIPTION"],
+			getFunc = function() return saveData.sortWithoutSearch end,
+			setFunc = function(value) saveData.sortWithoutSearch = value end,
+			default = defaultData.sortWithoutSearch
+		}
+		optionsData[#optionsData + 1] = {
+			type = "checkbox",
+			name = L["SETTINGS_KEEP_SORTORDER_ON_CLOSE_LABEL"],
+			tooltip = L["SETTINGS_KEEP_SORTORDER_ON_CLOSE_DESCRIPTION"],
+			getFunc = function() return saveData.keepSortOrderOnClose end,
+			setFunc = function(value) saveData.keepSortOrderOnClose = value end,
+			default = defaultData.keepSortOrderOnClose
+		}
+		optionsData[#optionsData + 1] = {
+			type = "checkbox",
+			name = L["SETTINGS_LIST_WITH_SINGLE_CLICK_LABEL"],
+			tooltip = L["SETTINGS_LIST_WITH_SINGLE_CLICK_DESCRIPTION"],
+			getFunc = function() return saveData.listWithSingleClick end,
+			setFunc = function(value) saveData.listWithSingleClick = value end,
+			default = defaultData.listWithSingleClick
+		}
+		optionsData[#optionsData + 1] = {
+			type = "checkbox",
+			name = L["SETTINGS_SHOW_SEARCH_LIBRARY_TOOLTIPS_LABEL"],
+			tooltip = L["SETTINGS_SHOW_SEARCH_LIBRARY_TOOLTIPS_DESCRIPTION"],
+			getFunc = function() return saveData.searchLibrary.showTooltips end,
+			setFunc = function(value) saveData.searchLibrary.showTooltips = value end,
+			default = defaultData.searchLibrary.showTooltips
+		}
+		optionsData[#optionsData + 1] = {
+			type = "checkbox",
+			name = L["SETTINGS_SHOW_TRADER_TOOLTIPS_LABEL"],
+			tooltip = L["SETTINGS_SHOW_TRADER_TOOLTIPS_DESCRIPTION"],
+			getFunc = function() return saveData.showTraderTooltip end,
+			setFunc = function(value) saveData.showTraderTooltip = value end,
+			default = defaultData.showTraderTooltip
+		}
+		optionsData[#optionsData + 1] = {
+			type = "checkbox",
+			name = L["SETTINGS_AUTO_CLEAR_HISTORY_LABEL"],
+			tooltip = L["SETTINGS_AUTO_CLEAR_HISTORY_DESCRIPTION"],
+			getFunc = function() return saveData.searchLibrary.autoClearHistory end,
+			setFunc = function(value) saveData.searchLibrary.autoClearHistory = value end,
+			default = defaultData.searchLibrary.autoClearHistory
 		}
 		LAM:RegisterOptionControls("AwesomeGuildStoreOptions", optionsData)
 
@@ -217,6 +176,10 @@ local function LoadSettings()
 		if(saveData.version == 11) then
 			saveData.listingSortField = defaultData.listingSortField
 			saveData.listingSortOrder = defaultData.listingSortOrder
+			saveData.replaceCategoryFilter = nil
+			saveData.replacePriceFilter = nil
+			saveData.replaceQualityFilter = nil
+			saveData.replaceLevelFilter = nil
 			saveData.version = 12
 		end
 	end
