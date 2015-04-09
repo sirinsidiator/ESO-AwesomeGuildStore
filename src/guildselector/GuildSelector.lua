@@ -37,6 +37,10 @@ function GuildSelector:Initialize(saveData)
 	SelectTradingHouseGuildId = function(...)
 		local result = {originalSelectTradingHouseGuildId(...)}
 		self:UpdateSelectedGuild()
+		local guildId, guildName = GetCurrentTradingHouseGuildDetails()
+		if(guildId ~= 0) then
+			self.saveData.lastGuildName = guildName
+		end
 		return unpack(result)
 	end
 end
@@ -178,9 +182,6 @@ function GuildSelector:UpdateSelectedGuild()
 	local guildId, guildName = GetCurrentTradingHouseGuildDetails()
 	if(guildId and self.entryByGuildId[guildId]) then
 		self.comboBox:SetSelectedItem(self.entryByGuildId[guildId].name)
-	end
-	if(guildId ~= 0) then
-		self.saveData.lastGuildName = guildName
 	end
 	self.selectedGuildId = guildId
 	self.selectedItemText.guildId = guildId
