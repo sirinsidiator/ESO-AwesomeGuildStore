@@ -5,9 +5,8 @@ local TextFilter = FilterBase:Subclass()
 AwesomeGuildStore.TextFilter = TextFilter
 
 local TEXT_FILTER_DATA_TYPE = 1
-local LINE_SPACING = 4
-local MARGIN = 20
 local TEXT_FITLER_TYPE_ID = 5
+local MARGIN = 22
 
 function TextFilter:New(name, tradingHouseWrapper, ...)
 	return FilterBase.New(self, TEXT_FITLER_TYPE_ID, name, tradingHouseWrapper, ...)
@@ -24,19 +23,18 @@ function TextFilter:InitializeControls(name)
 	local label = container:CreateControl(name .. "Label", CT_LABEL)
 	label:SetFont("ZoFontWinH4")
 	label:SetText(L["TEXT_FILTER_TITLE"])
-	label:SetAnchor(TOPLEFT, container, TOPLEFT, 0, 0)
-	label:SetAnchor(TOPRIGHT, container, TOPRIGHT, 0, 0)
 	self:SetLabelControl(label)
 
 	local input = CreateControlFromVirtual(name .. "Input", container, "AwesomeGuildStoreNameFilterTemplate")
-	input:SetAnchor(TOPLEFT, label, BOTTOMLEFT, 0, LINE_SPACING)
-	input:SetAnchor(TOPRIGHT, label, BOTTOMRIGHT, 0, LINE_SPACING)
+	input:ClearAnchors()
+	input:SetAnchor(BOTTOMLEFT, container, BOTTOMLEFT, 0, 0)
+	input:SetAnchor(BOTTOMRIGHT, container, BOTTOMRIGHT, 0, 0)
 	local inputBox = input:GetNamedChild("Box")
 	ZO_EditDefaultText_Initialize(inputBox, L["TEXT_FILTER_TEXT"])
 	inputBox:SetMaxInputChars(250)
 	self.inputBox = inputBox
 
-	container:SetHeight(label:GetHeight() + LINE_SPACING + input:GetHeight() + MARGIN)
+	container:SetHeight(22 + 4 + 28)
 
 	local tooltipText = L["RESET_FILTER_LABEL_TEMPLATE"]:format(label:GetText():gsub(":", ""))
 	self.resetButton:SetTooltipText(tooltipText)
