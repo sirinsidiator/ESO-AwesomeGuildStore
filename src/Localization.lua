@@ -306,13 +306,13 @@ local localization = {
 		SUBFILTER_RUNE_TYPE_LABEL = "Òèï póîÿ",
 		SUBFILTER_GLYPH_TYPE_LABEL = "Òèï âìèña",
 
-		SUBFILTER_RECIPE_KNOWLEDGE_LABEL = "Recipe Knowledge", -- TODO: translate
-		SUBFILTER_RECIPE_KNOWLEDGE_UNKNOWN = "Unkown Recipes", -- TODO: translate
-		SUBFILTER_RECIPE_KNOWLEDGE_KNOWN = "Known Recipes", -- TODO: translate
+		SUBFILTER_RECIPE_KNOWLEDGE_LABEL = "Çîaîèe peœeïòoá",
+		SUBFILTER_RECIPE_KNOWLEDGE_UNKNOWN = "Îeèçáecòîÿe peœeïòÿ",
+		SUBFILTER_RECIPE_KNOWLEDGE_KNOWN = "Èçáecòîÿe peœeïòÿ",
 
-		SUBFILTER_MOTIF_KNOWLEDGE_LABEL = "Motif Knowledge", -- TODO: translate
-		SUBFILTER_MOTIF_KNOWLEDGE_UNKNOWN = "Unkown Motifs", -- TODO: translate
-		SUBFILTER_MOTIF_KNOWLEDGE_KNOWN = "Known Motifs", -- TODO: translate
+		SUBFILTER_MOTIF_KNOWLEDGE_LABEL = "Çîaîèe còèìeé",
+		SUBFILTER_MOTIF_KNOWLEDGE_UNKNOWN = "Îeèçáecòîÿe còèìè",
+		SUBFILTER_MOTIF_KNOWLEDGE_KNOWN = "Èçáecòîÿe còèìè",
 
 		SEARCH_PREVIOUS_PAGE_LABEL = "Ïoêaçaòö ïpeä. còp.",
 		SEARCH_SHOW_MORE_LABEL = "Ïoêaçaòö àoìöúe peçóìöòaòoá",
@@ -324,8 +324,8 @@ local localization = {
 
 		QUALITY_SELECTOR_TITLE = "Êaùecòáo:",
 
-		TEXT_FILTER_TITLE = "Text Filter:", -- TODO: translate
-		TEXT_FILTER_TEXT = "Filter by text", -- TODO: translate
+		TEXT_FILTER_TITLE = "Òeêcòoáÿé ñèìöòp:",
+		TEXT_FILTER_TEXT = "Ñèìöòp ïo òeêcòó",
 
 		WARNING_SUBFILTER_LIMIT = "Îeìöçü oòoàpaòö àoìee ùeí ïo 8 ñèìöòpaí",
 
@@ -370,7 +370,7 @@ local localization = {
 
 		INVALID_STATE = "Oúèàêa.\nËòo àaâ èâpÿ è oî äoìæeî àÿòö ïoïpaáìeî á àìèæaéúee ápeíü.",
 
-		LOCAL_FILTER_EXPLANATION_TOOLTIP = "This filter is local and only applies to the currently visible page", -- TODO: translate
+		LOCAL_FILTER_EXPLANATION_TOOLTIP = "Ëòoò ñèìöòp ìoêaìöîÿé è paàoòaeò òoìöêo äìü oòoàpaæaeíoé còpaîèœÿ",
 	},
 }
 
