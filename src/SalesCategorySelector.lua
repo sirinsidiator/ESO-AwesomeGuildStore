@@ -195,7 +195,7 @@ end
 local function SalesCategoryFilter(slot)
 	if(slot.quality == ITEM_QUALITY_TRASH) then return false end
 	local itemLink = GetItemLink(slot.bagId, slot.slotIndex)
-	if(IsItemLinkBound(itemLink)) then return false end
+	if(IsItemLinkBound(itemLink) or IsItemLinkStolen(itemLink)) then return false end
 
 	if(NonContiguousCount(currentFilterValues) == 0) then
 		return true
