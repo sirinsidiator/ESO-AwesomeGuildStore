@@ -53,7 +53,6 @@ function SearchTabWrapper:AttachFilter(filter)
 	if(filter.FilterPageResult) then
 		CALLBACK_MANAGER:RegisterCallback(filter.callbackName, RebuildSearchResultsPage)
 	end
-	RebuildSearchResultsPage()
 end
 
 function SearchTabWrapper:DetachFilter(filter)
@@ -66,7 +65,6 @@ function SearchTabWrapper:DetachFilter(filter)
 	if(filter.FilterPageResult) then
 		CALLBACK_MANAGER:UnregisterCallback(filter.callbackName, RebuildSearchResultsPage)
 	end
-	RebuildSearchResultsPage()
 end
 
 function SearchTabWrapper:RefreshFilterDimensions()
