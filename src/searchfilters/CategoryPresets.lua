@@ -197,7 +197,7 @@ AwesomeGuildStore.FILTER_PRESETS = {
 				texture = "EsoUI/Art/Inventory/inventory_tabIcon_all_%s.dds",
 				isDefault = true,
 				filters = {
-					[TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_FOOD, ITEMTYPE_DRINK, ITEMTYPE_RECIPE, ITEMTYPE_POTION, ITEMTYPE_RACIAL_STYLE_MOTIF, ITEMTYPE_AVA_REPAIR }
+					[TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_FOOD, ITEMTYPE_DRINK, ITEMTYPE_RECIPE, ITEMTYPE_POTION, ITEMTYPE_RACIAL_STYLE_MOTIF, ITEMTYPE_CONTAINER, ITEMTYPE_AVA_REPAIR }
 				},
 			},
 			{
@@ -239,6 +239,13 @@ AwesomeGuildStore.FILTER_PRESETS = {
 				},
 				subfilters = {
 					SUBFILTER_MOTIF_KNOWLEDGE
+				},
+			},
+			{
+				label = L["FILTER_SUBCATEGORY_CONTAINER"],
+				texture = "EsoUI/Art/MainMenu/menuBar_inventory_%s.dds",
+				filters = {
+					[TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_CONTAINER },
 				},
 			},
 			{
