@@ -133,9 +133,7 @@ end
 
 function PriceFilter:Reset()
 	self.slider:SetMinMax(MIN_VALUE, MAX_VALUE)
-	zo_callLater(function()
-		self.slider:SetRangeValue(MIN_VALUE, MAX_VALUE)
-	end, 1)
+	self.slider:SetRangeValue(MIN_VALUE, MAX_VALUE)
 end
 
 function PriceFilter:IsDefault()
