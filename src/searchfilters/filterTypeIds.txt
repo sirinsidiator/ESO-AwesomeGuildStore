@@ -30,3 +30,5 @@
 40 .. 99 - reserved
 
 100 - MasterMerchant DealSelector
+101 - MasterMerchant DealFilter
+102 - CookeryWiz Recipe Filter
