@@ -188,6 +188,15 @@ local localization = {
 		TOOLTIP_LESS_THAN = "under ",
 		TOOLTIP_GREATER_THAN = "over ",
 
+		MAIL_AUGMENTATION_MESSAGE_BODY = "You sold <<2>> <<t:1>> to <<3>>.",
+		MAIL_AUGMENTATION_INVOICE_SELL_VALUE = "Sell Value",
+		MAIL_AUGMENTATION_INVOICE_LISTING_FEE = "Listing Fee",
+		MAIL_AUGMENTATION_INVOICE_GUILD_BANK = "Guild Bank",
+		MAIL_AUGMENTATION_INVOICE_COMMISSION = "Commission",
+		MAIL_AUGMENTATION_INVOICE_LISTING_FEE_REFUND = "Listing Fee (refund)",
+		MAIL_AUGMENTATION_INVOICE_PROFIT = "Profit",
+		MAIL_AUGMENTATION_REQUEST_DATA = "Load Details",
+
 		SETTINGS_REQUIRES_RELOADUI_WARNING = "Only is applied after you reload the UI",
 		SETTINGS_KEEP_FILTERS_ON_CLOSE_LABEL = "Remember filters between store visits",
 		SETTINGS_KEEP_FILTERS_ON_CLOSE_DESCRIPTION = "Leaves the store filters set during a play session instead of clearing it when you close the guild store window and restores the last active state when the UI is loaded",
@@ -207,6 +216,8 @@ local localization = {
 		SETTINGS_SHOW_TRADER_TOOLTIPS_DESCRIPTION = "Show the currently hired trader for a guild that you are a member of, when hovering over the name or an entry in the drop down menu",
 		SETTINGS_AUTO_CLEAR_HISTORY_LABEL = "Auto clear history",
 		SETTINGS_AUTO_CLEAR_HISTORY_DESCRIPTION = "Automatically deletes all history entries when you open the guild store for the first time in a game session. You can undo the deletion via the menu in the search library",
+		SETTINGS_MAIL_AUGMENTATION_LABEL = "Mail augmentation",
+		SETTINGS_MAIL_AUGMENTATION_DESCRIPTION = "Adds detailed information about a transaction to an incoming Guild Store Mail if the data is available in the Guild Activity Log.",
 
 		INVALID_STATE = "Invalid Store State.\nThis is a bug in the game and should be fixed soon.",
 
@@ -265,6 +276,15 @@ local localization = {
 
 		TOOLTIP_LESS_THAN = "unter ",
 		TOOLTIP_GREATER_THAN = "über ",
+
+		MAIL_AUGMENTATION_MESSAGE_BODY = "Du hast <<2>> <<t:1>> an <<3>> verkauft.",
+		MAIL_AUGMENTATION_INVOICE_SELL_VALUE = "Verkaufswert",
+		MAIL_AUGMENTATION_INVOICE_LISTING_FEE = "Einstellgebühr",
+		MAIL_AUGMENTATION_INVOICE_GUILD_BANK = "Gildenbank",
+		MAIL_AUGMENTATION_INVOICE_COMMISSION = "Provision",
+		MAIL_AUGMENTATION_INVOICE_LISTING_FEE_REFUND = "Einstellgebühr (Rückzahlung)",
+		MAIL_AUGMENTATION_INVOICE_PROFIT = "Gewinn",
+		MAIL_AUGMENTATION_REQUEST_DATA = "Lade Details",
 
 		SETTINGS_REQUIRES_RELOADUI_WARNING = "Wird erst angewandt wenn das Interface neu geladen wurde",
 		SETTINGS_KEEP_FILTERS_ON_CLOSE_LABEL = "Filtereinstellungen merken",

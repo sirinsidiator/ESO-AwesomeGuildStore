@@ -15,6 +15,16 @@ local function UnregisterForEvent(event, name)
 	EVENT_MANAGER:UnregisterForEvent(name, event)
 end
 
+local function WrapFunction(object, functionName, wrapper)
+	if(type(object) == "string") then
+		wrapper = functionName
+		functionName = object
+		object = _G
+	end
+	local originalFunction = object[functionName]
+	object[functionName] = function(...) return wrapper(originalFunction, ...) end
+end
+
 local function OnAddonLoaded(callback)
 	local eventHandle = ""
 	eventHandle = RegisterForEvent(EVENT_ADD_ON_LOADED, function(event, name)
@@ -25,6 +35,7 @@ local function OnAddonLoaded(callback)
 end
 
 AwesomeGuildStore.RegisterForEvent = RegisterForEvent
+AwesomeGuildStore.WrapFunction = WrapFunction
 -----------------------------------------------------------------------------------------
 
 AwesomeGuildStore.GetAPIVersion = function() return 2 end
@@ -35,4 +46,5 @@ AwesomeGuildStore.OnCloseSearchTabCallbackName = ADDON_NAME .. "_OnCloseSearchTa
 OnAddonLoaded(function()
 	local saveData = AwesomeGuildStore.LoadSettings()
 	local tradingHouseWrapper = AwesomeGuildStore.TradingHouseWrapper:New(saveData)
+	AwesomeGuildStore.InitializeAugmentedMails(saveData)
 end)

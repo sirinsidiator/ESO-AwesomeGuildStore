@@ -47,6 +47,7 @@ searchfilters/TextFilter.lua
 history/SavedSearchTooltip.lua
 history/SearchLibrary.lua
 history/SearchLibrary.xml
+history/MailBox.lua
 guildselector/HiredTraderTooltip.lua
 guildselector/GuildSelector.lua
 guildselector/GuildSelector.xml
@@ -55,5 +56,6 @@ wrappers/SearchTabWrapper.lua
 wrappers/SellTabWrapper.lua
 wrappers/ListingTabWrapper.lua
 wrappers/KeybindStripWrapper.lua
+wrappers/ActivityLogWrapper.lua
 SalesCategorySelector.lua
 AwesomeGuildStore.xml

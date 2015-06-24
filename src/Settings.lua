@@ -9,6 +9,7 @@ local function LoadSettings()
 		listWithSingleClick = true,
 		sortWithoutSearch = false,
 		showTraderTooltip = true,
+		augementMails = true,
 		sortField = TRADING_HOUSE_SORT_SALE_PRICE,
 		sortOrder = ZO_SORT_ORDER_UP,
 		listingSortField = TRADING_HOUSE_SORT_LISTING_TIME,
@@ -111,6 +112,15 @@ local function LoadSettings()
 			setFunc = function(value) saveData.searchLibrary.autoClearHistory = value end,
 			default = defaultData.searchLibrary.autoClearHistory
 		}
+		optionsData[#optionsData + 1] = {
+			type = "checkbox",
+			name = L["SETTINGS_MAIL_AUGMENTATION_LABEL"],
+			tooltip = L["SETTINGS_MAIL_AUGMENTATION_DESCRIPTION"],
+			getFunc = function() return saveData.augementMails end,
+			setFunc = function(value) saveData.augementMails = value end,
+			default = defaultData.augementMails,
+			warning = L["SETTINGS_REQUIRES_RELOADUI_WARNING"]
+		}
 		LAM:RegisterOptionControls("AwesomeGuildStoreOptions", optionsData)
 
 		AwesomeGuildStore.OpenSettingsPanel = function()
@@ -181,6 +191,10 @@ local function LoadSettings()
 			saveData.replaceQualityFilter = nil
 			saveData.replaceLevelFilter = nil
 			saveData.version = 12
+		end
+		if(saveData.version == 12) then
+			saveData.augementMails = defaultData.augementMails
+			saveData.version = 13
 		end
 	end
 
