@@ -80,7 +80,7 @@ end
 
 function ListingTabWrapper:InitializeLoadingOverlay(tradingHouseWrapper)
 	tradingHouseWrapper:PreHook("OnAwaitingResponse", function(self, responseType)
-		if(responseType == TRADING_HOUSE_RESULT_LISTINGS_PENDING) then
+		if(responseType == TRADING_HOUSE_RESULT_LISTINGS_PENDING or responseType == TRADING_HOUSE_RESULT_CANCEL_SALE_PENDING) then
 			if(self:IsInListingsMode()) then
 				tradingHouseWrapper:ShowLoadingOverlay()
 			end
@@ -88,7 +88,7 @@ function ListingTabWrapper:InitializeLoadingOverlay(tradingHouseWrapper)
 	end)
 
 	tradingHouseWrapper:PreHook("OnResponseReceived", function(self, responseType, result)
-		if(responseType == TRADING_HOUSE_RESULT_LISTINGS_PENDING) then
+		if(responseType == TRADING_HOUSE_RESULT_LISTINGS_PENDING or responseType == TRADING_HOUSE_RESULT_CANCEL_SALE_PENDING) then
 			if(result == TRADING_HOUSE_RESULT_SUCCESS) then
 				self:UpdateListingCounts()
 			end
