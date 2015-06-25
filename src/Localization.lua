@@ -167,6 +167,8 @@ local localization = {
 		TEXT_FILTER_TEXT = "Filter by text",
 		TEXT_FILTER_ITEMCOUNT_TEMPLATE = GetString(SI_TRADING_HOUSE_RESULT_COUNT) .. " (<<2>>)",
 
+		UNIT_PRICE_FILTER_TITLE = "Unit Price Filter:",
+
 		WARNING_SUBFILTER_LIMIT = "Cannot filter for more than 8 at a time",
 
 		SEARCH_LIBRARY_TOGGLE_LABEL = "Toggle Search Library",
@@ -255,6 +257,8 @@ local localization = {
 
 		TEXT_FILTER_TITLE = "Textfilter:",
 		TEXT_FILTER_TEXT = "Nach Text filtern",
+
+		UNIT_PRICE_FILTER_TITLE = "Stückpreisfilter:",
 
 		WARNING_SUBFILTER_LIMIT = "Kann nur nach 8 gleichzeitig filtern",
 

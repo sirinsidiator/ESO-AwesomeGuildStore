@@ -44,6 +44,7 @@ searchfilters/PriceFilter.lua
 searchfilters/LevelFilter.lua
 searchfilters/QualityFilter.lua
 searchfilters/TextFilter.lua
+searchfilters/UnitPriceFilter.lua
 history/SavedSearchTooltip.lua
 history/SearchLibrary.lua
 history/SearchLibrary.xml

@@ -200,6 +200,11 @@ function SearchTabWrapper:InitializeFilters(tradingHouseWrapper)
 	searchLibrary:RegisterFilter(qualityFilter)
 	self.qualityFilter = qualityFilter
 
+	local unitPriceFilter = AwesomeGuildStore.UnitPriceFilter:New("AwesomeGuildStoreUnitPriceFilter", tradingHouseWrapper)
+	self:AttachFilter(unitPriceFilter)
+	searchLibrary:RegisterFilter(unitPriceFilter)
+	self.unitPriceFilter = unitPriceFilter
+
 	local textFilter = AwesomeGuildStore.TextFilter:New("AwesomeGuildStoreTextFilter", tradingHouseWrapper)
 	self:AttachFilter(textFilter)
 	searchLibrary:RegisterFilter(textFilter)

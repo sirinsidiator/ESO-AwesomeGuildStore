@@ -3,8 +3,9 @@
 3 - LevelFilter
 4 - QualityFilter
 5 - TextFilter
+6 - UnitPriceFilter
 
-6 .. 19 - reserved
+7 .. 19 - reserved
 
 20 - WeaponTraitSubfilter
 21 - WeaponEnchantmentSubfilter

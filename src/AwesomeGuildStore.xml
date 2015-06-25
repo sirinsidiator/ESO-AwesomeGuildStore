@@ -59,7 +59,40 @@
 				<EditBox name="$(parent)Box" inherits="ZO_DefaultEditForBackdrop ZO_EditDefaultText" />
 			</Controls>
 		</Backdrop>
-		
+
+		<Control name="AwesomeGuildStorePriceInputTemplate" virtual="true"> <!-- copy pasta from tradinghouse.xml -->
+			<Controls>
+				<Backdrop name="$(parent)MinPrice" inherits="ZO_EditBackdrop">
+					<Anchor point="TOPLEFT" />
+					<Dimensions x="88" y="25" />
+
+					<Controls>
+						<EditBox name="$(parent)Box" font="ZoFontWinT1" textType="NUMERIC_UNSIGNED_INT" inherits="ZO_DefaultEditForBackdrop">
+							<Anchor point="TOPLEFT" offsetX="2" offsetY="2" />
+							<Anchor point="BOTTOMRIGHT" />
+						</EditBox>
+					</Controls>
+				</Backdrop>
+
+				<Texture name="$(parent)PriceRangeDivider" color="FFFFFF">
+					<Dimensions x="10" y="2" />
+					<Anchor point="LEFT" relativeTo="$(parent)MinPrice" relativePoint="RIGHT" offsetX="4" />
+				</Texture>
+
+				<Backdrop name="$(parent)MaxPrice" inherits="ZO_EditBackdrop">
+					<Dimensions x="88" y="25" />
+					<Anchor point="LEFT" relativeTo="$(parent)PriceRangeDivider" relativePoint="RIGHT" offsetX="4" />
+
+					<Controls>
+						<EditBox name="$(parent)Box" font="ZoFontWinT1" textType="NUMERIC_UNSIGNED_INT" inherits="ZO_DefaultEditForBackdrop">
+							<Anchor point="TOPLEFT" offsetX="2" offsetY="2" />
+							<Anchor point="BOTTOMRIGHT" />
+						</EditBox>
+					</Controls>
+				</Backdrop>
+			</Controls>
+		</Control>
+
 		<Control name="AwesomeGuildStoreShowMoreRowTemplate" mouseEnabled="true" tier="MEDIUM" layer="CONTROLS" virtual="true">
 			<Dimensions y="32" />
 
@@ -74,7 +107,8 @@
 					<TextureCoords left="0" right="1" top="0" bottom=".625" />
 				</Texture>
 
-				<Label name="$(parent)Text" font="ZoFontGameShadow" verticalAlignment="CENTER" horizontalAlignment="CENTER" wrapMode="ELLIPSIS" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_NORMAL">
+				<Label name="$(parent)Text" font="ZoFontGameShadow" verticalAlignment="CENTER" horizontalAlignment="CENTER" wrapMode="ELLIPSIS"
+					color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_NORMAL">
 					<Dimensions y="32" />
 					<Anchor point="LEFT" />
 					<Anchor point="RIGHT" />
