@@ -17,10 +17,10 @@ local MIN_QUALITY = 1
 local MAX_QUALITY = 5
 local QUALITY_LABEL = {L["NORMAL_QUALITY_LABEL"], L["MAGIC_QUALITY_LABEL"], L["ARCANE_QUALITY_LABEL"], L["ARTIFACT_QUALITY_LABEL"], L["LEGENDARY_QUALITY_LABEL"]}
 local LINE_SPACING = 4
-local QUALITY_FITLER_TYPE_ID = 4
+local QUALITY_FILTER_TYPE_ID = 4
 
 function QualityFilter:New(name, tradingHouseWrapper, ...)
-	return FilterBase.New(self, QUALITY_FITLER_TYPE_ID, name, tradingHouseWrapper, ...)
+	return FilterBase.New(self, QUALITY_FILTER_TYPE_ID, name, tradingHouseWrapper, ...)
 end
 
 function QualityFilter:Initialize(name, tradingHouseWrapper)

@@ -5,11 +5,11 @@ local TextFilter = FilterBase:Subclass()
 AwesomeGuildStore.TextFilter = TextFilter
 
 local TEXT_FILTER_DATA_TYPE = 1
-local TEXT_FITLER_TYPE_ID = 5
+local TEXT_FILTER_TYPE_ID = 5
 local MARGIN = 22
 
 function TextFilter:New(name, tradingHouseWrapper, ...)
-	return FilterBase.New(self, TEXT_FITLER_TYPE_ID, name, tradingHouseWrapper, ...)
+	return FilterBase.New(self, TEXT_FILTER_TYPE_ID, name, tradingHouseWrapper, ...)
 end
 
 function TextFilter:Initialize(name, tradingHouseWrapper)

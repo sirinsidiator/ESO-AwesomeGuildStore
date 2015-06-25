@@ -10,10 +10,10 @@ local MAX_LEVEL = 50
 local MIN_RANK = 1
 local MAX_RANK = 14
 local LINE_SPACING = 4
-local LEVEL_FITLER_TYPE_ID = 3
+local LEVEL_FILTER_TYPE_ID = 3
 
 function LevelFilter:New(name, tradingHouseWrapper, ...)
-	return FilterBase.New(self, LEVEL_FITLER_TYPE_ID, name, tradingHouseWrapper, ...)
+	return FilterBase.New(self, LEVEL_FILTER_TYPE_ID, name, tradingHouseWrapper, ...)
 end
 
 function LevelFilter:Initialize(name, tradingHouseWrapper)

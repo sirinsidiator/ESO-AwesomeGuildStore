@@ -11,10 +11,10 @@ local values = { LOWER_LIMIT, 10, 50, 100, 200, 300, 400, 500, 600, 700, 800, 90
 local MIN_VALUE = 1
 local MAX_VALUE = #values
 local LINE_SPACING = 4
-local PRICE_FITLER_TYPE_ID = 2
+local PRICE_FILTER_TYPE_ID = 2
 
 function PriceFilter:New(name, tradingHouseWrapper, ...)
-	return FilterBase.New(self, PRICE_FITLER_TYPE_ID, name, tradingHouseWrapper, ...)
+	return FilterBase.New(self, PRICE_FILTER_TYPE_ID, name, tradingHouseWrapper, ...)
 end
 
 function PriceFilter:Initialize(name, tradingHouseWrapper)
