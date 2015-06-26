@@ -151,9 +151,11 @@ AwesomeGuildStore.InitializeAugmentedMails = function(saveData)
 		if(category == GUILD_HISTORY_STORE and MAIL_INBOX.mailId and not hasData) then
 			local mailId = MAIL_INBOX.mailId
 			local mailData = MAIL_INBOX:GetMailData(mailId)
-			local messageControl = MAIL_INBOX.messageControl
-			ZO_MailInboxShared_PopulateMailData(mailData, mailId)
-			ZO_MailInboxShared_UpdateInbox(mailData, GetControl(messageControl, "From"), GetControl(messageControl, "Subject"), GetControl(messageControl, "Expires"), GetControl(messageControl, "Received"), GetControl(messageControl, "Body"))
+			if(mailData) then
+				local messageControl = MAIL_INBOX.messageControl
+				ZO_MailInboxShared_PopulateMailData(mailData, mailId)
+				ZO_MailInboxShared_UpdateInbox(mailData, GetControl(messageControl, "From"), GetControl(messageControl, "Subject"), GetControl(messageControl, "Expires"), GetControl(messageControl, "Received"), GetControl(messageControl, "Body"))
+			end
 		end
 	end)
 
