@@ -10,6 +10,7 @@ local function LoadSettings()
 		sortWithoutSearch = false,
 		showTraderTooltip = true,
 		augementMails = true,
+		mailAugmentationShowInvoice = false,
 		sortField = TRADING_HOUSE_SORT_SALE_PRICE,
 		sortOrder = ZO_SORT_ORDER_UP,
 		listingSortField = TRADING_HOUSE_SORT_LISTING_TIME,
@@ -36,6 +37,7 @@ local function LoadSettings()
 			name = "Awesome Guild Store",
 			author = "sirinsidiator",
 			version = "VERSION_NUMBER",
+			registerForRefresh = true,
 			registerForDefaults = true
 		}
 		local panel = LAM:RegisterAddonPanel("AwesomeGuildStoreOptions", panelData)
@@ -120,6 +122,15 @@ local function LoadSettings()
 			setFunc = function(value) saveData.augementMails = value end,
 			default = defaultData.augementMails,
 			warning = L["SETTINGS_REQUIRES_RELOADUI_WARNING"]
+		}
+		optionsData[#optionsData + 1] = {
+			type = "checkbox",
+			name = L["SETTINGS_MAIL_AUGMENTATION_INVOICE_LABEL"],
+			tooltip = L["SETTINGS_MAIL_AUGMENTATION_INVOICE_DESCRIPTION"],
+			getFunc = function() return saveData.mailAugmentationShowInvoice end,
+			setFunc = function(value) saveData.mailAugmentationShowInvoice = value end,
+			default = defaultData.mailAugmentationShowInvoice,
+			disabled = function() return not saveData.augementMails end
 		}
 		LAM:RegisterOptionControls("AwesomeGuildStoreOptions", optionsData)
 

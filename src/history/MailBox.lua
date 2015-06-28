@@ -140,9 +140,10 @@ AwesomeGuildStore.InitializeAugmentedMails = function(saveData)
 		container.guildBank = CreateLine(container, L["MAIL_AUGMENTATION_INVOICE_GUILD_BANK"], "-")
 		container.commission = CreateLine(container, L["MAIL_AUGMENTATION_INVOICE_COMMISSION"], "-")
 		CreateDivider(container)
+		container.profit = CreateLine(container, L["MAIL_AUGMENTATION_INVOICE_PROFIT"])
 		container.listingFeeRefund = CreateLine(container, L["MAIL_AUGMENTATION_INVOICE_LISTING_FEE_REFUND"], "+")
 		CreateDivider(container)
-		container.profit = CreateLine(container, L["MAIL_AUGMENTATION_INVOICE_PROFIT"])
+		container.received = CreateLine(container, L["MAIL_AUGMENTATION_INVOICE_RECEIVED"])
 
 		return container
 	end
@@ -202,10 +203,11 @@ AwesomeGuildStore.InitializeAugmentedMails = function(saveData)
 				invoice.listingFee:SetValue(saleData.listingFee)
 				invoice.guildBank:SetValue(saleData.tax)
 				invoice.commission:SetValue(saleData.houseCut - saleData.tax)
+				invoice.profit:SetValue(saleData.profit)
 				invoice.listingFeeRefund:SetValue(saleData.listingFee)
-				invoice.profit:SetValue(saleData.profit + saleData.listingFee)
+				invoice.received:SetValue(saleData.profit + saleData.listingFee)
 				button:SetHidden(true)
-				invoice:SetHidden(false)
+				invoice:SetHidden(not saveData.mailAugmentationShowInvoice)
 			else
 				hasData = false
 				button:SetHidden(false)
@@ -220,9 +222,11 @@ AwesomeGuildStore.InitializeAugmentedMails = function(saveData)
 	WrapFunction("ReadMail", function(originalReadMail, mailId)
 		local transactionData = transactionDataByMailIdString[Id64ToString(mailId)]
 		if(transactionData) then
+			local format = L["MAIL_AUGMENTATION_MESSAGE_BODY"]
 			local buyerLink = neutralColor:Colorize(ZO_LinkHandler_CreateDisplayNameLink(transactionData.buyerName)):gsub("[%[%]]", "")
 			local itemCount = neutralColor:Colorize(transactionData.itemCount .. "x")
-			return zo_strformat(L["MAIL_AUGMENTATION_MESSAGE_BODY"], transactionData.itemLink, itemCount, buyerLink)
+			local sellPrice = neutralColor:Colorize(zo_strformat("<<1>> <<2>>", ZO_CurrencyControl_FormatCurrency(transactionData.sellPrice), iconMarkup))
+			return zo_strformat(format, transactionData.itemLink, itemCount, buyerLink, sellPrice)
 		else
 			return originalReadMail(mailId)
 		end

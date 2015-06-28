@@ -18,7 +18,7 @@ local localization = {
 		FILTER_SUBCATEGORY_MEDIUMARMOR = GetString(SI_TRADING_HOUSE_BROWSE_ARMOR_TYPE_MEDIUM),
 		FILTER_SUBCATEGORY_LIGHTARMOR = GetString(SI_TRADING_HOUSE_BROWSE_ARMOR_TYPE_LIGHT),
 		FILTER_SUBCATEGORY_SHIELD = GetString(SI_TRADING_HOUSE_BROWSE_ARMOR_TYPE_SHIELD),
-		FILTER_SUBCATEGORY_JEWELRY = "Jewelry",
+		FILTER_SUBCATEGORY_JEWELRY = GetString(SI_GAMEPADITEMCATEGORY38),
 		FILTER_SUBCATEGORY_COSTUME = GetString("SI_EQUIPTYPE", EQUIP_TYPE_COSTUME),
 
 		FILTER_SUBCATEGORY_FOOD = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_ITEMTYPE", ITEMTYPE_FOOD)),
@@ -39,7 +39,7 @@ local localization = {
 		FILTER_SUBCATEGORY_WEAPONTRAIT = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_ITEMTYPE", ITEMTYPE_WEAPON_TRAIT)),
 		FILTER_SUBCATEGORY_ARMORTRAIT = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_ITEMTYPE", ITEMTYPE_ARMOR_TRAIT)),
 
-		FILTER_SUBCATEGORY_GLYPHS = "Glyph",
+		FILTER_SUBCATEGORY_GLYPHS = GetString(SI_GAMEPADITEMCATEGORY13),
 		FILTER_SUBCATEGORY_SOULGEMS = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_ITEMTYPE", ITEMTYPE_SOUL_GEM)),
 		FILTER_SUBCATEGORY_SIEGE = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_ITEMTYPE", ITEMTYPE_SIEGE)),
 		FILTER_SUBCATEGORY_BAIT = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_ITEMTYPE", ITEMTYPE_LURE)),
@@ -190,13 +190,14 @@ local localization = {
 		TOOLTIP_LESS_THAN = "under ",
 		TOOLTIP_GREATER_THAN = "over ",
 
-		MAIL_AUGMENTATION_MESSAGE_BODY = "You sold <<2>> <<t:1>> to <<3>>.",
-		MAIL_AUGMENTATION_INVOICE_SELL_VALUE = "Sell Value",
-		MAIL_AUGMENTATION_INVOICE_LISTING_FEE = "Listing Fee",
-		MAIL_AUGMENTATION_INVOICE_GUILD_BANK = "Guild Bank",
+		MAIL_AUGMENTATION_MESSAGE_BODY = "You sold <<2>> <<t:1>> to <<3>> for <<4>>.",
+		MAIL_AUGMENTATION_INVOICE_SELL_VALUE = GetString(SI_TRADING_HOUSE_POSTING_PRICE_TOTAL):gsub(":", ""),
+		MAIL_AUGMENTATION_INVOICE_LISTING_FEE = GetString(SI_TRADING_HOUSE_POSTING_LISTING_FEE),
+		MAIL_AUGMENTATION_INVOICE_GUILD_BANK = GetString(SI_TRADING_HOUSE_POSTING_TH_CUT),
 		MAIL_AUGMENTATION_INVOICE_COMMISSION = "Commission",
-		MAIL_AUGMENTATION_INVOICE_LISTING_FEE_REFUND = "Listing Fee (refund)",
-		MAIL_AUGMENTATION_INVOICE_PROFIT = "Profit",
+		MAIL_AUGMENTATION_INVOICE_LISTING_FEE_REFUND = GetString(SI_TRADING_HOUSE_POSTING_LISTING_FEE) .. " (refund)",
+		MAIL_AUGMENTATION_INVOICE_PROFIT = GetString(SI_TRADING_HOUSE_POSTING_PROFIT),
+		MAIL_AUGMENTATION_INVOICE_RECEIVED = GetString(SI_MAIL_READ_SENT_GOLD_LABEL):gsub(":", ""),
 		MAIL_AUGMENTATION_REQUEST_DATA = "Load Details",
 
 		SETTINGS_REQUIRES_RELOADUI_WARNING = "Only is applied after you reload the UI",
@@ -219,15 +220,15 @@ local localization = {
 		SETTINGS_AUTO_CLEAR_HISTORY_LABEL = "Auto clear history",
 		SETTINGS_AUTO_CLEAR_HISTORY_DESCRIPTION = "Automatically deletes all history entries when you open the guild store for the first time in a game session. You can undo the deletion via the menu in the search library",
 		SETTINGS_MAIL_AUGMENTATION_LABEL = "Mail augmentation",
-		SETTINGS_MAIL_AUGMENTATION_DESCRIPTION = "Adds detailed information about a transaction to an incoming Guild Store Mail if the data is available in the Guild Activity Log.",
+		SETTINGS_MAIL_AUGMENTATION_DESCRIPTION = "Adds more detailed information about a transaction to an incoming Guild Store Mail if the data is available in the Guild Activity Log.",
+		SETTINGS_MAIL_AUGMENTATION_INVOICE_LABEL = "Show invoice on mails",
+		SETTINGS_MAIL_AUGMENTATION_INVOICE_DESCRIPTION = "Adds a detailed invoice to the mail which lists all deductions.",
 
 		INVALID_STATE = "Invalid Store State.\nThis is a bug in the game and should be fixed soon.",
 
 		LOCAL_FILTER_EXPLANATION_TOOLTIP = "This filter is local and only applies to the currently visible page",
 	},
 	de = {
-		FILTER_SUBCATEGORY_GLYPHS = "Glyphe",
-		FILTER_SUBCATEGORY_JEWELRY = "Schmuck",
 		SUBFILTER_WEAPON_TYPE_LABEL = "Waffentyp",
 		SUBFILTER_ARMOR_TYPE_LABEL = "Rüstungstyp",
 		SUBFILTER_JEWELRY_TYPE_LABEL = "Schmucktyp",
@@ -281,13 +282,9 @@ local localization = {
 		TOOLTIP_LESS_THAN = "unter ",
 		TOOLTIP_GREATER_THAN = "über ",
 
-		MAIL_AUGMENTATION_MESSAGE_BODY = "Du hast <<2>> <<t:1>> an <<3>> verkauft.",
-		MAIL_AUGMENTATION_INVOICE_SELL_VALUE = "Verkaufswert",
-		MAIL_AUGMENTATION_INVOICE_LISTING_FEE = "Einstellgebühr",
-		MAIL_AUGMENTATION_INVOICE_GUILD_BANK = "Gildenbank",
+		MAIL_AUGMENTATION_MESSAGE_BODY = "Du hast <<2>> <<t:1>> an <<3>> verkauft für <<4>>.",
 		MAIL_AUGMENTATION_INVOICE_COMMISSION = "Provision",
-		MAIL_AUGMENTATION_INVOICE_LISTING_FEE_REFUND = "Einstellgebühr (Rückzahlung)",
-		MAIL_AUGMENTATION_INVOICE_PROFIT = "Gewinn",
+		MAIL_AUGMENTATION_INVOICE_LISTING_FEE_REFUND = GetString(SI_TRADING_HOUSE_POSTING_LISTING_FEE) .. " (Rückzahlung)",
 		MAIL_AUGMENTATION_REQUEST_DATA = "Lade Details",
 
 		SETTINGS_REQUIRES_RELOADUI_WARNING = "Wird erst angewandt wenn das Interface neu geladen wurde",
@@ -315,9 +312,6 @@ local localization = {
 		LOCAL_FILTER_EXPLANATION_TOOLTIP = "Dieser Filter ist lokal und wirkt nur auf der derzeit sichtbaren Seite",
 	},
 	fr = {
-		FILTER_SUBCATEGORY_JEWELRY = GetString(SI_GAMEPADITEMCATEGORY38),
-		FILTER_SUBCATEGORY_GLYPHS = GetString(SI_GAMEPADITEMCATEGORY13),
-
 		SUBFILTER_WEAPON_ENCHANTMENT_LABEL = "Enchantement d'arme",
 		SUBFILTER_WEAPON_TYPE_LABEL = "Type d'arme",
 		SUBFILTER_ARMOR_TYPE_LABEL = "Type d'armure",
@@ -371,13 +365,9 @@ local localization = {
 		TOOLTIP_LESS_THAN = "moins de ",
 		TOOLTIP_GREATER_THAN = "plus que ",
 
-		MAIL_AUGMENTATION_MESSAGE_BODY = "Vous avez vendu <<2>> <<t:1>> à <<3>>.",
-		MAIL_AUGMENTATION_INVOICE_SELL_VALUE = GetString(SI_TRADING_HOUSE_POSTING_PRICE_TOTAL),
-		MAIL_AUGMENTATION_INVOICE_LISTING_FEE = GetString(SI_TRADING_HOUSE_POSTING_LISTING_FEE),
-		MAIL_AUGMENTATION_INVOICE_GUILD_BANK = GetString(SI_TRADING_HOUSE_POSTING_TH_CUT),
+		MAIL_AUGMENTATION_MESSAGE_BODY = "Vous avez vendu <<2>> <<t:1>> à <<3>> pour <<4>>.", -- TODO: check translation -- google translated the last part of the sentence
 		MAIL_AUGMENTATION_INVOICE_COMMISSION = "Commission",
 		MAIL_AUGMENTATION_INVOICE_LISTING_FEE_REFUND = GetString(SI_TRADING_HOUSE_POSTING_LISTING_FEE) .. " (remboursement)",
-		MAIL_AUGMENTATION_INVOICE_PROFIT = GetString(SI_TRADING_HOUSE_POSTING_PROFIT),
 		MAIL_AUGMENTATION_REQUEST_DATA = "Chargement des détails",
 
 		SETTINGS_REQUIRES_RELOADUI_WARNING = "Sera appliqué uniquement après le rechargement de l'interface (ReloadUI)",
@@ -400,8 +390,12 @@ local localization = {
 		SETTINGS_AUTO_CLEAR_HISTORY_LABEL = "Effacer automatiquement l'historique",
 		SETTINGS_AUTO_CLEAR_HISTORY_DESCRIPTION = "Supprime automatiquement l'historique à chaque lancement du jeu. Vous pouvez annuler la suppression via le menu dans la fenêtre de recherche",
 		SETTINGS_MAIL_AUGMENTATION_LABEL = "Détail des transactions dans les mails",
-		SETTINGS_MAIL_AUGMENTATION_DESCRIPTION = "Affiche un récapitulatif détaillé des transactions effectuées à la boutique de guilde si les informations sont disponibles via l'historique des ventes de celle-ci.",
+		SETTINGS_MAIL_AUGMENTATION_DESCRIPTION = "Affiche un récapitulatif détaillé des transactions effectuées à la boutique de guilde si les informations sont disponibles via l'historique des ventes de celle-ci.",  -- TODO: check translation -- changed english text and added "more" in the beginning 
+		--SETTINGS_MAIL_AUGMENTATION_INVOICE_LABEL = "Show invoice on mails", -- TODO: translate
+		--SETTINGS_MAIL_AUGMENTATION_INVOICE_DESCRIPTION = "Adds a detailed invoice to the mail which lists all deductions.", -- TODO: translate
+
 		INVALID_STATE = "Boutique de guilde indisponible.\nCeci est un bug du jeu et devrait être résolu bientôt.",
+
 		LOCAL_FILTER_EXPLANATION_TOOLTIP = "Ce filtre est visuel et ne s'applique qu'à la page en cours",
 	},
 	ru = {
