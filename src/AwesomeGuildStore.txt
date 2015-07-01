@@ -39,6 +39,7 @@ searchfilters/CategoryPresets.lua
 searchfilters/CategorySubfilter.lua
 searchfilters/KnownRecipeFilter.lua
 searchfilters/KnownMotifFilter.lua
+searchfilters/KnownRuneTranslationFilter.lua
 searchfilters/ResearchableTraitsFilter.lua
 searchfilters/CategorySelector.lua
 searchfilters/PriceFilter.lua

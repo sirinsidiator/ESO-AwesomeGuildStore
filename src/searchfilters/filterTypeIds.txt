@@ -28,8 +28,9 @@
 38 - KnownRecipeSubfilter
 39 - KnownMotifSubfilter
 40 - ResearchableTraitsSubfilter
+41 - KnownRuneTranslationSubfilter
 
-41 .. 99 - reserved
+42 .. 99 - reserved
 
 100 - MasterMerchant DealSelector
 101 - MasterMerchant DealFilter
