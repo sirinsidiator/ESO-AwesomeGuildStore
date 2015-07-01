@@ -62,9 +62,9 @@ AwesomeGuildStore.InitializeAugmentedMails = function(saveData)
 		return potentialEvents[1]
 	end
 
-	local function GetTransactionDataForMail(dataTable, skipSearch)
+	local function GetTransactionDataForMail(dataTable)
 		local mailIdString = Id64ToString(dataTable.mailId)
-		if(not transactionDataByMailIdString[mailIdString] and not skipSearch) then
+		if(not transactionDataByMailIdString[mailIdString]) then
 			transactionDataByMailIdString[mailIdString] = GetTransaction(dataTable.secsSinceReceived, dataTable.attachedMoney)
 		end
 		return transactionDataByMailIdString[mailIdString]
@@ -149,10 +149,10 @@ AwesomeGuildStore.InitializeAugmentedMails = function(saveData)
 	end
 
 	RegisterForEvent(EVENT_GUILD_HISTORY_CATEGORY_UPDATED, function(_, guildId, category)
-		if(category == GUILD_HISTORY_STORE and MAIL_INBOX.mailId and not hasData) then
+		if(category == GUILD_HISTORY_STORE and type(MAIL_INBOX.mailId) == "number" and not hasData) then
 			local mailId = MAIL_INBOX.mailId
 			local mailData = MAIL_INBOX:GetMailData(mailId)
-			if(mailData) then
+			if(mailData and mailData.fromStore) then
 				local messageControl = MAIL_INBOX.messageControl
 				ZO_MailInboxShared_PopulateMailData(mailData, mailId)
 				ZO_MailInboxShared_UpdateInbox(mailData, GetControl(messageControl, "From"), GetControl(messageControl, "Subject"), GetControl(messageControl, "Expires"), GetControl(messageControl, "Received"), GetControl(messageControl, "Body"))
@@ -220,7 +220,11 @@ AwesomeGuildStore.InitializeAugmentedMails = function(saveData)
 	end)
 
 	WrapFunction("ReadMail", function(originalReadMail, mailId)
-		local transactionData = transactionDataByMailIdString[Id64ToString(mailId)]
+		local mailIdString = mailId
+		if(type(mailIdString) ~= "string") then
+			mailIdString = Id64ToString(mailId)
+		end
+		local transactionData = transactionDataByMailIdString[mailIdString]
 		if(transactionData) then
 			local format = L["MAIL_AUGMENTATION_MESSAGE_BODY"]
 			local buyerLink = neutralColor:Colorize(ZO_LinkHandler_CreateDisplayNameLink(transactionData.buyerName)):gsub("[%[%]]", "")
