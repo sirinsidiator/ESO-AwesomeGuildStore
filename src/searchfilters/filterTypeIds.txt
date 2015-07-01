@@ -27,8 +27,9 @@
 37 - GlyphTypeSubfilter
 38 - KnownRecipeSubfilter
 39 - KnownMotifSubfilter
+40 - ResearchableTraitsSubfilter
 
-40 .. 99 - reserved
+41 .. 99 - reserved
 
 100 - MasterMerchant DealSelector
 101 - MasterMerchant DealFilter
