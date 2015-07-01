@@ -27,6 +27,7 @@ function ListingTabWrapper:RunInitialSetup(tradingHouseWrapper)
 	self:InitializeListingSortHeaders(tradingHouseWrapper)
 	self:InitializeListingCount(tradingHouseWrapper)
 	self:InitializeLoadingOverlay(tradingHouseWrapper)
+	self:InitializeUnitPriceDisplay(tradingHouseWrapper)
 end
 
 local function PrepareSortHeader(container, name, key)
@@ -95,6 +96,51 @@ function ListingTabWrapper:InitializeLoadingOverlay(tradingHouseWrapper)
 			tradingHouseWrapper:HideLoadingOverlay()
 		end
 	end)
+end
+
+function ListingTabWrapper:InitializeUnitPriceDisplay(tradingHouseWrapper)
+	local PER_UNIT_PRICE_CURRENCY_OPTIONS = {
+		showTooltips = false,
+		iconSide = RIGHT,
+	}
+	local UNIT_PRICE_FONT = "/esoui/common/fonts/univers67.otf|14|soft-shadow-thin"
+	local ITEM_LISTINGS_DATA_TYPE = 2
+
+	local saveData = self.saveData
+	local tradingHouse = tradingHouseWrapper.tradingHouse
+	local dataType = tradingHouse.m_postedItemsList.dataTypes[ITEM_LISTINGS_DATA_TYPE]
+	local originalSetupCallback = dataType.setupCallback
+
+	dataType.setupCallback = function(rowControl, postedItem)
+		originalSetupCallback(rowControl, postedItem)
+
+		local sellPriceControl = rowControl:GetNamedChild("SellPrice")
+		local perItemPrice = rowControl:GetNamedChild("SellPricePerItem")
+		if(saveData.displayPerUnitPrice) then
+			if(not perItemPrice) then
+				local controlName = rowControl:GetName() .. "SellPricePerItem"
+				perItemPrice = rowControl:CreateControl(controlName, CT_LABEL)
+				perItemPrice:SetAnchor(TOPRIGHT, sellPriceControl, BOTTOMRIGHT, 0, 0)
+				perItemPrice:SetFont(UNIT_PRICE_FONT)
+			end
+
+			if(postedItem.stackCount > 1) then
+				local unitPrice = tonumber(string.format("%.2f", postedItem.purchasePrice / postedItem.stackCount))
+				ZO_CurrencyControl_SetSimpleCurrency(perItemPrice, postedItem.currencyType, unitPrice, PER_UNIT_PRICE_CURRENCY_OPTIONS, nil, tradingHouse.m_playerMoney[postedItem.currencyType] < postedItem.purchasePrice)
+				perItemPrice:SetText("@" .. perItemPrice:GetText():gsub("|t.-:.-:", "|t12:12:"))
+				perItemPrice:SetHidden(false)
+				sellPriceControl:ClearAnchors()
+				sellPriceControl:SetAnchor(RIGHT, rowControl, RIGHT, -140, -8)
+				perItemPrice = nil
+			end
+		end
+
+		if(perItemPrice) then
+			perItemPrice:SetHidden(true)
+			sellPriceControl:ClearAnchors()
+			sellPriceControl:SetAnchor(RIGHT, rowControl, RIGHT, -140, 0)
+		end
+	end
 end
 
 function ListingTabWrapper:ChangeSort(key, order)
