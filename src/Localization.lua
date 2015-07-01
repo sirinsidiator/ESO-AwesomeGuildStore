@@ -140,7 +140,7 @@ local localization = {
 		SUBFILTER_MOTIF_KNOWLEDGE_LABEL = "Motif Knowledge",
 		SUBFILTER_MOTIF_KNOWLEDGE_UNKNOWN = "Unknown Motifs",
 		SUBFILTER_MOTIF_KNOWLEDGE_KNOWN = "Known Motifs",
-		
+
 		SUBFILTER_TRAIT_KNOWLEDGE_LABEL = "Trait Knowledge",
 		SUBFILTER_TRAIT_KNOWLEDGE_UNKNOWN = "Unknown Trait",
 		SUBFILTER_TRAIT_KNOWLEDGE_KNOWN = "Known Trait",
@@ -238,10 +238,13 @@ local localization = {
 		LOCAL_FILTER_EXPLANATION_TOOLTIP = "This filter is local and only applies to the currently visible page",
 	},
 	de = {
+		SUBFILTER_WEAPON_ENCHANTMENT_LABEL = "Waffenverzauberung",
 		SUBFILTER_WEAPON_TYPE_LABEL = "Waffentyp",
 		SUBFILTER_ARMOR_TYPE_LABEL = "Rüstungstyp",
+		SUBFILTER_ARMOR_ENCHANTMENT_LABEL = "Rüstungsverzauberung",
 		SUBFILTER_JEWELRY_TYPE_LABEL = "Schmucktyp",
 		SUBFILTER_JEWELRY_TRAIT_LABEL = "Schmuckeigenschaften",
+		SUBFILTER_JEWELRY_ENCHANTMENT_LABEL = "Schmuckverzauberung",
 		SUBFILTER_MATERIAL_TYPE_LABEL = "Materialtyp",
 		SUBFILTER_INGREDIENT_TYPE_LABEL = "Zutatentyp",
 		SUBFILTER_RUNE_TYPE_LABEL = "Runensteintyp",
@@ -254,6 +257,14 @@ local localization = {
 		SUBFILTER_MOTIF_KNOWLEDGE_LABEL = "Motivwissen",
 		SUBFILTER_MOTIF_KNOWLEDGE_UNKNOWN = "Unbekannte Motive",
 		SUBFILTER_MOTIF_KNOWLEDGE_KNOWN = "Bekannte Motive",
+		
+		SUBFILTER_TRAIT_KNOWLEDGE_LABEL = "Eigenschaftenwissen",
+		SUBFILTER_TRAIT_KNOWLEDGE_UNKNOWN = "Unbekannte Eigenschaften",
+		SUBFILTER_TRAIT_KNOWLEDGE_KNOWN = "Bekannte Eigenschaften",
+
+		SUBFILTER_RUNE_KNOWLEDGE_LABEL = "Runensteinwissen",
+		SUBFILTER_RUNE_KNOWLEDGE_UNKNOWN = "Unbekannte Runensteine",
+		SUBFILTER_RUNE_KNOWLEDGE_KNOWN = "Bekannte Runensteine",
 
 		AUTO_SEARCH_TOGGLE_LABEL = "Automatische Suche umschalten",
 		SEARCH_PREVIOUS_PAGE_LABEL = "Vorherige Seite anzeigen",
@@ -316,6 +327,10 @@ local localization = {
 		SETTINGS_SHOW_TRADER_TOOLTIPS_DESCRIPTION = "Zeigt den derzeit angeheuerten Händler einer Gilde der du angehörst, wenn du die Maus über den Namen oder einen Eintrag in der Selektion bewegst",
 		SETTINGS_AUTO_CLEAR_HISTORY_LABEL = "Verlauf automatisch entleeren",
 		SETTINGS_AUTO_CLEAR_HISTORY_DESCRIPTION = "Löscht automatisch alle Einträge im Verlauf wenn du den Gildenladen zum ersten Mal während einer Spielesitzung besuchst. Du kannst die Löschung über das Menü in der Suchbibliothek rückgängig machen",
+		SETTINGS_MAIL_AUGMENTATION_LABEL = "Postverbesserung",
+		SETTINGS_MAIL_AUGMENTATION_DESCRIPTION = "Fügt detailiertere Informationen über eine Transaktion in die eintreffende Gildenladen Post ein, solange die Daten in den Gildenaufzeichnungen vorhanden sind.",
+		SETTINGS_MAIL_AUGMENTATION_INVOICE_LABEL = "Zeige Rechnung in Nachrichten",
+		SETTINGS_MAIL_AUGMENTATION_INVOICE_DESCRIPTION = "Zeigt eine detailierte Rechnung an, die alle Abzüge auflistet.",
 
 		INVALID_STATE = "Ungültiger Händlerzustand.\nDas ist ein Fehler im Spiel und sollte bald behoben werden.",
 
@@ -400,7 +415,7 @@ local localization = {
 		SETTINGS_AUTO_CLEAR_HISTORY_LABEL = "Effacer automatiquement l'historique",
 		SETTINGS_AUTO_CLEAR_HISTORY_DESCRIPTION = "Supprime automatiquement l'historique à chaque lancement du jeu. Vous pouvez annuler la suppression via le menu dans la fenêtre de recherche",
 		SETTINGS_MAIL_AUGMENTATION_LABEL = "Détail des transactions dans les mails",
-		SETTINGS_MAIL_AUGMENTATION_DESCRIPTION = "Affiche un récapitulatif détaillé des transactions effectuées à la boutique de guilde si les informations sont disponibles via l'historique des ventes de celle-ci.",  -- TODO: check translation -- changed english text and added "more" in the beginning 
+		SETTINGS_MAIL_AUGMENTATION_DESCRIPTION = "Affiche un récapitulatif détaillé des transactions effectuées à la boutique de guilde si les informations sont disponibles via l'historique des ventes de celle-ci.",  -- TODO: check translation -- changed english text and added "more" in the beginning
 		--SETTINGS_MAIL_AUGMENTATION_INVOICE_LABEL = "Show invoice on mails", -- TODO: translate
 		--SETTINGS_MAIL_AUGMENTATION_INVOICE_DESCRIPTION = "Adds a detailed invoice to the mail which lists all deductions.", -- TODO: translate
 
