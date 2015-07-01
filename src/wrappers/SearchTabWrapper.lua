@@ -1,4 +1,5 @@
 local L = AwesomeGuildStore.Localization
+local ToggleButton = AwesomeGuildStore.ToggleButton
 
 local SearchTabWrapper = ZO_Object:Subclass()
 AwesomeGuildStore.SearchTabWrapper = SearchTabWrapper
@@ -22,6 +23,18 @@ function SearchTabWrapper:RunInitialSetup(tradingHouseWrapper)
 	zo_callLater(function()
 		self:RefreshFilterDimensions() -- call this after the layout has been updated
 	end, 1)
+	self.tradingHouseWrapper = tradingHouseWrapper
+
+	local saveData = self.saveData
+	CALLBACK_MANAGER:RegisterCallback("AwesomeGuildStore_SearchLibraryEntry_Selected", function(entry)
+		if(saveData.autoSearch) then
+			if(not self:Search()) then
+				self.searchPending = true
+			end
+		else
+			self.searchPending = false
+		end
+	end)
 end
 
 function SearchTabWrapper:UpdateFilterAnchors()
@@ -290,9 +303,7 @@ function SearchTabWrapper:InitializeButtons(tradingHouseWrapper)
 	searchButton:SetText(L["START_SEARCH_LABEL"])
 	searchButton:SetHandler("OnMouseUp",function(control, button, isInside)
 		if(control:GetState() == BSTATE_NORMAL and button == 1 and isInside) then
-			if(tradingHouse:CanSearch()) then
-				tradingHouse:DoSearch()
-			end
+			self:Search()
 		end
 	end)
 	self:AttachButton(searchButton)
@@ -319,6 +330,21 @@ function SearchTabWrapper:InitializeButtons(tradingHouseWrapper)
 		if(not saveData.keepFiltersOnClose) then return end
 		return true
 	end)
+
+	local autoSearchButton = ToggleButton:New(browseItemsControl:GetNamedChild("Header"), "AwesomeGuildStoreAutoSearchButton", "EsoUI/Art/lfg/lfg_tabIcon_groupTools_%s.dds", 0, 0, 28, 28, L["AUTO_SEARCH_TOGGLE_LABEL"])
+	autoSearchButton.control:ClearAnchors()
+	autoSearchButton.control:SetAnchor(TOPRIGHT, browseItemsControl:GetNamedChild("Header"), TOPLEFT, 278, -2)
+	if(saveData.autoSearch) then
+		autoSearchButton:Press()
+	end
+	autoSearchButton.HandlePress = function()
+		saveData.autoSearch = true
+		return true
+	end
+	autoSearchButton.HandleRelease = function()
+		saveData.autoSearch = false
+		return true
+	end
 end
 
 function SearchTabWrapper:InitializeSearchSortHeaders(tradingHouseWrapper)
@@ -364,14 +390,15 @@ function SearchTabWrapper:InitializeSearchSortHeaders(tradingHouseWrapper)
 	end)
 end
 
+local function IsReady()
+	return GetTradingHouseCooldownRemaining() == 0 and not TRADING_HOUSE:IsAwaitingResponse()
+end
+
 function SearchTabWrapper:InitializeNavigation(tradingHouseWrapper)
 	local SHOW_MORE_DATA_TYPE = 4 -- watch out for changes in tradinghouse.lua
 	local tradingHouse = tradingHouseWrapper.tradingHouse
 	local search = tradingHouse.m_search
 
-	local function IsReady()
-		return GetTradingHouseCooldownRemaining() == 0
-	end
 
 	local showPreviousPageEntry =  {
 		label = L["SEARCH_PREVIOUS_PAGE_LABEL"],
@@ -518,10 +545,31 @@ end
 
 function SearchTabWrapper:EnableSearchButton()
 	self.searchButton:SetEnabled(true)
+	if(not GetSelectedTradingHouseGuildId()) then -- TODO: remove once the event handling is fixed
+		self:SubmitPendingSearch()
+	end
 end
 
 function SearchTabWrapper:DisableSearchButton()
 	self.searchButton:SetEnabled(false)
+end
+
+function SearchTabWrapper:Search()
+	local tradingHouse = self.tradingHouseWrapper.tradingHouse
+	if(tradingHouse:CanSearch() and IsReady()) then
+		tradingHouse:DoSearch()
+		return true
+	end
+	return false
+end
+
+function SearchTabWrapper:SubmitPendingSearch()
+	local saveData = self.saveData
+	if(self.searchPending and saveData.autoSearch) then
+		if(self:Search()) then
+			self.searchPending = false
+		end
+	end
 end
 
 function SearchTabWrapper:RelocateButtons(tradingHouse)

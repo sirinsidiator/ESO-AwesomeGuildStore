@@ -148,6 +148,7 @@ local localization = {
 		LEGENDARY_QUALITY_LABEL = GetString(SI_TRADING_HOUSE_BROWSE_QUALITY_LEGENDARY),
 
 		START_SEARCH_LABEL = GetString(SI_TRADING_HOUSE_DO_SEARCH),
+		AUTO_SEARCH_TOGGLE_LABEL = "Toggle Auto Search",
 		SEARCH_PREVIOUS_PAGE_LABEL = "Show Previous Page",
 		SEARCH_SHOW_MORE_LABEL = "Show More Results",
 		RESET_ALL_FILTERS_LABEL = "Reset All Filters",
@@ -246,6 +247,7 @@ local localization = {
 		SUBFILTER_MOTIF_KNOWLEDGE_UNKNOWN = "Unbekannte Motive",
 		SUBFILTER_MOTIF_KNOWLEDGE_KNOWN = "Bekannte Motive",
 
+		AUTO_SEARCH_TOGGLE_LABEL = "Automatische Suche umschalten",
 		SEARCH_PREVIOUS_PAGE_LABEL = "Vorherige Seite anzeigen",
 		SEARCH_SHOW_MORE_LABEL = "Mehr Ergebnisse anzeigen",
 		RESET_ALL_FILTERS_LABEL = "Alle Filter zurücksetzen",
@@ -330,9 +332,9 @@ local localization = {
 		SUBFILTER_MOTIF_KNOWLEDGE_UNKNOWN = "Motif inconnu",
 		SUBFILTER_MOTIF_KNOWLEDGE_KNOWN = "Motif connu",
 
+		--AUTO_SEARCH_TOGGLE_LABEL = "Toggle Auto Search", -- TODO: translate
 		SEARCH_PREVIOUS_PAGE_LABEL = "Afficher la page précédente",
 		SEARCH_SHOW_MORE_LABEL = "Afficher les résultats suivants",
-
 		RESET_ALL_FILTERS_LABEL = "Réinitialiser tous les filtres",
 		RESET_FILTER_LABEL_TEMPLATE = "Réinitialiser le filtre %s",
 

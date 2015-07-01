@@ -31,6 +31,7 @@ function TradingHouseWrapper:Initialize(saveData)
 		self:DisableGuildSelector()
 		self:HideLoadingOverlay()
 		self:ResetSalesCategoryFilter()
+		searchTab.searchPending = true
 	end)
 
 	self:Wrap("RunInitialSetup", function(originalRunInitialSetup, ...)

@@ -401,6 +401,7 @@ local function InitializeBaseRow(self, rowControl, entry, fadeFavorite)
 	rowControl:SetHandler("OnMouseUp", function(control, button, isInside)
 		if(button == 1 and isInside) then
 			self:Deserialize(entry.state)
+			CALLBACK_MANAGER:FireCallbacks("AwesomeGuildStore_SearchLibraryEntry_Selected", entry)
 			PlaySound("Click")
 		end
 	end)
