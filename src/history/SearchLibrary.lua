@@ -260,7 +260,11 @@ function SearchLibrary:RegisterFilter(filter)
 	table.sort(self.filters, function(a, b) return a.type < b.type end)
 
 	CALLBACK_MANAGER:RegisterCallback(filter.callbackName, function(filter)
-		self.currentState[filter.type] = filter:Serialize()
+		if(filter:IsDefault()) then
+			self.currentState[filter.type] = nil
+		else
+			self.currentState[filter.type] = filter:Serialize()
+		end
 		self:SaveCurrentState()
 	end)
 end
@@ -285,10 +289,26 @@ function SearchLibrary:Serialize()
 
 	for i = 1, #filters do
 		local filter = filters[i]
-		state[filter.type] = filter:Serialize()
+		if(filter:IsDefault()) then
+			state[filter.type] = nil
+		else
+			state[filter.type] = filter:Serialize()
+		end
 	end
 
 	return BuildStateString(filters, state)
+end
+
+function SearchLibrary:ReplaceEntry(state, newState)
+	local entry = self.searchList[state]
+	if(entry) then
+		entry.state = newState
+		self.searchList[state] = nil
+		self.searchList[entry.state] = entry
+		self.historyDirty = self.historyDirty or entry.history
+		self.favoritesDirty = self.favoritesDirty or entry.favorite
+		self:Refresh()
+	end
 end
 
 function SearchLibrary:Deserialize(state)
@@ -297,13 +317,19 @@ function SearchLibrary:Deserialize(state)
 	if(version == SAVE_VERSION) then
 		self:ResetFilters()
 
+		local hasDefaults = false
 		local filterByType = self.filterByType
 		for i = 2, #states do
 			local type, data = zo_strsplit("#", states[i])
 			local filter = filterByType[tonumber(type)]
 			if(filter) then
 				filter:Deserialize(data)
+				if(filter:IsDefault()) then hasDefaults = true end
 			end
+		end
+
+		if(hasDefaults) then
+			self:ReplaceEntry(state, self:Serialize())
 		end
 	else
 		states = {zo_strsplit(":", state)}
@@ -316,15 +342,7 @@ function SearchLibrary:Deserialize(state)
 					filter[i]:Deserialize(data[i])
 				end
 			end
-			local entry = self.searchList[state]
-			if(entry) then
-				entry.state = self:Serialize()
-				self.searchList[state] = nil
-				self.searchList[entry.state] = entry
-				self.historyDirty = self.historyDirty or entry.history
-				self.favoritesDirty = self.favoritesDirty or entry.favorite
-				self:Refresh()
-			end
+			self:ReplaceEntry(state, self:Serialize())
 		end
 	end
 end

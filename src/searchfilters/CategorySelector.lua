@@ -232,6 +232,10 @@ function CategorySelector:Reset()
 	end
 end
 
+function CategorySelector:IsDefault()
+	return false
+end
+
 -- category[;subcategory[;(subfilterId,subfilterState)*]]
 function CategorySelector:Serialize()
 	local category = self.category
