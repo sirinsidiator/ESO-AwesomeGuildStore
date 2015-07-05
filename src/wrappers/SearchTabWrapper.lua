@@ -12,6 +12,7 @@ function SearchTabWrapper:New(saveData)
 	return wrapper
 end
 
+local iconMarkup = string.format("|t%u:%u:%s|t", 16, 16, "EsoUI/Art/currency/currency_gold.dds")
 function SearchTabWrapper:RunInitialSetup(tradingHouseWrapper)
 	self:InitializeContainers(tradingHouseWrapper)
 	self:InitializePageFiltering(tradingHouseWrapper)
@@ -20,6 +21,7 @@ function SearchTabWrapper:RunInitialSetup(tradingHouseWrapper)
 	self:InitializeSearchSortHeaders(tradingHouseWrapper)
 	self:InitializeNavigation(tradingHouseWrapper)
 	self:InitializeUnitPriceDisplay(tradingHouseWrapper)
+	self:InitializePurchaseNotification(tradingHouseWrapper)
 	zo_callLater(function()
 		self:RefreshFilterDimensions() -- call this after the layout has been updated
 	end, 1)
@@ -541,6 +543,26 @@ function SearchTabWrapper:InitializeUnitPriceDisplay(tradingHouseWrapper)
 			sellPriceControl:SetAnchor(RIGHT, rowControl, RIGHT, -5, 0)
 		end
 	end
+end
+
+function SearchTabWrapper:InitializePurchaseNotification(tradingHouseWrapper)
+	local saveData = self.saveData
+	local purchaseMessage = ""
+	tradingHouseWrapper:Wrap("ConfirmPendingPurchase", function(originalConfirmPendingPurchase, self, pendingPurchaseIndex)
+		local _, _, _, count, seller, _, price = GetTradingHouseSearchResultItemInfo(pendingPurchaseIndex)
+		seller = ZO_LinkHandler_CreateDisplayNameLink(seller:gsub("|c.-$", "")) -- have to strip the stuff that MM is adding to the end
+		price = zo_strformat("<<1>> <<2>>", ZO_CurrencyControl_FormatCurrency(price), iconMarkup)
+		local itemLink = GetTradingHouseSearchResultItemLink(pendingPurchaseIndex, LINK_STYLE_BRACKETS)
+		local _, guildName = GetCurrentTradingHouseGuildDetails()
+		purchaseMessage = zo_strformat(L["PURCHASE_NOTIFICATION"], count, itemLink, seller, price, guildName)
+		originalConfirmPendingPurchase(self, pendingPurchaseIndex)
+	end)
+	tradingHouseWrapper:Wrap("OnPurchaseSuccess", function(originalOnPurchaseSuccess, self)
+		if(saveData.purchaseNotification) then
+			df("[AwesomeGuildStore] %s", purchaseMessage)
+		end
+		originalOnPurchaseSuccess(self)
+	end)
 end
 
 function SearchTabWrapper:EnableSearchButton()

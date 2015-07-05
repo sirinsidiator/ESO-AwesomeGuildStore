@@ -11,6 +11,7 @@ local function LoadSettings()
 		showTraderTooltip = true,
 		augementMails = true,
 		mailAugmentationShowInvoice = false,
+		purchaseNotification = true,
 		sortField = TRADING_HOUSE_SORT_SALE_PRICE,
 		sortOrder = ZO_SORT_ORDER_UP,
 		listingSortField = TRADING_HOUSE_SORT_LISTING_TIME,
@@ -132,6 +133,14 @@ local function LoadSettings()
 			default = defaultData.mailAugmentationShowInvoice,
 			disabled = function() return not saveData.augementMails end
 		}
+		optionsData[#optionsData + 1] = {
+			type = "checkbox",
+			name = L["SETTINGS_PURCHASE_NOTIFICATION_LABEL"],
+			tooltip = L["SETTINGS_PURCHASE_NOTIFICATION_DESCRIPTION"],
+			getFunc = function() return saveData.purchaseNotification end,
+			setFunc = function(value) saveData.purchaseNotification = value end,
+			default = defaultData.purchaseNotification,
+		}
 		LAM:RegisterOptionControls("AwesomeGuildStoreOptions", optionsData)
 
 		AwesomeGuildStore.OpenSettingsPanel = function()
@@ -206,6 +215,10 @@ local function LoadSettings()
 		if(saveData.version == 12) then
 			saveData.augementMails = defaultData.augementMails
 			saveData.version = 13
+		end
+		if(saveData.version == 13) then
+			saveData.purchaseNotification = defaultData.purchaseNotification
+			saveData.version = 14
 		end
 	end
 

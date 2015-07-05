@@ -232,10 +232,14 @@ local localization = {
 		SETTINGS_MAIL_AUGMENTATION_DESCRIPTION = "Adds more detailed information about a transaction to an incoming Guild Store Mail if the data is available in the Guild Activity Log.",
 		SETTINGS_MAIL_AUGMENTATION_INVOICE_LABEL = "Show invoice on mails",
 		SETTINGS_MAIL_AUGMENTATION_INVOICE_DESCRIPTION = "Adds a detailed invoice to the mail which lists all deductions.",
+		SETTINGS_PURCHASE_NOTIFICATION_LABEL = "Purchase notifications", -- TODO: translate
+		SETTINGS_PURCHASE_NOTIFICATION_DESCRIPTION = "Shows a message in chat after a purchase was completed in a guild store", -- TODO: translate
 
 		INVALID_STATE = "Invalid Store State.\nThis is a bug in the game and should be fixed soon.",
 
 		LOCAL_FILTER_EXPLANATION_TOOLTIP = "This filter is local and only applies to the currently visible page",
+
+		PURCHASE_NOTIFICATION = "You bought <<1>>x <<t:2>> from <<3>> for <<4>> in <<5>>", -- TODO: translate
 	},
 	de = {
 		SUBFILTER_WEAPON_ENCHANTMENT_LABEL = "Waffenverzauberung",
@@ -257,7 +261,7 @@ local localization = {
 		SUBFILTER_MOTIF_KNOWLEDGE_LABEL = "Motivwissen",
 		SUBFILTER_MOTIF_KNOWLEDGE_UNKNOWN = "Unbekannte Motive",
 		SUBFILTER_MOTIF_KNOWLEDGE_KNOWN = "Bekannte Motive",
-		
+
 		SUBFILTER_TRAIT_KNOWLEDGE_LABEL = "Eigenschaftenwissen",
 		SUBFILTER_TRAIT_KNOWLEDGE_UNKNOWN = "Unbekannte Eigenschaften",
 		SUBFILTER_TRAIT_KNOWLEDGE_KNOWN = "Bekannte Eigenschaften",
@@ -331,10 +335,14 @@ local localization = {
 		SETTINGS_MAIL_AUGMENTATION_DESCRIPTION = "Fügt detailiertere Informationen über eine Transaktion in die eintreffende Gildenladen Post ein, solange die Daten in den Gildenaufzeichnungen vorhanden sind.",
 		SETTINGS_MAIL_AUGMENTATION_INVOICE_LABEL = "Zeige Rechnung in Nachrichten",
 		SETTINGS_MAIL_AUGMENTATION_INVOICE_DESCRIPTION = "Zeigt eine detailierte Rechnung an, die alle Abzüge auflistet.",
+		SETTINGS_PURCHASE_NOTIFICATION_LABEL = "Kaufbenachrichtigung",
+		SETTINGS_PURCHASE_NOTIFICATION_DESCRIPTION = "Zeigt eine Meldung im Chat, nachdem ein Kauf in einem Gildenladen abgeschlossen wurde",
 
 		INVALID_STATE = "Ungültiger Händlerzustand.\nDas ist ein Fehler im Spiel und sollte bald behoben werden.",
 
 		LOCAL_FILTER_EXPLANATION_TOOLTIP = "Dieser Filter ist lokal und wirkt nur auf der derzeit sichtbaren Seite",
+
+		PURCHASE_NOTIFICATION = "Du hast <<1>>x <<t:2>> von <<3>> für <<4>> in <<5>> gekauft",
 	},
 	fr = {
 		SUBFILTER_WEAPON_ENCHANTMENT_LABEL = "Enchantement d'arme",
