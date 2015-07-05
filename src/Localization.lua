@@ -356,14 +356,24 @@ local localization = {
 		SUBFILTER_INGREDIENT_TYPE_LABEL = "Type d'ingrédient",
 		SUBFILTER_RUNE_TYPE_LABEL = "Type de rune",
 		SUBFILTER_GLYPH_TYPE_LABEL = "Type de glyphe",
+
 		SUBFILTER_RECIPE_KNOWLEDGE_LABEL = "Type de recette",
 		SUBFILTER_RECIPE_KNOWLEDGE_UNKNOWN = "Recettes inconnues",
 		SUBFILTER_RECIPE_KNOWLEDGE_KNOWN = "Recettes connues",
+
 		SUBFILTER_MOTIF_KNOWLEDGE_LABEL = "Connaissance du motif",
 		SUBFILTER_MOTIF_KNOWLEDGE_UNKNOWN = "Motif inconnu",
 		SUBFILTER_MOTIF_KNOWLEDGE_KNOWN = "Motif connu",
 
-		--AUTO_SEARCH_TOGGLE_LABEL = "Toggle Auto Search", -- TODO: translate
+		SUBFILTER_TRAIT_KNOWLEDGE_LABEL = "Connaissance du trait",
+		SUBFILTER_TRAIT_KNOWLEDGE_UNKNOWN = "Trait inconnu",
+		SUBFILTER_TRAIT_KNOWLEDGE_KNOWN = "Trait recherché",
+
+		SUBFILTER_RUNE_KNOWLEDGE_LABEL = "Maîtrise de la rune",
+		SUBFILTER_RUNE_KNOWLEDGE_UNKNOWN = "Rune inconnue",
+		SUBFILTER_RUNE_KNOWLEDGE_KNOWN = "Rune déchiffrée",
+
+		AUTO_SEARCH_TOGGLE_LABEL = "Afficher/Masquer la recherche automatique",
 		SEARCH_PREVIOUS_PAGE_LABEL = "Afficher la page précédente",
 		SEARCH_SHOW_MORE_LABEL = "Afficher les résultats suivants",
 		RESET_ALL_FILTERS_LABEL = "Réinitialiser tous les filtres",
@@ -376,6 +386,8 @@ local localization = {
 
 		TEXT_FILTER_TITLE = "Filtre textuel:",
 		TEXT_FILTER_TEXT = "Filtrer selon le nom",
+
+		UNIT_PRICE_FILTER_TITLE = "Filtre sur le prix unitaire:",
 
 		WARNING_SUBFILTER_LIMIT = "Votre filtre est trop complexe, veuillez vous limiter à 8 critères",
 
@@ -398,7 +410,7 @@ local localization = {
 		TOOLTIP_LESS_THAN = "moins de ",
 		TOOLTIP_GREATER_THAN = "plus que ",
 
-		MAIL_AUGMENTATION_MESSAGE_BODY = "Vous avez vendu <<2>> <<t:1>> à <<3>> pour <<4>>.", -- TODO: check translation -- google translated the last part of the sentence
+		MAIL_AUGMENTATION_MESSAGE_BODY = "Vous avez vendu <<2>> <<t:1>> à <<3>> pour <<4>>.",
 		MAIL_AUGMENTATION_INVOICE_COMMISSION = "Commission",
 		MAIL_AUGMENTATION_INVOICE_LISTING_FEE_REFUND = GetString(SI_TRADING_HOUSE_POSTING_LISTING_FEE) .. " (remboursement)",
 		MAIL_AUGMENTATION_REQUEST_DATA = "Chargement des détails",
@@ -423,9 +435,9 @@ local localization = {
 		SETTINGS_AUTO_CLEAR_HISTORY_LABEL = "Effacer automatiquement l'historique",
 		SETTINGS_AUTO_CLEAR_HISTORY_DESCRIPTION = "Supprime automatiquement l'historique à chaque lancement du jeu. Vous pouvez annuler la suppression via le menu dans la fenêtre de recherche",
 		SETTINGS_MAIL_AUGMENTATION_LABEL = "Détail des transactions dans les mails",
-		SETTINGS_MAIL_AUGMENTATION_DESCRIPTION = "Affiche un récapitulatif détaillé des transactions effectuées à la boutique de guilde si les informations sont disponibles via l'historique des ventes de celle-ci.",  -- TODO: check translation -- changed english text and added "more" in the beginning
-		--SETTINGS_MAIL_AUGMENTATION_INVOICE_LABEL = "Show invoice on mails", -- TODO: translate
-		--SETTINGS_MAIL_AUGMENTATION_INVOICE_DESCRIPTION = "Adds a detailed invoice to the mail which lists all deductions.", -- TODO: translate
+		SETTINGS_MAIL_AUGMENTATION_DESCRIPTION = "Affiche un récapitulatif détaillé de la transaction effectuée dans le mail si les informations sont disponibles via l'historique des ventes de la guilde.",
+		SETTINGS_MAIL_AUGMENTATION_INVOICE_LABEL = "Afficher la note dans les mails",
+		SETTINGS_MAIL_AUGMENTATION_INVOICE_DESCRIPTION = "Affiche une note détaillée de la transaction dans les mails.",
 
 		INVALID_STATE = "Boutique de guilde indisponible.\nCeci est un bug du jeu et devrait être résolu bientôt.",
 
@@ -454,6 +466,15 @@ local localization = {
 		SUBFILTER_MOTIF_KNOWLEDGE_UNKNOWN = "Îeèçáecòîÿe còèìè",
 		SUBFILTER_MOTIF_KNOWLEDGE_KNOWN = "Èçáecòîÿe còèìè",
 
+		SUBFILTER_TRAIT_KNOWLEDGE_LABEL = "Ocoàeîîocòè",
+		SUBFILTER_TRAIT_KNOWLEDGE_UNKNOWN = "Îeèçáecòîÿe ocoàeîîocòè",
+		SUBFILTER_TRAIT_KNOWLEDGE_KNOWN = "Èçáecòîÿe ocoàeîîocòè",
+
+		SUBFILTER_RUNE_KNOWLEDGE_LABEL = "Póîÿ",
+		SUBFILTER_RUNE_KNOWLEDGE_UNKNOWN = "Îeèçáecòîÿe póîÿ",
+		SUBFILTER_RUNE_KNOWLEDGE_KNOWN = "Èçáecòîÿe póîÿ",
+
+		AUTO_SEARCH_TOGGLE_LABEL = "Áêìôùèòö aáòoïoècê",
 		SEARCH_PREVIOUS_PAGE_LABEL = "Ïoêaçaòö ïpeä. còp.",
 		SEARCH_SHOW_MORE_LABEL = "Ïoêaçaòö àoìöúe peçóìöòaòoá",
 		RESET_ALL_FILTERS_LABEL = "Càpocèòö áce ñèìöòpÿ",
@@ -466,6 +487,8 @@ local localization = {
 
 		TEXT_FILTER_TITLE = "Òeêcòoáÿé ñèìöòp:",
 		TEXT_FILTER_TEXT = "Ñèìöòp ïo òeêcòó",
+
+		UNIT_PRICE_FILTER_TITLE = "Ñèìöòp ïo œeîaí:",
 
 		WARNING_SUBFILTER_LIMIT = "Îeìöçü oòoàpaòö àoìee ùeí ïo 8 ñèìöòpaí",
 
@@ -488,6 +511,11 @@ local localization = {
 		TOOLTIP_LESS_THAN = "íeîöúe ",
 		TOOLTIP_GREATER_THAN = "àoìöúe ",
 
+		MAIL_AUGMENTATION_MESSAGE_BODY = "Áÿ ïpoäaìè <<2>> <<t:1>> <<3>> ça <<4>>.",
+		MAIL_AUGMENTATION_INVOICE_COMMISSION = "Êoíèccèü",
+		MAIL_AUGMENTATION_INVOICE_LISTING_FEE_REFUND = GetString(SI_TRADING_HOUSE_POSTING_LISTING_FEE) .. " (áoçápaò)",
+		MAIL_AUGMENTATION_REQUEST_DATA = "Çaâpóçèòö äeòaìè",
+
 		SETTINGS_REQUIRES_RELOADUI_WARNING = "Àóäeò ïpèíeîeîo òoìöêo ïocìe ïepeçaâpóçêè UI",
 		SETTINGS_KEEP_FILTERS_ON_CLOSE_LABEL = "Çaïoíèîaòö ñèìöòpÿ íeæäó áèçèòaíè á íaâaçèî",
 		SETTINGS_KEEP_FILTERS_ON_CLOSE_DESCRIPTION = "Çaïoíèîaeò áÿàpaîîÿe áaíè ñèìöòpÿ è ïpè ïocìeäóôûeí áèçèòe á íaâaçèî ïocìeäîèe ècïoìöçoáaîîÿe ñèìöòpÿ óæe àóäóò áêìôùeîÿ",
@@ -507,6 +535,10 @@ local localization = {
 		SETTINGS_SHOW_TRADER_TOOLTIPS_DESCRIPTION = "Ïoêaçÿáaeò îaîüòoâo áaúèíè âèìöäèüíè òopâoáœa, êoâäa îaáoäèòe îa îaçáaîèe âèìöäèè á cïècêe âèìöäèé",
 		SETTINGS_AUTO_CLEAR_HISTORY_LABEL = "Aáòooùècòêa ècòopèè",
 		SETTINGS_AUTO_CLEAR_HISTORY_DESCRIPTION = "Aáòoíaòèùecêè oùèûaeò ácô ècòopèô ïpè ïepáoí c îaùaìa èâpoáoé ceccèè áèçèòe ê òopâoáœó. Áÿíoæeòe oòíeîèòö óäaìeîèe á íeîô ècòopèè ïoècêa",
+		SETTINGS_MAIL_AUGMENTATION_LABEL = "Ïoùòoáoe pacúèpeîèe",
+		SETTINGS_MAIL_AUGMENTATION_DESCRIPTION = "Äoàaáìüeò àoìee äeòaìöîóô èîñopíaœèô o cäeìêe áo áxoäüûee ïècöío oò Âèìöäeécêoâo Íaâaçèîa, ecìè èîñopíaœèü äocòóïîa á ìoâe aêòèáîocòè âèìöäèè.",
+		SETTINGS_MAIL_AUGMENTATION_INVOICE_LABEL = "Cùeò á ïècöíax",
+		SETTINGS_MAIL_AUGMENTATION_INVOICE_DESCRIPTION = "Äoàaáìüeò äeòaìöîÿé cùeò á ïècöía, êoòopÿé coäepæèò èîñopíaœèô oào ácex ïocòóïìeîèüx.",
 
 		INVALID_STATE = "Oúèàêa.\nËòo àaâ èâpÿ è oî äoìæeî àÿòö ïoïpaáìeî á àìèæaéúee ápeíü.",
 
