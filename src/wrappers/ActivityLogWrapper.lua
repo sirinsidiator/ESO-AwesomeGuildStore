@@ -37,6 +37,29 @@ function ActivityLogWrapper:GetMinMaxPurchaseEventTimes(guildId, startIndex)
 end
 
 function ActivityLogWrapper:Initialize()
+	self:InitializeGuildState()
+
+	RegisterForEvent(EVENT_GUILD_HISTORY_CATEGORY_UPDATED, function(_, guildId, category)
+		if(category == GUILD_HISTORY_STORE) then
+			local guildState = self.state[guildId]
+			if(not guildState) then d("[AwesomeGuildStore] guildState not correctly initialized. Please report this to the author.") return end
+			local oldest, newest, endIndex = self:GetMinMaxPurchaseEventTimes(guildId, guildState.highestIndex)
+			guildState.hasMore = DoesGuildHistoryCategoryHaveMoreEvents(guildId, category)
+			guildState.highestIndex = endIndex
+			guildState.oldest = oldest
+			guildState.newest = newest
+		end
+	end)
+
+	RegisterForEvent(EVENT_GUILD_SELF_JOINED_GUILD, function(_, guildId, guildName)
+		self:InitializeGuildState()
+	end)
+	RegisterForEvent(EVENT_GUILD_SELF_LEFT_GUILD, function(_, guildId, guildName)
+		self:InitializeGuildState()
+	end)
+end
+
+function ActivityLogWrapper:InitializeGuildState()
 	local state = {}
 	for i = 1, GetNumGuilds() do
 		local guildId = GetGuildId(i)
@@ -49,17 +72,6 @@ function ActivityLogWrapper:Initialize()
 		}
 	end
 	self.state = state
-
-	RegisterForEvent(EVENT_GUILD_HISTORY_CATEGORY_UPDATED, function(_, guildId, category)
-		if(category == GUILD_HISTORY_STORE) then
-			local guildState = state[guildId]
-			local oldest, newest, endIndex = self:GetMinMaxPurchaseEventTimes(guildId, guildState.highestIndex)
-			guildState.hasMore = DoesGuildHistoryCategoryHaveMoreEvents(guildId, category)
-			guildState.highestIndex = endIndex
-			guildState.oldest = oldest
-			guildState.newest = newest
-		end
-	end)
 end
 
 function ActivityLogWrapper:RequestNewest(guildId)
