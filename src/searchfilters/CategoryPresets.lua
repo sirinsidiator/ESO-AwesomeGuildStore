@@ -24,7 +24,7 @@ AwesomeGuildStore.FILTER_PRESETS = {
 				texture = "EsoUI/Art/Inventory/inventory_tabIcon_all_%s.dds",
 				isDefault = true,
 				filters = {
-					[TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_WEAPON },
+					[TRADING_HOUSE_FILTER_TYPE_EQUIP] = { EQUIP_TYPE_ONE_HAND, EQUIP_TYPE_TWO_HAND }
 				},
 				subfilters = {
 					SUBFILTER_WEAPON_TRAITS,
