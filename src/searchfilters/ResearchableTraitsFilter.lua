@@ -87,7 +87,7 @@ local function IsItemLinkTraitKnown(itemLink)
 				if(not info.known) then
 					local _, _, known = GetSmithingResearchLineTraitInfo(info.craftingSkillType, info.researchLineIndex, info.traitIndex)
 					info.known = known
-					info.researching = (GetSmithingResearchLineTraitTimes(craftingSkillType, researchLineIndex, traitIndex) ~= nil)
+					info.researching = (GetSmithingResearchLineTraitTimes(info.craftingSkillType, info.researchLineIndex, info.traitIndex) ~= nil)
 				end
 				return true, info.known, info.researching
 			end
