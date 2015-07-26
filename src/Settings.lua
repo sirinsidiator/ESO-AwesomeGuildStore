@@ -16,6 +16,7 @@ local function LoadSettings()
 		sortOrder = ZO_SORT_ORDER_UP,
 		listingSortField = TRADING_HOUSE_SORT_LISTING_TIME,
 		listingSortOrder = ZO_SORT_ORDER_DOWN,
+		disableCustomSellTabFilter = false,
 		searchLibrary = {
 			x = 980,
 			y = -5,
@@ -140,6 +141,14 @@ local function LoadSettings()
 			getFunc = function() return saveData.purchaseNotification end,
 			setFunc = function(value) saveData.purchaseNotification = value end,
 			default = defaultData.purchaseNotification,
+		}
+		optionsData[#optionsData + 1] = {
+			type = "checkbox",
+			name = L["SETTINGS_DISABLE_CUSTOM_SELL_TAB_FILTER_LABEL"],
+			tooltip = L["SETTINGS_DISABLE_CUSTOM_SELL_TAB_FILTER_DESCRIPTION"],
+			getFunc = function() return saveData.disableCustomSellTabFilter end,
+			setFunc = function(value) saveData.disableCustomSellTabFilter = value end,
+			default = defaultData.disableCustomSellTabFilter,
 		}
 		LAM:RegisterOptionControls("AwesomeGuildStoreOptions", optionsData)
 

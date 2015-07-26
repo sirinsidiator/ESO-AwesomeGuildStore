@@ -70,21 +70,12 @@ function SalesCategorySelector:New(parent, name)
 		selector:CreateSubcategory(name, category, preset)
 	end
 
-	local searchBoxControl = ZO_PlayerInventorySearchBox
-	searchBoxControl:SetDrawLayer(3) -- make sure the text box is above the sort by name field
 	local filterDividerControl = ZO_PlayerInventoryFilterDivider
-	local sortByControl = ZO_PlayerInventorySortBy
-	local wasFilterDividerHidden
 	local function Activate()
-		searchBoxControl:ClearAnchors()
-		searchBoxControl:SetAnchor(TOPLEFT, sortByControl, TOPLEFT, 220, 3)
-		wasFilterDividerHidden = filterDividerControl:IsHidden()
 		filterDividerControl:SetHidden(true)
 	end
 	local function Deactivate()
-		searchBoxControl:ClearAnchors()
-		searchBoxControl:SetAnchor(TOPRIGHT, searchBoxControl:GetParent(), TOPRIGHT, -26, 68)
-		filterDividerControl:SetHidden(wasFilterDividerHidden)
+		filterDividerControl:SetHidden(false)
 	end
 	RegisterForEvent(EVENT_OPEN_TRADING_HOUSE, Activate)
 	RegisterForEvent(EVENT_CLOSE_TRADING_HOUSE, Deactivate)
@@ -221,8 +212,9 @@ end
 local BACKPACK_TRADING_HOUSE_LAYOUT_FRAGMENT_BASIC = ZO_BackpackLayoutFragment:New(
 	{
 		width = 670,
-		backpackOffsetY = 145,
-		sortByOffsetY = 114,
+		inventoryTopOffsetY = -20 + 65,
+		backpackOffsetY = 145 - 65,
+		sortByOffsetY = 114 - 65,
 		sortByHeaderWidth = 670,
 		sortByNameWidth = 352,
 		hideAlliancePoints = true,
@@ -232,8 +224,9 @@ local BACKPACK_TRADING_HOUSE_LAYOUT_FRAGMENT_BASIC = ZO_BackpackLayoutFragment:N
 local BACKPACK_TRADING_HOUSE_LAYOUT_FRAGMENT_ADVANCED = ZO_BackpackLayoutFragment:New(
 	{
 		width = 670,
-		backpackOffsetY = 181,
-		sortByOffsetY = 149,
+		inventoryTopOffsetY = -20 + 65,
+		backpackOffsetY = 181 - 65,
+		sortByOffsetY = 149 - 65,
 		sortByHeaderWidth = 670,
 		sortByNameWidth = 352,
 		hideAlliancePoints = true,

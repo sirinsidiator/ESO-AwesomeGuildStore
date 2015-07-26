@@ -234,6 +234,8 @@ local localization = {
 		SETTINGS_MAIL_AUGMENTATION_INVOICE_DESCRIPTION = "Adds a detailed invoice to the mail which lists all deductions.",
 		SETTINGS_PURCHASE_NOTIFICATION_LABEL = "Purchase notifications", -- TODO: translate
 		SETTINGS_PURCHASE_NOTIFICATION_DESCRIPTION = "Shows a message in chat after a purchase was completed in a guild store", -- TODO: translate
+		SETTINGS_DISABLE_CUSTOM_SELL_TAB_FILTER_LABEL = "Disable custom selltab filter", -- TODO: translate
+		SETTINGS_DISABLE_CUSTOM_SELL_TAB_FILTER_DESCRIPTION = "Shows the ingame inventory filter instead of AGS own version when deactivated.", -- TODO: translate
 
 		INVALID_STATE = "Invalid Store State.\nThis is a bug in the game and should be fixed soon.",
 

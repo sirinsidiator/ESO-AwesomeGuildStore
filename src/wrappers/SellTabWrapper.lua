@@ -3,8 +3,20 @@ AwesomeGuildStore.SellTabWrapper = SellTabWrapper
 
 function SellTabWrapper:New(saveData)
 	local wrapper = ZO_Object.New(self)
-	wrapper.saveData = saveData
+	wrapper:Initialize(saveData)
 	return wrapper
+end
+
+function SellTabWrapper:Initialize(saveData)
+	self.saveData = saveData
+
+	if(saveData.disableCustomSellTabFilter) then
+		self.customFilterDisabled = true
+	else
+		self.customFilterDisabled = false
+		local libCIF = LibStub:GetLibrary("libCommonInventoryFilters", LibStub.SILENT)
+		libCIF:disableGuildStoreSellFilters()
+	end
 end
 
 function SellTabWrapper:RunInitialSetup(tradingHouseWrapper)
@@ -41,10 +53,12 @@ function SellTabWrapper:ResetSalesCategoryFilter()
 end
 
 function SellTabWrapper:OnOpen(tradingHouseWrapper)
-	if(not self.salesCategoryFilter) then
+	if(not self.salesCategoryFilter and not self.customFilterDisabled) then
 		self:InitializeCategoryFilter(tradingHouseWrapper)
 	end
-	self.salesCategoryFilter:Refresh()
+	if(self.salesCategoryFilter) then
+		self.salesCategoryFilter:Refresh()
+	end
 	self.interceptInventoryItemClicks = true
 end
 
