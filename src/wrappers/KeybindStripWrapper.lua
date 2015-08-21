@@ -7,18 +7,26 @@ function KeybindStripWrapper:New(...)
 	return wrapper
 end
 
-function KeybindStripWrapper:Initialize(tradingHouse)
+function KeybindStripWrapper:Initialize(tradingHouse, activityManager)
 	local keybindStripDescriptor = tradingHouse.keybindStripDescriptor
 
 	local secondaryDescriptor = keybindStripDescriptor[1]
 	assert(secondaryDescriptor.keybind == "UI_SHORTCUT_SECONDARY")
 	local originalEnabled = secondaryDescriptor.enabled
 	secondaryDescriptor.enabled = function()
-		if(tradingHouse:IsInSearchMode() and self.isSearchDisabled) then
-			return false
+		if(tradingHouse:IsInSearchMode()) then
+			return not self.isSearchDisabled
+		else
+			return originalEnabled()
 		end
+	end
 
-		return originalEnabled()
+	secondaryDescriptor.callback = function()
+		if(tradingHouse:IsInSearchMode()) then
+			activityManager:ExecuteSearch()
+		elseif(tradingHouse:CanPostWithMoneyCheck()) then
+			tradingHouse:PostPendingItem()
+		end
 	end
 
 	local tertiaryDescriptor = keybindStripDescriptor[2]

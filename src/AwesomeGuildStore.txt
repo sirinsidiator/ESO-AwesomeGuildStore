@@ -55,6 +55,12 @@ history/MailBox.lua
 guildselector/HiredTraderTooltip.lua
 guildselector/GuildSelector.lua
 guildselector/GuildSelector.xml
+activityManager/ActivityBase.lua
+activityManager/CancelSaleOperation.lua
+activityManager/RequestListingsOperation.lua
+activityManager/ExecuteSearchOperation.lua
+activityManager/SwitchGuildOperation.lua
+activityManager/ActivityManager.lua
 wrappers/TradingHouseWrapper.lua
 wrappers/SearchTabWrapper.lua
 wrappers/SellTabWrapper.lua

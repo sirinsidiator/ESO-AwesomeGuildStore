@@ -30,11 +30,7 @@ function SearchTabWrapper:RunInitialSetup(tradingHouseWrapper)
 	local saveData = self.saveData
 	CALLBACK_MANAGER:RegisterCallback("AwesomeGuildStore_SearchLibraryEntry_Selected", function(entry)
 		if(saveData.autoSearch) then
-			if(not self:Search()) then
-				self.searchPending = true
-			end
-		else
-			self.searchPending = false
+			self:Search()
 		end
 	end)
 end
@@ -565,33 +561,8 @@ function SearchTabWrapper:InitializePurchaseNotification(tradingHouseWrapper)
 	end)
 end
 
-function SearchTabWrapper:EnableSearchButton()
-	self.searchButton:SetEnabled(true)
-	if(not GetSelectedTradingHouseGuildId()) then -- TODO: remove once the event handling is fixed
-		self:SubmitPendingSearch()
-	end
-end
-
-function SearchTabWrapper:DisableSearchButton()
-	self.searchButton:SetEnabled(false)
-end
-
 function SearchTabWrapper:Search()
-	local tradingHouse = self.tradingHouseWrapper.tradingHouse
-	if(tradingHouse:CanSearch() and IsReady()) then
-		tradingHouse:DoSearch()
-		return true
-	end
-	return false
-end
-
-function SearchTabWrapper:SubmitPendingSearch()
-	local saveData = self.saveData
-	if(self.searchPending and saveData.autoSearch) then
-		if(self:Search()) then
-			self.searchPending = false
-		end
-	end
+	self.tradingHouseWrapper.activityManager:ExecuteSearch()
 end
 
 function SearchTabWrapper:RelocateButtons(tradingHouse)

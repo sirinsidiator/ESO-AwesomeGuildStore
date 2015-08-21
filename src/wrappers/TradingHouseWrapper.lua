@@ -16,22 +16,29 @@ function TradingHouseWrapper:Initialize(saveData)
 
 	self.titleLabel = tradingHouse.m_control:GetNamedChild("TitleLabel")
 
-	self.loadingOverlay = AwesomeGuildStore.LoadingOverlay:New("AwesomeGuildStoreLoading")
+	self.loadingOverlay = AwesomeGuildStore.LoadingOverlay:New("AwesomeGuildStoreLoadingOverlay")
+	self.loadingIndicator = AwesomeGuildStore.LoadingIcon:New("AwesomeGuildStoreLoadingIndicator")
+	self.loadingIndicator:SetParent(tradingHouse.m_control)
+	self.loadingIndicator:ClearAnchors()
+	self.loadingIndicator:SetAnchor(BOTTOMLEFT, tradingHouse.m_control, BOTTOMLEFT, 15, 20)
 	local searchTab = AwesomeGuildStore.SearchTabWrapper:New(saveData)
 	self.searchTab = searchTab
 	local sellTab = AwesomeGuildStore.SellTabWrapper:New(saveData)
 	self.sellTab = sellTab
 	local listingTab = AwesomeGuildStore.ListingTabWrapper:New(saveData)
 	self.listingTab = listingTab
+	local activityManager = AwesomeGuildStore.ActivityManager:New(self, self.loadingIndicator, self.loadingOverlay)
+	self.activityManager = activityManager
 
 	self:Wrap("OpenTradingHouse", function(originalOpenTradingHouse, ...)
 		originalOpenTradingHouse(...)
 		self:SetInterceptInventoryItemClicks(false)
-		self:DisableSearchButton()
-		self:DisableGuildSelector()
-		self:HideLoadingOverlay()
 		self:ResetSalesCategoryFilter()
-		searchTab.searchPending = true
+		if(saveData.autoSearch) then
+			zo_callLater(function() -- TODO: put this in the right spot so that we don't need a callLater
+				searchTab:Search()
+			end, 500)
+		end
 	end)
 
 	self:Wrap("RunInitialSetup", function(originalRunInitialSetup, ...)
@@ -69,8 +76,18 @@ function TradingHouseWrapper:Initialize(saveData)
 	end)
 
 	RegisterForEvent(EVENT_CLOSE_TRADING_HOUSE, function()
-		self:HideGuildSelector()
+		self:HideLoadingIndicator()
+		self:HideLoadingOverlay()
 		currentTab:OnClose(self)
+	end)
+
+	local KIOSK_OPTION_INDEX = 1
+	RegisterForEvent(EVENT_CHATTER_BEGIN, function(_, optionCount)
+		if(IsShiftKeyDown()) then return end --  or not saveData.skipGuildKioskDialog
+		local _, optionType = GetChatterOption(KIOSK_OPTION_INDEX)
+		if(optionType == CHATTER_START_TRADINGHOUSE) then
+			SelectChatterOption(KIOSK_OPTION_INDEX)
+		end
 	end)
 end
 
@@ -79,33 +96,11 @@ function TradingHouseWrapper:InitializeGuildSelector()
 end
 
 function TradingHouseWrapper:InitializeKeybindStripWrapper()
-	self.keybindStrip = AwesomeGuildStore.KeybindStripWrapper:New(self.tradingHouse)
+	self.keybindStrip = AwesomeGuildStore.KeybindStripWrapper:New(self.tradingHouse, self.activityManager)
 end
 
 function TradingHouseWrapper:InitializeSearchCooldown()
-	ZO_PreHook("ExecuteTradingHouseSearch", function()
-		self:DisableSearchButton()
-		self:DisableGuildSelector()
-		self:ShowLoadingOverlay()
-	end)
-
-	local tradingHouse = self.tradingHouse
-	RegisterForEvent(EVENT_TRADING_HOUSE_SEARCH_COOLDOWN_UPDATE, function(_, cooldownMilliseconds)
-		if(cooldownMilliseconds ~= 0) then return end
-		tradingHouse.m_searchAllowed = true
-		self:EnableSearchButton()
-		self:EnableGuildSelector()
-		tradingHouse:OnSearchCooldownUpdate(cooldownMilliseconds)
-		self:HideLoadingOverlay()
-	end)
-
 	RegisterForEvent(EVENT_TRADING_HOUSE_STATUS_RECEIVED, function()
-		if(GetTradingHouseCooldownRemaining() == 0) then
-			self:EnableSearchButton()
-			self:EnableGuildSelector()
-			self:HideLoadingOverlay()
-		end
-
 		if(not GetSelectedTradingHouseGuildId()) then -- it's a trader when guildId is nil
 			self:ShowTitleLabel()
 			self:HideGuildSelector()
@@ -115,12 +110,6 @@ function TradingHouseWrapper:InitializeSearchCooldown()
 			self:ShowGuildSelector()
 		end
 	end)
-
-	local function HideLoadingOverlay()
-		self:HideLoadingOverlay()
-	end
-	RegisterForEvent(EVENT_TRADING_HOUSE_SEARCH_RESULTS_RECEIVED, HideLoadingOverlay)
-	RegisterForEvent(EVENT_TRADING_HOUSE_OPERATION_TIME_OUT, HideLoadingOverlay)
 end
 
 function TradingHouseWrapper:SetInterceptInventoryItemClicks(enabled)
@@ -151,22 +140,12 @@ function TradingHouseWrapper:HideLoadingOverlay()
 	self.loadingOverlay:Hide()
 end
 
-function TradingHouseWrapper:EnableSearchButton()
-	self.searchTab:EnableSearchButton()
-	self.keybindStrip:EnableSearch()
+function TradingHouseWrapper:ShowLoadingIndicator()
+	self.loadingIndicator:Show()
 end
 
-function TradingHouseWrapper:DisableSearchButton()
-	self.searchTab:DisableSearchButton()
-	self.keybindStrip:DisableSearch()
-end
-
-function TradingHouseWrapper:EnableGuildSelector()
-	self.guildSelector:Enable()
-end
-
-function TradingHouseWrapper:DisableGuildSelector()
-	self.guildSelector:Disable()
+function TradingHouseWrapper:HideLoadingIndicator()
+	self.loadingIndicator:Hide()
 end
 
 function TradingHouseWrapper:ShowGuildSelector()

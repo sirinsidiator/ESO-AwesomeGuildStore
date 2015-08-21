@@ -34,12 +34,14 @@ function GuildSelector:Initialize(saveData)
 	end)
 
 	local originalSelectTradingHouseGuildId = SelectTradingHouseGuildId
-	SelectTradingHouseGuildId = function(...)
-		local result = {originalSelectTradingHouseGuildId(...)}
-		self:UpdateSelectedGuild()
-		local guildId, guildName = GetCurrentTradingHouseGuildDetails()
-		if(guildId ~= 0) then
-			self.saveData.lastGuildName = guildName
+	SelectTradingHouseGuildId = function(guildId, skipUpdates, ...)
+		local result = {originalSelectTradingHouseGuildId(guildId, ...)}
+		if(skipUpdates ~= true) then
+			self:UpdateSelectedGuild()
+			local guildId, guildName = GetCurrentTradingHouseGuildDetails()
+			if(guildId ~= 0) then
+				self.saveData.lastGuildName = guildName
+			end
 		end
 		return unpack(result)
 	end

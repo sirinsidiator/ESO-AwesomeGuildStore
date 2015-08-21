@@ -24,10 +24,13 @@ function ListingTabWrapper:New(saveData)
 end
 
 function ListingTabWrapper:RunInitialSetup(tradingHouseWrapper)
+	self.tradingHouseWrapper = tradingHouseWrapper
 	self:InitializeListingSortHeaders(tradingHouseWrapper)
 	self:InitializeListingCount(tradingHouseWrapper)
 	self:InitializeLoadingOverlay(tradingHouseWrapper)
 	self:InitializeUnitPriceDisplay(tradingHouseWrapper)
+	self:InitializeCancelSaleOperation(tradingHouseWrapper)
+	self:InitializeRequestListingsOperation(tradingHouseWrapper)
 end
 
 local function PrepareSortHeader(container, name, key)
@@ -140,6 +143,92 @@ function ListingTabWrapper:InitializeUnitPriceDisplay(tradingHouseWrapper)
 			sellPriceControl:ClearAnchors()
 			sellPriceControl:SetAnchor(RIGHT, rowControl, RIGHT, -140, 0)
 		end
+	end
+end
+
+function ListingTabWrapper:InitializeCancelSaleOperation(tradingHouseWrapper)
+	local activityManager = tradingHouseWrapper.activityManager
+
+	tradingHouseWrapper:Wrap("ShowCancelListingConfirmation", function(originalShowCancelListingConfirmation, self, listingIndex)
+		if(IsShiftKeyDown()) then
+			activityManager:CancelSale(listingIndex)
+		else
+			originalShowCancelListingConfirmation(self, listingIndex)
+		end
+	end)
+
+	ZO_PreHook("ZO_Dialogs_RegisterCustomDialog", function(name, info)
+		if(name == "CONFIRM_TRADING_HOUSE_CANCEL_LISTING") then
+			info.buttons[1].callback = function(dialog)
+				activityManager:CancelSale(dialog.listingIndex)
+				dialog.listingIndex = nil
+			end
+		end
+	end)
+
+	local ActivityBase = AwesomeGuildStore.ActivityBase
+	local originalZO_TradingHouse_CreateItemData = ZO_TradingHouse_CreateItemData
+	ZO_TradingHouse_CreateItemData = function(index, fn)
+		local result = originalZO_TradingHouse_CreateItemData(index, fn)
+		if(result) then
+			if(fn == GetTradingHouseListingItemInfo) then
+				local guildId = GetSelectedTradingHouseGuildId()
+				local key = string.format("%d_%d", ActivityBase.ACTIVITY_TYPE_CANCEL_SALE, guildId) -- TODO: make it work with multiple cancel operations
+				local operation = activityManager:GetActivity(key)
+				if(operation and operation.listingIndex == result.slotIndex) then
+					result.cancelPending = true
+				end
+			end
+			return result
+		end
+	end
+
+	local AquireLoadingIcon = AwesomeGuildStore.LoadingIcon.Aquire
+	local function SetCancelPending(rowControl, pending)
+		local cancelButton = GetControl(rowControl, "CancelSale")
+		cancelButton:SetHidden(false)
+		if(pending) then
+			if(not rowControl.loadingIcon) then
+				local loadingIcon = AquireLoadingIcon()
+				loadingIcon:SetParent(rowControl)
+				loadingIcon:ClearAnchors()
+				loadingIcon:SetAnchor(CENTER, cancelButton, CENTER, 0, 0)
+				rowControl.loadingIcon = loadingIcon
+			end
+			cancelButton:SetHidden(true)
+			rowControl.loadingIcon:Show()
+		elseif(rowControl.loadingIcon) then
+			rowControl.loadingIcon:Release()
+			rowControl.loadingIcon = nil
+		end
+	end
+
+	local ITEM_LISTINGS_DATA_TYPE = 2
+	local rowType = tradingHouseWrapper.tradingHouse.m_postedItemsList.dataTypes[ITEM_LISTINGS_DATA_TYPE]
+	local originalSetupCallback = rowType.setupCallback
+	rowType.setupCallback = function(rowControl, postedItem)
+		originalSetupCallback(rowControl, postedItem)
+		SetCancelPending(rowControl, postedItem.cancelPending)
+	end
+end
+
+function ListingTabWrapper:SetListedItemPending(index)
+	local list = self.tradingHouseWrapper.tradingHouse.m_postedItemsList
+	local scrollData = ZO_ScrollList_GetDataList(list)
+	for i = 1, #scrollData do
+		local data = ZO_ScrollList_GetDataEntryData(scrollData[i])
+		if(data.slotIndex == index) then
+			data.cancelPending = true
+			ZO_ScrollList_RefreshVisible(list)
+			return
+		end
+	end
+end
+
+function ListingTabWrapper:InitializeRequestListingsOperation(tradingHouseWrapper)
+	local activityManager = tradingHouseWrapper.activityManager
+	tradingHouseWrapper.tradingHouse.RequestListings = function()
+		activityManager:RequestListings()
 	end
 end
 

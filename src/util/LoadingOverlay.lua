@@ -1,3 +1,69 @@
+local LoadingIcon = ZO_Object:Subclass()
+AwesomeGuildStore.LoadingIcon = LoadingIcon
+
+local function IconFactory(pool)
+	return LoadingIcon:New("AwesomeGuildStoreLoadingIcon" .. pool:GetNextControlId())
+end
+
+local function ResetFunction(icon)
+	icon:Hide()
+	local control = icon.control
+	control:SetParent(GuiRoot)
+	control:ClearAnchors()
+	icon.key = nil
+end
+
+LoadingIcon.iconPool = ZO_ObjectPool:New(IconFactory, ResetFunction)
+
+function LoadingIcon.Aquire()
+	local icon, key = LoadingIcon.iconPool:AcquireObject()
+	icon.key = key
+	return icon
+end
+
+function LoadingIcon:Release()
+	LoadingIcon.iconPool:ReleaseObject(self.key)
+end
+
+function LoadingIcon:New(name)
+	local object = ZO_Object.New(self)
+
+	local control = CreateControlFromVirtual(name, GuiRoot, "AwesomeGuildStoreLoadingTemplate")
+	control:SetHidden(true)
+	object.animation = ANIMATION_MANAGER:CreateTimelineFromVirtual("LoadIconAnimation", control:GetNamedChild("Icon"))
+	object.control = control
+
+	return object
+end
+
+function LoadingIcon:SetParent(parent)
+	local control = self.control
+	control:SetParent(parent)
+	control:SetDrawTier(parent:GetDrawTier())
+	control:SetDrawLayer(parent:GetDrawLayer())
+	control:SetDrawLevel(parent:GetDrawLevel() + 1)
+	control:ClearAnchors()
+	control:SetAnchor(CENTER, parent, CENTER, 0, 0)
+end
+
+function LoadingIcon:ClearAnchors()
+	self.control:ClearAnchors()
+end
+
+function LoadingIcon:SetAnchor(point, target, relativePoint, offsetX, offsetY)
+	self.control:SetAnchor(point, target, relativePoint, offsetX, offsetY)
+end
+
+function LoadingIcon:Show()
+	self.animation:PlayForward()
+	self.control:SetHidden(false)
+end
+
+function LoadingIcon:Hide()
+	self.control:SetHidden(true)
+	self.animation:Stop()
+end
+
 local LoadingOverlay = ZO_Object:Subclass()
 AwesomeGuildStore.LoadingOverlay = LoadingOverlay
 
@@ -11,12 +77,11 @@ function LoadingOverlay:New(name)
 	control:SetCenterTexture("EsoUI/Art/ChatWindow/chat_BG_center.dds")
 	control:SetEdgeTexture("EsoUI/Art/ChatWindow/chat_BG_edge.dds", 256, 256, 32)
 	control:SetInsets(32, 32, -32, -32)
-	local loadingIcon = CreateControlFromVirtual(name .. "Icon", control, "AwesomeGuildStoreLoadingTemplate")
-	loadingIcon:SetAnchor(CENTER, control, CENTER, 0, 0)
-	loadingIcon.animation = ANIMATION_MANAGER:CreateTimelineFromVirtual("LoadIconAnimation", loadingIcon:GetNamedChild("Icon"))
+	local loadingIcon = LoadingIcon:New(name .. "Icon")
+	loadingIcon:SetParent(control)
 
 	overlay.control = control
-	overlay.loadingAnimation = loadingIcon.animation
+	overlay.loadingIcon = loadingIcon
 
 	return overlay
 end
@@ -33,11 +98,11 @@ function LoadingOverlay:SetParent(parent)
 end
 
 function LoadingOverlay:Show()
-	self.loadingAnimation:PlayForward()
+	self.loadingIcon:Show()
 	self.control:SetHidden(false)
 end
 
 function LoadingOverlay:Hide()
 	self.control:SetHidden(true)
-	self.loadingAnimation:Stop()
+	self.loadingIcon:Hide()
 end
