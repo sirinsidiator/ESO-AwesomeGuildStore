@@ -17,6 +17,7 @@ local function LoadSettings()
 		listingSortField = TRADING_HOUSE_SORT_LISTING_TIME,
 		listingSortOrder = ZO_SORT_ORDER_DOWN,
 		disableCustomSellTabFilter = false,
+		skipGuildKioskDialog = true,
 		searchLibrary = {
 			x = 980,
 			y = -5,
@@ -150,6 +151,14 @@ local function LoadSettings()
 			setFunc = function(value) saveData.disableCustomSellTabFilter = value end,
 			default = defaultData.disableCustomSellTabFilter,
 		}
+		optionsData[#optionsData + 1] = {
+			type = "checkbox",
+			name = L["SETTINGS_SKIP_GUILD_KIOSK_DIALOG_LABEL"],
+			tooltip = L["SETTINGS_SKIP_GUILD_KIOSK_DIALOG_DESCRIPTION"],
+			getFunc = function() return saveData.skipGuildKioskDialog end,
+			setFunc = function(value) saveData.skipGuildKioskDialog = value end,
+			default = defaultData.skipGuildKioskDialog,
+		}
 		LAM:RegisterOptionControls("AwesomeGuildStoreOptions", optionsData)
 
 		AwesomeGuildStore.OpenSettingsPanel = function()
@@ -228,6 +237,10 @@ local function LoadSettings()
 		if(saveData.version == 13) then
 			saveData.purchaseNotification = defaultData.purchaseNotification
 			saveData.version = 14
+		end
+		if(saveData.version == 14) then
+			saveData.skipGuildKioskDialog = defaultData.skipGuildKioskDialog
+			saveData.version = 15
 		end
 	end
 

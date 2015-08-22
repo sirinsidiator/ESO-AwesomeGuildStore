@@ -236,6 +236,8 @@ local localization = {
 		SETTINGS_PURCHASE_NOTIFICATION_DESCRIPTION = "Shows a message in chat after a purchase was completed in a guild store", -- TODO: translate
 		SETTINGS_DISABLE_CUSTOM_SELL_TAB_FILTER_LABEL = "Disable custom selltab filter", -- TODO: translate
 		SETTINGS_DISABLE_CUSTOM_SELL_TAB_FILTER_DESCRIPTION = "Shows the ingame inventory filter instead of AGS own version when deactivated.", -- TODO: translate
+		SETTINGS_SKIP_GUILD_KIOSK_DIALOG_LABEL = "Skip guild kiosk dialog", -- TODO: translate
+		SETTINGS_SKIP_GUILD_KIOSK_DIALOG_DESCRIPTION = "When activated, the dialog at guild traders (not at banks) is skipped and the store opened automatically. This can be suppressed by holding the shift key when talking to a trader.", -- TODO: translate
 
 		INVALID_STATE = "Invalid Store State.\nThis is a bug in the game and should be fixed soon.",
 
@@ -336,9 +338,11 @@ local localization = {
 		SETTINGS_MAIL_AUGMENTATION_LABEL = "Postverbesserung",
 		SETTINGS_MAIL_AUGMENTATION_DESCRIPTION = "Fügt detailiertere Informationen über eine Transaktion in die eintreffende Gildenladen Post ein, solange die Daten in den Gildenaufzeichnungen vorhanden sind.",
 		SETTINGS_MAIL_AUGMENTATION_INVOICE_LABEL = "Zeige Rechnung in Nachrichten",
-		SETTINGS_MAIL_AUGMENTATION_INVOICE_DESCRIPTION = "Zeigt eine detailierte Rechnung an, die alle Abzüge auflistet.",
+		SETTINGS_MAIL_AUGMENTATION_INVOICE_DESCRIPTION = "Zeigt eine detailierte Rechnung an, die alle Abzüge auflistet",
 		SETTINGS_PURCHASE_NOTIFICATION_LABEL = "Kaufbenachrichtigung",
 		SETTINGS_PURCHASE_NOTIFICATION_DESCRIPTION = "Zeigt eine Meldung im Chat, nachdem ein Kauf in einem Gildenladen abgeschlossen wurde",
+		SETTINGS_SKIP_GUILD_KIOSK_DIALOG_LABEL = "Gildenkioskdialog überspringen",
+		SETTINGS_SKIP_GUILD_KIOSK_DIALOG_DESCRIPTION = "Der Dialog bei Gildenläden (nicht in der Bank) wird übersprungen und der Laden automatisch geöffnet, wenn diese Option aktiv ist. Dies kann unterdrückt werden, indem die Shift Taste gedrückt gehalten wird während man den Händler anspricht",
 
 		INVALID_STATE = "Ungültiger Händlerzustand.\nDas ist ein Fehler im Spiel und sollte bald behoben werden.",
 
@@ -440,6 +444,12 @@ local localization = {
 		SETTINGS_MAIL_AUGMENTATION_DESCRIPTION = "Affiche un récapitulatif détaillé de la transaction effectuée dans le mail si les informations sont disponibles via l'historique des ventes de la guilde.",
 		SETTINGS_MAIL_AUGMENTATION_INVOICE_LABEL = "Afficher la note dans les mails",
 		SETTINGS_MAIL_AUGMENTATION_INVOICE_DESCRIPTION = "Affiche une note détaillée de la transaction dans les mails.",
+		SETTINGS_PURCHASE_NOTIFICATION_LABEL = "Notifications d'achat",
+		SETTINGS_PURCHASE_NOTIFICATION_DESCRIPTION = "Affiche un message dans la fenêtre de discussion après un achat en boutique",
+		SETTINGS_DISABLE_CUSTOM_SELL_TAB_FILTER_LABEL = "Désactiver les sous-catégories de mise en vente",
+		SETTINGS_DISABLE_CUSTOM_SELL_TAB_FILTER_DESCRIPTION = "Affiche les filtres de l'inventaire à la place de ceux d'AGS dans l'onglet de mise en vente",
+		SETTINGS_SKIP_GUILD_KIOSK_DIALOG_LABEL = "Afficher directement la boutique",
+		SETTINGS_SKIP_GUILD_KIOSK_DIALOG_DESCRIPTION = "Lorsque vous dialoguerez avec l'embauché du marchand de guilde, celui-vous affichera directement sa boutique. Cette fonctionnalité peut être désactivée en maintenant le bouton Shift avant d'initier la conversation.",
 
 		INVALID_STATE = "Boutique de guilde indisponible.\nCeci est un bug du jeu et devrait être résolu bientôt.",
 
