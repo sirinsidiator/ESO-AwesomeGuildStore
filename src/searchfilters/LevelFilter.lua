@@ -8,7 +8,7 @@ AwesomeGuildStore.LevelFilter = LevelFilter
 local MIN_LEVEL = 1
 local MAX_LEVEL = 50
 local MIN_RANK = 1
-local MAX_RANK = 14
+local MAX_RANK = 16
 local LINE_SPACING = 4
 local LEVEL_FILTER_TYPE_ID = 3
 
@@ -199,7 +199,7 @@ function LevelFilter:GetTooltipText(state)
 	maxLevel = tonumber(maxLevel)
 	if(minLevel or maxLevel) then
 		local label = isNormal and L["LEVEL_SELECTOR_TITLE"] or L["VR_SELECTOR_TITLE"]
-		local text = ("%d - %d"):format(minLevel or 1, maxLevel or (isNormal and 50 or 14))
+		local text = ("%d - %d"):format(minLevel or 1, maxLevel or (isNormal and MAX_LEVEL or MAX_RANK))
 		return {{label = label:sub(0, -2), text = text}}
 	end
 	return {}
