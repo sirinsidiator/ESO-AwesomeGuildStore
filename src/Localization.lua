@@ -232,12 +232,12 @@ local localization = {
 		SETTINGS_MAIL_AUGMENTATION_DESCRIPTION = "Adds more detailed information about a transaction to an incoming Guild Store Mail if the data is available in the Guild Activity Log.",
 		SETTINGS_MAIL_AUGMENTATION_INVOICE_LABEL = "Show invoice on mails",
 		SETTINGS_MAIL_AUGMENTATION_INVOICE_DESCRIPTION = "Adds a detailed invoice to the mail which lists all deductions.",
-		SETTINGS_PURCHASE_NOTIFICATION_LABEL = "Purchase notifications", -- TODO: translate
-		SETTINGS_PURCHASE_NOTIFICATION_DESCRIPTION = "Shows a message in chat after a purchase was completed in a guild store", -- TODO: translate
-		SETTINGS_DISABLE_CUSTOM_SELL_TAB_FILTER_LABEL = "Disable custom selltab filter", -- TODO: translate
-		SETTINGS_DISABLE_CUSTOM_SELL_TAB_FILTER_DESCRIPTION = "Shows the ingame inventory filter instead of AGS own version when deactivated.", -- TODO: translate
-		SETTINGS_SKIP_GUILD_KIOSK_DIALOG_LABEL = "Skip guild kiosk dialog", -- TODO: translate
-		SETTINGS_SKIP_GUILD_KIOSK_DIALOG_DESCRIPTION = "When activated, the dialog at guild traders (not at banks) is skipped and the store opened automatically. This can be suppressed by holding the shift key when talking to a trader.", -- TODO: translate
+		SETTINGS_PURCHASE_NOTIFICATION_LABEL = "Purchase notifications",
+		SETTINGS_PURCHASE_NOTIFICATION_DESCRIPTION = "Shows a message in chat after a purchase was completed in a guild store",
+		SETTINGS_DISABLE_CUSTOM_SELL_TAB_FILTER_LABEL = "Disable custom selltab filter",
+		SETTINGS_DISABLE_CUSTOM_SELL_TAB_FILTER_DESCRIPTION = "Shows the ingame inventory filter instead of AGS own version when deactivated.",
+		SETTINGS_SKIP_GUILD_KIOSK_DIALOG_LABEL = "Skip guild kiosk dialog",
+		SETTINGS_SKIP_GUILD_KIOSK_DIALOG_DESCRIPTION = "When activated, the dialog at guild traders (not at banks) is skipped and the store opened automatically. This can be suppressed by holding the shift key when talking to a trader.",
 
 		INVALID_STATE = "Invalid Store State.\nThis is a bug in the game and should be fixed soon.",
 
@@ -551,6 +551,12 @@ local localization = {
 		SETTINGS_MAIL_AUGMENTATION_DESCRIPTION = "Äoàaáìüeò àoìee äeòaìöîóô èîñopíaœèô o cäeìêe áo áxoäüûee ïècöío oò Âèìöäeécêoâo Íaâaçèîa, ecìè èîñopíaœèü äocòóïîa á ìoâe aêòèáîocòè âèìöäèè.",
 		SETTINGS_MAIL_AUGMENTATION_INVOICE_LABEL = "Cùeò á ïècöíax",
 		SETTINGS_MAIL_AUGMENTATION_INVOICE_DESCRIPTION = "Äoàaáìüeò äeòaìöîÿé cùeò á ïècöía, êoòopÿé coäepæèò èîñopíaœèô oào ácex ïocòóïìeîèüx.",
+		SETTINGS_PURCHASE_NOTIFICATION_LABEL = "Oïoáeûeîèe o ïoêóïêe",
+		SETTINGS_PURCHASE_NOTIFICATION_DESCRIPTION = "Ïoêaçÿáaeò cooàûeîèe á ùaòe ïocìe coáepúeîèü ïoêóïêè áaúeâo òoáapa á âèìöäeécêoí íaâaçèîe",
+		SETTINGS_DISABLE_CUSTOM_SELL_TAB_FILTER_LABEL = "Oòêìôùèòö ñèìöòpÿ aääoîa",
+		SETTINGS_DISABLE_CUSTOM_SELL_TAB_FILTER_DESCRIPTION = "Ïoêaçÿáaeò còaîäapòîÿe èâpoáÿe ñèìöòpÿ èîáeîòapü áíecòo ñèìöòpoá aääoîa AGS, ecìè áÿêìôùeîo.",
+		SETTINGS_SKIP_GUILD_KIOSK_DIALOG_LABEL = "Ïpoïócòèòö äèaìoâ êèocêa",
+		SETTINGS_SKIP_GUILD_KIOSK_DIALOG_DESCRIPTION = "Êoâäa áêìôùeîo, äèaìoâ âèìöäeécêoâo òopâoáœa (îe àaîêèpa) ïpoïócêaeòcü è íaâaçèî oòêpÿáaeòcü cpaçó aáòoíaòèùecêè. Áÿ cíoæeòe îaæaòö è óäepæèáaòö Shift ïpè îaùaìe äèaìoâa c âèìöäeécêèí òopâoáœeí, ùòoàÿ óáèäeòö còaîäapòîÿé äèaìoâ ïpè áêìôùeîèè ëòoé ñóîêœèè.",
 
 		INVALID_STATE = "Oúèàêa.\nËòo àaâ èâpÿ è oî äoìæeî àÿòö ïoïpaáìeî á àìèæaéúee ápeíü.",
 
