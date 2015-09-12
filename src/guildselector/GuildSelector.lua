@@ -172,7 +172,8 @@ function GuildSelector:ReselectLastGuild()
 		for i = 1, GetNumTradingHouseGuilds() do
 			guildId, guildName = GetTradingHouseGuildDetails(i)
 			if(guildName == self.saveData.lastGuildName) then
-				SelectTradingHouseGuildId(guildId)
+				SelectTradingHouseGuildId(guildId, true)
+				TRADING_HOUSE:UpdateForGuildChange()
 				break
 			end
 		end
