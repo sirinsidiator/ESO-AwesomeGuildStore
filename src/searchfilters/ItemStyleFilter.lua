@@ -19,9 +19,9 @@ local OTHER_STYLES = {
 	[31] = true,
 	[32] = true,
 	[33] = true,
-	[34] = true,
 	[35] = true,
 }
+local IMPERIAL_STYLE_VALUE = 16
 local OTHER_STYLE_VALUE = 99
 
 function ItemStyleFilter:New(name, tradingHouseWrapper, subfilterPreset, ...)
@@ -41,10 +41,10 @@ function ItemStyleFilter:BeforeRebuildSearchResultsPage(tradingHouseWrapper)
 	for _, button in pairs(group.buttons) do
 		if(button:IsPressed()) then
 			if(button.value == OTHER_STYLE_VALUE) then
-				d("show others")
 				self.showOtherStyles = true
+			elseif(button.value == IMPERIAL_STYLE_VALUE) then
+				self.selectedStyles[34] = true -- there are two different imperial styles it seems
 			else
-				df("show %s", GetString("SI_ITEMSTYLE", button.value))
 				self.selectedStyles[button.value] = true
 			end
 			hasSelections = true
