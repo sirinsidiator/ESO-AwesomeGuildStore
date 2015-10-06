@@ -34,7 +34,7 @@ function CategorySubfilter:Initialize(name, tradingHouseWrapper, subfilterPreset
 	for index, buttonPreset in ipairs(subfilterPreset.buttons) do
 		local button = ToggleButton:New(group.control, group.control:GetName() .. "Button" .. index, buttonPreset.texture, 0, 0, BUTTON_SIZE, BUTTON_SIZE, buttonPreset.label)
 		button.HandlePress = function()
-			if(group.pressedButtonCount >= 8) then
+			if(not subfilterPreset.isLocal and group.pressedButtonCount > 8) then
 				ZO_Alert(UI_ALERT_CATEGORY_ERROR, SOUNDS.GENERAL_ALERT_ERROR, L["WARNING_SUBFILTER_LIMIT"])
 				self.resetButton:SetHidden(false)
 				return false

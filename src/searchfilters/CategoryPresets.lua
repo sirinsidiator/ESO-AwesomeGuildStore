@@ -4,7 +4,7 @@ local SUBFILTER_WEAPON_TRAITS, SUBFILTER_WEAPON_ENCHANTMENTS, SUBFILTER_WEAPON_O
 local SUBFILTER_ARMOR_SLOTS, SUBFILTER_ARMOR_TRAITS, SUBFILTER_ARMOR_ENCHANTMENTS, SUBFILTER_JEWELRY_TRAITS, SUBFILTER_JEWELRY_ENCHANTMENTS = 6, 7, 8, 9, 10
 local SUBFILTER_BLACKSMITHING_MATERIALS, SUBFILTER_CLOTHING_MATERIALS, SUBFILTER_WOODWORKING_MATERIALS, SUBFILTER_ALCHEMY_MATERIALS = 11, 12, 13, 14
 local SUBFILTER_ENCHANTING_MATERIALS, SUBFILTER_GLYPHS, SUBFILTER_JEWELRY_TYPE, SUBFILTER_STYLE_MATERIALS = 15, 16, 17, 18
-local SUBFILTER_RECIPE_KNOWLEDGE, SUBFILTER_MOTIF_KNOWLEDGE, SUBFILTER_TRAIT_KNOWLEDGE, SUBFILTER_RUNE_KNOWLEDGE = 19, 20, 21, 22
+local SUBFILTER_RECIPE_KNOWLEDGE, SUBFILTER_MOTIF_KNOWLEDGE, SUBFILTER_TRAIT_KNOWLEDGE, SUBFILTER_RUNE_KNOWLEDGE, SUBFILTER_ITEM_STYLE = 19, 20, 21, 22, 23
 
 AwesomeGuildStore.FILTER_PRESETS = {
 	[ITEMFILTERTYPE_ALL] = {
@@ -29,7 +29,8 @@ AwesomeGuildStore.FILTER_PRESETS = {
 				subfilters = {
 					SUBFILTER_WEAPON_TRAITS,
 					SUBFILTER_WEAPON_ENCHANTMENTS,
-					SUBFILTER_TRAIT_KNOWLEDGE
+					SUBFILTER_TRAIT_KNOWLEDGE,
+					SUBFILTER_ITEM_STYLE
 				},
 			},
 			{
@@ -42,7 +43,8 @@ AwesomeGuildStore.FILTER_PRESETS = {
 					SUBFILTER_WEAPON_ONEHANDED,
 					SUBFILTER_WEAPON_TRAITS,
 					SUBFILTER_WEAPON_ENCHANTMENTS,
-					SUBFILTER_TRAIT_KNOWLEDGE
+					SUBFILTER_TRAIT_KNOWLEDGE,
+					SUBFILTER_ITEM_STYLE
 				},
 			},
 			{
@@ -56,7 +58,8 @@ AwesomeGuildStore.FILTER_PRESETS = {
 					SUBFILTER_WEAPON_TWOHANDED,
 					SUBFILTER_WEAPON_TRAITS,
 					SUBFILTER_WEAPON_ENCHANTMENTS,
-					SUBFILTER_TRAIT_KNOWLEDGE
+					SUBFILTER_TRAIT_KNOWLEDGE,
+					SUBFILTER_ITEM_STYLE
 				},
 			},
 			{
@@ -69,7 +72,8 @@ AwesomeGuildStore.FILTER_PRESETS = {
 				subfilters = {
 					SUBFILTER_WEAPON_TRAITS,
 					SUBFILTER_WEAPON_ENCHANTMENTS,
-					SUBFILTER_TRAIT_KNOWLEDGE
+					SUBFILTER_TRAIT_KNOWLEDGE,
+					SUBFILTER_ITEM_STYLE
 				},
 			},
 			{
@@ -83,7 +87,8 @@ AwesomeGuildStore.FILTER_PRESETS = {
 					SUBFILTER_WEAPON_STAFF,
 					SUBFILTER_WEAPON_TRAITS,
 					SUBFILTER_WEAPON_ENCHANTMENTS,
-					SUBFILTER_TRAIT_KNOWLEDGE
+					SUBFILTER_TRAIT_KNOWLEDGE,
+					SUBFILTER_ITEM_STYLE
 				},
 			},
 			{
@@ -96,7 +101,8 @@ AwesomeGuildStore.FILTER_PRESETS = {
 				subfilters = {
 					SUBFILTER_WEAPON_TRAITS,
 					SUBFILTER_WEAPON_ENCHANTMENTS,
-					SUBFILTER_TRAIT_KNOWLEDGE
+					SUBFILTER_TRAIT_KNOWLEDGE,
+					SUBFILTER_ITEM_STYLE
 				},
 			}
 		}
@@ -117,7 +123,8 @@ AwesomeGuildStore.FILTER_PRESETS = {
 					SUBFILTER_ARMOR_SLOTS,
 					SUBFILTER_ARMOR_TRAITS,
 					SUBFILTER_ARMOR_ENCHANTMENTS,
-					SUBFILTER_TRAIT_KNOWLEDGE
+					SUBFILTER_TRAIT_KNOWLEDGE,
+					SUBFILTER_ITEM_STYLE
 				},
 			},
 			{
@@ -131,7 +138,8 @@ AwesomeGuildStore.FILTER_PRESETS = {
 					SUBFILTER_ARMOR_SLOTS,
 					SUBFILTER_ARMOR_TRAITS,
 					SUBFILTER_ARMOR_ENCHANTMENTS,
-					SUBFILTER_TRAIT_KNOWLEDGE
+					SUBFILTER_TRAIT_KNOWLEDGE,
+					SUBFILTER_ITEM_STYLE
 				},
 			},
 			{
@@ -145,7 +153,8 @@ AwesomeGuildStore.FILTER_PRESETS = {
 					SUBFILTER_ARMOR_SLOTS,
 					SUBFILTER_ARMOR_TRAITS,
 					SUBFILTER_ARMOR_ENCHANTMENTS,
-					SUBFILTER_TRAIT_KNOWLEDGE
+					SUBFILTER_TRAIT_KNOWLEDGE,
+					SUBFILTER_ITEM_STYLE
 				},
 			},
 			{
@@ -159,7 +168,8 @@ AwesomeGuildStore.FILTER_PRESETS = {
 					SUBFILTER_ARMOR_SLOTS,
 					SUBFILTER_ARMOR_TRAITS,
 					SUBFILTER_ARMOR_ENCHANTMENTS,
-					SUBFILTER_TRAIT_KNOWLEDGE
+					SUBFILTER_TRAIT_KNOWLEDGE,
+					SUBFILTER_ITEM_STYLE
 				},
 			},
 			{
@@ -172,7 +182,8 @@ AwesomeGuildStore.FILTER_PRESETS = {
 				subfilters = {
 					SUBFILTER_ARMOR_TRAITS,
 					SUBFILTER_ARMOR_ENCHANTMENTS,
-					SUBFILTER_TRAIT_KNOWLEDGE
+					SUBFILTER_TRAIT_KNOWLEDGE,
+					SUBFILTER_ITEM_STYLE
 				},
 			},
 			{
@@ -1129,6 +1140,120 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 				label = L["SUBFILTER_RUNE_KNOWLEDGE_KNOWN"],
 				texture = "EsoUI/Art/Journal/journal_tabIcon_loreLibrary_%s.dds",
 				value = 2,
+			},
+		},
+	},
+	[SUBFILTER_ITEM_STYLE] = {
+		type = 42,
+		label = L["SUBFILTER_ITEM_STYLE_LABEL"],
+		class = "ItemStyleFilter",
+		filter = 42,
+		isLocal = true, -- TODO: this is just a quick hack to prevent the 8 button warning from showing
+		buttons = {
+			{
+				label = L["SUBFILTER_ITEM_STYLE_BRETON"],
+				texture = "EsoUI/Art/CharacterCreate/characterCreate_bretonIcon_%s.dds",
+				value = 1,
+			},
+			{
+				label = L["SUBFILTER_ITEM_STYLE_REDGUARD"],
+				texture = "EsoUI/Art/CharacterCreate/characterCreate_redguardIcon_%s.dds",
+				value = 2,
+			},
+			{
+				label = L["SUBFILTER_ITEM_STYLE_ORC"],
+				texture = "EsoUI/Art/CharacterCreate/characterCreate_orcIcon_%s.dds",
+				value = 3,
+			},
+			{
+				label = L["SUBFILTER_ITEM_STYLE_DUNMER"],
+				texture = "EsoUI/Art/CharacterCreate/characterCreate_dunmerIcon_%s.dds",
+				value = 4,
+			},
+			{
+				label = L["SUBFILTER_ITEM_STYLE_NORD"],
+				texture = "EsoUI/Art/CharacterCreate/characterCreate_nordIcon_%s.dds",
+				value = 5,
+			},
+			{
+				label = L["SUBFILTER_ITEM_STYLE_ARGONIAN"],
+				texture = "EsoUI/Art/CharacterCreate/characterCreate_argonianIcon_%s.dds",
+				value = 6,
+			},
+			{
+				label = L["SUBFILTER_ITEM_STYLE_ALTMER"],
+				texture = "EsoUI/Art/CharacterCreate/characterCreate_altmerIcon_%s.dds",
+				value = 7,
+			},
+			{
+				label = L["SUBFILTER_ITEM_STYLE_BOSMER"],
+				texture = "EsoUI/Art/CharacterCreate/characterCreate_bosmerIcon_%s.dds",
+				value = 8,
+			},
+			{
+				label = L["SUBFILTER_ITEM_STYLE_KHAJIIT"],
+				texture = "EsoUI/Art/CharacterCreate/characterCreate_khajiitIcon_%s.dds",
+				value = 9,
+			},
+			{
+				label = L["SUBFILTER_ITEM_STYLE_IMPERIAL"],
+				texture = "EsoUI/Art/CharacterCreate/characterCreate_imperialIcon_%s.dds",
+				value = 16,
+			},
+			{
+				label = L["SUBFILTER_ITEM_STYLE_ANCIENT_ELF"],
+				texture = "EsoUI/Art/Icons/progression_tabIcon_magma_%s.dds",
+				value = 15,
+			},
+			{
+				label = L["SUBFILTER_ITEM_STYLE_PRIMAL"],
+				texture = "EsoUI/Art/Icons/progression_tabicon_flames_%s.dds",
+				value = 19,
+			},
+			{
+				label = L["SUBFILTER_ITEM_STYLE_BARBARIC"],
+				texture = "EsoUI/Art/Icons/progression_tabicon_avasiege_%s.dds",
+				value = 17,
+			},
+			{
+				label = L["SUBFILTER_ITEM_STYLE_DAEDRIC"],
+				texture = "EsoUI/Art/Icons/progression_tabIcon_daedricConjuration_%s.dds",
+				value = 20,
+			},
+			{
+				label = L["SUBFILTER_ITEM_STYLE_DWEMER"],
+				texture = "AwesomeGuildStore/images/style/dwemer_%s.dds",
+				value = 14,
+			},
+			{
+				label = L["SUBFILTER_ITEM_STYLE_GLASS"],
+				texture = "EsoUI/Art/Icons/progression_tabIcon_sunMagic_%s.dds",
+				value = 28,
+			},
+			{
+				label = L["SUBFILTER_ITEM_STYLE_XIVKYN"],
+				texture = "EsoUI/Art/Icons/progression_tabicon_darkmagic_%s.dds",
+				value = 29,
+			},
+			{
+				label = L["SUBFILTER_ITEM_STYLE_DAGGERFALL"],
+				texture = "AwesomeGuildStore/images/style/daggerfall_%s.dds",
+				value = 23,
+			},
+			{
+				label = L["SUBFILTER_ITEM_STYLE_EBONHEART"],
+				texture = "AwesomeGuildStore/images/style/ebonheart_%s.dds",
+				value = 24,
+			},
+			{
+				label = L["SUBFILTER_ITEM_STYLE_ALDMERI"],
+				texture = "AwesomeGuildStore/images/style/aldmeri_%s.dds",
+				value = 25,
+			},
+			{
+				label = L["SUBFILTER_ITEM_STYLE_OTHER"],
+				texture = "EsoUI/Art/Inventory/inventory_tabIcon_misc_%s.dds",
+				value = 99,
 			},
 		},
 	},
