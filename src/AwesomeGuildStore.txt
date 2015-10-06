@@ -43,6 +43,7 @@ searchfilters/KnownMotifFilter.lua
 searchfilters/KnownRuneTranslationFilter.lua
 searchfilters/ResearchableTraitsFilter.lua
 searchfilters/ItemStyleFilter.lua
+searchfilters/ItemSetFilter.lua
 searchfilters/CategorySelector.lua
 searchfilters/PriceFilter.lua
 searchfilters/LevelFilter.lua

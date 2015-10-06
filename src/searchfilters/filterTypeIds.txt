@@ -29,9 +29,10 @@
 39 - KnownMotifSubfilter
 40 - ResearchableTraitsSubfilter
 41 - KnownRuneTranslationSubfilter
-42 - ItemStyleFilter
+42 - ItemStyleSubfilter
+43 - ItemSetSubfilter
 
-43 .. 99 - reserved
+44 .. 99 - reserved
 
 100 - MasterMerchant DealSelector
 101 - MasterMerchant DealFilter
