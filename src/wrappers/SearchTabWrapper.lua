@@ -400,7 +400,8 @@ function SearchTabWrapper:InitializeNavigation(tradingHouseWrapper)
 		callback = function() self:SearchPreviousPage() end,
 		updateState = function(rowControl)
 			rowControl:SetEnabled(true)
-		end
+		end,
+		color = ZO_ColorDef:New("F97431")
 	}
 
 	local showNextPageEntry =  {
@@ -408,7 +409,8 @@ function SearchTabWrapper:InitializeNavigation(tradingHouseWrapper)
 		callback = function() self:SearchNextPage() end,
 		updateState = function(rowControl)
 			rowControl:SetEnabled(true)
-		end
+		end,
+		color = ZO_ColorDef:New("50D35D")
 	}
 
 	ZO_ScrollList_AddDataType(tradingHouse.m_searchResultsList, SHOW_MORE_DATA_TYPE, "AwesomeGuildStoreShowMoreRowTemplate", 32, function(rowControl, entry)
@@ -417,6 +419,11 @@ function SearchTabWrapper:InitializeNavigation(tradingHouseWrapper)
 		rowControl.label = label
 
 		local highlight = rowControl:GetNamedChild("Highlight")
+		if(entry.color) then
+			highlight:SetColor(entry.color:UnpackRGB())
+			highlight:SetAlpha(0.5)
+		end
+
 		if not highlight.animation then
 			highlight.animation = ANIMATION_MANAGER:CreateTimelineFromVirtual("ShowOnMouseOverLabelAnimation", highlight)
 			local alphaAnimation = highlight.animation:GetFirstAnimation()
