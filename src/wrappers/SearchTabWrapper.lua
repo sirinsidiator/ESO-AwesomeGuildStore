@@ -389,10 +389,6 @@ function SearchTabWrapper:InitializeSearchSortHeaders(tradingHouseWrapper)
 	end)
 end
 
-local function IsReady()
-	return GetTradingHouseCooldownRemaining() == 0 and not TRADING_HOUSE:IsAwaitingResponse()
-end
-
 function SearchTabWrapper:InitializeNavigation(tradingHouseWrapper)
 	local SHOW_MORE_DATA_TYPE = 4 -- watch out for changes in tradinghouse.lua
 	local tradingHouse = tradingHouseWrapper.tradingHouse
@@ -401,17 +397,17 @@ function SearchTabWrapper:InitializeNavigation(tradingHouseWrapper)
 
 	local showPreviousPageEntry =  {
 		label = L["SEARCH_PREVIOUS_PAGE_LABEL"],
-		callback = function() search:SearchPreviousPage() end,
+		callback = function() self:SearchPreviousPage() end,
 		updateState = function(rowControl)
-			rowControl:SetEnabled(IsReady())
+			rowControl:SetEnabled(true)
 		end
 	}
 
 	local showNextPageEntry =  {
 		label = L["SEARCH_SHOW_MORE_LABEL"],
-		callback = function() search:SearchNextPage() end,
+		callback = function() self:SearchNextPage() end,
 		updateState = function(rowControl)
-			rowControl:SetEnabled(IsReady())
+			rowControl:SetEnabled(true)
 		end
 	}
 
@@ -490,11 +486,17 @@ function SearchTabWrapper:InitializeNavigation(tradingHouseWrapper)
 		currentPageLabel:SetHidden(page <= 0 or not hasNextOrPrevious)
 	end
 
-	tradingHouseWrapper:PreHook("UpdatePagingButtons", function(self)
+	tradingHouseWrapper:Wrap("UpdatePagingButtons", function(originalUpdatePagingButtons, self)
 		UpdatePageLabel(search.m_page, search:HasNextPage() or search:HasPreviousPage())
 		if(showPreviousPageEntry.rowControl ~= nil) then showPreviousPageEntry.updateState(showPreviousPageEntry.rowControl) end
 		if(showNextPageEntry.rowControl ~= nil) then showNextPageEntry.updateState(showNextPageEntry.rowControl) end
+		originalUpdatePagingButtons(self)
+		self.m_previousPage:SetEnabled(true)
+		self.m_nextPage:SetEnabled(true)
 	end)
+
+	tradingHouse.m_previousPage:SetHandler("OnClicked", function() self:SearchPreviousPage() end)
+	tradingHouse.m_nextPage:SetHandler("OnClicked", function() self:SearchNextPage() end)
 end
 
 function SearchTabWrapper:InitializeUnitPriceDisplay(tradingHouseWrapper)
@@ -564,6 +566,14 @@ end
 
 function SearchTabWrapper:Search()
 	self.tradingHouseWrapper.activityManager:ExecuteSearch()
+end
+
+function SearchTabWrapper:SearchPreviousPage()
+	self.tradingHouseWrapper.activityManager:ExecuteSearchPreviousPage()
+end
+
+function SearchTabWrapper:SearchNextPage()
+	self.tradingHouseWrapper.activityManager:ExecuteSearchNextPage()
 end
 
 function SearchTabWrapper:RelocateButtons(tradingHouse)

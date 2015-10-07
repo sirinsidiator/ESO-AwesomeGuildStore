@@ -130,7 +130,7 @@ function ActivityManager:CancelSale(listingIndex)
 			self.tradingHouseWrapper.listingTab:SetListedItemPending(listingIndex)
 			self:ExecuteNext()
 		else
-			--d("CancelSale already in queue")
+		--d("CancelSale already in queue")
 		end
 	end
 end
@@ -142,18 +142,26 @@ function ActivityManager:RequestListings()
 			--d("RequestListings queued")
 			self:ExecuteNext()
 		else
-			--d("RequestListings already in queue")
+		--d("RequestListings already in queue")
 		end
 	end
 end
 
-function ActivityManager:ExecuteSearch()
-	if(self:QueueActivity(ExecuteSearchOperation:New(self.tradingHouseWrapper))) then
+function ActivityManager:ExecuteSearch(page)
+	if(self:QueueActivity(ExecuteSearchOperation:New(self.tradingHouseWrapper, page))) then
 		--d("ExecuteSearch queued")
 		self:ExecuteNext()
 	else
-		--d("ExecuteSearch already in queue")
+	--d("ExecuteSearch already in queue")
 	end
+end
+
+function ActivityManager:ExecuteSearchPreviousPage()
+	self:ExecuteSearch(ExecuteSearchOperation.PREVIOUS_PAGE)
+end
+
+function ActivityManager:ExecuteSearchNextPage()
+	self:ExecuteSearch(ExecuteSearchOperation.NEXT_PAGE)
 end
 
 function ActivityManager:SwitchGuild()
@@ -163,7 +171,7 @@ function ActivityManager:SwitchGuild()
 			--d("SwitchGuild queued")
 			self:ExecuteNext()
 		else
-			--d("SwitchGuild already in queue")
+		--d("SwitchGuild already in queue")
 		end
 	end
 end
