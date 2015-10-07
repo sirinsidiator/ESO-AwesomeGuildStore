@@ -24,6 +24,7 @@ function SearchTabWrapper:RunInitialSetup(tradingHouseWrapper)
 	self:InitializePurchaseNotification(tradingHouseWrapper)
 	zo_callLater(function()
 		self:RefreshFilterDimensions() -- call this after the layout has been updated
+		self.categoryFilter:UpdateSubfilterVisibility() -- fix inpage filters not working on first visit
 	end, 1)
 	self.tradingHouseWrapper = tradingHouseWrapper
 
