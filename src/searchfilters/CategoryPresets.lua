@@ -1166,102 +1166,102 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 			{
 				label = L["SUBFILTER_ITEM_STYLE_BRETON"],
 				texture = "EsoUI/Art/CharacterCreate/characterCreate_bretonIcon_%s.dds",
-				value = 1,
+				value = ITEMSTYLE_RACIAL_BRETON,
 			},
 			{
 				label = L["SUBFILTER_ITEM_STYLE_REDGUARD"],
 				texture = "EsoUI/Art/CharacterCreate/characterCreate_redguardIcon_%s.dds",
-				value = 2,
+				value = ITEMSTYLE_RACIAL_REDGUARD,
 			},
 			{
 				label = L["SUBFILTER_ITEM_STYLE_ORC"],
 				texture = "EsoUI/Art/CharacterCreate/characterCreate_orcIcon_%s.dds",
-				value = 3,
+				value = ITEMSTYLE_RACIAL_ORC,
 			},
 			{
 				label = L["SUBFILTER_ITEM_STYLE_DUNMER"],
 				texture = "EsoUI/Art/CharacterCreate/characterCreate_dunmerIcon_%s.dds",
-				value = 4,
+				value = ITEMSTYLE_RACIAL_DARK_ELF,
 			},
 			{
 				label = L["SUBFILTER_ITEM_STYLE_NORD"],
 				texture = "EsoUI/Art/CharacterCreate/characterCreate_nordIcon_%s.dds",
-				value = 5,
+				value = ITEMSTYLE_RACIAL_NORD,
 			},
 			{
 				label = L["SUBFILTER_ITEM_STYLE_ARGONIAN"],
 				texture = "EsoUI/Art/CharacterCreate/characterCreate_argonianIcon_%s.dds",
-				value = 6,
+				value = ITEMSTYLE_RACIAL_ARGONIAN,
 			},
 			{
 				label = L["SUBFILTER_ITEM_STYLE_ALTMER"],
 				texture = "EsoUI/Art/CharacterCreate/characterCreate_altmerIcon_%s.dds",
-				value = 7,
+				value = ITEMSTYLE_RACIAL_HIGH_ELF,
 			},
 			{
 				label = L["SUBFILTER_ITEM_STYLE_BOSMER"],
 				texture = "EsoUI/Art/CharacterCreate/characterCreate_bosmerIcon_%s.dds",
-				value = 8,
+				value = ITEMSTYLE_RACIAL_WOOD_ELF,
 			},
 			{
 				label = L["SUBFILTER_ITEM_STYLE_KHAJIIT"],
 				texture = "EsoUI/Art/CharacterCreate/characterCreate_khajiitIcon_%s.dds",
-				value = 9,
+				value = ITEMSTYLE_RACIAL_KHAJIIT,
 			},
 			{
 				label = L["SUBFILTER_ITEM_STYLE_IMPERIAL"],
 				texture = "EsoUI/Art/CharacterCreate/characterCreate_imperialIcon_%s.dds",
-				value = 16,
+				value = ITEMSTYLE_RACIAL_IMPERIAL,
 			},
 			{
 				label = L["SUBFILTER_ITEM_STYLE_ANCIENT_ELF"],
 				texture = "EsoUI/Art/Icons/progression_tabIcon_magma_%s.dds",
-				value = 15,
+				value = ITEMSTYLE_AREA_ANCIENT_ELF,
 			},
 			{
 				label = L["SUBFILTER_ITEM_STYLE_PRIMAL"],
 				texture = "EsoUI/Art/Icons/progression_tabicon_flames_%s.dds",
-				value = 19,
+				value = ITEMSTYLE_ENEMY_PRIMITIVE,
 			},
 			{
 				label = L["SUBFILTER_ITEM_STYLE_BARBARIC"],
 				texture = "EsoUI/Art/Icons/progression_tabicon_avasiege_%s.dds",
-				value = 17,
+				value = ITEMSTYLE_AREA_REACH,
 			},
 			{
 				label = L["SUBFILTER_ITEM_STYLE_DAEDRIC"],
 				texture = "EsoUI/Art/Icons/progression_tabIcon_daedricConjuration_%s.dds",
-				value = 20,
+				value = ITEMSTYLE_ENEMY_DAEDRIC,
 			},
 			{
 				label = L["SUBFILTER_ITEM_STYLE_DWEMER"],
 				texture = "AwesomeGuildStore/images/style/dwemer_%s.dds",
-				value = 14,
+				value = ITEMSTYLE_AREA_DWEMER,
 			},
 			{
 				label = L["SUBFILTER_ITEM_STYLE_GLASS"],
 				texture = "EsoUI/Art/Icons/progression_tabIcon_sunMagic_%s.dds",
-				value = 28,
+				value = ITEMSTYLE_GLASS,
 			},
 			{
 				label = L["SUBFILTER_ITEM_STYLE_XIVKYN"],
 				texture = "EsoUI/Art/Icons/progression_tabicon_darkmagic_%s.dds",
-				value = 29,
+				value = ITEMSTYLE_AREA_XIVKYN,
 			},
 			{
 				label = L["SUBFILTER_ITEM_STYLE_DAGGERFALL"],
 				texture = "AwesomeGuildStore/images/style/daggerfall_%s.dds",
-				value = 23,
+				value = 23, --TODO: replace with ITEMSTYLE_ALLIANCE_DAGGERFALL in 100013
 			},
 			{
 				label = L["SUBFILTER_ITEM_STYLE_EBONHEART"],
 				texture = "AwesomeGuildStore/images/style/ebonheart_%s.dds",
-				value = 24,
+				value = 24, --TODO: replace with ITEMSTYLE_ALLIANCE_EBONHEART in 100013
 			},
 			{
 				label = L["SUBFILTER_ITEM_STYLE_ALDMERI"],
 				texture = "AwesomeGuildStore/images/style/aldmeri_%s.dds",
-				value = 25,
+				value = 25, --TODO: replace with ITEMSTYLE_ALLIANCE_ALDMERI in 100013
 			},
 			{
 				label = L["SUBFILTER_ITEM_STYLE_OTHER"],
