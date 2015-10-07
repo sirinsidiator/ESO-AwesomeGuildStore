@@ -44,6 +44,7 @@ searchfilters/KnownRuneTranslationFilter.lua
 searchfilters/ResearchableTraitsFilter.lua
 searchfilters/ItemStyleFilter.lua
 searchfilters/ItemSetFilter.lua
+searchfilters/CraftedItemFilter.lua
 searchfilters/CategorySelector.lua
 searchfilters/PriceFilter.lua
 searchfilters/LevelFilter.lua
