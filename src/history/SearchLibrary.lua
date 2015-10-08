@@ -97,9 +97,11 @@ function SearchLibrary:Initialize(saveData)
 	self.toggleButton = toggleButton
 
 	ZO_PreHook(TRADING_HOUSE.m_search, "InternalExecuteSearch", function()
-		self:AddHistoryEntry(self:Serialize())
+		local state = self:Serialize()
+		self:AddHistoryEntry(state)
 		if(self:IsVisible()) then
-			self:Refresh()
+			self:Refresh(true)
+			self:HighlightEntry(state)
 		end
 	end)
 
@@ -357,6 +359,7 @@ end
 function SearchLibrary:SaveCurrentState()
 	self.saveData.lastState = BuildStateString(self.filters, self.currentState)
 	self:UpdateFavoriteButtonState()
+	self:HighlightEntry(self.saveData.lastState)
 end
 
 local function GetRowButton(rowControl, template)
@@ -387,6 +390,10 @@ local function InitializeBaseRow(self, rowControl, entry, fadeFavorite)
 	if not highlight.animation then
 		highlight.animation = ANIMATION_MANAGER:CreateTimelineFromVirtual("ShowOnMouseOverLabelAnimation", highlight)
 	end
+
+	local alpha = entry.selected and 0.5 or 0
+	highlight:SetAlpha(alpha)
+	highlight.animation:GetFirstAnimation():SetAlphaValues(alpha, 1)
 
 	local function FadeIn()
 		highlight.animation:PlayForward()
@@ -440,6 +447,9 @@ local function InitializeBaseRow(self, rowControl, entry, fadeFavorite)
 		end
 		return true
 	end
+
+	entry.rowControl = rowControl
+	rowControl.entry = entry
 end
 
 local function ResetButton(button)
@@ -453,6 +463,8 @@ local function ResetButton(button)
 end
 
 local function DestroyBaseRow(rowControl)
+	rowControl.entry.rowControl = nil
+	rowControl.entry = nil
 	local highlight = rowControl:GetNamedChild("Highlight")
 	highlight.animation:PlayFromEnd(highlight.animation:GetDuration())
 	ResetButton(rowControl.SaveButton)
@@ -711,6 +723,27 @@ function SearchLibrary:UpdateEntryLabel(state, label)
 	end
 end
 
+local function HighlightEntryInScrollList(state, listControl)
+	local scrollData = ZO_ScrollList_GetDataList(listControl)
+	local hasChanges = false
+	local newState
+	for i = 1, #scrollData do
+		newState = (scrollData[i].data.state == state)
+		if(scrollData[i].data.selected ~= newState) then
+			scrollData[i].data.selected = newState
+			hasChanges = true
+		end
+	end
+	if(hasChanges) then
+		ZO_ScrollList_RefreshVisible(listControl)
+	end
+end
+
+function SearchLibrary:HighlightEntry(state)
+	HighlightEntryInScrollList(state, self.historyControl)
+	HighlightEntryInScrollList(state, self.favoritesControl)
+end
+
 local function SortByTimeDesc(entryA, entryB)
 	return entryA.data.lastSearchTime > entryB.data.lastSearchTime
 end
@@ -745,30 +778,38 @@ local function RebuildScrollList(listControl, dataList, sortFunction, filterFunc
 	return scrollData
 end
 
-function SearchLibrary:RebuildHistory()
-	if(not self.historyDirty) then return end
-	local scrollData = RebuildScrollList(self.historyControl, self.searchList, SortByTimeDesc, FilterHistoryEntires)
+function SearchLibrary:RebuildHistory(skipUpdateHighlight)
+	if(self.historyDirty) then
+		local scrollData = RebuildScrollList(self.historyControl, self.searchList, SortByTimeDesc, FilterHistoryEntires)
 
-	for i = HISTORY_LENGTH + 1, #scrollData do
-		local entry = self:GetEntry(scrollData[i].data.state, true)
-		if(entry) then
-			entry.history = false
+		for i = HISTORY_LENGTH + 1, #scrollData do
+			local entry = self:GetEntry(scrollData[i].data.state, true)
+			if(entry) then
+				entry.history = false
+			end
 		end
+
+		if(not skipUpdateHighlight) then
+			HighlightEntryInScrollList(self.saveData.lastState, self.historyControl)
+		end
+		self.historyDirty = false
 	end
-
-	self.historyDirty = false
 end
 
-function SearchLibrary:RebuildFavorites()
-	if(not self.favoritesDirty) then return end
-	RebuildScrollList(self.favoritesControl, self.searchList, SortBySearchCountDesc, FilterFavoriteEntires)
-	self:UpdateFavoriteButtonState()
-	self.favoritesDirty = false
+function SearchLibrary:RebuildFavorites(skipUpdateHighlight)
+	if(self.favoritesDirty) then
+		RebuildScrollList(self.favoritesControl, self.searchList, SortBySearchCountDesc, FilterFavoriteEntires)
+		self:UpdateFavoriteButtonState()
+		if(not skipUpdateHighlight) then
+			HighlightEntryInScrollList(self.saveData.lastState, self.favoritesControl)
+		end
+		self.favoritesDirty = false
+	end
 end
 
-function SearchLibrary:Refresh()
-	self:RebuildHistory()
-	self:RebuildFavorites()
+function SearchLibrary:Refresh(skipUpdateHighlight)
+	self:RebuildHistory(skipUpdateHighlight)
+	self:RebuildFavorites(skipUpdateHighlight)
 	self:CleanUp()
 end
 
