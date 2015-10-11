@@ -264,11 +264,11 @@ local localization = {
 		SETTINGS_MAIL_AUGMENTATION_INVOICE_LABEL = "Show invoice on mails",
 		SETTINGS_MAIL_AUGMENTATION_INVOICE_DESCRIPTION = "Adds a detailed invoice to the mail which lists all deductions.",
 		SETTINGS_PURCHASE_NOTIFICATION_LABEL = "Purchase notifications",
-		SETTINGS_PURCHASE_NOTIFICATION_DESCRIPTION = "Shows a message in chat after you have purchased an item in a guild store", -- TODO: update french, russian
-		SETTINGS_CANCEL_NOTIFICATION_LABEL = "Cancel notifications", -- TODO: french, russian
-		SETTINGS_CANCEL_NOTIFICATION_DESCRIPTION = "Shows a message in chat after you have cancelled an item listing from a guild store", -- TODO: french, russian
-		SETTINGS_LISTED_NOTIFICATION_LABEL = "Listed item notifications", -- TODO: french, russian
-		SETTINGS_LISTED_NOTIFICATION_DESCRIPTION = "Shows a message in chat after you have created a new item listing in a guild store", -- TODO: french, russian
+		SETTINGS_PURCHASE_NOTIFICATION_DESCRIPTION = "Shows a message in chat after you have purchased an item in a guild store", -- TODO: update russian
+		SETTINGS_CANCEL_NOTIFICATION_LABEL = "Cancel notifications", -- TODO: russian
+		SETTINGS_CANCEL_NOTIFICATION_DESCRIPTION = "Shows a message in chat after you have cancelled an item listing from a guild store", -- TODO: russian
+		SETTINGS_LISTED_NOTIFICATION_LABEL = "Listed item notifications", -- TODO: russian
+		SETTINGS_LISTED_NOTIFICATION_DESCRIPTION = "Shows a message in chat after you have created a new item listing in a guild store", -- TODO: russian
 		SETTINGS_DISABLE_CUSTOM_SELL_TAB_FILTER_LABEL = "Disable custom selltab filter",
 		SETTINGS_DISABLE_CUSTOM_SELL_TAB_FILTER_DESCRIPTION = "Shows the ingame inventory filter instead of AGS own version when deactivated.",
 		SETTINGS_SKIP_GUILD_KIOSK_DIALOG_LABEL = "Skip guild kiosk dialog",
@@ -279,8 +279,8 @@ local localization = {
 		LOCAL_FILTER_EXPLANATION_TOOLTIP = "This filter is local and only applies to the currently visible page",
 
 		PURCHASE_NOTIFICATION = "You have bought <<1>>x <<t:2>> from <<3>> for <<4>> in <<5>>", -- TODO: russian
-		CANCEL_NOTIFICATION = "You have cancelled your listing of <<1>>x <<t:2>> for <<3>> in <<4>>", -- TODO: french, russian
-		LISTED_NOTIFICATION = "You have listed <<1>>x <<t:2>> for <<3>> in <<4>>", -- TODO: french, russian
+		CANCEL_NOTIFICATION = "You have cancelled your listing of <<1>>x <<t:2>> for <<3>> in <<4>>", -- TODO: russian
+		LISTED_NOTIFICATION = "You have listed <<1>>x <<t:2>> for <<3>> in <<4>>", -- TODO: russian
 	},
 	de = {
 		SUBFILTER_WEAPON_ENCHANTMENT_LABEL = "Waffenverzauberung",
@@ -507,6 +507,10 @@ local localization = {
 		SETTINGS_MAIL_AUGMENTATION_INVOICE_DESCRIPTION = "Affiche une note détaillée de la transaction dans les mails.",
 		SETTINGS_PURCHASE_NOTIFICATION_LABEL = "Notifications d'achat",
 		SETTINGS_PURCHASE_NOTIFICATION_DESCRIPTION = "Affiche un message dans la fenêtre de discussion après un achat en boutique",
+		SETTINGS_CANCEL_NOTIFICATION_LABEL = "Notifications d'annulation",
+		SETTINGS_CANCEL_NOTIFICATION_DESCRIPTION = "Affiche un message dans la fenêtre de discussion après avoir annulé une vente en boutique de guilde",
+		SETTINGS_LISTED_NOTIFICATION_LABEL = "Notification de mise en vente",
+		SETTINGS_LISTED_NOTIFICATION_DESCRIPTION = "Affiche un message dans la fenêtre de discussion après avoir placé une vente en boutique de guilde",
 		SETTINGS_DISABLE_CUSTOM_SELL_TAB_FILTER_LABEL = "Désactiver les sous-catégories de mise en vente",
 		SETTINGS_DISABLE_CUSTOM_SELL_TAB_FILTER_DESCRIPTION = "Affiche les filtres de l'inventaire à la place de ceux d'AGS dans l'onglet de mise en vente",
 		SETTINGS_SKIP_GUILD_KIOSK_DIALOG_LABEL = "Afficher directement la boutique",
@@ -517,6 +521,8 @@ local localization = {
 		LOCAL_FILTER_EXPLANATION_TOOLTIP = "Ce filtre est visuel et ne s'applique qu'à la page en cours",
 
 		PURCHASE_NOTIFICATION = "Vous avez acheté <<1>>x <<t:2>> à <<3>> pour <<4>> chez <<5>>",
+		CANCEL_NOTIFICATION = "Vous avez annulé votre vente de <<1>>x <<t:2>> pour <<3>> chez <<4>>",
+		LISTED_NOTIFICATION = "Vous avez placé <<1>>x <<t:2>> pour <<3>> chez <<4>>",
 	},
 	ru = {
 		FILTER_SUBCATEGORY_JEWELRY = "Àèæóòepèü",
