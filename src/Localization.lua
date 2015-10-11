@@ -172,13 +172,13 @@ local localization = {
 		SUBFILTER_ITEM_STYLE_ALDMERI = GetString("SI_ITEMSTYLE", ITEMSTYLE_ALLIANCE_ALDMERI),
 		SUBFILTER_ITEM_STYLE_OTHER = GetString(SI_TRADING_HOUSE_BROWSE_ITEM_TYPE_OTHER),
 
-		SUBFILTER_ITEM_SET_LABEL = "Itemset", -- TODO russian
-		SUBFILTER_ITEM_SET_NORMAL = "Individual item", -- TODO russian
-		SUBFILTER_ITEM_SET_HAS_SET = "Set item", -- TODO russian
+		SUBFILTER_ITEM_SET_LABEL = "Itemset",
+		SUBFILTER_ITEM_SET_NORMAL = "Individual item",
+		SUBFILTER_ITEM_SET_HAS_SET = "Set item",
 
-		SUBFILTER_CRAFTING_LABEL = "Crafting", -- TODO russian
-		SUBFILTER_CRAFTING_IS_CRAFTED = "Crafted item", -- TODO russian
-		SUBFILTER_CRAFTING_IS_LOOT = "Looted item", -- TODO russian
+		SUBFILTER_CRAFTING_LABEL = "Crafting",
+		SUBFILTER_CRAFTING_IS_CRAFTED = "Crafted item",
+		SUBFILTER_CRAFTING_IS_LOOT = "Looted item",
 
 		NORMAL_QUALITY_LABEL = GetString(SI_TRADING_HOUSE_BROWSE_QUALITY_NORMAL),
 		MAGIC_QUALITY_LABEL = GetString(SI_TRADING_HOUSE_BROWSE_QUALITY_MAGIC),
@@ -264,11 +264,11 @@ local localization = {
 		SETTINGS_MAIL_AUGMENTATION_INVOICE_LABEL = "Show invoice on mails",
 		SETTINGS_MAIL_AUGMENTATION_INVOICE_DESCRIPTION = "Adds a detailed invoice to the mail which lists all deductions.",
 		SETTINGS_PURCHASE_NOTIFICATION_LABEL = "Purchase notifications",
-		SETTINGS_PURCHASE_NOTIFICATION_DESCRIPTION = "Shows a message in chat after you have purchased an item in a guild store", -- TODO: update russian
-		SETTINGS_CANCEL_NOTIFICATION_LABEL = "Cancel notifications", -- TODO: russian
-		SETTINGS_CANCEL_NOTIFICATION_DESCRIPTION = "Shows a message in chat after you have cancelled an item listing from a guild store", -- TODO: russian
-		SETTINGS_LISTED_NOTIFICATION_LABEL = "Listed item notifications", -- TODO: russian
-		SETTINGS_LISTED_NOTIFICATION_DESCRIPTION = "Shows a message in chat after you have created a new item listing in a guild store", -- TODO: russian
+		SETTINGS_PURCHASE_NOTIFICATION_DESCRIPTION = "Shows a message in chat after you have purchased an item in a guild store",
+		SETTINGS_CANCEL_NOTIFICATION_LABEL = "Cancel notifications",
+		SETTINGS_CANCEL_NOTIFICATION_DESCRIPTION = "Shows a message in chat after you have cancelled an item listing from a guild store",
+		SETTINGS_LISTED_NOTIFICATION_LABEL = "Listed item notifications",
+		SETTINGS_LISTED_NOTIFICATION_DESCRIPTION = "Shows a message in chat after you have created a new item listing in a guild store",
 		SETTINGS_DISABLE_CUSTOM_SELL_TAB_FILTER_LABEL = "Disable custom selltab filter",
 		SETTINGS_DISABLE_CUSTOM_SELL_TAB_FILTER_DESCRIPTION = "Shows the ingame inventory filter instead of AGS own version when deactivated.",
 		SETTINGS_SKIP_GUILD_KIOSK_DIALOG_LABEL = "Skip guild kiosk dialog",
@@ -278,9 +278,9 @@ local localization = {
 
 		LOCAL_FILTER_EXPLANATION_TOOLTIP = "This filter is local and only applies to the currently visible page",
 
-		PURCHASE_NOTIFICATION = "You have bought <<1>>x <<t:2>> from <<3>> for <<4>> in <<5>>", -- TODO: russian
-		CANCEL_NOTIFICATION = "You have cancelled your listing of <<1>>x <<t:2>> for <<3>> in <<4>>", -- TODO: russian
-		LISTED_NOTIFICATION = "You have listed <<1>>x <<t:2>> for <<3>> in <<4>>", -- TODO: russian
+		PURCHASE_NOTIFICATION = "You have bought <<1>>x <<t:2>> from <<3>> for <<4>> in <<5>>",
+		CANCEL_NOTIFICATION = "You have cancelled your listing of <<1>>x <<t:2>> for <<3>> in <<4>>",
+		LISTED_NOTIFICATION = "You have listed <<1>>x <<t:2>> for <<3>> in <<4>>",
 	},
 	de = {
 		SUBFILTER_WEAPON_ENCHANTMENT_LABEL = "Waffenverzauberung",
@@ -555,6 +555,14 @@ local localization = {
 		SUBFILTER_RUNE_KNOWLEDGE_UNKNOWN = "Îeèçáecòîÿe póîÿ",
 		SUBFILTER_RUNE_KNOWLEDGE_KNOWN = "Èçáecòîÿe póîÿ",
 
+		SUBFILTER_ITEM_SET_LABEL = "Îaàop",
+		SUBFILTER_ITEM_SET_NORMAL = "Oäèîoùîÿé ïpeäíeò",
+		SUBFILTER_ITEM_SET_HAS_SET = "Ïpeäíeò îaàopa",
+
+		SUBFILTER_CRAFTING_LABEL = "Peíecìeîîoe",
+		SUBFILTER_CRAFTING_IS_CRAFTED = "Cäeìaîîÿé ïpeäíeò",
+		SUBFILTER_CRAFTING_IS_LOOT = "Îaéäeîîÿé ïpeäíeò",
+
 		AUTO_SEARCH_TOGGLE_LABEL = "Áêìôùèòö aáòoïoècê",
 		SEARCH_PREVIOUS_PAGE_LABEL = "Ïoêaçaòö ïpeä. còp.",
 		SEARCH_SHOW_MORE_LABEL = "Ïoêaçaòö àoìöúe peçóìöòaòoá",
@@ -622,6 +630,11 @@ local localization = {
 		SETTINGS_MAIL_AUGMENTATION_INVOICE_DESCRIPTION = "Äoàaáìüeò äeòaìöîÿé cùeò á ïècöía, êoòopÿé coäepæèò èîñopíaœèô oào ácex ïocòóïìeîèüx.",
 		SETTINGS_PURCHASE_NOTIFICATION_LABEL = "Oïoáeûeîèe o ïoêóïêe",
 		SETTINGS_PURCHASE_NOTIFICATION_DESCRIPTION = "Ïoêaçÿáaeò cooàûeîèe á ùaòe ïocìe coáepúeîèü ïoêóïêè áaúeâo òoáapa á âèìöäeécêoí íaâaçèîe",
+		SETTINGS_CANCEL_NOTIFICATION_LABEL = "Ïpeäóïpeæäeîèü oòçÿáa",
+		SETTINGS_CANCEL_NOTIFICATION_DESCRIPTION = "Ïoêaçÿáaeò cooàûeîèe á ùaòe, ïocìe òoâo êaê áÿ oòoçáaìè ïpeäíeò èç ïpoäaæè á âèìöäeécêoí íaâaçèîe",
+		SETTINGS_LISTED_NOTIFICATION_LABEL = "Ïpeäóïpeæäeîèe o paçíeûeîèè",
+		SETTINGS_LISTED_NOTIFICATION_DESCRIPTION = "Ïoêaçÿáaeò cooàûeîèe á ùaòe, ïocìe òoâo êaê áÿ paçíecòèìè ïpeäíeò îa ïpoäaæó á âèìöäeécêoí íaâaçèîe",
+		SETTINGS_PURCHASE_NOTIFICATION_DESCRIPTION = "Ïoêaçÿáaeò cooàûeîèe á ùaòe, ïocìe òoâo êaê áÿ êóïèìè ïpeäíeò á âèìöäeécêoí íaâaçèîe",
 		SETTINGS_DISABLE_CUSTOM_SELL_TAB_FILTER_LABEL = "Oòêìôùèòö ñèìöòpÿ aääoîa",
 		SETTINGS_DISABLE_CUSTOM_SELL_TAB_FILTER_DESCRIPTION = "Ïoêaçÿáaeò còaîäapòîÿe èâpoáÿe ñèìöòpÿ èîáeîòapü áíecòo ñèìöòpoá aääoîa AGS, ecìè áÿêìôùeîo.",
 		SETTINGS_SKIP_GUILD_KIOSK_DIALOG_LABEL = "Ïpoïócòèòö äèaìoâ êèocêa",
@@ -630,6 +643,10 @@ local localization = {
 		INVALID_STATE = "Oúèàêa.\nËòo àaâ èâpÿ è oî äoìæeî àÿòö ïoïpaáìeî á àìèæaéúee ápeíü.",
 
 		LOCAL_FILTER_EXPLANATION_TOOLTIP = "Ëòoò ñèìöòp ìoêaìöîÿé è paàoòaeò òoìöêo äìü oòoàpaæaeíoé còpaîèœÿ",
+
+		PURCHASE_NOTIFICATION = "Áÿ êóïèìè <<1>>x <<t:2>> ó <<3>> ça <<4>> á <<5>>",
+		CANCEL_NOTIFICATION = "Áÿ oòoçáaìè èç ïpoäaæè <<1>>x <<t:2>> ça <<3>> á <<4>>",
+		LISTED_NOTIFICATION = "Áÿ paçíecòèìè îa ïpoäaæó <<1>>x <<t:2>> ça <<3>> á <<4>>",
 	},
 }
 
