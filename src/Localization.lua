@@ -172,13 +172,13 @@ local localization = {
 		SUBFILTER_ITEM_STYLE_ALDMERI = GetString("SI_ITEMSTYLE", ITEMSTYLE_ALLIANCE_ALDMERI),
 		SUBFILTER_ITEM_STYLE_OTHER = GetString(SI_TRADING_HOUSE_BROWSE_ITEM_TYPE_OTHER),
 
-		SUBFILTER_ITEM_SET_LABEL = "Itemset", -- TODO
-		SUBFILTER_ITEM_SET_NORMAL = "Individual item", -- TODO
-		SUBFILTER_ITEM_SET_HAS_SET = "Set item", -- TODO
+		SUBFILTER_ITEM_SET_LABEL = "Itemset", -- TODO russian
+		SUBFILTER_ITEM_SET_NORMAL = "Individual item", -- TODO russian
+		SUBFILTER_ITEM_SET_HAS_SET = "Set item", -- TODO russian
 
-		SUBFILTER_CRAFTING_LABEL = "Crafting", -- TODO
-		SUBFILTER_CRAFTING_IS_CRAFTED = "Crafted item", -- TODO
-		SUBFILTER_CRAFTING_IS_LOOT = "Looted item", -- TODO
+		SUBFILTER_CRAFTING_LABEL = "Crafting", -- TODO russian
+		SUBFILTER_CRAFTING_IS_CRAFTED = "Crafted item", -- TODO russian
+		SUBFILTER_CRAFTING_IS_LOOT = "Looted item", -- TODO russian
 
 		NORMAL_QUALITY_LABEL = GetString(SI_TRADING_HOUSE_BROWSE_QUALITY_NORMAL),
 		MAGIC_QUALITY_LABEL = GetString(SI_TRADING_HOUSE_BROWSE_QUALITY_MAGIC),
@@ -274,7 +274,7 @@ local localization = {
 
 		LOCAL_FILTER_EXPLANATION_TOOLTIP = "This filter is local and only applies to the currently visible page",
 
-		PURCHASE_NOTIFICATION = "You bought <<1>>x <<t:2>> from <<3>> for <<4>> in <<5>>", -- TODO: translate
+		PURCHASE_NOTIFICATION = "You bought <<1>>x <<t:2>> from <<3>> for <<4>> in <<5>>", -- TODO: russian
 	},
 	de = {
 		SUBFILTER_WEAPON_ENCHANTMENT_LABEL = "Waffenverzauberung",
@@ -304,6 +304,14 @@ local localization = {
 		SUBFILTER_RUNE_KNOWLEDGE_LABEL = "Runensteinwissen",
 		SUBFILTER_RUNE_KNOWLEDGE_UNKNOWN = "Unbekannte Runensteine",
 		SUBFILTER_RUNE_KNOWLEDGE_KNOWN = "Bekannte Runensteine",
+
+		SUBFILTER_ITEM_SET_LABEL = "Set Gegenstand",
+		SUBFILTER_ITEM_SET_NORMAL = "Individueller Gegenstand",
+		SUBFILTER_ITEM_SET_HAS_SET = "Set Gegenstand",
+
+		SUBFILTER_CRAFTING_LABEL = "Handwerk",
+		SUBFILTER_CRAFTING_IS_CRAFTED = "Hergestellter Gegenstand",
+		SUBFILTER_CRAFTING_IS_LOOT = "Erbeuteter Gegenstand",
 
 		AUTO_SEARCH_TOGGLE_LABEL = "Automatische Suche umschalten",
 		SEARCH_PREVIOUS_PAGE_LABEL = "Vorherige Seite anzeigen",
