@@ -264,7 +264,11 @@ local localization = {
 		SETTINGS_MAIL_AUGMENTATION_INVOICE_LABEL = "Show invoice on mails",
 		SETTINGS_MAIL_AUGMENTATION_INVOICE_DESCRIPTION = "Adds a detailed invoice to the mail which lists all deductions.",
 		SETTINGS_PURCHASE_NOTIFICATION_LABEL = "Purchase notifications",
-		SETTINGS_PURCHASE_NOTIFICATION_DESCRIPTION = "Shows a message in chat after a purchase was completed in a guild store",
+		SETTINGS_PURCHASE_NOTIFICATION_DESCRIPTION = "Shows a message in chat after you have purchased an item in a guild store", -- TODO: update french, russian
+		SETTINGS_CANCEL_NOTIFICATION_LABEL = "Cancel notifications", -- TODO: french, russian
+		SETTINGS_CANCEL_NOTIFICATION_DESCRIPTION = "Shows a message in chat after you have cancelled an item listing from a guild store", -- TODO: french, russian
+		SETTINGS_LISTED_NOTIFICATION_LABEL = "Listed item notifications", -- TODO: french, russian
+		SETTINGS_LISTED_NOTIFICATION_DESCRIPTION = "Shows a message in chat after you have created a new item listing in a guild store", -- TODO: french, russian
 		SETTINGS_DISABLE_CUSTOM_SELL_TAB_FILTER_LABEL = "Disable custom selltab filter",
 		SETTINGS_DISABLE_CUSTOM_SELL_TAB_FILTER_DESCRIPTION = "Shows the ingame inventory filter instead of AGS own version when deactivated.",
 		SETTINGS_SKIP_GUILD_KIOSK_DIALOG_LABEL = "Skip guild kiosk dialog",
@@ -274,7 +278,9 @@ local localization = {
 
 		LOCAL_FILTER_EXPLANATION_TOOLTIP = "This filter is local and only applies to the currently visible page",
 
-		PURCHASE_NOTIFICATION = "You bought <<1>>x <<t:2>> from <<3>> for <<4>> in <<5>>", -- TODO: russian
+		PURCHASE_NOTIFICATION = "You have bought <<1>>x <<t:2>> from <<3>> for <<4>> in <<5>>", -- TODO: russian
+		CANCEL_NOTIFICATION = "You have cancelled your listing of <<1>>x <<t:2>> for <<3>> in <<4>>", -- TODO: french, russian
+		LISTED_NOTIFICATION = "You have listed <<1>>x <<t:2>> for <<3>> in <<4>>", -- TODO: french, russian
 	},
 	de = {
 		SUBFILTER_WEAPON_ENCHANTMENT_LABEL = "Waffenverzauberung",
@@ -380,6 +386,12 @@ local localization = {
 		SETTINGS_MAIL_AUGMENTATION_INVOICE_DESCRIPTION = "Zeigt eine detailierte Rechnung an, die alle Abzüge auflistet",
 		SETTINGS_PURCHASE_NOTIFICATION_LABEL = "Kaufbenachrichtigung",
 		SETTINGS_PURCHASE_NOTIFICATION_DESCRIPTION = "Zeigt eine Meldung im Chat, nachdem ein Kauf in einem Gildenladen abgeschlossen wurde",
+		SETTINGS_CANCEL_NOTIFICATION_LABEL = "Abbruchbenachrichtigung",
+		SETTINGS_CANCEL_NOTIFICATION_DESCRIPTION = "Zeigt eine Meldung im Chat, nachdem ein Angebot in einem Gildenladen abgeborchen wurde",
+		SETTINGS_LISTED_NOTIFICATION_LABEL = "Angebotsbenachrichtigung",
+		SETTINGS_LISTED_NOTIFICATION_DESCRIPTION = "Zeigt eine Meldung im Chat, nachdem ein Angebot in einem Gildenladen erstellt wurde",
+		SETTINGS_DISABLE_CUSTOM_SELL_TAB_FILTER_LABEL = "Deaktiviere Verkaufsreiter Filter",
+		SETTINGS_DISABLE_CUSTOM_SELL_TAB_FILTER_DESCRIPTION = "Zeigt die Inventarfilter der normalen Benutzeroberfläche anstelle der AGS-eigenen Version",
 		SETTINGS_SKIP_GUILD_KIOSK_DIALOG_LABEL = "Gildenkioskdialog überspringen",
 		SETTINGS_SKIP_GUILD_KIOSK_DIALOG_DESCRIPTION = "Der Dialog bei Gildenläden (nicht in der Bank) wird übersprungen und der Laden automatisch geöffnet, wenn diese Option aktiv ist. Dies kann unterdrückt werden, indem die Shift Taste gedrückt gehalten wird während man den Händler anspricht",
 
@@ -388,6 +400,8 @@ local localization = {
 		LOCAL_FILTER_EXPLANATION_TOOLTIP = "Dieser Filter ist lokal und wirkt nur auf der derzeit sichtbaren Seite",
 
 		PURCHASE_NOTIFICATION = "Du hast <<1>>x <<t:2>> von <<3>> für <<4>> in <<5>> gekauft",
+		CANCEL_NOTIFICATION = "Du hast dein Angebot von <<1>>x <<t:2>> für <<3>> in <<4>> abgebrochen",
+		LISTED_NOTIFICATION = "Du hast <<1>>x <<t:2>> für <<3>> in <<4>> angeboten",
 	},
 	fr = {
 		SUBFILTER_WEAPON_ENCHANTMENT_LABEL = "Enchantement d'arme",

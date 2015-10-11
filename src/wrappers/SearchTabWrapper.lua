@@ -564,8 +564,9 @@ function SearchTabWrapper:InitializePurchaseNotification(tradingHouseWrapper)
 		originalConfirmPendingPurchase(self, pendingPurchaseIndex)
 	end)
 	tradingHouseWrapper:Wrap("OnPurchaseSuccess", function(originalOnPurchaseSuccess, self)
-		if(saveData.purchaseNotification) then
+		if(saveData.purchaseNotification and purchaseMessage ~= "") then
 			df("[AwesomeGuildStore] %s", purchaseMessage)
+			purchaseMessage = ""
 		end
 		originalOnPurchaseSuccess(self)
 	end)

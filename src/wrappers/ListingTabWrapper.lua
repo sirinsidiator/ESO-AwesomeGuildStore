@@ -1,6 +1,14 @@
-TRADING_HOUSE_SORT_LISTING_NAME = 1
-TRADING_HOUSE_SORT_LISTING_PRICE = 2
-TRADING_HOUSE_SORT_LISTING_TIME = 3
+local L = AwesomeGuildStore.Localization
+local RegisterForEvent = AwesomeGuildStore.RegisterForEvent
+
+local TRADING_HOUSE_SORT_LISTING_NAME = 1
+local TRADING_HOUSE_SORT_LISTING_PRICE = 2
+local TRADING_HOUSE_SORT_LISTING_TIME = 3
+AwesomeGuildStore.TRADING_HOUSE_SORT_LISTING_NAME = TRADING_HOUSE_SORT_LISTING_NAME
+AwesomeGuildStore.TRADING_HOUSE_SORT_LISTING_PRICE = TRADING_HOUSE_SORT_LISTING_PRICE
+AwesomeGuildStore.TRADING_HOUSE_SORT_LISTING_TIME = TRADING_HOUSE_SORT_LISTING_TIME
+
+local iconMarkup = string.format("|t%u:%u:%s|t", 16, 16, "EsoUI/Art/currency/currency_gold.dds")
 
 local ascSortFunctions = {
 	[TRADING_HOUSE_SORT_LISTING_NAME] = function(a, b) return a.data.name < b.data.name end,
@@ -31,6 +39,7 @@ function ListingTabWrapper:RunInitialSetup(tradingHouseWrapper)
 	self:InitializeUnitPriceDisplay(tradingHouseWrapper)
 	self:InitializeCancelSaleOperation(tradingHouseWrapper)
 	self:InitializeRequestListingsOperation(tradingHouseWrapper)
+	self:InitializeCancelNotification(tradingHouseWrapper)
 end
 
 local function PrepareSortHeader(container, name, key)
@@ -230,6 +239,29 @@ function ListingTabWrapper:InitializeRequestListingsOperation(tradingHouseWrappe
 	tradingHouseWrapper.tradingHouse.RequestListings = function()
 		activityManager:RequestListings()
 	end
+end
+
+function ListingTabWrapper:InitializeCancelNotification(tradingHouseWrapper)
+	local saveData = self.saveData
+	local cancelMessage = ""
+	tradingHouseWrapper:Wrap("ShowCancelListingConfirmation", function(originalShowCancelListingConfirmation, self, listingIndex)
+		local _, _, _, count, _, _, price = GetTradingHouseListingItemInfo(listingIndex)
+		price = zo_strformat("<<1>> <<2>>", ZO_CurrencyControl_FormatCurrency(price), iconMarkup)
+		local itemLink = GetTradingHouseListingItemLink(listingIndex, LINK_STYLE_BRACKETS)
+		local _, guildName = GetCurrentTradingHouseGuildDetails()
+		cancelMessage = zo_strformat(L["CANCEL_NOTIFICATION"], count, itemLink, price, guildName)
+
+		originalShowCancelListingConfirmation(self, listingIndex)
+	end)
+
+	RegisterForEvent(EVENT_TRADING_HOUSE_RESPONSE_RECEIVED, function(_, responseType, result)
+		if(responseType == TRADING_HOUSE_RESULT_CANCEL_SALE_PENDING and result == TRADING_HOUSE_RESULT_SUCCESS) then
+			if(saveData.cancelNotification and cancelMessage ~= "") then
+				df("[AwesomeGuildStore] %s", cancelMessage)
+				cancelMessage = ""
+			end
+		end
+	end)
 end
 
 function ListingTabWrapper:ChangeSort(key, order)

@@ -1,6 +1,6 @@
 local function LoadSettings()
 	local defaultData = {
-		version = 11,
+		version = 16,
 		lastGuildName = "",
 		keepFiltersOnClose = true,
 		oldQualitySelectorBehavior = false,
@@ -12,9 +12,11 @@ local function LoadSettings()
 		augementMails = true,
 		mailAugmentationShowInvoice = false,
 		purchaseNotification = true,
+		cancelNotification = true,
+		listedNotification = false,
 		sortField = TRADING_HOUSE_SORT_SALE_PRICE,
 		sortOrder = ZO_SORT_ORDER_UP,
-		listingSortField = TRADING_HOUSE_SORT_LISTING_TIME,
+		listingSortField = AwesomeGuildStore.TRADING_HOUSE_SORT_LISTING_TIME,
 		listingSortOrder = ZO_SORT_ORDER_DOWN,
 		disableCustomSellTabFilter = false,
 		skipGuildKioskDialog = true,
@@ -145,6 +147,22 @@ local function LoadSettings()
 		}
 		optionsData[#optionsData + 1] = {
 			type = "checkbox",
+			name = L["SETTINGS_CANCEL_NOTIFICATION_LABEL"],
+			tooltip = L["SETTINGS_CANCEL_NOTIFICATION_DESCRIPTION"],
+			getFunc = function() return saveData.cancelNotification end,
+			setFunc = function(value) saveData.cancelNotification = value end,
+			default = defaultData.cancelNotification,
+		}
+		optionsData[#optionsData + 1] = {
+			type = "checkbox",
+			name = L["SETTINGS_LISTED_NOTIFICATION_LABEL"],
+			tooltip = L["SETTINGS_LISTED_NOTIFICATION_DESCRIPTION"],
+			getFunc = function() return saveData.listedNotification end,
+			setFunc = function(value) saveData.listedNotification = value end,
+			default = defaultData.listedNotification,
+		}
+		optionsData[#optionsData + 1] = {
+			type = "checkbox",
 			name = L["SETTINGS_DISABLE_CUSTOM_SELL_TAB_FILTER_LABEL"],
 			tooltip = L["SETTINGS_DISABLE_CUSTOM_SELL_TAB_FILTER_DESCRIPTION"],
 			getFunc = function() return saveData.disableCustomSellTabFilter end,
@@ -241,6 +259,11 @@ local function LoadSettings()
 		if(saveData.version == 14) then
 			saveData.skipGuildKioskDialog = defaultData.skipGuildKioskDialog
 			saveData.version = 15
+		end
+		if(saveData.version == 15) then
+			saveData.cancelNotification = defaultData.cancelNotification
+			saveData.listedNotification = defaultData.listedNotification
+			saveData.version = 16
 		end
 	end
 
