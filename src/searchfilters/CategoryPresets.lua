@@ -617,7 +617,7 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 				value = WEAPONTYPE_AXE,
 			},
 			{
-				label = L["SUBFILTER_WEAPON_TYPE_MACE"],
+				label = L["SUBFILTER_WEAPON_TYPE_HAMMER"],
 				texture = "AwesomeGuildStore/images/weapon/mace_%s.dds",
 				value = WEAPONTYPE_HAMMER,
 			},
@@ -639,17 +639,17 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 		filter = TRADING_HOUSE_FILTER_TYPE_WEAPON,
 		buttons = {
 			{
-				label = L["SUBFILTER_WEAPON_TYPE_AXE"],
+				label = L["SUBFILTER_WEAPON_TYPE_TWO_HANDED_AXE"],
 				texture = "AwesomeGuildStore/images/weapon/axe_%s.dds",
 				value = WEAPONTYPE_TWO_HANDED_AXE,
 			},
 			{
-				label = L["SUBFILTER_WEAPON_TYPE_MACE"],
+				label = L["SUBFILTER_WEAPON_TYPE_TWO_HANDED_HAMMER"],
 				texture = "AwesomeGuildStore/images/weapon/mace_%s.dds",
 				value = WEAPONTYPE_TWO_HANDED_HAMMER,
 			},
 			{
-				label = L["SUBFILTER_WEAPON_TYPE_SWORD"],
+				label = L["SUBFILTER_WEAPON_TYPE_TWO_HANDED_SWORD"],
 				texture = "AwesomeGuildStore/images/weapon/twohand_%s.dds",
 				value = WEAPONTYPE_TWO_HANDED_SWORD,
 			},
