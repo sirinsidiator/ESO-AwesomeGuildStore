@@ -222,6 +222,8 @@ function SearchTabWrapper:InitializeFilters(tradingHouseWrapper)
 	searchLibrary:RegisterFilter(textFilter)
 	self.textFilter = textFilter
 
+	CALLBACK_MANAGER:FireCallbacks(AwesomeGuildStore.OnInitializeFiltersCallbackName, tradingHouseWrapper)
+
 	if(saveData.keepFiltersOnClose) then
 		searchLibrary:Deserialize(saveData.searchLibrary.lastState)
 	end
