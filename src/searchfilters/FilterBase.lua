@@ -57,13 +57,18 @@ end
 function FilterBase:Initialize(name, tradingHouseWrapper)
 end
 
+local function ClearCallLater(id)
+	EVENT_MANAGER:UnregisterForUpdate("CallLaterFunction"..id)
+end
+
 function FilterBase:HandleChange()
-	if(not self.fireChangeCallback) then
-		self.fireChangeCallback = zo_callLater(function()
-			self.fireChangeCallback = nil
-			CALLBACK_MANAGER:FireCallbacks(self.callbackName, self)
-		end, 100)
+	if(self.fireChangeCallback) then
+		ClearCallLater(self.fireChangeCallback)
 	end
+	self.fireChangeCallback = zo_callLater(function()
+		self.fireChangeCallback = nil
+		CALLBACK_MANAGER:FireCallbacks(self.callbackName, self)
+	end, 250)
 	self.resetButton:SetHidden(self:IsDefault())
 end
 
