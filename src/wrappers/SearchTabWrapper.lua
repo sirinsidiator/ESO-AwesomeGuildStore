@@ -560,7 +560,7 @@ function SearchTabWrapper:InitializePurchaseNotification(tradingHouseWrapper)
 		local _, _, _, count, seller, _, price = GetTradingHouseSearchResultItemInfo(pendingPurchaseIndex)
 		seller = ZO_LinkHandler_CreateDisplayNameLink(seller:gsub("|c.-$", "")) -- have to strip the stuff that MM is adding to the end
 		price = zo_strformat("<<1>> <<2>>", ZO_CurrencyControl_FormatCurrency(price), iconMarkup)
-		local itemLink = GetTradingHouseSearchResultItemLink(pendingPurchaseIndex, LINK_STYLE_BRACKETS)
+		local itemLink = GetTradingHouseSearchResultItemLink(pendingPurchaseIndex)
 		local _, guildName = GetCurrentTradingHouseGuildDetails()
 		purchaseMessage = zo_strformat(L["PURCHASE_NOTIFICATION"], count, itemLink, seller, price, guildName)
 		originalConfirmPendingPurchase(self, pendingPurchaseIndex)

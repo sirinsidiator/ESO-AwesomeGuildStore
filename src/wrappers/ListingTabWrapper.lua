@@ -247,7 +247,7 @@ function ListingTabWrapper:InitializeCancelNotification(tradingHouseWrapper)
 	tradingHouseWrapper:Wrap("ShowCancelListingConfirmation", function(originalShowCancelListingConfirmation, self, listingIndex)
 		local _, _, _, count, _, _, price = GetTradingHouseListingItemInfo(listingIndex)
 		price = zo_strformat("<<1>> <<2>>", ZO_CurrencyControl_FormatCurrency(price), iconMarkup)
-		local itemLink = GetTradingHouseListingItemLink(listingIndex, LINK_STYLE_BRACKETS)
+		local itemLink = GetTradingHouseListingItemLink(listingIndex)
 		local _, guildName = GetCurrentTradingHouseGuildDetails()
 		cancelMessage = zo_strformat(L["CANCEL_NOTIFICATION"], count, itemLink, price, guildName)
 

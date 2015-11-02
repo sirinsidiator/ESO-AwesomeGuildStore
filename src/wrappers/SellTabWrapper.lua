@@ -56,7 +56,7 @@ function SellTabWrapper:InitializeListedNotification(tradingHouseWrapper)
 			local count = ZO_InventorySlot_GetStackCount(self.m_pendingItem)
 			local price = zo_strformat("<<1>> <<2>>", ZO_CurrencyControl_FormatCurrency(self.m_invoiceSellPrice.sellPrice or 0), iconMarkup)
 			local _, guildName = GetCurrentTradingHouseGuildDetails()
-			local itemLink = GetItemLink(BAG_BACKPACK, self.m_pendingItemSlot, LINK_STYLE_BRACKETS)
+			local itemLink = GetItemLink(BAG_BACKPACK, self.m_pendingItemSlot)
 
 			listedMessage = zo_strformat(L["LISTED_NOTIFICATION"], count, itemLink, price, guildName)
 		end
