@@ -193,6 +193,13 @@ function SearchTabWrapper:InitializeFilters(tradingHouseWrapper)
 	local searchLibrary = AwesomeGuildStore.SearchLibrary:New(saveData.searchLibrary)
 	self.searchLibrary = searchLibrary
 
+	SLASH_COMMANDS["/ags"] = function(command) -- TODO: make proper command handler once we have more
+		if(command == "reset") then
+			searchLibrary:ResetPosition()
+			d("[AwesomeGuildStore] Default search library position restored")
+		end
+	end
+
 	local categoryFilter = AwesomeGuildStore.CategorySelector:New(browseItemsControl, "AwesomeGuildStoreItemCategory", self, tradingHouseWrapper)
 	searchLibrary:RegisterFilter(categoryFilter)
 	self.categoryFilter = categoryFilter
