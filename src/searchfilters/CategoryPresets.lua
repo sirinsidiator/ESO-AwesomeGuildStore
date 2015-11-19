@@ -1273,17 +1273,17 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 			{
 				label = L["SUBFILTER_ITEM_STYLE_DAGGERFALL"],
 				texture = "AwesomeGuildStore/images/style/daggerfall_%s.dds",
-				value = 23, --TODO: replace with ITEMSTYLE_ALLIANCE_DAGGERFALL in 100013
+				value = ITEMSTYLE_ALLIANCE_DAGGERFALL,
 			},
 			{
 				label = L["SUBFILTER_ITEM_STYLE_EBONHEART"],
 				texture = "AwesomeGuildStore/images/style/ebonheart_%s.dds",
-				value = 24, --TODO: replace with ITEMSTYLE_ALLIANCE_EBONHEART in 100013
+				value = ITEMSTYLE_ALLIANCE_EBONHEART,
 			},
 			{
 				label = L["SUBFILTER_ITEM_STYLE_ALDMERI"],
 				texture = "AwesomeGuildStore/images/style/aldmeri_%s.dds",
-				value = 25, --TODO: replace with ITEMSTYLE_ALLIANCE_ALDMERI in 100013
+				value = ITEMSTYLE_ALLIANCE_ALDMERI,
 			},
 			{
 				label = L["SUBFILTER_ITEM_STYLE_OTHER"],
