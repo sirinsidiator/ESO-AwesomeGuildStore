@@ -31,8 +31,10 @@
 41 - KnownRuneTranslationSubfilter
 42 - ItemStyleSubfilter
 43 - ItemSetSubfilter
+44 - CraftedItemSubfilter
+45 - RecipeImprovementSubfilter
 
-44 .. 99 - reserved
+46 .. 99 - reserved
 
 100 - MasterMerchant DealSelector
 101 - MasterMerchant DealFilter
