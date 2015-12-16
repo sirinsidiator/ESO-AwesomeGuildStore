@@ -34,26 +34,44 @@ function KnownMotifFilter:BeforeRebuildSearchResultsPage(tradingHouseWrapper)
 	return (self.showUnknown ~= self.showKnown)
 end
 
--- TODO: this is just a workaround until ZOS fixes the mercenary motif books; remove it once it works
-local MERCENARY_ACHIEVEMENT_ID = 1348
-local MERCENARY_BOOK_ITEM_ID = 64715
-local MERCENARY_CHAPTER_START_ID = 64716
-local MERCENARY_CHAPTER_END_ID = 64729
-local function IsMercenaryMotifKnown(link)
+-- TODO: this is just a workaround until ZOS fixes these exotic motif books; remove once it works
+local EXOTIC_BOOK_DATA = {
+	{ -- mercenary motif
+		achievementId = 1348,
+		bookId = 64715,
+		chapterStartId = 64716,
+		chapterEndId = 64729,
+	},
+	{ -- ancient orc
+		achievementId = 1341,
+		bookId = 69527,
+		chapterStartId = 69528,
+		chapterEndId = 69541,
+	}
+}
+
+local function TestMotif(motifData, link)
 	local itemId = select(3, zo_strsplit(":", link))
 	itemId = tonumber(itemId)
-	if(itemId < MERCENARY_BOOK_ITEM_ID or itemId > MERCENARY_CHAPTER_END_ID) then return false end
-	if(IsAchievementComplete(MERCENARY_ACHIEVEMENT_ID)) then return true end
-	if(itemId ~= MERCENARY_BOOK_ITEM_ID) then
-	local index = itemId - MERCENARY_CHAPTER_START_ID + 1
-	local _, numCompleted, numRequired = GetAchievementCriterion(MERCENARY_ACHIEVEMENT_ID, index)
+	if(itemId < motifData.bookId or itemId > motifData.chapterEndId) then return false end
+	if(IsAchievementComplete(motifData.achievementId)) then return true end
+	if(itemId ~= motifData.bookId) then
+		local index = itemId - motifData.chapterStartId + 1
+		local _, numCompleted, numRequired = GetAchievementCriterion(motifData.achievementId, index)
 		return numCompleted == numRequired
+	end
+	return false
+end
+
+local function IsExoticMotifKnown(link)
+	for i = 1, #EXOTIC_BOOK_DATA do
+		if(TestMotif(EXOTIC_BOOK_DATA[i], link)) then return true end
 	end
 	return false
 end
 
 function KnownMotifFilter:FilterPageResult(index, icon, name, quality, stackCount, sellerName, timeRemaining, purchasePrice)
 	local itemLink = GetTradingHouseSearchResultItemLink(index, LINK_STYLE_BRACKETS)
-	local isKnown = IsItemLinkBookKnown(itemLink) or IsMercenaryMotifKnown(itemLink)
+	local isKnown = IsItemLinkBookKnown(itemLink) or IsExoticMotifKnown(itemLink)
 	return (self.showUnknown and not isKnown) or (self.showKnown and isKnown)
 end
