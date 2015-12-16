@@ -5,10 +5,10 @@ local FilterBase = AwesomeGuildStore.FilterBase
 local UnitPriceFilter = FilterBase:Subclass()
 AwesomeGuildStore.UnitPriceFilter = UnitPriceFilter
 
-local LOWER_LIMIT = 1
+local LOWER_LIMIT = 0
 local UPPER_LIMIT = 2100000000
-local values = { LOWER_LIMIT, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30, 35, 40, 45, 50, 100, 200, 300, 400, 500, 700, 800, 900, 1000, 2000, 3000, 4000, 5000, 10000, 50000, 100000, UPPER_LIMIT }
-local MIN_VALUE = 1
+local values = { LOWER_LIMIT, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30, 35, 40, 45, 50, 100, 200, 300, 400, 500, 700, 800, 900, 1000, 2000, 3000, 4000, 5000, 10000, 50000, 100000, UPPER_LIMIT }
+local MIN_VALUE = 0
 local MAX_VALUE = #values
 local LINE_SPACING = 4
 local UNIT_PRICE_FILTER_TYPE_ID = 6
@@ -45,7 +45,9 @@ function UnitPriceFilter:InitializeControls(name)
 	container:SetHeight(71)
 
 	self.minPriceBox = inputContainer:GetNamedChild("MinPriceBox")
+	self.minPriceBox:SetTextType(TEXT_TYPE_NUMERIC)
 	self.maxPriceBox = inputContainer:GetNamedChild("MaxPriceBox")
+	self.maxPriceBox:SetTextType(TEXT_TYPE_NUMERIC)
 
 	local tooltipText = L["RESET_FILTER_LABEL_TEMPLATE"]:format(label:GetText():gsub(":", ""))
 	self.resetButton:SetTooltipText(tooltipText)
@@ -62,9 +64,17 @@ local function ValueFromText(value, limit, old)
 	if(value == "") then
 		value = limit
 	else
-		value = ToNearestLinear(tonumber(value)) or old
+		value = ToNearestLinear(tonumber(value))
+		if(value == nil) then value = old end
 	end
 	return value
+end
+
+local function PreventNegativeInput(textBox)
+	local value = tonumber(textBox:GetText())
+	if(not value) then textBox:SetText("") return true
+	elseif(value < 0) then textBox:SetText(-value) return true end
+	return false
 end
 
 function UnitPriceFilter:InitializeHandlers(tradingHouse)
@@ -74,13 +84,18 @@ function UnitPriceFilter:InitializeHandlers(tradingHouse)
 	local setFromTextBox = false
 
 	local function UpdateSliderFromTextBox()
-		setFromTextBox = true
-		local oldMin, oldMax = slider:GetRangeValue()
-		local min = ValueFromText(minPriceBox:GetText(), MIN_VALUE, oldMin)
-		local max = ValueFromText(maxPriceBox:GetText(), MAX_VALUE, oldMax)
+		if(not setFromTextBox) then
+			setFromTextBox = true
+			PreventNegativeInput(minPriceBox)
+			PreventNegativeInput(maxPriceBox)
 
-		slider:SetRangeValue(min, max)
-		setFromTextBox = false
+			local oldMin, oldMax = slider:GetRangeValue()
+			local min = ValueFromText(minPriceBox:GetText(), MIN_VALUE, oldMin)
+			local max = ValueFromText(maxPriceBox:GetText(), MAX_VALUE, oldMax)
+
+			slider:SetRangeValue(min, max)
+			setFromTextBox = false
+		end
 	end
 
 	minPriceBox:SetHandler("OnTextChanged", UpdateSliderFromTextBox)
