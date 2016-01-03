@@ -30,6 +30,13 @@ function TradingHouseWrapper:Initialize(saveData)
 	local activityManager = AwesomeGuildStore.ActivityManager:New(self, self.loadingIndicator, self.loadingOverlay)
 	self.activityManager = activityManager
 
+	self.modeToTab =
+		{
+			[ZO_TRADING_HOUSE_MODE_BROWSE] = searchTab,
+			[ZO_TRADING_HOUSE_MODE_SELL] = sellTab,
+			[ZO_TRADING_HOUSE_MODE_LISTINGS] = listingTab,
+		}
+
 	self:Wrap("OpenTradingHouse", function(originalOpenTradingHouse, ...)
 		originalOpenTradingHouse(...)
 		self:SetInterceptInventoryItemClicks(false)
@@ -46,9 +53,9 @@ function TradingHouseWrapper:Initialize(saveData)
 		tradingHouse.m_numItemsOnPage = 0
 
 		AwesomeGuildStore:FireBeforeInitialSetupCallbacks(self)
-		searchTab:RunInitialSetup(self)
-		sellTab:RunInitialSetup(self)
-		listingTab:RunInitialSetup(self)
+		for mode, tab in next, self.modeToTab do
+			tab:RunInitialSetup(self)
+		end
 
 		self:InitializeGuildSelector()
 		self:InitializeKeybindStripWrapper()
@@ -61,24 +68,22 @@ function TradingHouseWrapper:Initialize(saveData)
 
 	local currentTab = searchTab
 	self:Wrap("HandleTabSwitch", function(originalHandleTabSwitch, tradingHouse, tabData)
-		currentTab:OnClose(self)
-		originalHandleTabSwitch(tradingHouse, tabData)
-
-		local mode = tabData.descriptor
-		if(mode == ZO_TRADING_HOUSE_MODE_BROWSE) then
-			currentTab = searchTab
-		elseif(mode == ZO_TRADING_HOUSE_MODE_SELL) then
-			currentTab = sellTab
-		elseif(mode == ZO_TRADING_HOUSE_MODE_LISTINGS) then
-			currentTab = listingTab
+		if currentTab then
+			currentTab:OnClose(self)
 		end
-		currentTab:OnOpen(self)
+		originalHandleTabSwitch(tradingHouse, tabData)
+		currentTab = self.modeToTab[tabData.descriptor]
+		if currentTab then
+			currentTab:OnOpen(self)
+		end
 	end)
 
 	RegisterForEvent(EVENT_CLOSE_TRADING_HOUSE, function()
 		self:HideLoadingIndicator()
 		self:HideLoadingOverlay()
-		currentTab:OnClose(self)
+		if currentTab then
+			currentTab:OnClose(self)
+		end
 	end)
 
 	local KIOSK_OPTION_INDEX = 1
@@ -89,6 +94,11 @@ function TradingHouseWrapper:Initialize(saveData)
 			SelectChatterOption(KIOSK_OPTION_INDEX)
 		end
 	end)
+end
+
+function TradingHouseWrapper:RegisterTabWrapper(mode, tab)
+	assert(self.modeToTab[mode] == nil)
+	self.modeToTab[mode] = tab
 end
 
 function TradingHouseWrapper:InitializeGuildSelector()
