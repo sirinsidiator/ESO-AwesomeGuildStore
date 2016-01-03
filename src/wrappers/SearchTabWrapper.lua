@@ -197,7 +197,7 @@ function SearchTabWrapper:InitializeFilters(tradingHouseWrapper)
 		if(command == "reset") then
 			searchLibrary:ResetPosition()
 			d("[AwesomeGuildStore] Default search library position restored")
-		end
+	end
 	end
 
 	local categoryFilter = AwesomeGuildStore.CategorySelector:New(browseItemsControl, "AwesomeGuildStoreItemCategory", self, tradingHouseWrapper)
@@ -229,7 +229,7 @@ function SearchTabWrapper:InitializeFilters(tradingHouseWrapper)
 	searchLibrary:RegisterFilter(textFilter)
 	self.textFilter = textFilter
 
-	CALLBACK_MANAGER:FireCallbacks(AwesomeGuildStore.OnInitializeFiltersCallbackName, tradingHouseWrapper)
+	AwesomeGuildStore:FireOnInitializeFiltersCallbacks(tradingHouseWrapper)
 
 	if(saveData.keepFiltersOnClose) then
 		searchLibrary:Deserialize(saveData.searchLibrary.lastState)
@@ -618,10 +618,10 @@ function SearchTabWrapper:OnOpen(tradingHouseWrapper)
 	tradingHouseWrapper:SetLoadingOverlayParent(ZO_TradingHouseItemPaneSearchResults)
 	tradingHouse.m_searchAllowed = true
 	tradingHouse:OnSearchCooldownUpdate(GetTradingHouseCooldownRemaining())
-	CALLBACK_MANAGER:FireCallbacks(AwesomeGuildStore.OnOpenSearchTabCallbackName, tradingHouseWrapper)
+	AwesomeGuildStore:FireOnOpenSearchTabCallbacks(tradingHouseWrapper)
 	self:RelocateButtons(tradingHouse)
 end
 
 function SearchTabWrapper:OnClose(tradingHouseWrapper)
-	CALLBACK_MANAGER:FireCallbacks(AwesomeGuildStore.OnCloseSearchTabCallbackName, tradingHouseWrapper)
+	AwesomeGuildStore:FireOnCloseSearchTabCallbacks(tradingHouseWrapper)
 end

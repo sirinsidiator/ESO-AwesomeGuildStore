@@ -45,7 +45,7 @@ function TradingHouseWrapper:Initialize(saveData)
 		local tradingHouseManager = originalRunInitialSetup(...)
 		tradingHouse.m_numItemsOnPage = 0
 
-		CALLBACK_MANAGER:FireCallbacks(AwesomeGuildStore.BeforeInitialSetupCallbackName, self)
+		AwesomeGuildStore:FireBeforeInitialSetupCallbacks(self)
 		searchTab:RunInitialSetup(self)
 		sellTab:RunInitialSetup(self)
 		listingTab:RunInitialSetup(self)
@@ -53,7 +53,7 @@ function TradingHouseWrapper:Initialize(saveData)
 		self:InitializeGuildSelector()
 		self:InitializeKeybindStripWrapper()
 		self:InitializeSearchCooldown()
-		CALLBACK_MANAGER:FireCallbacks(AwesomeGuildStore.AfterInitialSetupCallbackName, self)
+		AwesomeGuildStore:FireAfterInitialSetupCallbacks(self)
 		return tradingHouseManager
 	end)
 

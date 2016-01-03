@@ -1,6 +1,6 @@
 local ADDON_NAME = "AwesomeGuildStore"
 
-AwesomeGuildStore = {}
+AwesomeGuildStore = ZO_CallbackObject:New()
 
 local nextEventHandleIndex = 1
 
@@ -39,11 +39,57 @@ AwesomeGuildStore.WrapFunction = WrapFunction
 -----------------------------------------------------------------------------------------
 
 AwesomeGuildStore.GetAPIVersion = function() return 2 end
+
+-- convenience functions for using the callback object:
+function AwesomeGuildStore:RegisterBeforeInitialSetupCallback(...)
+	self:RegisterCallback("BeforeInitialSetup", ...)
+end
+function AwesomeGuildStore:FireBeforeInitialSetupCallbacks(...)
+	self:FireCallbacks("BeforeInitialSetup", ...)
+end
+
+function AwesomeGuildStore:RegisterAfterInitialSetupCallback(...)
+	self:RegisterCallback("AfterInitialSetup", ...)
+end
+function AwesomeGuildStore:FireAfterInitialSetupCallbacks(...)
+	self:FireCallbacks("AfterInitialSetup", ...)
+end
+
+function AwesomeGuildStore:RegisterOnOpenSearchTabCallback(...)
+	self:RegisterCallback("OnOpenSearchTab", ...)
+end
+function AwesomeGuildStore:FireOnOpenSearchTabCallbacks(...)
+	self:FireCallbacks("OnOpenSearchTab", ...)
+end
+
+function AwesomeGuildStore:RegisterOnCloseSearchTabCallback(...)
+	self:RegisterCallback("OnCloseSearchTab", ...)
+end
+function AwesomeGuildStore:FireOnCloseSearchTabCallbacks(...)
+	self:FireCallbacks("OnCloseSearchTab", ...)
+end
+
+function AwesomeGuildStore:RegisterOnInitializeFiltersCallback(...)
+	self:RegisterCallback("OnInitializeFilters", ...)
+end
+function AwesomeGuildStore:FireOnInitializeFiltersCallbacks(...)
+	self:FireCallbacks("OnInitializeFilters", ...)
+end
+
+-- deprecated callback names for CALLBACK_MANAGER:
 AwesomeGuildStore.BeforeInitialSetupCallbackName = ADDON_NAME .. "_BeforeInitialSetup"
 AwesomeGuildStore.AfterInitialSetupCallbackName = ADDON_NAME .. "_AfterInitialSetup"
 AwesomeGuildStore.OnOpenSearchTabCallbackName = ADDON_NAME .. "_OnOpenSearchTab"
 AwesomeGuildStore.OnCloseSearchTabCallbackName = ADDON_NAME .. "_OnCloseSearchTab"
 AwesomeGuildStore.OnInitializeFiltersCallbackName = ADDON_NAME .. "_OnInitializeFilters"
+
+-- compatibility layer for old callback handling:
+AwesomeGuildStore:RegisterBeforeInitialSetupCallback(function(...) CALLBACK_MANAGER:FireCallbacks(AwesomeGuildStore.BeforeInitialSetupCallbackName, ...) end)
+AwesomeGuildStore:RegisterAfterInitialSetupCallback(function(...) CALLBACK_MANAGER:FireCallbacks(AwesomeGuildStore.AfterInitialSetupCallbackName, ...) end)
+AwesomeGuildStore:RegisterOnOpenSearchTabCallback(function(...) CALLBACK_MANAGER:FireCallbacks(AwesomeGuildStore.OnOpenSearchTabCallbackName, ...) end)
+AwesomeGuildStore:RegisterOnCloseSearchTabCallback(function(...) CALLBACK_MANAGER:FireCallbacks(AwesomeGuildStore.OnCloseSearchTabCallbackName, ...) end)
+AwesomeGuildStore:RegisterOnInitializeFiltersCallback(function(...) CALLBACK_MANAGER:FireCallbacks(AwesomeGuildStore.OnInitializeFiltersCallbackName, ...) end)
+
 OnAddonLoaded(function()
 	local saveData = AwesomeGuildStore.LoadSettings()
 	local tradingHouseWrapper = AwesomeGuildStore.TradingHouseWrapper:New(saveData)
