@@ -17,6 +17,7 @@ function LevelFilter:New(name, tradingHouseWrapper, ...)
 end
 
 function LevelFilter:Initialize(name, tradingHouseWrapper)
+	self.isLocal = false
 	self:InitializeControls(name, tradingHouseWrapper.tradingHouse)
 	self:InitializeHandlers(tradingHouseWrapper.tradingHouse)
 end

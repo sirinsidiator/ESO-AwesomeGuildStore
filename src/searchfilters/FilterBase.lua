@@ -15,6 +15,7 @@ function FilterBase:New(type, name, tradingHouseWrapper, ...)
 end
 
 function FilterBase:InitializeBase(type, name)
+	self.isLocal = true -- set to false if it is not a local filter
 	self.type = type
 	self.callbackName = name .. "Changed"
 
@@ -37,7 +38,7 @@ function FilterBase:SetLabelControl(label)
 	label:ClearAnchors()
 	label:SetAnchor(TOPLEFT, self.container, TOPLEFT, 0, 0)
 	label:SetAnchor(TOPRIGHT, self.container, TOPLRIGHT, -RESET_BUTTON_SIZE, 0)
-	if(self.FilterPageResult) then -- we have a local filter here
+	if(self.isLocal) then
 		label:SetColor(localFilterLabelColor:UnpackRGBA())
 		label:SetMouseEnabled(true)
 		label:SetHandler("OnMouseEnter", function()
@@ -85,20 +86,21 @@ function FilterBase:SetHidden(hidden)
 	self.container:SetHidden(hidden)
 end
 
--- the following functions are used for filtering items on a result page and should only be implemented where necessary
+-- the following functions are used for filtering items on a result page and should be overwritten where necessary
 
---function FilterBase:BeforeRebuildSearchResultsPage(tradingHouseWrapper)
---	return true when the filter actually has work to do
---end
+function FilterBase:BeforeRebuildSearchResultsPage(tradingHouseWrapper)
+	return false
+		--	return true when the filter actually has work to do
+end
 
---function FilterBase:FilterPageResult(index, icon, name, quality, stackCount, sellerName, timeRemaining, purchasePrice)
---	return true if the item is visible
--- the filtering will stop on the first filter that returns false and just hide the item then
---end
+function FilterBase:FilterPageResult(index, icon, name, quality, stackCount, sellerName, timeRemaining, purchasePrice)
+	return true -- if the item is visible
+		-- the filtering will stop on the first filter that returns false and just hide the item then
+end
 
---function FilterBase:AfterRebuildSearchResultsPage(tradingHouseWrapper)
+function FilterBase:AfterRebuildSearchResultsPage(tradingHouseWrapper)
 -- can be used for cleaning up
---end
+end
 
 -- these functions are used by the reset button
 function FilterBase:Reset()

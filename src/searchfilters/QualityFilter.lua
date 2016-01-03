@@ -24,6 +24,7 @@ function QualityFilter:New(name, tradingHouseWrapper, ...)
 end
 
 function QualityFilter:Initialize(name, tradingHouseWrapper)
+	self.isLocal = false
 	self:InitializeControls(name, tradingHouseWrapper.tradingHouse, tradingHouseWrapper.saveData)
 	self:InitializeHandlers(tradingHouseWrapper.tradingHouse)
 end

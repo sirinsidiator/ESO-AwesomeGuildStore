@@ -62,7 +62,7 @@ function SearchTabWrapper:AttachFilter(filter)
 	filter:SetWidth(FILTER_PANEL_WIDTH)
 	self:UpdateFilterAnchors()
 	filter:SetHidden(false)
-	if(filter.FilterPageResult) then
+	if(filter.isLocal) then
 		CALLBACK_MANAGER:RegisterCallback(filter.callbackName, RebuildSearchResultsPage)
 	end
 end
@@ -74,7 +74,7 @@ function SearchTabWrapper:DetachFilter(filter)
 	filter:SetParent(GuiRoot)
 	self:UpdateFilterAnchors()
 	self.attachedFilters[filter.type] = nil
-	if(filter.FilterPageResult) then
+	if(filter.isLocal) then
 		CALLBACK_MANAGER:UnregisterCallback(filter.callbackName, RebuildSearchResultsPage)
 	end
 end
@@ -121,19 +121,20 @@ function SearchTabWrapper:InitializePageFiltering(tradingHouseWrapper)
 	local filters = self.attachedFilters
 	local itemCount, filteredItemCount = 0, 0
 
-	local activeFilters
+	local activeFilters, numActiveFilters = {}, 0
 	local function BeforeRebuildSearchResultsPage(tradingHouseWrapper)
-		activeFilters = {}
+		numActiveFilters = 0
 		for _, filter in pairs(filters) do
-			if(filter.BeforeRebuildSearchResultsPage and filter:BeforeRebuildSearchResultsPage(tradingHouseWrapper) and filter.FilterPageResult) then
-				activeFilters[#activeFilters + 1] = filter
+			if(filter:BeforeRebuildSearchResultsPage(tradingHouseWrapper)) then
+				numActiveFilters = numActiveFilters + 1
+				activeFilters[numActiveFilters] = filter
 			end
 		end
-		return (#activeFilters > 0)
+		return (numActiveFilters > 0)
 	end
 
 	local function FilterPageResult(...)
-		for i = 1, #activeFilters do
+		for i = 1, numActiveFilters do
 			if(not activeFilters[i]:FilterPageResult(...)) then
 				return false
 			end
@@ -143,9 +144,7 @@ function SearchTabWrapper:InitializePageFiltering(tradingHouseWrapper)
 
 	local function AfterRebuildSearchResultsPage(tradingHouseWrapper)
 		for _, filter in pairs(filters) do
-			if(filter.AfterRebuildSearchResultsPage) then
-				filter:AfterRebuildSearchResultsPage(tradingHouseWrapper)
-			end
+			filter:AfterRebuildSearchResultsPage(tradingHouseWrapper)
 		end
 	end
 
