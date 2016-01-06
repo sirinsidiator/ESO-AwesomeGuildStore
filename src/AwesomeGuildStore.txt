@@ -3,7 +3,7 @@
 ## Version: VERSION_NUMBER
 ## APIVersion: 100013
 ## FastAPI: 100013
-## OptionalDependsOn: LibStub LibAddonMenu-2.0 libFilters libCommonInventoryFilters
+## OptionalDependsOn: LibStub LibAddonMenu-2.0 libFilters libCommonInventoryFilters LibTextFilter
 ## SavedVariables: AwesomeGuildStore_Data
 ##
 ## This Add-on is not created by, affiliated with or sponsored by ZeniMax Media Inc. or its affiliates. 
@@ -28,6 +28,7 @@ lib/LibAddonMenu-2.0/controls/slider.lua
 lib/LibAddonMenu-2.0/controls/texture.lua
 lib/libFilters/libFilters.lua
 lib/libCommonInventoryFilters/libCommonInventoryFilters.lua
+lib/LibTextFilter/LibTextFilter.lua
 StartUp.lua
 Localization.lua
 Settings.lua

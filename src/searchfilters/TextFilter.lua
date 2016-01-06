@@ -47,37 +47,16 @@ function TextFilter:InitializeHandlers(tradingHouseWrapper)
 		ZO_EditDefaultText_OnTextChanged(inputBox)
 		self:HandleChange()
 	end)
-
-	local nameFilter = ZO_StringSearch:New()
-	nameFilter:AddProcessor(TEXT_FILTER_DATA_TYPE, function(stringSearch, data, searchTerm, cache)
-		searchTerm = searchTerm:lower()
-		if(zo_plainstrfind(data.name:lower(), searchTerm) or zo_plainstrfind(data.setName:lower(), searchTerm) or (data.isSetItem and zo_plainstrfind("set", searchTerm))) then
-			return true
-		end
-	end)
-	self.nameFilter = nameFilter
-	self.data = { name = "", setName = "", isSetItem = false, itemLinkData = "", type = TEXT_FILTER_DATA_TYPE }
+	self.LTF = LibStub("LibTextFilter")
+	self.haystack = {}
 end
 
 function TextFilter:BeforeRebuildSearchResultsPage(tradingHouseWrapper)
 	local searchTerm = self.inputBox:GetText()
-	local nameFilter = self.nameFilter
-
 	if(searchTerm ~= "") then
-		local terms = {zo_strsplit("+", searchTerm)}
-		for i = 1, #terms do
-			local term = terms[i]
-			local _, itemLinkData = term:match("|H(.-):(.-)|h(.-)|h")
-			if(itemLinkData and itemLinkData ~= "") then -- prepare itemLinks beforehand for better performance
-				terms[i] = itemLinkData
-			end
-		end
-		self.isMatch = function(data)
-			for i = 1, #terms do
-				local term = terms[i]
-				if(term == data.itemLinkData or nameFilter:IsMatch(term, data)) then return true end
-			end
-		end
+		searchTerm = searchTerm:lower():gsub("|h(.-):", "|H%1:") -- need to fix links after we put everything to lowercase
+		local tokens = self.LTF:Tokenize(searchTerm)
+		self.parsedTokens = self.LTF:Parse(tokens)
 		return true
 	end
 	return false
@@ -85,16 +64,16 @@ end
 
 function TextFilter:FilterPageResult(index, icon, name, quality, stackCount, sellerName, timeRemaining, purchasePrice)
 	local data = self.data
-	local itemLink = GetTradingHouseSearchResultItemLink(index, LINK_STYLE_BRACKETS)
+	local itemLink = GetTradingHouseSearchResultItemLink(index)
 	local isSetItem, setName = GetItemLinkSetInfo(itemLink)
-	local _, itemLinkData = itemLink:match("|H(.-):(.-)|h(.-)|h")
 
-	data.name = name
-	data.setName = setName
-	data.isSetItem = isSetItem
-	data.itemLinkData = itemLinkData
+	self.haystack[1] = name:lower()
+	self.haystack[2] = itemLink
+	self.haystack[3] = setName:lower()
+	local haystack = (table.concat(self.haystack, " "))
+	local isMatch, result = self.LTF:Evaluate(haystack, ZO_ShallowTableCopy(self.parsedTokens))
 
-	return self.isMatch(data)
+	return isMatch
 end
 
 function TextFilter:Reset()
