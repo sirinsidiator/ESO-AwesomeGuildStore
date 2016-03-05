@@ -1286,6 +1286,41 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
 				value = ITEMSTYLE_ALLIANCE_ALDMERI,
 			},
 			{
+				label = L["SUBFILTER_ITEM_STYLE_AKAVIRI"],
+				texture = "EsoUI/Art/Campaign/overview_indexIcon_emperor_%s.dds",
+				value = ITEMSTYLE_AREA_AKAVIRI,
+			},
+			{
+				label = L["SUBFILTER_ITEM_STYLE_MERCENARY"],
+				texture = "EsoUI/Art/Inventory/inventory_tabIcon_armor_%s.dds",
+				value = ITEMSTYLE_UNDAUNTED,
+			},
+			{
+				label = L["SUBFILTER_ITEM_STYLE_ANCIENT_ORC"],
+				texture = "EsoUI/Art/WorldMap/map_ava_tabIcon_oreMine_%s.dds",
+				value = ITEMSTYLE_AREA_ANCIENT_ORC,
+			},
+			{
+				label = L["SUBFILTER_ITEM_STYLE_MALACATH"],
+				texture = "EsoUI/Art/Guild/guildHistory_indexIcon_combat_%s.dds",
+				value = ITEMSTYLE_DEITY_MALACATH,
+			},
+			{
+				label = L["SUBFILTER_ITEM_STYLE_TRINIMAC"],
+				texture = "EsoUI/Art/Guild/guildHistory_indexIcon_campaigns_%s.dds",
+				value = ITEMSTYLE_DEITY_TRINIMAC,
+			},
+			{
+				label = L["SUBFILTER_ITEM_STYLE_SOUL_SHRIVEN"],
+				texture = "EsoUI/Art/MainMenu/menuBar_collections_%s.dds",
+				value = ITEMSTYLE_AREA_SOUL_SHRIVEN,
+			},
+			{
+				label = L["SUBFILTER_ITEM_STYLE_OUTLAW"],
+				texture = "EsoUI/Art/Tutorial/tutorial_idexIcon_combat_%s.dds",
+				value = ITEMSTYLE_UNUSED9,
+			},
+			{
 				label = L["SUBFILTER_ITEM_STYLE_OTHER"],
 				texture = "EsoUI/Art/Inventory/inventory_tabIcon_misc_%s.dds",
 				value = 99,
