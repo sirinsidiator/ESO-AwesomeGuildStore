@@ -2,7 +2,6 @@
 ## Author: sirinsidiator
 ## Version: VERSION_NUMBER
 ## APIVersion: 100014
-## FastAPI: 100014
 ## OptionalDependsOn: LibStub LibAddonMenu-2.0 libFilters libCommonInventoryFilters LibTextFilter
 ## SavedVariables: AwesomeGuildStore_Data
 ##
