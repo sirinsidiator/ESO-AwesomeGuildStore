@@ -1,5 +1,5 @@
 local LIB_IDENTIFIER = "LibTextFilter"
-local lib = LibStub:NewLibrary(LIB_IDENTIFIER, 3)
+local lib = LibStub:NewLibrary(LIB_IDENTIFIER, 4)
 
 if not lib then
 	return	-- already loaded and no upgrade necessary
@@ -42,7 +42,7 @@ end
 
 local function Convert(input, value)
 	if(type(value) == "string") then
-		local _, linkData = value:match("|H(.-):(.-)|h(.-)|h")
+		local _, linkData = value:match("|[Hh](.-):(.-)|h(.-)|h") -- not 100% okay, but otherwise putting the input into lower case won't work
 		if(linkData and linkData ~= "") then
 			value = linkData
 		end
@@ -88,11 +88,11 @@ end
 
 local function LinkGeneralizationOperation(input, a)
 	local a_ = a
-	local _, linkData = a_:match("|H(.-):(.-)|h(.-)|h")
+	local h, linkData = a_:match("(|[Hh].-):(.-)|h(.-)|h")
 	if(linkData and linkData ~= "") then
 		local data = {zo_strsplit(":", linkData)}
 		if(data[1] == "item") then
-			a_ = table.concat({"|H0:", data[1], ":", data[2], "|h|h"})
+			a_ = table.concat({h, ":", data[1], ":", data[2], "|h|h"})
 		end
 	end
 	if(lib.debug) then

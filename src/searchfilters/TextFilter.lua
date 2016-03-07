@@ -69,13 +69,8 @@ function TextFilter:FilterPageResult(index, icon, name, quality, stackCount, sel
 	haystack[1] = name:lower()
 	haystack[2] = itemLink
 	haystack[3] = setName:lower()
-	for i = 1, #haystack do
-		local isMatch, result = LTF:Filter(haystack[i], self.searchTerm)
-		if(isMatch) then
-			return true
-		end
-	end
-	return false
+	local isMatch, result = LTF:Filter(table.concat(haystack, "\n"), self.searchTerm)
+	return isMatch
 end
 
 function TextFilter:Reset()
