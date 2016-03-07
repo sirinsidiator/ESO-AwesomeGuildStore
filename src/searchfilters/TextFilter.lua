@@ -54,7 +54,7 @@ end
 function TextFilter:BeforeRebuildSearchResultsPage(tradingHouseWrapper)
 	local searchTerm = self.inputBox:GetText()
 	if(searchTerm ~= "") then
-		self.searchTerm = searchTerm:lower():gsub("|h(.-)|h(.-)|h", "|H%1|h%2|h") -- need to fix links after we put everything to lowercase
+		self.searchTerm = searchTerm:lower()
 		return true
 	end
 	return false
@@ -66,10 +66,10 @@ function TextFilter:FilterPageResult(index, icon, name, quality, stackCount, sel
 	local isSetItem, setName = GetItemLinkSetInfo(itemLink)
 
 	local haystack, LTF = self.haystack, self.LTF
-	haystack[1] = name:lower()
+	haystack[1] = name
 	haystack[2] = itemLink
-	haystack[3] = setName:lower()
-	local isMatch, result = LTF:Filter(table.concat(haystack, "\n"), self.searchTerm)
+	haystack[3] = setName
+	local isMatch, result = LTF:Filter(table.concat(haystack, "\n"):lower(), self.searchTerm)
 	return isMatch
 end
 
