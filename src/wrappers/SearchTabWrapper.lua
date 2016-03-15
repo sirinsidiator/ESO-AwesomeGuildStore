@@ -164,7 +164,7 @@ function SearchTabWrapper:InitializePageFiltering(tradingHouseWrapper)
 
 	tradingHouseWrapper:Wrap("RebuildSearchResultsPage", function(originalRebuildSearchResultsPage, self, ...)
 		local isFiltering = BeforeRebuildSearchResultsPage(tradingHouseWrapper)
-		if(isFiltering) then
+		if(isFiltering and not IsControlKeyDown()) then
 			itemCount, filteredItemCount = 0, 0
 			GetTradingHouseSearchResultItemInfo = FakeGetTradingHouseSearchResultItemInfo
 		end
@@ -172,7 +172,7 @@ function SearchTabWrapper:InitializePageFiltering(tradingHouseWrapper)
 		originalRebuildSearchResultsPage(self, ...)
 
 		AfterRebuildSearchResultsPage(tradingHouseWrapper)
-		if(isFiltering) then
+		if(isFiltering and not IsControlKeyDown()) then
 			GetTradingHouseSearchResultItemInfo = OriginalGetTradingHouseSearchResultItemInfo
 			self.m_resultCount:SetText(zo_strformat(L["TEXT_FILTER_ITEMCOUNT_TEMPLATE"], itemCount, filteredItemCount))
 
@@ -619,8 +619,17 @@ function SearchTabWrapper:OnOpen(tradingHouseWrapper)
 	tradingHouse:OnSearchCooldownUpdate(GetTradingHouseCooldownRemaining())
 	AwesomeGuildStore:FireOnOpenSearchTabCallbacks(tradingHouseWrapper)
 	self:RelocateButtons(tradingHouse)
+
+	self.wasControlKeyDown = IsControlKeyDown() -- TODO use action layer
+	EVENT_MANAGER:RegisterForUpdate("AwesomeGuildStoreSearchTabWrapper", 100, function()
+		if(self.wasControlKeyDown ~= IsControlKeyDown()) then
+			self.wasControlKeyDown = IsControlKeyDown()
+			RebuildSearchResultsPage()
+		end
+	end)
 end
 
 function SearchTabWrapper:OnClose(tradingHouseWrapper)
+	EVENT_MANAGER:UnregisterForUpdate("AwesomeGuildStoreSearchTabWrapper")
 	AwesomeGuildStore:FireOnCloseSearchTabCallbacks(tradingHouseWrapper)
 end
