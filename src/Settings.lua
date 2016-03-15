@@ -1,6 +1,6 @@
 local function LoadSettings()
 	local defaultData = {
-		version = 16,
+		version = 17,
 		lastGuildName = "",
 		keepFiltersOnClose = true,
 		oldQualitySelectorBehavior = false,
@@ -31,6 +31,8 @@ local function LoadSettings()
 			showTooltips = true,
 			locked = true,
 			autoClearHistory = false,
+			favoritesSortField = "searches",
+			favoritesSortOrder = ZO_SORT_ORDER_DOWN,
 		}
 	}
 
@@ -264,6 +266,11 @@ local function LoadSettings()
 			saveData.cancelNotification = defaultData.cancelNotification
 			saveData.listedNotification = defaultData.listedNotification
 			saveData.version = 16
+		end
+		if(saveData.version == 16) then
+			saveData.searchLibrary.favoritesSortField = defaultData.searchLibrary.favoritesSortField
+			saveData.searchLibrary.favoritesSortOrder = defaultData.searchLibrary.favoritesSortOrder
+			saveData.version = 17
 		end
 	end
 

@@ -140,6 +140,11 @@ function SearchLibrary:Initialize(saveData)
 		return true
 	end
 
+	self.favoritesSortHeaderGroup:SelectHeaderByKey(saveData.favoritesSortField, ZO_SortHeaderGroup.SUPPRESS_CALLBACKS)
+	if(saveData.favoritesSortOrder == ZO_SORT_ORDER_DOWN) then -- call it a second time to invert the sort order
+		self.favoritesSortHeaderGroup:SelectHeaderByKey(saveData.favoritesSortField, ZO_SortHeaderGroup.SUPPRESS_CALLBACKS)
+	end
+
 	if(saveData.isActive) then
 		self:Show()
 	end
@@ -530,10 +535,35 @@ function SearchLibrary:InitializeHistory()
 end
 
 function SearchLibrary:InitializeFavorites()
-	self.control:GetNamedChild("FavoritesLabel"):SetText(L["SEARCH_LIBRARY_FAVORITES_LABEL"])
+	local favoritesLabel = self.control:GetNamedChild("FavoritesLabel")
+	favoritesLabel:SetText(L["SEARCH_LIBRARY_FAVORITES_LABEL"])
+
 	local favoritesControl = self.control:GetNamedChild("Favorites")
 	self.favoritesControl = favoritesControl
 	self.favoritesDirty = true
+
+	local headers = self.control:CreateControl("$(parent)Headers", CT_CONTROL)
+	headers:SetAnchor(TOPRIGHT, self.control:GetNamedChild("Options"), TOPLEFT, -5, 0)
+	headers:SetDimensions(180, 32)
+
+	local nameHeader = CreateControlFromVirtual("$(parent)Name", headers, "ZO_SortHeader")
+	ZO_SortHeader_Initialize(nameHeader, "Name", "name", ZO_SORT_ORDER_UP, TEXT_ALIGN_LEFT, "ZoFontGameLargeBold")
+	nameHeader:SetAnchor(TOPLEFT, nil, TOPLEFT, 0, 0)
+	nameHeader:SetDimensions(80, 32)
+
+	local searchCountHeader = CreateControlFromVirtual("$(parent)SearchCount", headers, "ZO_SortHeader")
+	ZO_SortHeader_Initialize(searchCountHeader, "Searches", "searches", ZO_SORT_ORDER_UP, TEXT_ALIGN_LEFT, "ZoFontGameLargeBold")
+	searchCountHeader:SetAnchor(TOPLEFT, nameHeader, TOPRIGHT, 0, 0)
+	searchCountHeader:SetDimensions(80, 32)
+
+	self.favoritesSortHeaderGroup = ZO_SortHeaderGroup:New(headers, true)
+	self.favoritesSortHeaderGroup:RegisterCallback(ZO_SortHeaderGroup.HEADER_CLICKED, function(key, order)
+		self.saveData.favoritesSortField = key
+		self.saveData.favoritesSortOrder = order
+		self.favoritesDirty = true
+		self:Refresh()
+	end)
+	self.favoritesSortHeaderGroup:AddHeadersFromContainer()
 
 	local function InitializeFavoritesRow(rowControl, entry)
 		InitializeBaseRow(self, rowControl, entry, true)
@@ -744,13 +774,44 @@ function SearchLibrary:HighlightEntry(state)
 	HighlightEntryInScrollList(state, self.favoritesControl)
 end
 
-local function SortByTimeDesc(entryA, entryB)
-	return entryA.data.lastSearchTime > entryB.data.lastSearchTime
+local function SortByNameAsc(entryA, entryB)
+	return entryB.data.label > entryA.data.label
+end
+
+local function SortByNameDesc(entryA, entryB)
+	return entryA.data.label > entryB.data.label
+end
+
+local function SortBySearchCountAsc(entryA, entryB)
+	return entryB.data.searchCount > entryA.data.searchCount
 end
 
 local function SortBySearchCountDesc(entryA, entryB)
 	return entryA.data.searchCount > entryB.data.searchCount
 end
+
+local function SortByTimeAsc(entryA, entryB)
+	return entryB.data.lastSearchTime > entryA.data.lastSearchTime
+end
+
+local function SortByTimeDesc(entryA, entryB)
+	return entryA.data.lastSearchTime > entryB.data.lastSearchTime
+end
+
+local SORT_FUNCTIONS = {
+	["name"] = {
+		[ZO_SORT_ORDER_UP] = SortByNameAsc,
+		[ZO_SORT_ORDER_DOWN] = SortByNameDesc
+	},
+	["searches"] = {
+		[ZO_SORT_ORDER_UP] = SortBySearchCountAsc,
+		[ZO_SORT_ORDER_DOWN] = SortBySearchCountDesc
+	},
+	["time"] = {
+		[ZO_SORT_ORDER_UP] = SortByTimeAsc,
+		[ZO_SORT_ORDER_DOWN] = SortByTimeDesc
+	},
+}
 
 local function FilterHistoryEntires(entry)
 	return entry.history
@@ -798,7 +859,8 @@ end
 
 function SearchLibrary:RebuildFavorites(skipUpdateHighlight)
 	if(self.favoritesDirty) then
-		RebuildScrollList(self.favoritesControl, self.searchList, SortBySearchCountDesc, FilterFavoriteEntires)
+		local sortFunction = SORT_FUNCTIONS[self.saveData.favoritesSortField][self.saveData.favoritesSortOrder] or SortBySearchCountDesc
+		RebuildScrollList(self.favoritesControl, self.searchList, sortFunction, FilterFavoriteEntires)
 		self:UpdateFavoriteButtonState()
 		if(not skipUpdateHighlight) then
 			HighlightEntryInScrollList(self.saveData.lastState, self.favoritesControl)
