@@ -162,6 +162,8 @@ function SearchTabWrapper:InitializePageFiltering(tradingHouseWrapper)
 		return nil, "", nil, 0
 	end
 
+	local saveData = self.saveData
+	local function SearchNextPage() self:SearchNextPage() end
 	tradingHouseWrapper:Wrap("RebuildSearchResultsPage", function(originalRebuildSearchResultsPage, self, ...)
 		local isFiltering = BeforeRebuildSearchResultsPage(tradingHouseWrapper)
 		if(isFiltering and not IsControlKeyDown()) then
@@ -179,6 +181,10 @@ function SearchTabWrapper:InitializePageFiltering(tradingHouseWrapper)
 			local shouldHide = (filteredItemCount ~= 0 or self.m_search:HasPreviousPage() or self.m_search:HasNextPage())
 			self.m_noItemsLabel:SetHidden(shouldHide)
 			self.m_searchAllowed = true -- don't disable search when we have inpage filters active
+
+			if(self.isReceivingResults and filteredItemCount == 0 and saveData.autoSearch and saveData.skipEmptyPages and self.m_search:HasNextPage()) then
+				SearchNextPage()
+			end
 		end
 	end)
 end

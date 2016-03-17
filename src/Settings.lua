@@ -20,6 +20,8 @@ local function LoadSettings()
 		listingSortOrder = ZO_SORT_ORDER_DOWN,
 		disableCustomSellTabFilter = false,
 		skipGuildKioskDialog = true,
+		autoSearch = false,
+		skipEmptyPages = false,
 		searchLibrary = {
 			x = 980,
 			y = -5,
@@ -179,6 +181,14 @@ local function LoadSettings()
 			setFunc = function(value) saveData.skipGuildKioskDialog = value end,
 			default = defaultData.skipGuildKioskDialog,
 		}
+		optionsData[#optionsData + 1] = {
+			type = "checkbox",
+			name = L["SETTINGS_SKIP_EMPTY_PAGES_LABEL"],
+			tooltip = L["SETTINGS_SKIP_EMPTY_PAGES_DESCRIPTION"],
+			getFunc = function() return saveData.skipEmptyPages end,
+			setFunc = function(value) saveData.skipEmptyPages = value end,
+			default = defaultData.skipEmptyPages,
+		}
 		LAM:RegisterOptionControls("AwesomeGuildStoreOptions", optionsData)
 
 		AwesomeGuildStore.OpenSettingsPanel = function()
@@ -270,6 +280,8 @@ local function LoadSettings()
 		if(saveData.version == 16) then
 			saveData.searchLibrary.favoritesSortField = defaultData.searchLibrary.favoritesSortField
 			saveData.searchLibrary.favoritesSortOrder = defaultData.searchLibrary.favoritesSortOrder
+			if(saveData.autoSearch == nil) then saveData.autoSearch = defaultData.autoSearch end
+			saveData.skipEmptyPages = defaultData.skipEmptyPages
 			saveData.version = 17
 		end
 	end

@@ -286,6 +286,8 @@ local localization = {
 		SETTINGS_DISABLE_CUSTOM_SELL_TAB_FILTER_DESCRIPTION = "Shows the ingame inventory filter instead of AGS own version when deactivated.",
 		SETTINGS_SKIP_GUILD_KIOSK_DIALOG_LABEL = "Skip guild kiosk dialog",
 		SETTINGS_SKIP_GUILD_KIOSK_DIALOG_DESCRIPTION = "When activated, the dialog at guild traders (not at banks) is skipped and the store opened automatically. This can be suppressed by holding the shift key when talking to a trader.",
+		SETTINGS_SKIP_EMPTY_PAGES_LABEL = "Skip empty result pages", -- TODO de,fr,ru
+		SETTINGS_SKIP_EMPTY_PAGES_DESCRIPTION = "When activated, pages that show no results due to local filters will automatically trigger a search for the next page. This only works while the auto search feature is active and can be suppressed by holding the ctrl key before the results are returned.", -- TODO de,fr,ru
 
 		INVALID_STATE = "Invalid Store State.\nThis is a bug in the game and should be fixed soon.",
 

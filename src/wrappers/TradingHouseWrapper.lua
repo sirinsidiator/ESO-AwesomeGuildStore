@@ -65,6 +65,12 @@ function TradingHouseWrapper:Initialize(saveData)
 	end)
 
 	self:PreHook("ClearSearchResults", function(self) self.m_numItemsOnPage = 0 end)
+	
+	self:Wrap("OnSearchResultsReceived", function(originalOnSearchResultsReceived, self, ...) 
+		self.isReceivingResults = true -- we use this to automatically advance to the next page if local filters hide every item
+		originalOnSearchResultsReceived(self, ...)
+		self.isReceivingResults = false
+	end)
 
 	local currentTab = searchTab
 	self:Wrap("HandleTabSwitch", function(originalHandleTabSwitch, tradingHouse, tabData)
