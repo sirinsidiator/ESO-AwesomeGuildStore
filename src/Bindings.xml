@@ -1,0 +1,10 @@
+<Bindings>
+	<Layer name="AwesomeGuildStoreSearchTab">
+		<Category>
+			<Action name="AGS_SUPPRESS_LOCAL_FILTERS">
+				<Down>TRADING_HOUSE:RebuildSearchResultsPage()</Down>
+				<Up>TRADING_HOUSE:RebuildSearchResultsPage()</Up>
+			</Action>
+		</Category>
+	</Layer>
+</Bindings>

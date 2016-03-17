@@ -4,6 +4,7 @@ local ToggleButton = AwesomeGuildStore.ToggleButton
 local SearchTabWrapper = ZO_Object:Subclass()
 AwesomeGuildStore.SearchTabWrapper = SearchTabWrapper
 
+local ACTION_LAYER_NAME = "AwesomeGuildStoreSearchTab"
 local FILTER_PANEL_WIDTH = 220
 
 function SearchTabWrapper:New(saveData)
@@ -34,6 +35,9 @@ function SearchTabWrapper:RunInitialSetup(tradingHouseWrapper)
 			self:Search()
 		end
 	end)
+
+	ZO_CreateStringId("SI_BINDING_NAME_AGS_SUPPRESS_LOCAL_FILTERS", "Suppress Local Filters")
+	CreateDefaultActionBind("AGS_SUPPRESS_LOCAL_FILTERS", KEY_CTRL)
 end
 
 function SearchTabWrapper:UpdateFilterAnchors()
@@ -625,17 +629,10 @@ function SearchTabWrapper:OnOpen(tradingHouseWrapper)
 	tradingHouse:OnSearchCooldownUpdate(GetTradingHouseCooldownRemaining())
 	AwesomeGuildStore:FireOnOpenSearchTabCallbacks(tradingHouseWrapper)
 	self:RelocateButtons(tradingHouse)
-
-	self.wasControlKeyDown = IsControlKeyDown() -- TODO use action layer
-	EVENT_MANAGER:RegisterForUpdate("AwesomeGuildStoreSearchTabWrapper", 100, function()
-		if(self.wasControlKeyDown ~= IsControlKeyDown()) then
-			self.wasControlKeyDown = IsControlKeyDown()
-			RebuildSearchResultsPage()
-		end
-	end)
+	PushActionLayerByName(ACTION_LAYER_NAME)
 end
 
 function SearchTabWrapper:OnClose(tradingHouseWrapper)
-	EVENT_MANAGER:UnregisterForUpdate("AwesomeGuildStoreSearchTabWrapper")
+	RemoveActionLayerByName(ACTION_LAYER_NAME)
 	AwesomeGuildStore:FireOnCloseSearchTabCallbacks(tradingHouseWrapper)
 end

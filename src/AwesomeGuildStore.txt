@@ -74,3 +74,4 @@ wrappers/KeybindStripWrapper.lua
 wrappers/ActivityLogWrapper.lua
 SalesCategorySelector.lua
 AwesomeGuildStore.xml
+Bindings.xml
