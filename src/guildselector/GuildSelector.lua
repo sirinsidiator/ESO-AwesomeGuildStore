@@ -67,6 +67,8 @@ function GuildSelector:InitializeComboBox(comboBoxControl, comboBox)
 			until not sellMode or newEntry.canSell or newEntry == selectedEntry
 
 			if(newEntry ~= selectedEntry) then
+				local focused = WINDOW_MANAGER:GetFocusControl()
+				if(focused) then focused:LoseFocus() end
 				self:OnGuildChanged(comboBox, newEntry.name, newEntry)
 			end
 		end
