@@ -547,12 +547,12 @@ function SearchLibrary:InitializeFavorites()
 	headers:SetDimensions(180, 32)
 
 	local nameHeader = CreateControlFromVirtual("$(parent)Name", headers, "ZO_SortHeader")
-	ZO_SortHeader_Initialize(nameHeader, "Name", "name", ZO_SORT_ORDER_UP, TEXT_ALIGN_LEFT, "ZoFontGameLargeBold")
+	ZO_SortHeader_Initialize(nameHeader, L["SEARCH_LIBRARY_SORT_HEADER_NAME"], "name", ZO_SORT_ORDER_UP, TEXT_ALIGN_LEFT, "ZoFontGameLargeBold")
 	nameHeader:SetAnchor(TOPLEFT, nil, TOPLEFT, 0, 0)
 	nameHeader:SetDimensions(80, 32)
 
 	local searchCountHeader = CreateControlFromVirtual("$(parent)SearchCount", headers, "ZO_SortHeader")
-	ZO_SortHeader_Initialize(searchCountHeader, "Searches", "searches", ZO_SORT_ORDER_UP, TEXT_ALIGN_LEFT, "ZoFontGameLargeBold")
+	ZO_SortHeader_Initialize(searchCountHeader, L["SEARCH_LIBRARY_SORT_HEADER_SEARCHES"], "searches", ZO_SORT_ORDER_UP, TEXT_ALIGN_LEFT, "ZoFontGameLargeBold")
 	searchCountHeader:SetAnchor(TOPLEFT, nameHeader, TOPRIGHT, 0, 0)
 	searchCountHeader:SetDimensions(80, 32)
 

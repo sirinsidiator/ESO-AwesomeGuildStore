@@ -190,8 +190,8 @@ local localization = {
 		SUBFILTER_CRAFTING_IS_CRAFTED = "Crafted item",
 		SUBFILTER_CRAFTING_IS_LOOT = "Looted item",
 
-		SUBFILTER_RECIPE_IMPROVEMENT_LABEL = "Recipe Improvement", -- TODO
-		SUBFILTER_RECIPE_IMPROVEMENT_TOOLTIP = "Recipe Improvement <<1>> <<2>>", -- TODO
+		SUBFILTER_RECIPE_IMPROVEMENT_LABEL = "Recipe Improvement", -- TODO ru
+		SUBFILTER_RECIPE_IMPROVEMENT_TOOLTIP = "Recipe Improvement <<1>> <<2>>", -- TODO ru
 
 		NORMAL_QUALITY_LABEL = GetString(SI_TRADING_HOUSE_BROWSE_QUALITY_NORMAL),
 		MAGIC_QUALITY_LABEL = GetString(SI_TRADING_HOUSE_BROWSE_QUALITY_MAGIC),
@@ -239,6 +239,8 @@ local localization = {
 		SEARCH_LIBRARY_MENU_LOCK_WINDOW = "Lock Window",
 		SEARCH_LIBRARY_MENU_RESET_WINDOW = "Reset Window",
 		SEARCH_LIBRARY_MENU_CLOSE_WINDOW = "Close Window",
+		SEARCH_LIBRARY_SORT_HEADER_NAME = "Name", -- TODO ru
+		SEARCH_LIBRARY_SORT_HEADER_SEARCHES = "Searches", -- TODO ru
 
 		TOOLTIP_LESS_THAN = "under ",
 		TOOLTIP_GREATER_THAN = "over ",
@@ -286,8 +288,8 @@ local localization = {
 		SETTINGS_DISABLE_CUSTOM_SELL_TAB_FILTER_DESCRIPTION = "Shows the ingame inventory filter instead of AGS own version when deactivated.",
 		SETTINGS_SKIP_GUILD_KIOSK_DIALOG_LABEL = "Skip guild kiosk dialog",
 		SETTINGS_SKIP_GUILD_KIOSK_DIALOG_DESCRIPTION = "When activated, the dialog at guild traders (not at banks) is skipped and the store opened automatically. This can be suppressed by holding the shift key when talking to a trader.",
-		SETTINGS_SKIP_EMPTY_PAGES_LABEL = "Skip empty result pages", -- TODO de,fr,ru
-		SETTINGS_SKIP_EMPTY_PAGES_DESCRIPTION = "When activated, pages that show no results due to local filters will automatically trigger a search for the next page. This only works while the auto search feature is active and can be suppressed by holding the ctrl key before the results are returned.", -- TODO de,fr,ru
+		SETTINGS_SKIP_EMPTY_PAGES_LABEL = "Skip empty result pages", -- TODO ru
+		SETTINGS_SKIP_EMPTY_PAGES_DESCRIPTION = "When activated, pages that show no results due to local filters will automatically trigger a search for the next page. This can be suppressed by holding the ctrl key before the results are returned.", -- TODO ru
 
 		INVALID_STATE = "Invalid Store State.\nThis is a bug in the game and should be fixed soon.",
 
@@ -334,6 +336,9 @@ local localization = {
 		SUBFILTER_CRAFTING_IS_CRAFTED = "Hergestellter Gegenstand",
 		SUBFILTER_CRAFTING_IS_LOOT = "Erbeuteter Gegenstand",
 
+		SUBFILTER_RECIPE_IMPROVEMENT_LABEL = "Rezeptverbesserung",
+		SUBFILTER_RECIPE_IMPROVEMENT_TOOLTIP = "Rezeptverbesserung <<1>> <<2>>",
+
 		AUTO_SEARCH_TOGGLE_LABEL = "Automatische Suche umschalten",
 		SEARCH_PREVIOUS_PAGE_LABEL = "Vorherige Seite anzeigen",
 		SEARCH_SHOW_MORE_LABEL = "Mehr Ergebnisse anzeigen",
@@ -367,6 +372,8 @@ local localization = {
 		SEARCH_LIBRARY_MENU_LOCK_WINDOW = "Fenster sperren",
 		SEARCH_LIBRARY_MENU_RESET_WINDOW = "Fenster zurücksetzen",
 		SEARCH_LIBRARY_MENU_CLOSE_WINDOW = "Fenster schließen",
+		SEARCH_LIBRARY_SORT_HEADER_NAME = "Name",
+		SEARCH_LIBRARY_SORT_HEADER_SEARCHES = "Suchen",
 
 		TOOLTIP_LESS_THAN = "unter ",
 		TOOLTIP_GREATER_THAN = "über ",
@@ -409,6 +416,8 @@ local localization = {
 		SETTINGS_DISABLE_CUSTOM_SELL_TAB_FILTER_DESCRIPTION = "Zeigt die Inventarfilter der normalen Benutzeroberfläche anstelle der AGS-eigenen Version",
 		SETTINGS_SKIP_GUILD_KIOSK_DIALOG_LABEL = "Gildenkioskdialog überspringen",
 		SETTINGS_SKIP_GUILD_KIOSK_DIALOG_DESCRIPTION = "Der Dialog bei Gildenläden (nicht in der Bank) wird übersprungen und der Laden automatisch geöffnet, wenn diese Option aktiv ist. Dies kann unterdrückt werden, indem die Shift Taste gedrückt gehalten wird während man den Händler anspricht",
+		SETTINGS_SKIP_EMPTY_PAGES_LABEL = "Leere Seiten überspringen",
+		SETTINGS_SKIP_EMPTY_PAGES_DESCRIPTION = "Wenn aktiviert, wechseln leere Seiten, die keine Ergebnisse aufgrund der lokalen Filter anzeigen, automatisch zur nächsten Seite. Durch drücken der Strg Taste bevor die Ergebnisse aufscheinen, kann diese Verhalten unterdrückt werden.",
 
 		INVALID_STATE = "Ungültiger Händlerzustand.\nDas ist ein Fehler im Spiel und sollte bald behoben werden.",
 
@@ -455,6 +464,9 @@ local localization = {
 		SUBFILTER_CRAFTING_IS_CRAFTED = "Objet fabriqué",
 		SUBFILTER_CRAFTING_IS_LOOT = "Objet looté",
 
+		SUBFILTER_RECIPE_IMPROVEMENT_LABEL = "Amélioration de recette",
+		SUBFILTER_RECIPE_IMPROVEMENT_TOOLTIP = "Amélioration de recette <<1>> <<2>>",
+
 		AUTO_SEARCH_TOGGLE_LABEL = "Afficher/Masquer la recherche automatique",
 		SEARCH_PREVIOUS_PAGE_LABEL = "Afficher la page précédente",
 		SEARCH_SHOW_MORE_LABEL = "Afficher les résultats suivants",
@@ -488,6 +500,8 @@ local localization = {
 		SEARCH_LIBRARY_MENU_LOCK_WINDOW = "Verrouiller la fenêtre",
 		SEARCH_LIBRARY_MENU_RESET_WINDOW = "Réinitialiser la fenêtre",
 		SEARCH_LIBRARY_MENU_CLOSE_WINDOW = "Fermer la fenêtre",
+		SEARCH_LIBRARY_SORT_HEADER_NAME = "Nom",
+		SEARCH_LIBRARY_SORT_HEADER_SEARCHES = "Recherches",
 
 		TOOLTIP_LESS_THAN = "moins de ",
 		TOOLTIP_GREATER_THAN = "plus que ",
@@ -530,6 +544,8 @@ local localization = {
 		SETTINGS_DISABLE_CUSTOM_SELL_TAB_FILTER_DESCRIPTION = "Affiche les filtres de l'inventaire à la place de ceux d'AGS dans l'onglet de mise en vente",
 		SETTINGS_SKIP_GUILD_KIOSK_DIALOG_LABEL = "Afficher directement la boutique",
 		SETTINGS_SKIP_GUILD_KIOSK_DIALOG_DESCRIPTION = "Lorsque vous dialoguerez avec l'embauché du marchand de guilde, celui-vous affichera directement sa boutique. Cette fonctionnalité peut être désactivée en maintenant le bouton Shift avant d'initier la conversation.",
+		SETTINGS_SKIP_EMPTY_PAGES_LABEL = "Passer les pages de résultat vides",
+		SETTINGS_SKIP_EMPTY_PAGES_DESCRIPTION = "Lors qu’activé, les pages n'affichant aucun résultat en raison des filtres locaux déclencheront au besoin une recherche des résultats suivants. Cette fonctionnalité peut être désactivée en maintenant la touche Ctrl enfoncée avant que les résultats ne soient affichés à l'écran.",
 
 		INVALID_STATE = "Boutique de guilde indisponible.\nCeci est un bug du jeu et devrait être résolu bientôt.",
 
