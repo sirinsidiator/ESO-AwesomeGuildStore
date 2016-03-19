@@ -22,7 +22,7 @@
 			</Controls>
 		</Control>
 
-		<TopLevelControl name="AwesomeGuildStoreSearchLibrary" mouseEnabled="true" hidden="true">
+		<TopLevelControl name="AwesomeGuildStoreSearchLibrary" mouseEnabled="true" hidden="true" clampedToScreen="true">
 			<DimensionConstraints minX="400" minY="150" />
 			<Controls>
 				<Label name="$(parent)HistoryLabel" font="ZoFontWinH3" wrapMode="ELLIPSIS">
