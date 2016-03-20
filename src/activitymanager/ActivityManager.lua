@@ -148,11 +148,16 @@ function ActivityManager:RequestListings()
 end
 
 function ActivityManager:ExecuteSearch(page)
-	if(self:QueueActivity(ExecuteSearchOperation:New(self.tradingHouseWrapper, page))) then
+	local activity = ExecuteSearchOperation:New(self.tradingHouseWrapper, page)
+	if(self:QueueActivity(activity)) then
 		--d("ExecuteSearch queued")
 		self:ExecuteNext()
 	else
-	--d("ExecuteSearch already in queue")
+		local oldActivity = self:GetActivity(activity:GetKey()) or self.currentActivity
+		if(oldActivity) then
+			oldActivity.page = activity.page -- TODO just a hack, needs some proper code
+		end
+		--d("ExecuteSearch already in queue")
 	end
 end
 
