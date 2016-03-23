@@ -115,7 +115,12 @@ end
 
 function ActivityManager:RemoveActivity(activity)
 	self.lookup[activity:GetKey()] = nil
-	table.remove(self.queue, 1)
+	for i = 1, #self.queue do
+		if(self.queue[i]:GetKey() == activity:GetKey()) then -- TODO: we actually want to compare the object and not only the key. it's just a workaround to stop skipping empty pages
+			table.remove(self.queue, i)
+			break
+		end
+	end
 end
 
 function ActivityManager:GetActivity(key)

@@ -92,6 +92,6 @@ AwesomeGuildStore:RegisterOnInitializeFiltersCallback(function(...) CALLBACK_MAN
 
 OnAddonLoaded(function()
 	local saveData = AwesomeGuildStore.LoadSettings()
-	local tradingHouseWrapper = AwesomeGuildStore.TradingHouseWrapper:New(saveData)
+	AwesomeGuildStore.main = AwesomeGuildStore.TradingHouseWrapper:New(saveData)
 	AwesomeGuildStore.InitializeAugmentedMails(saveData)
 end)

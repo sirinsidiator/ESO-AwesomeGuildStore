@@ -1,5 +1,6 @@
 local L = AwesomeGuildStore.Localization
 local ToggleButton = AwesomeGuildStore.ToggleButton
+local ExecuteSearchOperation = AwesomeGuildStore.ExecuteSearchOperation
 
 local SearchTabWrapper = ZO_Object:Subclass()
 AwesomeGuildStore.SearchTabWrapper = SearchTabWrapper
@@ -167,7 +168,7 @@ function SearchTabWrapper:InitializePageFiltering(tradingHouseWrapper)
 	end
 
 	local saveData = self.saveData
-	local function SearchNextPage() self:SearchNextPage() end
+	local searchTabWrapper = self
 	tradingHouseWrapper:Wrap("RebuildSearchResultsPage", function(originalRebuildSearchResultsPage, self, ...)
 		local isFiltering = BeforeRebuildSearchResultsPage(tradingHouseWrapper)
 		if(isFiltering and not IsControlKeyDown()) then
@@ -186,8 +187,8 @@ function SearchTabWrapper:InitializePageFiltering(tradingHouseWrapper)
 			self.m_noItemsLabel:SetHidden(shouldHide)
 			self.m_searchAllowed = true -- don't disable search when we have inpage filters active
 
-			if(self.isReceivingResults and filteredItemCount == 0 and saveData.skipEmptyPages and self.m_search:HasNextPage()) then
-				SearchNextPage()
+			if(self.isReceivingResults and searchTabWrapper.isOpen and filteredItemCount == 0 and saveData.skipEmptyPages and self.m_search:HasNextPage()) then
+				searchTabWrapper:SearchNextPage()
 			end
 		end
 	end)
@@ -630,9 +631,13 @@ function SearchTabWrapper:OnOpen(tradingHouseWrapper)
 	AwesomeGuildStore:FireOnOpenSearchTabCallbacks(tradingHouseWrapper)
 	self:RelocateButtons(tradingHouse)
 	PushActionLayerByName(ACTION_LAYER_NAME)
+	self.isOpen = true
 end
 
 function SearchTabWrapper:OnClose(tradingHouseWrapper)
+	self.isOpen = false
+	local activity = ExecuteSearchOperation:New(self.tradingHouseWrapper) -- TODO not the best way to go about it, but it will do for now
+	self.tradingHouseWrapper.activityManager:RemoveActivity(activity)
 	RemoveActionLayerByName(ACTION_LAYER_NAME)
 	AwesomeGuildStore:FireOnCloseSearchTabCallbacks(tradingHouseWrapper)
 end
