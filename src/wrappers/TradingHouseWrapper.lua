@@ -48,6 +48,7 @@ function TradingHouseWrapper:Initialize(saveData)
 		end
 	end)
 
+	local ranInitialSetup = false
 	self:Wrap("RunInitialSetup", function(originalRunInitialSetup, ...)
 		local tradingHouseManager = originalRunInitialSetup(...)
 		tradingHouse.m_numItemsOnPage = 0
@@ -61,6 +62,7 @@ function TradingHouseWrapper:Initialize(saveData)
 		self:InitializeKeybindStripWrapper()
 		self:InitializeSearchCooldown()
 		AwesomeGuildStore:FireAfterInitialSetupCallbacks(self)
+		ranInitialSetup = true
 		return tradingHouseManager
 	end)
 
@@ -74,6 +76,7 @@ function TradingHouseWrapper:Initialize(saveData)
 
 	local currentTab = searchTab
 	self:Wrap("HandleTabSwitch", function(originalHandleTabSwitch, tradingHouse, tabData)
+		if(not ranInitialSetup) then return end
 		if currentTab then
 			currentTab:OnClose(self)
 		end
@@ -85,6 +88,7 @@ function TradingHouseWrapper:Initialize(saveData)
 	end)
 
 	RegisterForEvent(EVENT_CLOSE_TRADING_HOUSE, function()
+		if(not ranInitialSetup) then return end
 		self:HideLoadingIndicator()
 		self:HideLoadingOverlay()
 		if currentTab then
