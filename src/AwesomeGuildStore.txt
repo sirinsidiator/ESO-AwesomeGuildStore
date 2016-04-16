@@ -61,6 +61,7 @@ history/MailBox.lua
 guildselector/HiredTraderTooltip.lua
 guildselector/GuildSelector.lua
 guildselector/GuildSelector.xml
+paging/Paging.lua
 activityManager/ActivityBase.lua
 activityManager/CancelSaleOperation.lua
 activityManager/RequestListingsOperation.lua

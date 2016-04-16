@@ -291,6 +291,8 @@ local localization = {
 		SETTINGS_SKIP_EMPTY_PAGES_LABEL = "Skip empty result pages", -- TODO ru
 		SETTINGS_SKIP_EMPTY_PAGES_DESCRIPTION = "When activated, pages that show no results due to local filters will automatically trigger a search for the next page. This can be suppressed by holding the ctrl key before the results are returned.", -- TODO ru
 
+		CONTROLS_SUPPRESS_LOCAL_FILTERS = "Suppress Local Filters", -- TODO ru
+
 		INVALID_STATE = "Invalid Store State.\nThis is a bug in the game and should be fixed soon.",
 
 		LOCAL_FILTER_EXPLANATION_TOOLTIP = "This filter is local and only applies to the currently visible page",
@@ -419,6 +421,8 @@ local localization = {
 		SETTINGS_SKIP_EMPTY_PAGES_LABEL = "Leere Seiten überspringen",
 		SETTINGS_SKIP_EMPTY_PAGES_DESCRIPTION = "Wenn aktiviert, wechseln leere Seiten, die keine Ergebnisse aufgrund der lokalen Filter anzeigen, automatisch zur nächsten Seite. Durch drücken der Strg Taste bevor die Ergebnisse aufscheinen, kann diese Verhalten unterdrückt werden.",
 
+		CONTROLS_SUPPRESS_LOCAL_FILTERS = "Lokale Filter unterdrücken",
+
 		INVALID_STATE = "Ungültiger Händlerzustand.\nDas ist ein Fehler im Spiel und sollte bald behoben werden.",
 
 		LOCAL_FILTER_EXPLANATION_TOOLTIP = "Dieser Filter ist lokal und wirkt nur auf der derzeit sichtbaren Seite",
@@ -546,6 +550,8 @@ local localization = {
 		SETTINGS_SKIP_GUILD_KIOSK_DIALOG_DESCRIPTION = "Lorsque vous dialoguerez avec l'embauché du marchand de guilde, celui-vous affichera directement sa boutique. Cette fonctionnalité peut être désactivée en maintenant le bouton Shift avant d'initier la conversation.",
 		SETTINGS_SKIP_EMPTY_PAGES_LABEL = "Passer les pages de résultat vides",
 		SETTINGS_SKIP_EMPTY_PAGES_DESCRIPTION = "Lors qu’activé, les pages n'affichant aucun résultat en raison des filtres locaux déclencheront au besoin une recherche des résultats suivants. Cette fonctionnalité peut être désactivée en maintenant la touche Ctrl enfoncée avant que les résultats ne soient affichés à l'écran.",
+
+		CONTROLS_SUPPRESS_LOCAL_FILTERS = "Désactiver les filtres locaux temporairement",
 
 		INVALID_STATE = "Boutique de guilde indisponible.\nCeci est un bug du jeu et devrait être résolu bientôt.",
 

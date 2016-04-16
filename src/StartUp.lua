@@ -94,4 +94,8 @@ OnAddonLoaded(function()
 	local saveData = AwesomeGuildStore.LoadSettings()
 	AwesomeGuildStore.main = AwesomeGuildStore.TradingHouseWrapper:New(saveData)
 	AwesomeGuildStore.InitializeAugmentedMails(saveData)
+
+	local L = AwesomeGuildStore.Localization
+	ZO_CreateStringId("SI_BINDING_NAME_AGS_SUPPRESS_LOCAL_FILTERS", L["CONTROLS_SUPPRESS_LOCAL_FILTERS"])
+	CreateDefaultActionBind("AGS_SUPPRESS_LOCAL_FILTERS", KEY_CTRL)
 end)

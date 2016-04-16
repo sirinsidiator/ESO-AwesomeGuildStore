@@ -5,7 +5,7 @@ local ExecuteSearchOperation = AwesomeGuildStore.ExecuteSearchOperation
 local SearchTabWrapper = ZO_Object:Subclass()
 AwesomeGuildStore.SearchTabWrapper = SearchTabWrapper
 
-local ACTION_LAYER_NAME = "AwesomeGuildStoreSearchTab"
+local ACTION_LAYER_NAME = "AwesomeGuildStore"
 local FILTER_PANEL_WIDTH = 220
 
 function SearchTabWrapper:New(saveData)
@@ -24,6 +24,7 @@ function SearchTabWrapper:RunInitialSetup(tradingHouseWrapper)
 	self:InitializeNavigation(tradingHouseWrapper)
 	self:InitializeUnitPriceDisplay(tradingHouseWrapper)
 	self:InitializePurchaseNotification(tradingHouseWrapper)
+	self:InitializeKeybinds(tradingHouseWrapper)
 	zo_callLater(function()
 		self:RefreshFilterDimensions() -- call this after the layout has been updated
 		self.categoryFilter:UpdateSubfilterVisibility() -- fix inpage filters not working on first visit
@@ -36,9 +37,6 @@ function SearchTabWrapper:RunInitialSetup(tradingHouseWrapper)
 			self:Search()
 		end
 	end)
-
-	ZO_CreateStringId("SI_BINDING_NAME_AGS_SUPPRESS_LOCAL_FILTERS", "Suppress Local Filters")
-	CreateDefaultActionBind("AGS_SUPPRESS_LOCAL_FILTERS", KEY_CTRL)
 end
 
 function SearchTabWrapper:UpdateFilterAnchors()
@@ -171,7 +169,7 @@ function SearchTabWrapper:InitializePageFiltering(tradingHouseWrapper)
 	local searchTabWrapper = self
 	tradingHouseWrapper:Wrap("RebuildSearchResultsPage", function(originalRebuildSearchResultsPage, self, ...)
 		local isFiltering = BeforeRebuildSearchResultsPage(tradingHouseWrapper)
-		if(isFiltering and not IsControlKeyDown()) then
+		if(isFiltering and not searchTabWrapper.suppressLocalFilters) then
 			itemCount, filteredItemCount = 0, 0
 			GetTradingHouseSearchResultItemInfo = FakeGetTradingHouseSearchResultItemInfo
 		end
@@ -179,7 +177,7 @@ function SearchTabWrapper:InitializePageFiltering(tradingHouseWrapper)
 		originalRebuildSearchResultsPage(self, ...)
 
 		AfterRebuildSearchResultsPage(tradingHouseWrapper)
-		if(isFiltering and not IsControlKeyDown()) then
+		if(isFiltering and not searchTabWrapper.suppressLocalFilters) then
 			GetTradingHouseSearchResultItemInfo = OriginalGetTradingHouseSearchResultItemInfo
 			self.m_resultCount:SetText(zo_strformat(L["TEXT_FILTER_ITEMCOUNT_TEMPLATE"], itemCount, filteredItemCount))
 
@@ -413,7 +411,6 @@ function SearchTabWrapper:InitializeNavigation(tradingHouseWrapper)
 	local tradingHouse = tradingHouseWrapper.tradingHouse
 	local search = tradingHouse.m_search
 
-
 	local showPreviousPageEntry =  {
 		label = L["SEARCH_PREVIOUS_PAGE_LABEL"],
 		callback = function() self:SearchPreviousPage() end,
@@ -500,29 +497,13 @@ function SearchTabWrapper:InitializeNavigation(tradingHouseWrapper)
 		end
 	end)
 
-	local navBar = tradingHouse.m_nagivationBar
-	local currentPageLabel = navBar:CreateControl("AwesomeGuildStoreCurrentPageLabel", CT_LABEL)
-	currentPageLabel:SetAnchor(TOP, navBar, TOPCENTER, 0, 5)
-	currentPageLabel:SetFont("ZoFontGameLarge")
-	currentPageLabel:SetColor(ZO_DEFAULT_ENABLED_COLOR:UnpackRGBA())
-
-	local function UpdatePageLabel(page, hasNextOrPrevious)
-		page = tonumber(page) + 1
-		currentPageLabel:SetText(page)
-		currentPageLabel:SetHidden(page <= 0 or not hasNextOrPrevious)
-	end
+	self.paging = AwesomeGuildStore.Paging:New(tradingHouseWrapper)
 
 	tradingHouseWrapper:Wrap("UpdatePagingButtons", function(originalUpdatePagingButtons, self)
-		UpdatePageLabel(search.m_page, search:HasNextPage() or search:HasPreviousPage())
 		if(showPreviousPageEntry.rowControl ~= nil) then showPreviousPageEntry.updateState(showPreviousPageEntry.rowControl) end
 		if(showNextPageEntry.rowControl ~= nil) then showNextPageEntry.updateState(showNextPageEntry.rowControl) end
 		originalUpdatePagingButtons(self)
-		self.m_previousPage:SetEnabled(true)
-		self.m_nextPage:SetEnabled(true)
 	end)
-
-	tradingHouse.m_previousPage:SetHandler("OnClicked", function() self:SearchPreviousPage() end)
-	tradingHouse.m_nextPage:SetHandler("OnClicked", function() self:SearchNextPage() end)
 end
 
 function SearchTabWrapper:InitializeUnitPriceDisplay(tradingHouseWrapper)
@@ -591,8 +572,19 @@ function SearchTabWrapper:InitializePurchaseNotification(tradingHouseWrapper)
 	end)
 end
 
-function SearchTabWrapper:Search()
-	self.tradingHouseWrapper.activityManager:ExecuteSearch()
+function SearchTabWrapper:InitializeKeybinds(tradingHouseWrapper)
+	function AwesomeGuildStore.SuppressLocalFilters(pressed)
+		self.suppressLocalFilters = pressed
+		TRADING_HOUSE:RebuildSearchResultsPage()
+	end
+end
+
+function SearchTabWrapper:Search(page)
+	if(page) then
+		self.tradingHouseWrapper.activityManager:ExecuteSearchPage(page)
+	else
+		self.tradingHouseWrapper.activityManager:ExecuteSearch()
+	end
 end
 
 function SearchTabWrapper:SearchPreviousPage()
