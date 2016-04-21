@@ -301,6 +301,7 @@ function SearchTabWrapper:AttachButton(button)
 	if(self.attachedButtons[button:GetName()]) then return end
 
 	self.attachedButtons[button:GetName()] = button
+	local hidden = button:IsControlHidden()
 	button:SetParent(self.buttonArea)
 
 	-- collapse buttons when they are hidden
@@ -316,7 +317,7 @@ function SearchTabWrapper:AttachButton(button)
 		button:__agsSetHidden(hidden)
 		self:UpdateButtonAnchors()
 	end
-	if(button:IsHidden() and not button:GetParent():IsHidden()) then button:SetHeight(0) end
+	if(hidden) then button:SetHeight(0) end
 
 	if(not button.__agsIndex) then
 		button.__agsIndex = self.nextButtonIndex
@@ -632,10 +633,11 @@ function SearchTabWrapper:RelocateButtons(tradingHouse)
 	local buttonArea = self.buttonArea
 
 	local leftPane = tradingHouse.m_leftPane
+	local buttonsToAdd = {}
 	for i = 1, leftPane:GetNumChildren() do
 		local child = leftPane:GetChild(i)
 		if(child and child:GetType() == CT_BUTTON) then
-			self:AttachButton(child)
+			buttonsToAdd[#buttonsToAdd + 1] = child
 		end
 	end
 
@@ -643,8 +645,12 @@ function SearchTabWrapper:RelocateButtons(tradingHouse)
 	for i = 1, common:GetNumChildren() do
 		local child = common:GetChild(i)
 		if(child and child:GetType() == CT_BUTTON) then
-			self:AttachButton(child)
+			buttonsToAdd[#buttonsToAdd + 1] = child
 		end
+	end
+
+	for i = 1, #buttonsToAdd do
+		self:AttachButton(buttonsToAdd[i])
 	end
 end
 
