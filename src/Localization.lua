@@ -190,8 +190,8 @@ local localization = {
 		SUBFILTER_CRAFTING_IS_CRAFTED = "Crafted item",
 		SUBFILTER_CRAFTING_IS_LOOT = "Looted item",
 
-		SUBFILTER_RECIPE_IMPROVEMENT_LABEL = "Recipe Improvement", -- TODO ru
-		SUBFILTER_RECIPE_IMPROVEMENT_TOOLTIP = "Recipe Improvement <<1>> <<2>>", -- TODO ru
+		SUBFILTER_RECIPE_IMPROVEMENT_LABEL = "Recipe Improvement",
+		SUBFILTER_RECIPE_IMPROVEMENT_TOOLTIP = "Recipe Improvement <<1>> <<2>>",
 
 		NORMAL_QUALITY_LABEL = GetString(SI_TRADING_HOUSE_BROWSE_QUALITY_NORMAL),
 		MAGIC_QUALITY_LABEL = GetString(SI_TRADING_HOUSE_BROWSE_QUALITY_MAGIC),
@@ -239,8 +239,8 @@ local localization = {
 		SEARCH_LIBRARY_MENU_LOCK_WINDOW = "Lock Window",
 		SEARCH_LIBRARY_MENU_RESET_WINDOW = "Reset Window",
 		SEARCH_LIBRARY_MENU_CLOSE_WINDOW = "Close Window",
-		SEARCH_LIBRARY_SORT_HEADER_NAME = "Name", -- TODO ru
-		SEARCH_LIBRARY_SORT_HEADER_SEARCHES = "Searches", -- TODO ru
+		SEARCH_LIBRARY_SORT_HEADER_NAME = "Name",
+		SEARCH_LIBRARY_SORT_HEADER_SEARCHES = "Searches",
 
 		TOOLTIP_LESS_THAN = "under ",
 		TOOLTIP_GREATER_THAN = "over ",
@@ -288,10 +288,10 @@ local localization = {
 		SETTINGS_DISABLE_CUSTOM_SELL_TAB_FILTER_DESCRIPTION = "Shows the ingame inventory filter instead of AGS own version when deactivated.",
 		SETTINGS_SKIP_GUILD_KIOSK_DIALOG_LABEL = "Skip guild kiosk dialog",
 		SETTINGS_SKIP_GUILD_KIOSK_DIALOG_DESCRIPTION = "When activated, the dialog at guild traders (not at banks) is skipped and the store opened automatically. This can be suppressed by holding the shift key when talking to a trader.",
-		SETTINGS_SKIP_EMPTY_PAGES_LABEL = "Skip empty result pages", -- TODO ru
+		SETTINGS_SKIP_EMPTY_PAGES_LABEL = "Skip empty result pages",
 		SETTINGS_SKIP_EMPTY_PAGES_DESCRIPTION = "When activated, pages that show no results due to local filters will automatically trigger a search for the next page. This can be suppressed by holding the ctrl key before the results are returned.", -- TODO ru
 
-		CONTROLS_SUPPRESS_LOCAL_FILTERS = "Suppress Local Filters", -- TODO ru
+		CONTROLS_SUPPRESS_LOCAL_FILTERS = "Suppress Local Filters",
 
 		INVALID_STATE = "Invalid Store State.\nThis is a bug in the game and should be fixed soon.",
 
@@ -600,6 +600,9 @@ local localization = {
 		SUBFILTER_CRAFTING_IS_CRAFTED = "Cäeìaîîÿé ïpeäíeò",
 		SUBFILTER_CRAFTING_IS_LOOT = "Îaéäeîîÿé ïpeäíeò",
 
+		SUBFILTER_RECIPE_IMPROVEMENT_LABEL = "Ópoáeîö peœeïòoá",
+		SUBFILTER_RECIPE_IMPROVEMENT_TOOLTIP = "Peœeïò äìü ópoáîeé <<1>> <<2>>",
+
 		AUTO_SEARCH_TOGGLE_LABEL = "Áêìôùèòö aáòoïoècê",
 		SEARCH_PREVIOUS_PAGE_LABEL = "Ïoêaçaòö ïpeä. còp.",
 		SEARCH_SHOW_MORE_LABEL = "Ïoêaçaòö àoìöúe peçóìöòaòoá",
@@ -633,6 +636,8 @@ local localization = {
 		SEARCH_LIBRARY_MENU_LOCK_WINDOW = "Çaàìoêèpoáaòö oêîo",
 		SEARCH_LIBRARY_MENU_RESET_WINDOW = "Càpocèòö ïoìoæeîèe oêîa",
 		SEARCH_LIBRARY_MENU_CLOSE_WINDOW = "Çaêpÿòö oêîo",
+		SEARCH_LIBRARY_SORT_HEADER_NAME = "Îaçáaîèe",
+		SEARCH_LIBRARY_SORT_HEADER_SEARCHES = "Ïoècêè",
 
 		TOOLTIP_LESS_THAN = "íeîöúe ",
 		TOOLTIP_GREATER_THAN = "àoìöúe ",
@@ -676,6 +681,10 @@ local localization = {
 		SETTINGS_DISABLE_CUSTOM_SELL_TAB_FILTER_DESCRIPTION = "Ïoêaçÿáaeò còaîäapòîÿe èâpoáÿe ñèìöòpÿ èîáeîòapü áíecòo ñèìöòpoá aääoîa AGS, ecìè áÿêìôùeîo.",
 		SETTINGS_SKIP_GUILD_KIOSK_DIALOG_LABEL = "Ïpoïócòèòö äèaìoâ êèocêa",
 		SETTINGS_SKIP_GUILD_KIOSK_DIALOG_DESCRIPTION = "Êoâäa áêìôùeîo, äèaìoâ âèìöäeécêoâo òopâoáœa (îe àaîêèpa) ïpoïócêaeòcü è íaâaçèî oòêpÿáaeòcü cpaçó aáòoíaòèùecêè. Áÿ cíoæeòe îaæaòö è óäepæèáaòö Shift ïpè îaùaìe äèaìoâa c âèìöäeécêèí òopâoáœeí, ùòoàÿ óáèäeòö còaîäapòîÿé äèaìoâ ïpè áêìôùeîèè ëòoé ñóîêœèè.",
+		SETTINGS_SKIP_EMPTY_PAGES_LABEL = "Ïpoïócêaòö ïócòÿe còpaîèœÿ",
+		SETTINGS_SKIP_EMPTY_PAGES_DESCRIPTION = "Êoâäa áêìôùeîo, còpaîèœÿ, îa êoòopÿx îeò peçóìöòaòoá ïoècêa, àóäóò aáòoíaòèùecêè ïpoïócêaòöcü è àóäeò coáepúeî ïepexoä ê cìeäóôûeé còpaîèœe. Ëòó îacòpoéêó íoæîo ïpoèâîopèpoáaòö, ecìè îaæaòö êîoïêó ctrl ïepeä áÿáoäoí peçóìöòaòoá.",
+
+		CONTROLS_SUPPRESS_LOCAL_FILTERS = "Èâîopèpoáaòö ñèìöòpÿ",
 
 		INVALID_STATE = "Oúèàêa.\nËòo àaâ èâpÿ è oî äoìæeî àÿòö ïoïpaáìeî á àìèæaéúee ápeíü.",
 
