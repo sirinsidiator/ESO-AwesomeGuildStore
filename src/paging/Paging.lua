@@ -31,7 +31,6 @@ function Paging:Initialize(tradingHouseWrapper)
 	inputBox:SetMaxInputChars(3)
 	inputBox:SetTextType(TEXT_TYPE_NUMERIC_UNSIGNED_INT)
 	inputBox:SetText(3)
---	inputBox:SetHandler("OnFocusLost", function() inputBox:SetText(self.currentPage) end)
 	inputBox:SetHandler("OnEscape", function() inputBox:SetText(self.currentPage) end)
 	inputBox:SetHandler("OnEnter", function() 
 		searchTab:Search(tonumber(inputBox:GetText()) - 1) 
@@ -105,8 +104,8 @@ function Paging:Initialize(tradingHouseWrapper)
 end
 
 function Paging:Reset()
-	self.currentPage = 1
-	self.maxPage = 1
+	self.currentPage = 0
+	self.maxPage = 0
 	self.previousPageButton:SetHidden(true)
 	self.nextPageButton:SetHidden(true)
 	self:Refresh()

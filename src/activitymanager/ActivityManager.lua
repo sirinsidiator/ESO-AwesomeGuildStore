@@ -166,6 +166,11 @@ function ActivityManager:ExecuteSearch(navType, page)
 	end
 end
 
+function ActivityManager:CancelSearch()
+	local activity = ExecuteSearchOperation:New(self.tradingHouseWrapper) -- TODO: do it without creating a new operation
+	self:RemoveActivity(activity)
+end
+
 function ActivityManager:ExecuteSearchPage(page)
 	self:ExecuteSearch(ExecuteSearchOperation.JUMP_TO_PAGE, page)
 end

@@ -34,6 +34,8 @@ function SearchTabWrapper:RunInitialSetup(tradingHouseWrapper)
 	local saveData = self.saveData
 	CALLBACK_MANAGER:RegisterCallback("AwesomeGuildStore_SearchLibraryEntry_Selected", function(entry)
 		if(saveData.autoSearch) then
+			self.fromSearchLibrary = true
+			tradingHouseWrapper.tradingHouse:ClearSearchResults()
 			self:Search()
 		end
 	end)
@@ -53,6 +55,26 @@ function SearchTabWrapper:UpdateFilterAnchors()
 	end
 end
 
+local function HandleFilterChanged(self)
+	if(not self.fromSearchLibrary) then
+		self:CancelSearch()
+	end
+end
+
+local function ClearCallLater(id)
+	EVENT_MANAGER:UnregisterForUpdate("CallLaterFunction"..id)
+end
+
+local function RequestHandleFilterChanged(self)
+	if(self.fireChangeCallback) then
+		ClearCallLater(self.fireChangeCallback)
+	end
+	self.fireChangeCallback = zo_callLater(function()
+		self.handleChangeCallback = nil
+		HandleFilterChanged(self)
+	end, 10)
+end
+
 local function RebuildSearchResultsPage()
 	TRADING_HOUSE:RebuildSearchResultsPage()
 end
@@ -65,6 +87,7 @@ function SearchTabWrapper:AttachFilter(filter)
 	filter:SetWidth(FILTER_PANEL_WIDTH)
 	self:UpdateFilterAnchors()
 	filter:SetHidden(false)
+	CALLBACK_MANAGER:RegisterCallback(filter.callbackName, HandleFilterChanged, self)
 	if(filter.isLocal) then
 		CALLBACK_MANAGER:RegisterCallback(filter.callbackName, RebuildSearchResultsPage)
 	end
@@ -77,6 +100,7 @@ function SearchTabWrapper:DetachFilter(filter)
 	filter:SetParent(GuiRoot)
 	self:UpdateFilterAnchors()
 	self.attachedFilters[filter.type] = nil
+	CALLBACK_MANAGER:UnregisterCallback(filter.callbackName, HandleFilterChanged)
 	if(filter.isLocal) then
 		CALLBACK_MANAGER:UnregisterCallback(filter.callbackName, RebuildSearchResultsPage)
 	end
@@ -168,6 +192,10 @@ function SearchTabWrapper:InitializePageFiltering(tradingHouseWrapper)
 	local saveData = self.saveData
 	local searchTabWrapper = self
 	tradingHouseWrapper:Wrap("RebuildSearchResultsPage", function(originalRebuildSearchResultsPage, self, ...)
+		if(self.isReceivingResults) then
+			self.fromSearchLibrary = false
+		end
+
 		local isFiltering = BeforeRebuildSearchResultsPage(tradingHouseWrapper)
 		if(isFiltering and not searchTabWrapper.suppressLocalFilters) then
 			itemCount, filteredItemCount = 0, 0
@@ -335,6 +363,7 @@ function SearchTabWrapper:InitializeButtons(tradingHouseWrapper)
 		tradingHouse.ClearSearchResults = function() end
 		tradingHouse:ResetAllSearchData(true)
 		tradingHouse.ClearSearchResults = originalClearSearchResults
+		RequestHandleFilterChanged(self)
 	end
 
 	tradingHouseWrapper:PreHook("ResetAllSearchData", function(tradingHouse, doReset)
@@ -593,6 +622,10 @@ end
 
 function SearchTabWrapper:SearchNextPage()
 	self.tradingHouseWrapper.activityManager:ExecuteSearchNextPage()
+end
+
+function SearchTabWrapper:CancelSearch()
+	self.tradingHouseWrapper.activityManager:CancelSearch()
 end
 
 function SearchTabWrapper:RelocateButtons(tradingHouse)
