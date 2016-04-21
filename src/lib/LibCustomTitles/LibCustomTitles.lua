@@ -1,7 +1,7 @@
 --[[
 Author: Ayantir
 Filename: LibCustomTitles.lua
-Version: 8
+Version: 9
 ]]--
 
 --[[
@@ -30,7 +30,7 @@ http://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
 ]]--
 
 local libLoaded
-local LIB_NAME, VERSION = "LibCustomTitles", 8
+local LIB_NAME, VERSION = "LibCustomTitles", 9
 local LibCustomTitles, oldminor = LibStub:NewLibrary(LIB_NAME, VERSION)
 if not LibCustomTitles then return end
 
@@ -48,18 +48,21 @@ function LibCustomTitles:Init()
 	}
 
 	local customTitles = {
+	
 		["@Ayantir"] = { -- Dev / EU. v1
 			ov = true,
 			en = "The Enlightened",
 			fr = "Mangeuse de Gâteaux",
 			de = "Die Erleuchtete",
 		},
+		
 		["@Baertram"] = { -- Dev / EU. v4
 			ov = true,
 			en = "Ursa Major",
 			fr = "Ursa Major",
 			de = "Ursa Major",
 		},
+		
 		["@sirinsidiator"] = { -- Dev / EU. v5
 			["Illonia Ithildû"] = {
 				ov = true,
@@ -72,6 +75,7 @@ function LibCustomTitles:Init()
 			fr = "Carrément pas suspect",
 			de = "Absolut Nicht Verdächtig",
 		},
+		
 		["@Randactyl"] = { -- Dev / NA. v6
 			["Vedrasi Rilim"] = {
 				ov = true,
@@ -110,6 +114,18 @@ function LibCustomTitles:Init()
 				fr = "Le Boucher",
 				de = "Der Metzger",
 			},
+		},
+		
+		["@LadyHermione"] = { -- NA
+			["Lady Hermione Sophia"] = {
+				ov = true,
+				en = "Know-It-All",
+			},
+		},
+		
+		["@Tarsalterror"] = { -- NA
+			ov = {en = "Enemy of Coldharbour", fr = "Ennemi de Havreglace", de = "Feind Kalthafens"},
+			en = "Fancy Man of Cornwood",
 		},
 		
 	}
