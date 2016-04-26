@@ -7,10 +7,15 @@ AwesomeGuildStore.LevelFilter = LevelFilter
 
 local MIN_LEVEL = 1
 local MAX_LEVEL = 50
-local MIN_RANK = 1
-local MAX_RANK = 16
+local MIN_POINTS = 1
+local MAX_POINTS = 160
 local LINE_SPACING = 4
 local LEVEL_FILTER_TYPE_ID = 3
+local TRADING_HOUSE_FILTER_TYPE_CHAMPION_POINTS = TRADING_HOUSE_FILTER_TYPE_CHAMPION_POINTS
+if(GetAPIVersion() == 100014) then
+	TRADING_HOUSE_FILTER_TYPE_CHAMPION_POINTS = TRADING_HOUSE_FILTER_TYPE_VETERAN_LEVEL
+	MAX_POINTS = 16
+end
 
 function LevelFilter:New(name, tradingHouseWrapper, ...)
 	return FilterBase.New(self, LEVEL_FILTER_TYPE_ID, name, tradingHouseWrapper, ...)
@@ -39,7 +44,7 @@ function LevelFilter:InitializeControls(name, tradingHouse)
 	local minLevel = common:GetNamedChild("MinLevel")
 	minLevel:SetParent(container)
 	minLevel:ClearAnchors()
-	minLevel:SetAnchor(LEFT, levelRangeToggle, RIGHT, 0, 0)
+	minLevel:SetAnchor(LEFT, levelRangeToggle, RIGHT, (GetAPIVersion() == 100014 and 0 or 10), 0) -- TODO
 
 	local levelRangeDivider = common:GetNamedChild("LevelRangeDivider")
 	levelRangeDivider:SetParent(container)
@@ -93,8 +98,8 @@ function LevelFilter:InitializeHandlers(tradingHouse)
 		if(togglingRangeMode) then isLevel = not isLevel end
 		local minValue = minLevelBox:GetText()
 		local maxValue = maxLevelBox:GetText()
-		local min = ValueFromText(minValue, isLevel and MIN_LEVEL or MIN_RANK)
-		local max = ValueFromText(maxValue, isLevel and MAX_LEVEL or MAX_RANK)
+		local min = ValueFromText(minValue, isLevel and MIN_LEVEL or MIN_POINTS)
+		local max = ValueFromText(maxValue, isLevel and MAX_LEVEL or MAX_POINTS)
 
 		if(not togglingRangeMode) then
 			self.min[tradingHouse.m_levelRangeFilterType] = tonumber(minValue)
@@ -111,9 +116,9 @@ function LevelFilter:InitializeHandlers(tradingHouse)
 	ZO_PreHook(tradingHouse, "ToggleLevelRangeMode", function(tradingHouse)
 		togglingRangeMode = true
 		if(tradingHouse.m_levelRangeFilterType == TRADING_HOUSE_FILTER_TYPE_LEVEL) then
-			slider:SetMinMax(MIN_RANK, MAX_RANK)
-			minLevelBox:SetText(self.min[TRADING_HOUSE_FILTER_TYPE_VETERAN_LEVEL] or "")
-			maxLevelBox:SetText(self.max[TRADING_HOUSE_FILTER_TYPE_VETERAN_LEVEL] or "")
+			slider:SetMinMax(MIN_POINTS, MAX_POINTS)
+			minLevelBox:SetText(self.min[TRADING_HOUSE_FILTER_TYPE_CHAMPION_POINTS] or "")
+			maxLevelBox:SetText(self.max[TRADING_HOUSE_FILTER_TYPE_CHAMPION_POINTS] or "")
 		else
 			slider:SetMinMax(MIN_LEVEL, MAX_LEVEL)
 			minLevelBox:SetText(self.min[TRADING_HOUSE_FILTER_TYPE_LEVEL] or "")
@@ -129,14 +134,14 @@ function LevelFilter:InitializeHandlers(tradingHouse)
 		local min = tonumber(minLevelBox:GetText())
 		local max = tonumber(maxLevelBox:GetText())
 		local isLevel = (tradingHouse.m_levelRangeFilterType == TRADING_HOUSE_FILTER_TYPE_LEVEL)
-		local filter = self.m_filters[isLevel and TRADING_HOUSE_FILTER_TYPE_LEVEL or TRADING_HOUSE_FILTER_TYPE_VETERAN_LEVEL]
+		local filter = self.m_filters[isLevel and TRADING_HOUSE_FILTER_TYPE_LEVEL or TRADING_HOUSE_FILTER_TYPE_CHAMPION_POINTS]
 
 		if(min == nil and max == nil) then
 			return
 		elseif(min == nil) then
-			min = isLevel and MIN_LEVEL or MIN_RANK
+			min = isLevel and MIN_LEVEL or MIN_POINTS
 		elseif(max == nil) then
-			max = isLevel and MAX_LEVEL or MAX_RANK
+			max = isLevel and MAX_LEVEL or MAX_POINTS
 		end
 
 		if(min == max) then max = nil end
@@ -158,9 +163,9 @@ function LevelFilter:Reset()
 	self.tradingHouse.m_levelRangeLabel:SetText(GetString(SI_TRADING_HOUSE_BROWSE_LEVEL_RANGE_LABEL))
 
 	self.min[TRADING_HOUSE_FILTER_TYPE_LEVEL] = nil
-	self.min[TRADING_HOUSE_FILTER_TYPE_VETERAN_LEVEL] = nil
 	self.max[TRADING_HOUSE_FILTER_TYPE_LEVEL] = nil
-	self.max[TRADING_HOUSE_FILTER_TYPE_VETERAN_LEVEL] = nil
+	self.min[TRADING_HOUSE_FILTER_TYPE_CHAMPION_POINTS] = nil
+	self.max[TRADING_HOUSE_FILTER_TYPE_CHAMPION_POINTS] = nil
 
 	self.slider:SetMinMax(MIN_LEVEL, MAX_LEVEL)
 	self.minLevelBox:SetText("")
@@ -176,14 +181,20 @@ end
 function LevelFilter:Serialize()
 	local min = self.minLevelBox:GetText()
 	local max = self.maxLevelBox:GetText()
-	local vr = (self.tradingHouse.m_levelRangeFilterType ~= TRADING_HOUSE_FILTER_TYPE_LEVEL) and "1" or "0"
-	return vr .. ";" .. tostring(min) .. ";" .. tostring(max)
+	local cp = (self.tradingHouse.m_levelRangeFilterType ~= TRADING_HOUSE_FILTER_TYPE_LEVEL) and "1" or "0"
+	return cp .. ";" .. tostring(min) .. ";" .. tostring(max)
 end
 
-function LevelFilter:Deserialize(state)
-	local vr, min, max = zo_strsplit(";", state)
+function LevelFilter:Deserialize(state, version)
+	local cp, min, max = zo_strsplit(";", state)
+	local isNormal = (cp == "0")
+	if(not isNormal and version == 2 and GetAPIVersion() > 100014) then -- TODO
+		min = tonumber(min)
+		max = tonumber(max)
+		if(min and min > 1) then min = min * 10 end
+		if(max and max > 1) then max = max * 10 end
+	end
 
-	local isNormal = (vr == "0")
 	local isNormalActive = (self.tradingHouse.m_levelRangeFilterType == TRADING_HOUSE_FILTER_TYPE_LEVEL)
 	if((isNormal and not isNormalActive) or (not isNormal and isNormalActive)) then
 		self.tradingHouse:ToggleLevelRangeMode()
@@ -193,14 +204,19 @@ function LevelFilter:Deserialize(state)
 	self.maxLevelBox:SetText(max or "")
 end
 
-function LevelFilter:GetTooltipText(state)
-	local vr, minLevel, maxLevel = zo_strsplit(";", state)
-	local isNormal = (vr == "0")
+function LevelFilter:GetTooltipText(state, version)
+	local cp, minLevel, maxLevel = zo_strsplit(";", state)
+	local isNormal = (cp == "0")
 	minLevel = tonumber(minLevel)
 	maxLevel = tonumber(maxLevel)
+	if(not isNormal and version == 2 and GetAPIVersion() > 100014) then -- TODO
+		if(minLevel and minLevel > 1) then minLevel = minLevel * 10 end
+		if(maxLevel and maxLevel > 1) then maxLevel = maxLevel * 10 end
+	end
+
 	if(minLevel or maxLevel) then
-		local label = isNormal and L["LEVEL_SELECTOR_TITLE"] or L["VR_SELECTOR_TITLE"]
-		local text = ("%d - %d"):format(minLevel or 1, maxLevel or (isNormal and MAX_LEVEL or MAX_RANK))
+		local label = isNormal and L["LEVEL_SELECTOR_TITLE"] or L["CP_SELECTOR_TITLE"] or L["VR_SELECTOR_TITLE"] -- TODO
+		local text = ("%d - %d"):format(minLevel or 1, maxLevel or (isNormal and MAX_LEVEL or MAX_POINTS))
 		return {{label = label:sub(0, -2), text = text}}
 	end
 	return {}

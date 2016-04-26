@@ -1,7 +1,7 @@
 ## Title: AwesomeGuildStore
 ## Author: sirinsidiator
 ## Version: VERSION_NUMBER
-## APIVersion: 100014
+## APIVersion: 100014 100015
 ## OptionalDependsOn: LibStub LibAddonMenu-2.0 libFilters libCommonInventoryFilters LibTextFilter LibCustomTitles
 ## SavedVariables: AwesomeGuildStore_Data
 ##
@@ -30,7 +30,8 @@ lib/libCommonInventoryFilters/libCommonInventoryFilters.lua
 lib/LibTextFilter/LibTextFilter.lua
 lib/LibCustomTitles/LibCustomTitles.lua
 StartUp.lua
-Localization.lua
+i18n/en_$(APIVersion).lua
+i18n/$(language).lua
 Settings.lua
 util/MinMaxRangeSlider.lua
 util/ButtonGroup.lua
@@ -38,7 +39,7 @@ util/ToggleButton.lua
 util/SimpleIconButton.lua
 util/LoadingOverlay.lua
 searchfilters/FilterBase.lua
-searchfilters/CategoryPresets.lua
+searchfilters/CategoryPresets_$(APIVersion).lua
 searchfilters/CategorySubfilter.lua
 searchfilters/KnownRecipeFilter.lua
 searchfilters/KnownMotifFilter.lua

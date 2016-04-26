@@ -98,12 +98,12 @@ function SavedSearchTooltip:Show(control, entry, filterByType)
 
 	local states = {zo_strsplit("%", entry.state)}
 	local version = tonumber(states[1])
-	if(version == 2) then
+	if(version >= 2) then
 		for i = 2, #states do
 			local type, data = zo_strsplit("#", states[i])
 			local filter = filterByType[tonumber(type)]
 			if(filter) then
-				local lines = filter:GetTooltipText(data)
+				local lines = filter:GetTooltipText(data, version)
 				for i = 1, #lines do
 					self:AddLine(lines[i].label, lines[i].text)
 				end

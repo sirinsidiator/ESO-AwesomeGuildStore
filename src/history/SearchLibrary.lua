@@ -6,7 +6,7 @@ local SUBFILTER_PRESETS = AwesomeGuildStore.SUBFILTER_PRESETS
 
 local SEARCH_DATA_TYPE = 1
 local HISTORY_LENGTH = 50
-local SAVE_VERSION = 2
+local SAVE_VERSION = (GetAPIVersion() == 100014 and 2 or 3) -- TODO
 
 local SAVE_BUTTON_TEMPLATE = {
 	name = "SaveButton",
@@ -318,40 +318,48 @@ function SearchLibrary:ReplaceEntry(state, newState)
 	end
 end
 
+local DESERIALIZER = {}
+DESERIALIZER[1] = function(self, state)
+	local states = {zo_strsplit(":", state)}
+	local version = tonumber(states[1])
+	if(version == 1) then
+		local data = {states[2], states[3], states[4], states[5], states[6]}
+		local filter = self.filterByType
+		for i = 1, 5 do
+			if(filter[i] and data[i] ~= "-") then
+				filter[i]:Deserialize(data[i])
+			end
+		end
+		self:ReplaceEntry(state, self:Serialize())
+	end
+end
+DESERIALIZER[2] = function(self, state, states, version)
+	self:ResetFilters()
+
+	local hasDefaults = (GetAPIVersion() > 100014 and version == 2) -- TODO
+	local filterByType = self.filterByType
+	for i = 2, #states do
+		local type, data = zo_strsplit("#", states[i])
+		local filter = filterByType[tonumber(type)]
+		if(filter) then
+			filter:Deserialize(data, version)
+			if(filter:IsDefault()) then hasDefaults = true end
+		end
+	end
+
+	if(hasDefaults) then
+		self:ReplaceEntry(state, self:Serialize())
+	end
+end
+DESERIALIZER[3] = function(self, state, states, version)
+	DESERIALIZER[2](self, state, states, version)
+end
+
 function SearchLibrary:Deserialize(state)
 	local states = {zo_strsplit("%", state)}
 	local version = tonumber(states[1])
-	if(version == SAVE_VERSION) then
-		self:ResetFilters()
-
-		local hasDefaults = false
-		local filterByType = self.filterByType
-		for i = 2, #states do
-			local type, data = zo_strsplit("#", states[i])
-			local filter = filterByType[tonumber(type)]
-			if(filter) then
-				filter:Deserialize(data)
-				if(filter:IsDefault()) then hasDefaults = true end
-			end
-		end
-
-		if(hasDefaults) then
-			self:ReplaceEntry(state, self:Serialize())
-		end
-	else
-		states = {zo_strsplit(":", state)}
-		version = tonumber(states[1])
-		if(version == 1) then
-			local data = {states[2], states[3], states[4], states[5], states[6]}
-			local filter = self.filterByType
-			for i = 1, 5 do
-				if(filter[i] and data[i] ~= "-") then
-					filter[i]:Deserialize(data[i])
-				end
-			end
-			self:ReplaceEntry(state, self:Serialize())
-		end
-	end
+	local deserializer = DESERIALIZER[version] or DESERIALIZER[1]
+	deserializer(self, state, states, version)
 end
 
 function SearchLibrary:ResetFilters()

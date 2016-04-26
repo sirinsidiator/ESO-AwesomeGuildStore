@@ -37,7 +37,7 @@ function CraftedItemFilter:FilterPageResult(index, icon, name, quality, stackCou
 	local isCrafted = false
 	local itemLink = GetTradingHouseSearchResultItemLink(index, LINK_STYLE_BRACKETS)
 	local itemType = GetItemLinkItemType(itemLink)
-	if(itemType == ITEMTYPE_POTION) then
+	if(itemType == ITEMTYPE_POTION or (GetAPIVersion() == 100015 and itemType == ITEMTYPE_POISON)) then -- TODO
 		local data = {ZO_LinkHandler_ParseLink(itemLink)}
 		isCrafted = (tonumber(data[24]) ~= 0) -- assuming that only crafted potions have data in this field
 	elseif(itemType == ITEMTYPE_FOOD or itemType == ITEMTYPE_DRINK) then
