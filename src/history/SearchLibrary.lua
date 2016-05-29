@@ -166,17 +166,17 @@ function SearchLibrary:InitializeOptions()
 	optionsControl:SetHandler("OnClicked", function(control)
 		ClearMenu()
 
-		AddMenuItem(L["SEARCH_LIBRARY_MENU_OPEN_SETTINGS"], AwesomeGuildStore.OpenSettingsPanel)
-		AddMenuItem(L["SEARCH_LIBRARY_MENU_CLEAR_HISTORY"], function()
+		AddCustomMenuItem(L["SEARCH_LIBRARY_MENU_OPEN_SETTINGS"], AwesomeGuildStore.OpenSettingsPanel)
+		AddCustomMenuItem(L["SEARCH_LIBRARY_MENU_CLEAR_HISTORY"], function()
 			self:ClearHistory()
 			self:Refresh()
 		end)
-		AddMenuItem(L["SEARCH_LIBRARY_MENU_CLEAR_FAVORITES"], function()
+		AddCustomMenuItem(L["SEARCH_LIBRARY_MENU_CLEAR_FAVORITES"], function()
 			self:ClearFavorites()
 			self:Refresh()
 		end)
 		if(self.undo) then
-			AddMenuItem(L["SEARCH_LIBRARY_MENU_UNDO_ACTION"], function()
+			AddCustomMenuItem(L["SEARCH_LIBRARY_MENU_UNDO_ACTION"], function()
 				if(self.undo) then
 					self.undo()
 					self:Refresh()
@@ -184,12 +184,12 @@ function SearchLibrary:InitializeOptions()
 			end)
 		end
 		if(self:IsLocked()) then
-			AddMenuItem(L["SEARCH_LIBRARY_MENU_UNLOCK_WINDOW"], function() self:Unlock() end)
+			AddCustomMenuItem(L["SEARCH_LIBRARY_MENU_UNLOCK_WINDOW"], function() self:Unlock() end)
 		else
-			AddMenuItem(L["SEARCH_LIBRARY_MENU_LOCK_WINDOW"], function() self:Lock() end)
-			AddMenuItem(L["SEARCH_LIBRARY_MENU_RESET_WINDOW"], function() self:ResetPosition() end)
+			AddCustomMenuItem(L["SEARCH_LIBRARY_MENU_LOCK_WINDOW"], function() self:Lock() end)
+			AddCustomMenuItem(L["SEARCH_LIBRARY_MENU_RESET_WINDOW"], function() self:ResetPosition() end)
 		end
-		AddMenuItem(L["SEARCH_LIBRARY_MENU_CLOSE_WINDOW"], function() self.toggleButton:Release() end)
+		AddCustomMenuItem(L["SEARCH_LIBRARY_MENU_CLOSE_WINDOW"], function() self.toggleButton:Release() end)
 
 		ShowMenu(optionsControl)
 	end)
