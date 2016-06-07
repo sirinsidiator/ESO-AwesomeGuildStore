@@ -79,24 +79,6 @@ function RecipeImprovementFilter:InitializeControls(name)
 		return ("(%s%d - %d)"):format(label, min, max)
 	end
 
-	if(GetAPIVersion() == 100014) then -- TODO
-		function GetLevelRangeFromImprovement(improvement)
-			local label, min, max
-			if(improvement < 5) then
-				label = GetString(SI_EXPERIENCE_LEVEL_LABEL) .. " "
-				min = improvement * 10
-				max = min + 5
-				if(improvement == 1) then min = 1 end
-			else
-				label = zo_iconFormat(GetVeteranRankIcon(), 24, 24)
-				min = (improvement - 5) * 10
-				max = min + 5
-				if(min == 0) then min = 1 end
-			end
-			return ("(%s%d - %d)"):format(label, min, max)
-		end
-	end
-
 	local function CreateNumeralButtonControl(value)
 		local textureName = zo_strformat(BUTTON_FOLDER .. "<<R:1>>_%s.dds", value)
 		local tooltipText = zo_strformat(L["SUBFILTER_RECIPE_IMPROVEMENT_TOOLTIP"], value, GetLevelRangeFromImprovement(value))

@@ -12,10 +12,6 @@ local MAX_POINTS = 160
 local LINE_SPACING = 4
 local LEVEL_FILTER_TYPE_ID = 3
 local TRADING_HOUSE_FILTER_TYPE_CHAMPION_POINTS = TRADING_HOUSE_FILTER_TYPE_CHAMPION_POINTS
-if(GetAPIVersion() == 100014) then
-	TRADING_HOUSE_FILTER_TYPE_CHAMPION_POINTS = TRADING_HOUSE_FILTER_TYPE_VETERAN_LEVEL
-	MAX_POINTS = 16
-end
 
 function LevelFilter:New(name, tradingHouseWrapper, ...)
 	return FilterBase.New(self, LEVEL_FILTER_TYPE_ID, name, tradingHouseWrapper, ...)
@@ -44,7 +40,7 @@ function LevelFilter:InitializeControls(name, tradingHouse)
 	local minLevel = common:GetNamedChild("MinLevel")
 	minLevel:SetParent(container)
 	minLevel:ClearAnchors()
-	minLevel:SetAnchor(LEFT, levelRangeToggle, RIGHT, (GetAPIVersion() == 100014 and 0 or 10), 0) -- TODO
+	minLevel:SetAnchor(LEFT, levelRangeToggle, RIGHT, 10, 0)
 
 	local levelRangeDivider = common:GetNamedChild("LevelRangeDivider")
 	levelRangeDivider:SetParent(container)
@@ -188,7 +184,7 @@ end
 function LevelFilter:Deserialize(state, version)
 	local cp, min, max = zo_strsplit(";", state)
 	local isNormal = (cp == "0")
-	if(not isNormal and version == 2 and GetAPIVersion() > 100014) then -- TODO
+	if(not isNormal and version == 2) then
 		min = tonumber(min)
 		max = tonumber(max)
 		if(min and min > 1) then min = min * 10 end
@@ -209,13 +205,13 @@ function LevelFilter:GetTooltipText(state, version)
 	local isNormal = (cp == "0")
 	minLevel = tonumber(minLevel)
 	maxLevel = tonumber(maxLevel)
-	if(not isNormal and version == 2 and GetAPIVersion() > 100014) then -- TODO
+	if(not isNormal and version == 2) then
 		if(minLevel and minLevel > 1) then minLevel = minLevel * 10 end
 		if(maxLevel and maxLevel > 1) then maxLevel = maxLevel * 10 end
 	end
 
 	if(minLevel or maxLevel) then
-		local label = isNormal and L["LEVEL_SELECTOR_TITLE"] or L["CP_SELECTOR_TITLE"] or L["VR_SELECTOR_TITLE"] -- TODO
+		local label = isNormal and L["LEVEL_SELECTOR_TITLE"] or L["CP_SELECTOR_TITLE"]
 		local text = ("%d - %d"):format(minLevel or 1, maxLevel or (isNormal and MAX_LEVEL or MAX_POINTS))
 		return {{label = label:sub(0, -2), text = text}}
 	end

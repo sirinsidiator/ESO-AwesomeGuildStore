@@ -6,7 +6,7 @@ local SUBFILTER_PRESETS = AwesomeGuildStore.SUBFILTER_PRESETS
 
 local SEARCH_DATA_TYPE = 1
 local HISTORY_LENGTH = 50
-local SAVE_VERSION = (GetAPIVersion() == 100014 and 2 or 3) -- TODO
+local SAVE_VERSION = 3
 
 local SAVE_BUTTON_TEMPLATE = {
 	name = "SaveButton",
@@ -336,7 +336,7 @@ end
 DESERIALIZER[2] = function(self, state, states, version)
 	self:ResetFilters()
 
-	local hasDefaults = (GetAPIVersion() > 100014 and version == 2) -- TODO
+	local hasDefaults = (version == 2)
 	local filterByType = self.filterByType
 	for i = 2, #states do
 		local type, data = zo_strsplit("#", states[i])
