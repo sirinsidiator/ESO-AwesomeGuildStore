@@ -34,6 +34,7 @@ local function OnAddonLoaded(callback)
 	end)
 end
 
+AwesomeGuildStore.UnregisterForEvent = UnregisterForEvent
 AwesomeGuildStore.RegisterForEvent = RegisterForEvent
 AwesomeGuildStore.WrapFunction = WrapFunction
 -----------------------------------------------------------------------------------------

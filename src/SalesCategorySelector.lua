@@ -84,6 +84,14 @@ function SalesCategorySelector:New(parent, name)
 	return selector
 end
 
+function SalesCategorySelector:Hide()
+    self.control:SetHidden(true)
+end
+
+function SalesCategorySelector:Show()
+    self.control:SetHidden(false)
+end
+
 function SalesCategorySelector:CreateSubcategory(name, category, categoryPreset)
 	if(#categoryPreset.subcategories == 0) then return end
 	local group = self:CreateSubcategoryGroup(name .. categoryPreset.name .. "Group", category)
