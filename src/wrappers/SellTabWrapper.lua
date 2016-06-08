@@ -173,7 +173,7 @@ local hasDifferentQualities = {
     [ITEMTYPE_FOOD] = true,
 }
 
--- itemId is basically what tells us that two items are the same thing, 
+-- itemId is basically what tells us that two items are the same thing,
 -- but some types need additional data to determine if they are of the same strength (and value).
 local function GetItemIdentifier(itemLink)
     local itemType = GetItemLinkItemType(itemLink)
@@ -296,10 +296,7 @@ end
 
 function SellTabWrapper:InitializeCategoryFilter(tradingHouseWrapper)
     local postItems = tradingHouseWrapper.tradingHouse.m_postItems
-    local salesCategoryFilter = AwesomeGuildStore.SalesCategorySelector:New(postItems, "AwesomeGuildStoreSalesItemCategory")
-    salesCategoryFilter.control:ClearAnchors()
-    salesCategoryFilter.control:SetAnchor(TOPLEFT, postItems, TOPRIGHT, 70, -53)
-    self.salesCategoryFilter = salesCategoryFilter
+    self.salesCategoryFilter = AwesomeGuildStore.SalesCategorySelector:New(postItems, "AwesomeGuildStoreSalesItemCategory")
 end
 
 function SellTabWrapper:InitializeCraftingBag(tradingHouseWrapper)
@@ -579,10 +576,18 @@ function SellTabWrapper:SetCurrentInventory(bagId)
     SCENE_MANAGER:RemoveFragment(self.currentInventoryFragment)
     if(bagId == BAG_BACKPACK) then
         self.currentInventoryFragment = INVENTORY_FRAGMENT
-        self.salesCategoryFilter:Show()
+        ZO_PlayerInventoryInfoBar:SetParent(ZO_PlayerInventory)
+        if(self.salesCategoryFilter) then
+            self.salesCategoryFilter:RefreshLayout()
+            self.salesCategoryFilter:Show()
+        end
     elseif(bagId == BAG_VIRTUAL) then
         self.currentInventoryFragment = CRAFT_BAG_FRAGMENT
-        self.salesCategoryFilter:Hide()
+        ZO_PlayerInventoryInfoBar:SetParent(ZO_CraftBag)
+        if(self.salesCategoryFilter) then
+            self.salesCategoryFilter:Hide()
+            self.salesCategoryFilter:SetBasicLayout()
+        end
     end
     SCENE_MANAGER:AddFragment(self.currentInventoryFragment)
 end
@@ -592,10 +597,11 @@ function SellTabWrapper:OnOpen(tradingHouseWrapper)
         self:InitializeCategoryFilter(tradingHouseWrapper)
     end
     if(self.salesCategoryFilter) then
-        self.salesCategoryFilter:Refresh()
+        self.salesCategoryFilter:RefreshLayout()
     end
     self.interceptInventoryItemClicks = true
     if(self.currentInventoryFragment == CRAFT_BAG_FRAGMENT) then
+        ZO_PlayerInventoryInfoBar:SetParent(ZO_CraftBag)
         SCENE_MANAGER:RemoveFragment(INVENTORY_FRAGMENT)
         SCENE_MANAGER:AddFragment(CRAFT_BAG_FRAGMENT)
     end
@@ -604,6 +610,7 @@ end
 function SellTabWrapper:OnClose(tradingHouseWrapper)
     self.interceptInventoryItemClicks = false
     if(self.currentInventoryFragment == CRAFT_BAG_FRAGMENT) then
+        ZO_PlayerInventoryInfoBar:SetParent(ZO_PlayerInventory)
         SCENE_MANAGER:RemoveFragment(CRAFT_BAG_FRAGMENT)
     end
 end

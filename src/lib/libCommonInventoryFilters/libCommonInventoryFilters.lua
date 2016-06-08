@@ -1,7 +1,6 @@
-local myNAME, myVERSION = "libCommonInventoryFilters", 1.0
+local myNAME, myVERSION = "libCommonInventoryFilters", 1.4
 local libCIF = LibStub:NewLibrary(myNAME, myVERSION)
 if not libCIF then return end
-
 
 local function enableGuildStoreSellFilters()
     local tradingHouseLayout = BACKPACK_TRADING_HOUSE_LAYOUT_FRAGMENT.layoutData
@@ -33,12 +32,9 @@ local function enableGuildStoreSellFilters()
     end
 end
 
-
 local function fixSearchBoxBugs()
     -- http://www.esoui.com/forums/showthread.php?t=4551
-
     -- search box bug #1: stale searchData after swapping equipment
-
     SHARED_INVENTORY:RegisterCallback("SlotUpdated",
         function(bagId, slotIndex, slotData)
             if slotData and slotData.searchData then
@@ -48,7 +44,6 @@ local function fixSearchBoxBugs()
         end)
 
     -- guild bank search box bug #2: wrong inventory updated
-
     ZO_GuildBankSearchBox:SetHandler("OnTextChanged",
         function(editBox)
             ZO_EditDefaultText_OnTextChanged(editBox)
@@ -56,7 +51,6 @@ local function fixSearchBoxBugs()
         end)
 
     -- guild bank search box bug #3: wrong search box cleared
-
     local guildBankScene = SCENE_MANAGER:GetScene("guildBank")
     guildBankScene:RegisterCallback("StateChange",
         function(oldState, newState)
@@ -66,25 +60,28 @@ local function fixSearchBoxBugs()
         end)
 end
 
-
 local function showSearchBoxes()
     -- re-anchoring is necessary because they overlap with sort headers
 
     ZO_PlayerInventorySearchBox:ClearAnchors()
-    ZO_PlayerInventorySearchBox:SetAnchor(BOTTOMLEFT, nil, TOPLEFT, 36, -8)
+    ZO_PlayerInventorySearchBox:SetAnchor(BOTTOMRIGHT, nil, TOPRIGHT, -15, -55)
     ZO_PlayerInventorySearchBox:SetHidden(false)
 
     ZO_PlayerBankSearchBox:ClearAnchors()
-    ZO_PlayerBankSearchBox:SetAnchor(BOTTOMLEFT, nil, TOPLEFT, 36, -8)
+    ZO_PlayerBankSearchBox:SetAnchor(BOTTOMRIGHT, nil, TOPRIGHT, -15, -55)
     ZO_PlayerBankSearchBox:SetWidth(ZO_PlayerInventorySearchBox:GetWidth())
     ZO_PlayerBankSearchBox:SetHidden(false)
 
     ZO_GuildBankSearchBox:ClearAnchors()
-    ZO_GuildBankSearchBox:SetAnchor(BOTTOMLEFT, nil, TOPLEFT, 36, -8)
+    ZO_GuildBankSearchBox:SetAnchor(BOTTOMRIGHT, nil, TOPRIGHT, -15, -55)
     ZO_GuildBankSearchBox:SetWidth(ZO_PlayerInventorySearchBox:GetWidth())
     ZO_GuildBankSearchBox:SetHidden(false)
-end
 
+    ZO_CraftBagSearchBox:ClearAnchors()
+    ZO_CraftBagSearchBox:SetAnchor(BOTTOMRIGHT, nil, TOPRIGHT, -15, -55)
+    ZO_CraftBagSearchBox:SetWidth(ZO_PlayerInventorySearchBox:GetWidth())
+    ZO_CraftBagSearchBox:SetHidden(false)
+end
 
 local function onPlayerActivated(eventCode)
     EVENT_MANAGER:UnregisterForEvent(myNAME, eventCode)
@@ -115,6 +112,7 @@ local function onPlayerActivated(eventCode)
         doShift(BACKPACK_STORE_LAYOUT_FRAGMENT.layoutData)
         doShift(BACKPACK_FENCE_LAYOUT_FRAGMENT.layoutData)
         doShift(BACKPACK_LAUNDER_LAYOUT_FRAGMENT.layoutData)
+        doShift(BACKPACK_GUILD_BANK_LAYOUT_FRAGMENT.layoutData)
     end
 
     -- replace ZO_InventoryManager:SetTradingHouseModeEnabled
@@ -123,15 +121,51 @@ local function onPlayerActivated(eventCode)
     --      - or would, if the filter wasn't reset in ApplyBackpackLayout
     --      - this simply doesn't work
     --  2) shows the search box and hides the filters tab, or vice versa
-    --      - we want to always show the search box and/or the filters too
-    --        unless another add-on explicitly disables them
+    --      - we want to show or hide them according to add-on requirements
+    --        specified during start-up
+    local savedPlayerInventorySearchBoxAnchor = {false}
+    local savedCraftBagSearchBoxAnchor = {false}
+
     function PLAYER_INVENTORY:SetTradingHouseModeEnabled(enabled)
         libCIF._tradingHouseModeEnabled = enabled
-        ZO_PlayerInventorySearchBox:SetHidden(not enabled and libCIF._searchBoxesDisabled)
-        ZO_PlayerInventoryTabs:SetHidden(enabled and libCIF._guildStoreSellFiltersDisabled)
+
+        if enabled then
+            ZO_PlayerInventorySearchBox:SetHidden(false)
+            ZO_CraftBagSearchBox:SetHidden(false)
+            ZO_PlayerInventoryTabs:SetHidden(libCIF._guildStoreSellFiltersDisabled)
+
+            -- move search box if custom sell filters are enabled (AwesomeGuildStore)
+            if libCIF._guildStoreSellFiltersDisabled then
+                if(not savedPlayerInventorySearchBoxAnchor[1]) then
+                    savedPlayerInventorySearchBoxAnchor = {ZO_PlayerInventorySearchBox:GetAnchor(0)}
+                    ZO_PlayerInventorySearchBox:ClearAnchors()
+                    ZO_PlayerInventorySearchBox:SetAnchor(BOTTOMLEFT, nil, TOPLEFT, 36, -8)
+                end
+                if(not savedCraftBagSearchBoxAnchor[1]) then
+                    savedCraftBagSearchBoxAnchor = {ZO_CraftBagSearchBox:GetAnchor(0)}
+                    ZO_CraftBagSearchBox:ClearAnchors()
+                    ZO_CraftBagSearchBox:SetAnchor(BOTTOMLEFT, nil, TOPLEFT, 36, -8)
+                end
+            end
+        else
+            ZO_PlayerInventorySearchBox:SetHidden(libCIF._searchBoxesDisabled)
+            ZO_CraftBagSearchBox:SetHidden(libCIF._searchBoxesDisabled)
+            ZO_PlayerInventoryTabs:SetHidden(false)
+
+            -- restore original search box position (FilterIt)
+            if savedPlayerInventorySearchBoxAnchor[1] then
+                ZO_PlayerInventorySearchBox:ClearAnchors()
+                ZO_PlayerInventorySearchBox:SetAnchor(unpack(savedPlayerInventorySearchBoxAnchor, 2))
+                savedPlayerInventorySearchBoxAnchor[1] = false
+            end
+            if savedCraftBagSearchBoxAnchor[1] then
+                ZO_CraftBagSearchBox:ClearAnchors()
+                ZO_CraftBagSearchBox:SetAnchor(unpack(savedCraftBagSearchBoxAnchor, 2))
+                savedCraftBagSearchBoxAnchor[1] = false
+            end
+        end
     end
 end
-
 
 -- shift backpack sort headers and item list down (shiftY > 0) or up (shiftY < 0)
 -- add-ons should only call this from their EVENT_ADD_ON_LOADED handler
@@ -139,20 +173,17 @@ function libCIF:addBackpackLayoutShiftY(shiftY)
     libCIF._backpackLayoutShiftY = (libCIF._backpackLayoutShiftY or 0) + shiftY
 end
 
-
 -- tell libCIF to skip enabling inventory filters on guild store sell tab
 -- add-ons should only call this from their EVENT_ADD_ON_LOADED handler
 function libCIF:disableGuildStoreSellFilters()
     libCIF._guildStoreSellFiltersDisabled = true
 end
 
-
 -- tell libCIF to skip showing inventory search boxes outside guild store sell tab
 -- add-ons should only call this from their EVENT_ADD_ON_LOADED handler
 function libCIF:disableSearchBoxes()
     libCIF._searchBoxesDisabled = true
 end
-
 
 EVENT_MANAGER:UnregisterForEvent(myNAME, EVENT_PLAYER_ACTIVATED)
 EVENT_MANAGER:RegisterForEvent(myNAME, EVENT_PLAYER_ACTIVATED, onPlayerActivated)

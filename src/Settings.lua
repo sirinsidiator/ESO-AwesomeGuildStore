@@ -174,6 +174,7 @@ local function LoadSettings()
             getFunc = function() return saveData.disableCustomSellTabFilter end,
             setFunc = function(value) saveData.disableCustomSellTabFilter = value end,
             default = defaultData.disableCustomSellTabFilter,
+            warning = L["SETTINGS_REQUIRES_RELOADUI_WARNING"]
         }
         optionsData[#optionsData + 1] = {
             type = "checkbox",
