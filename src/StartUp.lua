@@ -5,33 +5,33 @@ AwesomeGuildStore = ZO_CallbackObject:New()
 local nextEventHandleIndex = 1
 
 local function RegisterForEvent(event, callback)
-	local eventHandleName = ADDON_NAME .. nextEventHandleIndex
-	EVENT_MANAGER:RegisterForEvent(eventHandleName, event, callback)
-	nextEventHandleIndex = nextEventHandleIndex + 1
-	return eventHandleName
+    local eventHandleName = ADDON_NAME .. nextEventHandleIndex
+    EVENT_MANAGER:RegisterForEvent(eventHandleName, event, callback)
+    nextEventHandleIndex = nextEventHandleIndex + 1
+    return eventHandleName
 end
 
 local function UnregisterForEvent(event, name)
-	EVENT_MANAGER:UnregisterForEvent(name, event)
+    EVENT_MANAGER:UnregisterForEvent(name, event)
 end
 
 local function WrapFunction(object, functionName, wrapper)
-	if(type(object) == "string") then
-		wrapper = functionName
-		functionName = object
-		object = _G
-	end
-	local originalFunction = object[functionName]
-	object[functionName] = function(...) return wrapper(originalFunction, ...) end
+    if(type(object) == "string") then
+        wrapper = functionName
+        functionName = object
+        object = _G
+    end
+    local originalFunction = object[functionName]
+    object[functionName] = function(...) return wrapper(originalFunction, ...) end
 end
 
 local function OnAddonLoaded(callback)
-	local eventHandle = ""
-	eventHandle = RegisterForEvent(EVENT_ADD_ON_LOADED, function(event, name)
-		if(name ~= ADDON_NAME) then return end
-		callback()
-		UnregisterForEvent(event, name)
-	end)
+    local eventHandle = ""
+    eventHandle = RegisterForEvent(EVENT_ADD_ON_LOADED, function(event, name)
+        if(name ~= ADDON_NAME) then return end
+        callback()
+        UnregisterForEvent(event, name)
+    end)
 end
 
 AwesomeGuildStore.UnregisterForEvent = UnregisterForEvent
@@ -43,38 +43,38 @@ AwesomeGuildStore.GetAPIVersion = function() return 2 end
 
 -- convenience functions for using the callback object:
 function AwesomeGuildStore:RegisterBeforeInitialSetupCallback(...)
-	self:RegisterCallback("BeforeInitialSetup", ...)
+    self:RegisterCallback("BeforeInitialSetup", ...)
 end
 function AwesomeGuildStore:FireBeforeInitialSetupCallbacks(...)
-	self:FireCallbacks("BeforeInitialSetup", ...)
+    self:FireCallbacks("BeforeInitialSetup", ...)
 end
 
 function AwesomeGuildStore:RegisterAfterInitialSetupCallback(...)
-	self:RegisterCallback("AfterInitialSetup", ...)
+    self:RegisterCallback("AfterInitialSetup", ...)
 end
 function AwesomeGuildStore:FireAfterInitialSetupCallbacks(...)
-	self:FireCallbacks("AfterInitialSetup", ...)
+    self:FireCallbacks("AfterInitialSetup", ...)
 end
 
 function AwesomeGuildStore:RegisterOnOpenSearchTabCallback(...)
-	self:RegisterCallback("OnOpenSearchTab", ...)
+    self:RegisterCallback("OnOpenSearchTab", ...)
 end
 function AwesomeGuildStore:FireOnOpenSearchTabCallbacks(...)
-	self:FireCallbacks("OnOpenSearchTab", ...)
+    self:FireCallbacks("OnOpenSearchTab", ...)
 end
 
 function AwesomeGuildStore:RegisterOnCloseSearchTabCallback(...)
-	self:RegisterCallback("OnCloseSearchTab", ...)
+    self:RegisterCallback("OnCloseSearchTab", ...)
 end
 function AwesomeGuildStore:FireOnCloseSearchTabCallbacks(...)
-	self:FireCallbacks("OnCloseSearchTab", ...)
+    self:FireCallbacks("OnCloseSearchTab", ...)
 end
 
 function AwesomeGuildStore:RegisterOnInitializeFiltersCallback(...)
-	self:RegisterCallback("OnInitializeFilters", ...)
+    self:RegisterCallback("OnInitializeFilters", ...)
 end
 function AwesomeGuildStore:FireOnInitializeFiltersCallbacks(...)
-	self:FireCallbacks("OnInitializeFilters", ...)
+    self:FireCallbacks("OnInitializeFilters", ...)
 end
 
 -- deprecated callback names for CALLBACK_MANAGER:
@@ -91,12 +91,31 @@ AwesomeGuildStore:RegisterOnOpenSearchTabCallback(function(...) CALLBACK_MANAGER
 AwesomeGuildStore:RegisterOnCloseSearchTabCallback(function(...) CALLBACK_MANAGER:FireCallbacks(AwesomeGuildStore.OnCloseSearchTabCallbackName, ...) end)
 AwesomeGuildStore:RegisterOnInitializeFiltersCallback(function(...) CALLBACK_MANAGER:FireCallbacks(AwesomeGuildStore.OnInitializeFiltersCallbackName, ...) end)
 
-OnAddonLoaded(function()
-	local saveData = AwesomeGuildStore.LoadSettings()
-	AwesomeGuildStore.main = AwesomeGuildStore.TradingHouseWrapper:New(saveData)
-	AwesomeGuildStore.InitializeAugmentedMails(saveData)
+local function IsSameAction(actionName, layerIndex, categoryIndex, actionIndex)
+    local targetTayerIndex, targetCategoryIndex, targetActionIndex = GetActionIndicesFromName(actionName)
+    return not (layerIndex ~= targetTayerIndex or categoryIndex ~= targetCategoryIndex or actionIndex ~= targetActionIndex)
+end
 
-	local L = AwesomeGuildStore.Localization
-	ZO_CreateStringId("SI_BINDING_NAME_AGS_SUPPRESS_LOCAL_FILTERS", L["CONTROLS_SUPPRESS_LOCAL_FILTERS"])
-	CreateDefaultActionBind("AGS_SUPPRESS_LOCAL_FILTERS", KEY_CTRL)
+OnAddonLoaded(function()
+    local saveData = AwesomeGuildStore.LoadSettings()
+    AwesomeGuildStore.main = AwesomeGuildStore.TradingHouseWrapper:New(saveData)
+    AwesomeGuildStore.InitializeAugmentedMails(saveData)
+
+    local L = AwesomeGuildStore.Localization
+    local actionName, defaultKey = "AGS_SUPPRESS_LOCAL_FILTERS", KEY_CTRL
+    ZO_CreateStringId("SI_BINDING_NAME_AGS_SUPPRESS_LOCAL_FILTERS", L["CONTROLS_SUPPRESS_LOCAL_FILTERS"])
+    RegisterForEvent(EVENT_KEYBINDING_CLEARED, function(_, layerIndex, categoryIndex, actionIndex, bindingIndex)
+        if(IsSameAction(actionName, layerIndex, categoryIndex, actionIndex) and bindingIndex == 1) then
+            saveData.hasUnboundAction[actionName] = true
+        end
+    end)
+    RegisterForEvent(EVENT_KEYBINDING_SET, function(_, layerIndex, categoryIndex, actionIndex, bindingIndex)
+        if(IsSameAction(actionName, layerIndex, categoryIndex, actionIndex) and bindingIndex == 1) then
+            saveData.hasUnboundAction[actionName] = false
+            CreateDefaultActionBind(actionName, defaultKey)
+        end
+    end)
+    if(not saveData.hasUnboundAction["AGS_SUPPRESS_LOCAL_FILTERS"]) then
+        CreateDefaultActionBind(actionName, defaultKey)
+    end
 end)

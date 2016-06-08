@@ -2,7 +2,7 @@ local function LoadSettings()
     local L = AwesomeGuildStore.Localization
     local CLEAR_SELL_PRICE_CACHE_DIALOG = "AWESOME_GUILD_STORE_CLEAR_SELL_PRICE_CACHE_CONFIRM"
     local defaultData = {
-        version = 17,
+        version = 18,
         lastGuildName = "",
         keepFiltersOnClose = true,
         oldQualitySelectorBehavior = false,
@@ -37,7 +37,8 @@ local function LoadSettings()
             autoClearHistory = false,
             favoritesSortField = "searches",
             favoritesSortOrder = ZO_SORT_ORDER_DOWN,
-        }
+        },
+        hasUnboundAction = {}
     }
 
     local function CreateSettingsDialog(saveData)
@@ -293,6 +294,10 @@ local function LoadSettings()
             if(saveData.autoSearch == nil) then saveData.autoSearch = defaultData.autoSearch end
             saveData.skipEmptyPages = defaultData.skipEmptyPages
             saveData.version = 17
+        end
+        if(saveData.version == 17) then
+            saveData.hasUnboundAction = {}
+            saveData.version = 18
         end
     end
 
