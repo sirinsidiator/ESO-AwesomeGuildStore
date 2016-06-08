@@ -1,7 +1,7 @@
 local ToggleButton = ZO_Object:Subclass()
 AwesomeGuildStore.ToggleButton = ToggleButton
 
-function ToggleButton:New(parent, name, textureName, x, y, width, height, tooltipText)
+function ToggleButton:New(parent, name, textureName, x, y, width, height, tooltipText, sound)
 	local button = ZO_Object.New(self)
 	button.pressed = false
 	button.locked = false
@@ -10,7 +10,7 @@ function ToggleButton:New(parent, name, textureName, x, y, width, height, toolti
 	control:SetNormalTexture(textureName:format("up"))
 	control:SetPressedTexture(textureName:format("down"))
 	control:SetMouseOverTexture(textureName:format("over"))
-	control:SetClickSound("Click")
+	control:SetClickSound(sound or SOUNDS.DEFAULT_CLICK)
 	control:SetHidden(false)
 	control:SetDimensions(width, height)
 	control:SetAnchor(TOPLEFT, parent, TOPLEFT, x, y)

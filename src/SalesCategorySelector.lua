@@ -103,7 +103,7 @@ function SalesCategorySelector:CreateSubcategory(name, category, categoryPreset)
 end
 
 function SalesCategorySelector:CreateCategoryButton(group, category, preset)
-    local button = ToggleButton:New(group.control, group.control:GetName() .. preset.name .. "Button", preset.texture, 180 + MAJOR_BUTTON_SIZE * category, 0, MAJOR_BUTTON_SIZE, MAJOR_BUTTON_SIZE, preset.label)
+    local button = ToggleButton:New(group.control, group.control:GetName() .. preset.name .. "Button", preset.texture, 180 + MAJOR_BUTTON_SIZE * category, 0, MAJOR_BUTTON_SIZE, MAJOR_BUTTON_SIZE, preset.label, SOUNDS.MENU_BAR_CLICK)
     button.HandlePress = function()
         group:ReleaseAllButtons()
         self.category = category
@@ -154,7 +154,7 @@ end
 
 function SalesCategorySelector:CreateSubcategoryButton(group, subcategory, preset, isCrafting)
     local offset = 140 + (isCrafting and MINOR_BUTTON_SIZE or 0)
-    local button = ToggleButton:New(group.control, group.control:GetName() .. "SubcategoryButton" .. subcategory, preset.texture, offset + MINOR_BUTTON_SIZE * subcategory, 0, MINOR_BUTTON_SIZE, MINOR_BUTTON_SIZE, preset.label)
+    local button = ToggleButton:New(group.control, group.control:GetName() .. "SubcategoryButton" .. subcategory, preset.texture, offset + MINOR_BUTTON_SIZE * subcategory, 0, MINOR_BUTTON_SIZE, MINOR_BUTTON_SIZE, preset.label, SOUNDS.MENU_BAR_CLICK)
     button.HandlePress = function()
         group:ReleaseAllButtons()
         group.label:SetText(preset.label)
