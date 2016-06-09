@@ -64,8 +64,11 @@ local function CreateSlider(container, data, name)
         self:LoseFocus()
     end)
     inputBox:SetHandler("OnTextChanged", function(self)
-        data.setFunc(tonumber(self:GetText()))
-        slider:SetValue(data.getFunc())
+        local value = tonumber(self:GetText())
+        if(value) then
+            data.setFunc(value)
+            slider:SetValue(data.getFunc())
+        end
     end)
     inputBox:SetHandler("OnFocusGained", function(self)
         self:SelectAll()
