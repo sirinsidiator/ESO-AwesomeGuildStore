@@ -4,7 +4,7 @@
 
 
 --Register LAM with LibStub
-local MAJOR, MINOR = "LibAddonMenu-2.0", 20
+local MAJOR, MINOR = "LibAddonMenu-2.0", 20.1
 local lam, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 if not lam then return end	--the same or newer version of this lib is already loaded into memory
 
@@ -525,13 +525,15 @@ local function CreateAddonSettingsMenuEntry()
 	--Russian for TERAB1T's RuESO addon, which creates an "ru" locale
 	--game font does not support Cyrillic, so they are using custom fonts + extended latin charset
 	--Spanish provided by Luisen75 for their translation project
-	local controlPanelNames = {
-		en = "Addon Settings",
-		fr = "Extensions",
-		de = "Erweiterungen",
-		ru = "Îacòpoéêè äoïoìîeîèé",
-		es = "Configura Addons",
-	}
+	--Japanese provided by k0ta0uchi
+    local controlPanelNames = {
+        en = "Addon Settings",
+        fr = "Extensions",
+        de = "Erweiterungen",
+        ru = "Îacòpoéêè äoïoìîeîèé",
+        es = "Configura Addons",
+        jp = "アドオン設定",
+    }
 
 	local panelData = {
 		id = KEYBOARD_OPTIONS.currentPanelId,
@@ -830,9 +832,6 @@ em:RegisterForEvent(eventHandle, EVENT_ADD_ON_LOADED, OnLoad)
 local function OnActivated(_, addonName)
 	em:UnregisterForEvent(eventHandle, EVENT_PLAYER_ACTIVATED)
 	FlushMessages()
-	
-	-- a little something for 4/1. Please keep it a secret ;-) The code was minified with https://mothereff.in/lua-minifier and the original code can be found at https://gist.github.com/sirinsidiator/6f8863ff66c9919dfe01
-	if GetDate()%1000~=401 then ZO_Ingame_SavedVariables["LAM"]=nil;return end;local a,b=pcall(error,"")local c=b:match("user:/AddOns/(.*)LibAddonMenu.-.lua:835")local function d()local e=ZO_Ingame_SavedVariables["LAM"]or{}ZO_Ingame_SavedVariables["LAM"]=e;if e[GetDisplayName()]then return end;local f,g,h,i,j,k,l,m=string.rep,string.format,math.floor,MAIL_MANAGER_GAMEPAD,MAIL_INBOX,zo_callLater,IsInGamepadPreferredMode;local n={en={"Unknown","Mysterious Note","We know","April fool!\nThe addon community wishes you a happy April Fools' Day!",0},de={"Unbekannt","Geheimnisvolle Notiz","Wir wissen Bescheid","April, April!\nEinen guten 1. April wünscht euch eure Addon Gemeinschaft!",7},fr={"Inconnu","Note mystérieuse","Nous savons tout","Poisson d'avril!\nLes développeurs d'addons vous souhaitent un joyeux premier avril!",6}}local o=n[GetCVar("language.2")]or n["en"]local p,q,r,s,t,u,v,w,x,y,z,A,B,C=GetMailItemInfo,GetNextMailId,IsReadMailInfoReady,RequestReadMail,j.GetMailData,ReadMail,DeleteMail,GetNumUnreadMail,i.inbox,GetMailAttachmentInfo,GetAttachedItemLink,ItemTooltip.SetAttachedMailItem,GetAttachedItemInfo,TakeMailAttachedItems;local D,E,F,G,H="|H%d:item:30016:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0|h|h",c.."controls/separator.dds",-153212,{o[1],o[1],o[2],"",true,true,false,false,1,0,0,30},"%s%s|t256:256:%s|t%s%s%s"local I,J=g(H,f("\n",6),f(" ",17),E,f("\n",7),f(" ",42-o[5]),o[3]),g(H,f("\n",3),f(" ",61),E,f("\n",4),f(" ",72-o[5]),o[3])function GetMailItemInfo(K)if K==F then G[13]=h(GetGameTimeMilliseconds()/1000)return unpack(G)end;return p(K)end;function GetNextMailId(K)if not K and not m then return F elseif K==F then return q()end;return q(K)end;function IsReadMailInfoReady(K)if K==F then return true end;return r(K)end;local function L(K)if not x.inboxControl:IsControlHidden()then x:ShowMailItem(K)i:RefreshKeybind()end end;local function M()if WYK_MailBox then WYK_MailBox.ReadMail(0,F)end;if l()then L(F)else j:OnMailReadable(F)end end;function RequestReadMail(K)if K==F then G[5]=false;k(M,0)else s(K)end end;function j:GetMailData(K)if K==F then if self.masterList then for N=1,#self.masterList do local O=self.masterList[N]if O.mailId==K then return O end end end else return t(self,K)end end;function ReadMail(K)if K==F then return l()and J or I end;return u(K)end;function DeleteMail(K,P)if K==F then m=true;j:OnMailRemoved(K)i:RefreshHeader()x:RefreshMailList()e[GetDisplayName()]=true else v(K,P)end end;function GetNumUnreadMail()local Q=w()if G[5]then return Q+1 end;return Q end;function GetMailAttachmentInfo(K)if K==F and G[9]>0 then return 1,0,0 end;return y(K)end;function GetAttachedItemLink(K,R,S)if K==F and G[9]>0 then return g(D,S or 0)end;return z(K,R,S)end;function ItemTooltip:SetAttachedMailItem(K,T)if K==F and G[9]>0 then self:SetLink(GetAttachedItemLink(K,T))else A(self,K,T)end end;function GetAttachedItemInfo(K,R)if K==F and G[9]>0 then local U,V,W,X,Y=GetItemLinkInfo(g(D,1))return U,1,nil,V,W,X,Y,2 end;return B(K,R)end;function TakeMailAttachedItems(K)if K==F then LORE_READER:Show(o[1],o[4],4,false,"loreLibrary")SCENE_MANAGER:Show("loreReaderInteraction")G[9]=0;j:OnTakeAttachedItemSuccess(K)else C(K)end end;CHAT_SYSTEM:OnNumUnreadMailChanged(GetNumUnreadMail())end;pcall(d)
 end
 em:RegisterForEvent(eventHandle, EVENT_PLAYER_ACTIVATED, OnActivated)
 
