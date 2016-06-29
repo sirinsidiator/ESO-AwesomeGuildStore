@@ -63,7 +63,7 @@ local function mockGlobals()
 	function ZO_OptionsWindow_AddUserPanel() end
 	function ZO_OptionsWindow_InitializeControl() end
 	function GetSkillLineInfo() end
-	function GetCraftingSkillName() end
+	function ZO_GetCraftingSkillName() end
 	function LocalizeString() end
 	
 	ITEMFILTERTYPE_ALL = 1
