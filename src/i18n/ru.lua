@@ -1,4 +1,4 @@
-local localization = {
+local localization = { -- translated by KiriX (http://www.esoui.com/forums/member.php?u=105)
 	FILTER_SUBCATEGORY_JEWELRY = "Àèæóòepèü",
 	FILTER_SUBCATEGORY_GLYPHS = "Âìèñÿ",
 	SUBFILTER_WEAPON_ENCHANTMENT_LABEL = "Çaùapoáaîèü opóæèü",

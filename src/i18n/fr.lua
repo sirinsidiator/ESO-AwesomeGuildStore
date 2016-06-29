@@ -1,4 +1,4 @@
-local localization = {
+local localization = { -- translated by Ayantir (http://www.esoui.com/forums/member.php?u=12247)
     SUBFILTER_WEAPON_ENCHANTMENT_LABEL = "Enchantement d'arme",
     SUBFILTER_WEAPON_TYPE_LABEL = "Type d'arme",
     SUBFILTER_ARMOR_TYPE_LABEL = "Type d'armure",
