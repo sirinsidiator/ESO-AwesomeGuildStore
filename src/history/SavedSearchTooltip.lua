@@ -98,7 +98,7 @@ function SavedSearchTooltip:Show(control, entry, filterByType)
 
 	local states = {zo_strsplit("%", entry.state)}
 	local version = tonumber(states[1])
-	if(version >= 2) then
+	if(version and version >= 2) then
 		for i = 2, #states do
 			local type, data = zo_strsplit("#", states[i])
 			local filter = filterByType[tonumber(type)]
