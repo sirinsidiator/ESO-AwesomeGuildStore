@@ -102,20 +102,27 @@ OnAddonLoaded(function()
     AwesomeGuildStore.InitializeAugmentedMails(saveData)
 
     local L = AwesomeGuildStore.Localization
+
     local actionName, defaultKey = "AGS_SUPPRESS_LOCAL_FILTERS", KEY_CTRL
     ZO_CreateStringId("SI_BINDING_NAME_AGS_SUPPRESS_LOCAL_FILTERS", L["CONTROLS_SUPPRESS_LOCAL_FILTERS"])
-    RegisterForEvent(EVENT_KEYBINDING_CLEARED, function(_, layerIndex, categoryIndex, actionIndex, bindingIndex)
-        if(IsSameAction(actionName, layerIndex, categoryIndex, actionIndex) and bindingIndex == 1) then
-            saveData.hasUnboundAction[actionName] = true
-        end
-    end)
-    RegisterForEvent(EVENT_KEYBINDING_SET, function(_, layerIndex, categoryIndex, actionIndex, bindingIndex)
+
+    local function HandleKeyBindReset()
+        saveData.hasUnboundAction = {}
+    end
+
+    ZO_PreHook("ResetAllBindsToDefault", HandleKeyBindReset)
+    ZO_PreHook("ResetKeyboardBindsToDefault", HandleKeyBindReset)
+
+    local function HandleKeyBindTouched(_, layerIndex, categoryIndex, actionIndex, bindingIndex)
         if(IsSameAction(actionName, layerIndex, categoryIndex, actionIndex) and bindingIndex == 1) then
             saveData.hasUnboundAction[actionName] = false
-            CreateDefaultActionBind(actionName, defaultKey)
         end
-    end)
-    if(not saveData.hasUnboundAction["AGS_SUPPRESS_LOCAL_FILTERS"]) then
+    end
+
+    RegisterForEvent(EVENT_KEYBINDING_CLEARED, HandleKeyBindTouched)
+    RegisterForEvent(EVENT_KEYBINDING_SET, HandleKeyBindTouched)
+
+    if(saveData.hasUnboundAction["AGS_SUPPRESS_LOCAL_FILTERS"] ~= false) then
         CreateDefaultActionBind(actionName, defaultKey)
     end
 end)
