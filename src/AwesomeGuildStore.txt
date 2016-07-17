@@ -1,7 +1,7 @@
 ## Title: AwesomeGuildStore
 ## Author: sirinsidiator
 ## Version: VERSION_NUMBER
-## APIVersion: 100015
+## APIVersion: 100015 100016
 ## OptionalDependsOn: LibStub LibAddonMenu-2.0 libFilters libCommonInventoryFilters LibTextFilter LibCustomTitles LibCustomMenu
 ## SavedVariables: AwesomeGuildStore_Data
 ##
@@ -25,6 +25,7 @@ lib/LibAddonMenu-2.0/controls/editbox.lua
 lib/LibAddonMenu-2.0/controls/header.lua
 lib/LibAddonMenu-2.0/controls/slider.lua
 lib/LibAddonMenu-2.0/controls/texture.lua
+lib/LibAddonMenu-2.0/controls/iconpicker.lua
 lib/libFilters/libFilters.lua
 lib/libCommonInventoryFilters/libCommonInventoryFilters.lua
 lib/LibTextFilter/LibTextFilter.lua

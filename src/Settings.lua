@@ -1,6 +1,5 @@
 local function LoadSettings()
     local L = AwesomeGuildStore.Localization
-    local CLEAR_SELL_PRICE_CACHE_DIALOG = "AWESOME_GUILD_STORE_CLEAR_SELL_PRICE_CACHE_CONFIRM"
     local defaultData = {
         version = 18,
         lastGuildName = "",
@@ -197,8 +196,14 @@ local function LoadSettings()
             name = L["SETTINGS_CLEAR_SELL_PRICE_CACHE_LABEL"],
             tooltip = L["SETTINGS_CLEAR_SELL_PRICE_CACHE_DESCRIPTION"],
             warning = L["SETTINGS_CLEAR_SELL_PRICE_CACHE_WARNING"],
+            isDangerous = true,
             func = function()
-                ZO_Dialogs_ShowDialog(CLEAR_SELL_PRICE_CACHE_DIALOG)
+                if(saveData.lastSoldStackCount) then
+                    ZO_ClearTable(saveData.lastSoldStackCount)
+                end
+                if(saveData.lastSoldPricePerUnit) then
+                    ZO_ClearTable(saveData.lastSoldPricePerUnit)
+                end
             end,
         }
         LAM:RegisterOptionControls("AwesomeGuildStoreOptions", optionsData)
@@ -308,32 +313,6 @@ local function LoadSettings()
     AwesomeGuildStore.defaultData = defaultData
 
     UpgradeSettings(saveData)
-
-    ESO_Dialogs[CLEAR_SELL_PRICE_CACHE_DIALOG] = {
-        canQueue = true,
-        title = {
-            text = L["SETTINGS_CLEAR_SELL_PRICE_CACHE_LABEL"],
-        },
-        mainText = {
-            text = L["SETTINGS_CLEAR_SELL_PRICE_CACHE_WARNING"],
-        },
-        buttons = {
-            [1] = {
-                text = SI_DIALOG_ACCEPT,
-                callback = function(dialog)
-                    if(saveData.lastSoldStackCount) then
-                        ZO_ClearTable(saveData.lastSoldStackCount)
-                    end
-                    if(saveData.lastSoldPricePerUnit) then
-                        ZO_ClearTable(saveData.lastSoldPricePerUnit)
-                    end
-                end,
-            },
-            [2] = {
-                text = SI_DIALOG_DECLINE,
-            }
-        }
-    }
 
     CreateSettingsDialog(saveData)
 

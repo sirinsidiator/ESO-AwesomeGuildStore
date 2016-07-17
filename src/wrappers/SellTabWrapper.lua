@@ -44,35 +44,16 @@ local function CreateSlider(container, data, name)
     data.width = "half"
     data.min = 0
     data.max = 1
+    data.clampInput = false
+    data.autoSelect = true
+    data.inputLocation = "right"
 
     local container = LAMCreateControl.slider(container, data, name)
     container:SetDimensions(203, SLIDER_HEIGHT)
     container.container:SetWidth(190)
 
     local slider = container.slider
-    slider:SetAnchor(TOPRIGHT, nil, nil, -60)
     slider:SetHeight(16)
-
-    local input = container.slidervalueBG
-    input:ClearAnchors()
-    input:SetAnchor(LEFT, slider, RIGHT, 5, 0)
-    input:SetDimensions(60, 26)
-
-    local inputBox = container.slidervalue
-    inputBox:SetFont("ZoFontGameLarge")
-    inputBox:SetHandler("OnEnter", function(self)
-        self:LoseFocus()
-    end)
-    inputBox:SetHandler("OnTextChanged", function(self)
-        local value = tonumber(self:GetText())
-        if(value) then
-            data.setFunc(value)
-            slider:SetValue(data.getFunc())
-        end
-    end)
-    inputBox:SetHandler("OnFocusGained", function(self)
-        self:SelectAll()
-    end)
 
     container.Show = ShowSlider
     container.Hide = HideSlider
