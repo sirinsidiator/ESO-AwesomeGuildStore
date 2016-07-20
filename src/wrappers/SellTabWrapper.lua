@@ -44,7 +44,6 @@ local function CreateSlider(container, data, name)
     data.width = "half"
     data.min = 0
     data.max = 1
-    data.clampInput = false
     data.autoSelect = true
     data.inputLocation = "right"
 
@@ -106,7 +105,7 @@ local hasDifferentQualities = {
 -- but some types need additional data to determine if they are of the same strength (and value).
 local function GetItemIdentifier(itemLink)
     local itemType = GetItemLinkItemType(itemLink)
-    local data = {zo_strsplit(":", itemLink)}
+    local data = {zo_strsplit(":", itemLink:match("|H(.-)|h.-|h"))}
     local itemId = data[3]
     local level = GetItemLinkRequiredLevel(itemLink)
     local cp = GetItemLinkRequiredChampionPoints(itemLink)
@@ -176,7 +175,9 @@ function SellTabWrapper:InitializeListingInput(tradingHouseWrapper)
     local quantitySlider = CreateSlider(container, {
         name = L["SELL_QUANTITY_SLIDER_LABEL"],
         getFunc = function() return self.currentStackCount end,
-        setFunc = function(value) self:SetQuantity(value, SKIP_UPDATE_SLIDER) end,
+        setFunc = function(value)
+            self:SetQuantity(value, SKIP_UPDATE_SLIDER)
+        end,
     }, "AwesomeGuildStoreFormInvoiceQuantitySlider")
     quantitySlider:SetAnchor(TOPLEFT, container, TOPLEFT, 0, 0)
     self.quantitySlider = quantitySlider
@@ -193,6 +194,9 @@ function SellTabWrapper:InitializeListingInput(tradingHouseWrapper)
     lastSoldQuantityButton.HandlePress = function(button)
         local lastSoldQuantity = self.lastSoldStackCount[self.pendingItemIdentifier]
         if(lastSoldQuantity) then
+            if(lastSoldQuantity > self.pendingStackCount) then
+                lastSoldQuantity = self.pendingStackCount
+            end
             self:SetQuantity(lastSoldQuantity)
         end
     end
@@ -202,6 +206,7 @@ function SellTabWrapper:InitializeListingInput(tradingHouseWrapper)
         getFunc = function() return tonumber(string.format("%.2f", self.currentPricePerUnit)) end,
         setFunc = function(value) self:SetUnitPrice(value, SKIP_UPDATE_SLIDER) end,
         decimals = 2,
+        clampInput = false
     }, "AwesomeGuildStoreFormInvoicePPUSlider")
     ppuSlider:SetAnchor(TOPLEFT, quantitySlider, BOTTOMLEFT, 0, 10)
     self.ppuSlider = ppuSlider
@@ -480,6 +485,9 @@ function SellTabWrapper:SetPendingItem(bagId, slotIndex)
         self:UpdateTempSlot()
 
         self.currentStackCount = self.lastSoldStackCount[self.pendingItemIdentifier] or self.pendingStackCount
+        if(self.currentStackCount > self.pendingStackCount) then
+            self.currentStackCount = self.pendingStackCount
+        end
         self.currentPricePerUnit = self.lastSoldPricePerUnit[self.pendingItemIdentifier] or GetMasterMerchantLastUsedPrice(self.pendingItemLink) or GetMasterMerchantPrice(self.pendingItemLink) or (sellPrice * 3)
         self.currentSellPrice = self.currentPricePerUnit * self.currentStackCount
 
