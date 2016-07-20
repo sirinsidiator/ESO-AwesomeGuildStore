@@ -107,7 +107,7 @@ OnAddonLoaded(function()
     ZO_CreateStringId("SI_BINDING_NAME_AGS_SUPPRESS_LOCAL_FILTERS", L["CONTROLS_SUPPRESS_LOCAL_FILTERS"])
 
     local function HandleKeyBindReset()
-        saveData.hasUnboundAction = {}
+        saveData.hasTouchedAction = {}
     end
 
     ZO_PreHook("ResetAllBindsToDefault", HandleKeyBindReset)
@@ -115,14 +115,14 @@ OnAddonLoaded(function()
 
     local function HandleKeyBindTouched(_, layerIndex, categoryIndex, actionIndex, bindingIndex)
         if(IsSameAction(actionName, layerIndex, categoryIndex, actionIndex) and bindingIndex == 1) then
-            saveData.hasUnboundAction[actionName] = false
+            saveData.hasTouchedAction[actionName] = true
         end
     end
 
     RegisterForEvent(EVENT_KEYBINDING_CLEARED, HandleKeyBindTouched)
     RegisterForEvent(EVENT_KEYBINDING_SET, HandleKeyBindTouched)
 
-    if(saveData.hasUnboundAction["AGS_SUPPRESS_LOCAL_FILTERS"] ~= false) then
+    if(not saveData.hasTouchedAction["AGS_SUPPRESS_LOCAL_FILTERS"]) then
         CreateDefaultActionBind(actionName, defaultKey)
     end
 end)

@@ -1,7 +1,7 @@
 local function LoadSettings()
     local L = AwesomeGuildStore.Localization
     local defaultData = {
-        version = 18,
+        version = 19,
         lastGuildName = "",
         keepFiltersOnClose = true,
         oldQualitySelectorBehavior = false,
@@ -37,7 +37,7 @@ local function LoadSettings()
             favoritesSortField = "searches",
             favoritesSortOrder = ZO_SORT_ORDER_DOWN,
         },
-        hasUnboundAction = {}
+        hasTouchedAction = {}
     }
 
     local function CreateSettingsDialog(saveData)
@@ -302,8 +302,34 @@ local function LoadSettings()
             saveData.version = 17
         end
         if(saveData.version == 17) then
-            saveData.hasUnboundAction = {}
             saveData.version = 18
+        end
+        if(saveData.version == 18) then
+            if(saveData.hasUnboundAction) then
+                local hasTouchedAction = {}
+                for key in pairs(saveData.hasUnboundAction) do
+                    hasTouchedAction[key] = true
+                end
+                saveData.hasTouchedAction = hasTouchedAction
+                saveData.hasUnboundAction = nil
+            end
+            if(saveData.lastSoldStackCount) then
+                local lastSoldStackCount = saveData.lastSoldStackCount
+                for key in pairs(lastSoldStackCount) do
+                    if(key:match("|h") ~= nil) then
+                        lastSoldStackCount[key] = nil
+                    end
+                end
+            end
+            if(saveData.lastSoldPricePerUnit) then
+                local lastSoldPricePerUnit = saveData.lastSoldPricePerUnit
+                for key in pairs(lastSoldPricePerUnit) do
+                    if(key:match("|h") ~= nil) then
+                        lastSoldPricePerUnit[key] = nil
+                    end
+                end
+            end
+            saveData.version = 19
         end
     end
 
