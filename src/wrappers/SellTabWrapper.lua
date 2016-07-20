@@ -183,6 +183,7 @@ function SellTabWrapper:InitializeListingInput(tradingHouseWrapper)
         setFunc = function(value)
             self:SetQuantity(value, SKIP_UPDATE_SLIDER)
         end,
+        decimals = 0,
     }, "AwesomeGuildStoreFormInvoiceQuantitySlider")
     quantitySlider:SetAnchor(TOPLEFT, container, TOPLEFT, 0, 0)
     self.quantitySlider = quantitySlider
