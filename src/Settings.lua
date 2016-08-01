@@ -1,7 +1,7 @@
 local function LoadSettings()
     local L = AwesomeGuildStore.Localization
     local defaultData = {
-        version = 19,
+        version = 20,
         lastGuildName = "",
         keepFiltersOnClose = true,
         oldQualitySelectorBehavior = false,
@@ -248,11 +248,7 @@ local function LoadSettings()
             saveData.searchLibrary.height = defaultData.searchLibrary.height
             saveData.version = 8
         end
-        if(saveData.version == 8) then
-            --saveData.lastGuildName = nil -- reverted
-            saveData.version = 9
-        end
-        if(saveData.version == 9) then
+        if(saveData.version <= 9) then
             saveData.lastGuildName = saveData.lastGuildName or defaultData.lastGuildName
             saveData.version = 10
         end
@@ -301,18 +297,18 @@ local function LoadSettings()
             saveData.skipEmptyPages = defaultData.skipEmptyPages
             saveData.version = 17
         end
-        if(saveData.version == 17) then
-            saveData.version = 18
-        end
-        if(saveData.version == 18) then
+        if(saveData.version <= 19) then
+            local hasTouchedAction = {}
             if(saveData.hasUnboundAction) then
-                local hasTouchedAction = {}
                 for key in pairs(saveData.hasUnboundAction) do
                     hasTouchedAction[key] = true
                 end
-                saveData.hasTouchedAction = hasTouchedAction
                 saveData.hasUnboundAction = nil
             end
+            if(not saveData.hasTouchedAction) then
+                saveData.hasTouchedAction = hasTouchedAction
+            end
+
             if(saveData.lastSoldStackCount) then
                 local lastSoldStackCount = saveData.lastSoldStackCount
                 for key in pairs(lastSoldStackCount) do
@@ -329,7 +325,7 @@ local function LoadSettings()
                     end
                 end
             end
-            saveData.version = 19
+            saveData.version = 20
         end
     end
 
