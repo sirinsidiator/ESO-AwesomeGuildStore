@@ -1,8 +1,3 @@
-local ZO_GetCraftingSkillName = ZO_GetCraftingSkillName
-if(GetAPIVersion() < 100016) then -- TODO remove
-    ZO_GetCraftingSkillName = GetCraftingSkillName
-end
-
 AwesomeGuildStore.Localization = {
     FILTER_CATEGORY_ALL = GetString("SI_ITEMFILTERTYPE", ITEMFILTERTYPE_ALL),
     FILTER_CATEGORY_WEAPON = GetString("SI_ITEMFILTERTYPE", ITEMFILTERTYPE_WEAPONS),
