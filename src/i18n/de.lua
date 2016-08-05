@@ -133,6 +133,7 @@ local localization = {
     INVALID_STATE = "Ungültiger Händlerzustand.\nDas ist ein Fehler im Spiel und sollte bald behoben werden.",
 
     LOCAL_FILTER_EXPLANATION_TOOLTIP = "Dieser Filter ist lokal und wirkt nur auf der derzeit sichtbaren Seite",
+    EXTERNAL_FILTER_EXPLANATION_TOOLTIP = "Dieser Filter wird von <<1>> bereitgestellt",
 
     PURCHASE_NOTIFICATION = "Du hast <<1>>x <<t:2>> von <<3>> für <<4>> in <<5>> gekauft",
     CANCEL_NOTIFICATION = "Du hast dein Angebot von <<1>>x <<t:2>> für <<3>> in <<4>> abgebrochen",

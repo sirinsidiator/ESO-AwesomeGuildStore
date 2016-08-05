@@ -313,6 +313,7 @@ AwesomeGuildStore.Localization = {
     INVALID_STATE = "Invalid Store State.\nThis is a bug in the game and should be fixed soon.",
 
     LOCAL_FILTER_EXPLANATION_TOOLTIP = "This filter is local and only applies to the currently visible page",
+    EXTERNAL_FILTER_EXPLANATION_TOOLTIP = "This filter is provided by <<1>>",
 
     PURCHASE_NOTIFICATION = "You have bought <<1>>x <<t:2>> from <<3>> for <<4>> in <<5>>",
     CANCEL_NOTIFICATION = "You have cancelled your listing of <<1>>x <<t:2>> for <<3>> in <<4>>",
