@@ -209,6 +209,7 @@ AwesomeGuildStore.Localization = {
     SEARCH_SHOW_MORE_LABEL = "Show More Results",
     RESET_ALL_FILTERS_LABEL = "Reset All Filters",
     RESET_FILTER_LABEL_TEMPLATE = "Reset %s Filter",
+    SEARCH_HAS_HIDDEN_RESULTS = "All items are hidden by local filters.",
 
     CATEGORY_TITLE = "Category",
     SUBCATEGORY_TITLE = "Subcategory",

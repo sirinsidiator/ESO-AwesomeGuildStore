@@ -43,6 +43,7 @@ local localization = {
     SEARCH_SHOW_MORE_LABEL = "Mehr Ergebnisse anzeigen",
     RESET_ALL_FILTERS_LABEL = "Alle Filter zurücksetzen",
     RESET_FILTER_LABEL_TEMPLATE = "%s zurücksetzen",
+    SEARCH_HAS_HIDDEN_RESULTS = "Alle Gegenstände werden durch lokale Filter ausgeblendet.",
 
     CATEGORY_TITLE = "Kategorie",
     SUBCATEGORY_TITLE = "Unterkategorie",

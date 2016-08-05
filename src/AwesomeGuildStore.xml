@@ -1,119 +1,130 @@
 <GuiXml>
-	<Controls>
-		<Control name="AwesomeGuildStoreMinMaxRangeSliderTemplate" virtual="true">
-			<Dimensions x="150" y="16" />
-			<Controls>
-				<Button name="$(parent)MinSlider" level="4">
-					<Dimensions x="10" y="16" />
-					<Anchor point="LEFT" />
-					<Textures normal="EsoUI/Art/Miscellaneous/scrollbox_elevator.dds" />
-				</Button>
-				<Button name="$(parent)MaxSlider" level="4">
-					<Dimensions x="10" y="16" />
-					<Anchor point="RIGHT" />
-					<Textures normal="EsoUI/Art/Miscellaneous/scrollbox_elevator.dds" />
-				</Button>
-				<Control name="$(parent)Range" level="3">
-					<Dimensions y="10" />
-					<Anchor point="LEFT" relativeTo="$(parent)MinSlider" relativePoint="RIGHT" offsetX="-6" />
-					<Anchor point="RIGHT" relativeTo="$(parent)MaxSlider" relativePoint="LEFT" offsetX="6" />
+    <Controls>
+        <Control name="AwesomeGuildStoreMinMaxRangeSliderTemplate" virtual="true">
+            <Dimensions x="150" y="16" />
+            <Controls>
+                <Button name="$(parent)MinSlider" level="4">
+                    <Dimensions x="10" y="16" />
+                    <Anchor point="LEFT" />
+                    <Textures normal="EsoUI/Art/Miscellaneous/scrollbox_elevator.dds" />
+                </Button>
+                <Button name="$(parent)MaxSlider" level="4">
+                    <Dimensions x="10" y="16" />
+                    <Anchor point="RIGHT" />
+                    <Textures normal="EsoUI/Art/Miscellaneous/scrollbox_elevator.dds" />
+                </Button>
+                <Control name="$(parent)Range" level="3">
+                    <Dimensions y="10" />
+                    <Anchor point="LEFT" relativeTo="$(parent)MinSlider" relativePoint="RIGHT" offsetX="-6" />
+                    <Anchor point="RIGHT" relativeTo="$(parent)MaxSlider" relativePoint="LEFT" offsetX="6" />
 
-					<Controls>
-						<Button name="$(parent)Slider">
-							<Dimensions x="16" y="16" />
-							<Anchor point="CENTER" />
-							<Textures normal="AwesomeGuildStore/images/mover.dds" />
-						</Button>
-					</Controls>
-				</Control>
-				<Texture name="$(parent)Glow" textureFile="AwesomeGuildStore/images/minmaxsliderglow.dds" level="1">
-					<Dimensions y="10" />
-					<Anchor point="LEFT" relativeTo="$(parent)MinSlider" relativePoint="RIGHT" offsetX="-6" />
-					<Anchor point="RIGHT" relativeTo="$(parent)MaxSlider" relativePoint="LEFT" offsetX="6" />
-				</Texture>
-				<Button name="$(parent)FullRange" level="2">
-					<Anchor point="LEFT" />
-					<Anchor point="RIGHT" />
-					<Dimensions y="10" />
-				</Button>
-				<Backdrop name="$(parent)Backdrop" inherits="ZO_SliderBackdrop">
-					<Anchor point="LEFT" />
-					<Anchor point="RIGHT" />
-					<Dimensions y="8" />
-				</Backdrop>
-			</Controls>
-		</Control>
+                    <Controls>
+                        <Button name="$(parent)Slider">
+                            <Dimensions x="16" y="16" />
+                            <Anchor point="CENTER" />
+                            <Textures normal="AwesomeGuildStore/images/mover.dds" />
+                        </Button>
+                    </Controls>
+                </Control>
+                <Texture name="$(parent)Glow" textureFile="AwesomeGuildStore/images/minmaxsliderglow.dds" level="1">
+                    <Dimensions y="10" />
+                    <Anchor point="LEFT" relativeTo="$(parent)MinSlider" relativePoint="RIGHT" offsetX="-6" />
+                    <Anchor point="RIGHT" relativeTo="$(parent)MaxSlider" relativePoint="LEFT" offsetX="6" />
+                </Texture>
+                <Button name="$(parent)FullRange" level="2">
+                    <Anchor point="LEFT" />
+                    <Anchor point="RIGHT" />
+                    <Dimensions y="10" />
+                </Button>
+                <Backdrop name="$(parent)Backdrop" inherits="ZO_SliderBackdrop">
+                    <Anchor point="LEFT" />
+                    <Anchor point="RIGHT" />
+                    <Dimensions y="8" />
+                </Backdrop>
+            </Controls>
+        </Control>
 
-		<Control name="AwesomeGuildStoreLoadingTemplate" virtual="true">
-			<Controls>
-				<Texture name="$(parent)Icon" textureFile="EsoUI/Art/Miscellaneous/wait_icon.dds" layer="OVERLAY">
-					<Anchor point="CENTER" />
-					<Dimensions x="32" y="32" />
-				</Texture>
-			</Controls>
-		</Control>
+        <Control name="AwesomeGuildStoreLoadingTemplate" virtual="true">
+            <Controls>
+                <Texture name="$(parent)Icon" textureFile="EsoUI/Art/Miscellaneous/wait_icon.dds" layer="OVERLAY">
+                    <Anchor point="CENTER" />
+                    <Dimensions x="32" y="32" />
+                </Texture>
+            </Controls>
+        </Control>
 
-		<Backdrop name="AwesomeGuildStoreNameFilterTemplate" inherits="ZO_EditBackdrop" virtual="true">
-			<Dimensions x="180" />
-			<Controls>
-				<EditBox name="$(parent)Box" inherits="ZO_DefaultEditForBackdrop ZO_EditDefaultText" />
-			</Controls>
-		</Backdrop>
+        <Backdrop name="AwesomeGuildStoreNameFilterTemplate" inherits="ZO_EditBackdrop" virtual="true">
+            <Dimensions x="180" />
+            <Controls>
+                <EditBox name="$(parent)Box" inherits="ZO_DefaultEditForBackdrop ZO_EditDefaultText" />
+            </Controls>
+        </Backdrop>
 
-		<Control name="AwesomeGuildStorePriceInputTemplate" virtual="true"> <!-- copy pasta from tradinghouse.xml -->
-			<Controls>
-				<Backdrop name="$(parent)MinPrice" inherits="ZO_EditBackdrop">
-					<Anchor point="TOPLEFT" />
-					<Dimensions x="88" y="25" />
+        <Control name="AwesomeGuildStorePriceInputTemplate" virtual="true"> <!-- copy pasta from tradinghouse.xml -->
+            <Controls>
+                <Backdrop name="$(parent)MinPrice" inherits="ZO_EditBackdrop">
+                    <Anchor point="TOPLEFT" />
+                    <Dimensions x="88" y="25" />
 
-					<Controls>
-						<EditBox name="$(parent)Box" font="ZoFontWinT1" textType="NUMERIC_UNSIGNED_INT" inherits="ZO_DefaultEditForBackdrop">
-							<Anchor point="TOPLEFT" offsetX="2" offsetY="2" />
-							<Anchor point="BOTTOMRIGHT" />
-						</EditBox>
-					</Controls>
-				</Backdrop>
+                    <Controls>
+                        <EditBox name="$(parent)Box" font="ZoFontWinT1" textType="NUMERIC_UNSIGNED_INT" inherits="ZO_DefaultEditForBackdrop">
+                            <Anchor point="TOPLEFT" offsetX="2" offsetY="2" />
+                            <Anchor point="BOTTOMRIGHT" />
+                        </EditBox>
+                    </Controls>
+                </Backdrop>
 
-				<Texture name="$(parent)PriceRangeDivider" color="FFFFFF">
-					<Dimensions x="10" y="2" />
-					<Anchor point="LEFT" relativeTo="$(parent)MinPrice" relativePoint="RIGHT" offsetX="4" />
-				</Texture>
+                <Texture name="$(parent)PriceRangeDivider" color="FFFFFF">
+                    <Dimensions x="10" y="2" />
+                    <Anchor point="LEFT" relativeTo="$(parent)MinPrice" relativePoint="RIGHT" offsetX="4" />
+                </Texture>
 
-				<Backdrop name="$(parent)MaxPrice" inherits="ZO_EditBackdrop">
-					<Dimensions x="88" y="25" />
-					<Anchor point="LEFT" relativeTo="$(parent)PriceRangeDivider" relativePoint="RIGHT" offsetX="4" />
+                <Backdrop name="$(parent)MaxPrice" inherits="ZO_EditBackdrop">
+                    <Dimensions x="88" y="25" />
+                    <Anchor point="LEFT" relativeTo="$(parent)PriceRangeDivider" relativePoint="RIGHT" offsetX="4" />
 
-					<Controls>
-						<EditBox name="$(parent)Box" font="ZoFontWinT1" textType="NUMERIC_UNSIGNED_INT" inherits="ZO_DefaultEditForBackdrop">
-							<Anchor point="TOPLEFT" offsetX="2" offsetY="2" />
-							<Anchor point="BOTTOMRIGHT" />
-						</EditBox>
-					</Controls>
-				</Backdrop>
-			</Controls>
-		</Control>
+                    <Controls>
+                        <EditBox name="$(parent)Box" font="ZoFontWinT1" textType="NUMERIC_UNSIGNED_INT" inherits="ZO_DefaultEditForBackdrop">
+                            <Anchor point="TOPLEFT" offsetX="2" offsetY="2" />
+                            <Anchor point="BOTTOMRIGHT" />
+                        </EditBox>
+                    </Controls>
+                </Backdrop>
+            </Controls>
+        </Control>
 
-		<Control name="AwesomeGuildStoreShowMoreRowTemplate" mouseEnabled="true" tier="MEDIUM" layer="CONTROLS" virtual="true">
-			<Dimensions y="32" />
+        <Control name="AwesomeGuildStoreShowMoreRowTemplate" mouseEnabled="true" tier="MEDIUM" layer="CONTROLS" virtual="true">
+            <Dimensions y="32" />
 
-			<Controls>
-				<Texture name="$(parent)Bg" textureFile="EsoUI/Art/Miscellaneous/listItem_backdrop.dds">
-					<AnchorFill />
-					<TextureCoords left="0" right="1" top="0" bottom=".8125" />
-				</Texture>
+            <Controls>
+                <Texture name="$(parent)Bg" textureFile="EsoUI/Art/Miscellaneous/listItem_backdrop.dds">
+                    <AnchorFill />
+                    <TextureCoords left="0" right="1" top="0" bottom=".8125" />
+                </Texture>
 
-				<Texture name="$(parent)Highlight" textureFile="EsoUI/Art/Miscellaneous/listItem_highlight.dds" alpha="0.5">
-					<AnchorFill />
-					<TextureCoords left="0" right="1" top="0" bottom=".625" />
-				</Texture>
+                <Texture name="$(parent)Highlight" textureFile="EsoUI/Art/Miscellaneous/listItem_highlight.dds" alpha="0.5">
+                    <AnchorFill />
+                    <TextureCoords left="0" right="1" top="0" bottom=".625" />
+                </Texture>
 
-				<Label name="$(parent)Text" font="ZoFontGameShadow" verticalAlignment="CENTER" horizontalAlignment="CENTER" wrapMode="ELLIPSIS"
-					color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_NORMAL">
-					<Dimensions y="32" />
-					<Anchor point="LEFT" />
-					<Anchor point="RIGHT" />
-				</Label>
-			</Controls>
-		</Control>
-	</Controls>
+                <Label name="$(parent)Text" font="ZoFontGameShadow" verticalAlignment="CENTER" horizontalAlignment="CENTER" wrapMode="ELLIPSIS" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_NORMAL">
+                    <Dimensions y="32" />
+                    <Anchor point="LEFT" />
+                    <Anchor point="RIGHT" />
+                </Label>
+            </Controls>
+        </Control>
+
+        <Control name="AwesomeGuildStoreHasHiddenRowTemplate" tier="MEDIUM" layer="CONTROLS" virtual="true">
+            <Dimensions y="24" />
+
+            <Controls>
+                <Label name="$(parent)Text" font="ZoFontGameLargeBold" verticalAlignment="CENTER" horizontalAlignment="CENTER" wrapMode="ELLIPSIS" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_SELECTED">
+                    <Dimensions y="24" />
+                    <Anchor point="LEFT" />
+                    <Anchor point="RIGHT" />
+                </Label>
+            </Controls>
+        </Control>
+    </Controls>
 </GuiXml>
