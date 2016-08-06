@@ -139,5 +139,7 @@ local localization = {
     PURCHASE_NOTIFICATION = "Du hast <<1>>x <<t:2>> von <<3>> für <<4>> in <<5>> gekauft",
     CANCEL_NOTIFICATION = "Du hast dein Angebot von <<1>>x <<t:2>> für <<3>> in <<4>> abgebrochen",
     LISTED_NOTIFICATION = "Du hast <<1>>x <<t:2>> für <<3>> in <<4>> angeboten",
+
+    LISTING_TAB_OVERALL_PRICE = "Gesamtpreis: |cffffff<<1>>|r <<2>>" -- 1: price, 2: gold icon
 }
 ZO_ShallowTableCopy(localization, AwesomeGuildStore.Localization)

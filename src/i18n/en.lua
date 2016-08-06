@@ -319,4 +319,6 @@ AwesomeGuildStore.Localization = {
     PURCHASE_NOTIFICATION = "You have bought <<1>>x <<t:2>> from <<3>> for <<4>> in <<5>>",
     CANCEL_NOTIFICATION = "You have cancelled your listing of <<1>>x <<t:2>> for <<3>> in <<4>>",
     LISTED_NOTIFICATION = "You have listed <<1>>x <<t:2>> for <<3>> in <<4>>",
+
+    LISTING_TAB_OVERALL_PRICE = "Overall Price: |cffffff<<1>>|r <<2>>" -- 1: price, 2: gold icon
 }
