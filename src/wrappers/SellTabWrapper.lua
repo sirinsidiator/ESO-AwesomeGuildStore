@@ -53,11 +53,6 @@ local function CreateSlider(container, data, name)
 
     local slider = container.slider
     slider:SetHeight(16)
-    
-    local input = container.slidervalue
-    ZO_PreHookHandler(input, "OnTextChanged", function()
-        if(input:GetText():sub(-1) == ".") then return true end
-    end)
 
     container.Show = ShowSlider
     container.Hide = HideSlider
