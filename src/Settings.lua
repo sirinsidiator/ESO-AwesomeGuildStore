@@ -47,6 +47,7 @@ local function LoadSettings()
             name = "Awesome Guild Store",
             author = "sirinsidiator",
             version = "VERSION_NUMBER",
+            website = "http://www.esoui.com/downloads/info695-AwesomeGuildStore.html",
             registerForRefresh = true,
             registerForDefaults = true
         }
