@@ -43,6 +43,7 @@ local localization = { -- translated by Ayantir (http://www.esoui.com/forums/mem
     SEARCH_SHOW_MORE_LABEL = "Afficher les résultats suivants",
     RESET_ALL_FILTERS_LABEL = "Réinitialiser tous les filtres",
     RESET_FILTER_LABEL_TEMPLATE = "Réinitialiser le filtre %s",
+    SEARCH_HAS_HIDDEN_RESULTS = "Les résultats ont tous été exclus par les filtres locaux",
 
     CATEGORY_TITLE = "Catégorie",
     SUBCATEGORY_TITLE = "Sous-catégorie",
@@ -133,9 +134,12 @@ local localization = { -- translated by Ayantir (http://www.esoui.com/forums/mem
     INVALID_STATE = "Boutique de guilde indisponible.\nCeci est un bug du jeu et devrait être résolu bientôt.",
 
     LOCAL_FILTER_EXPLANATION_TOOLTIP = "Ce filtre est visuel et ne s'applique qu'à la page en cours",
+    EXTERNAL_FILTER_EXPLANATION_TOOLTIP = "Ce filtre est fourni par <<1>>",
 
     PURCHASE_NOTIFICATION = "Vous avez acheté <<1>>x <<t:2>> à <<3>> pour <<4>> chez <<5>>",
     CANCEL_NOTIFICATION = "Vous avez annulé votre vente de <<1>>x <<t:2>> pour <<3>> chez <<4>>",
     LISTED_NOTIFICATION = "Vous avez placé <<1>>x <<t:2>> pour <<3>> chez <<4>>",
+
+    LISTING_TAB_OVERALL_PRICE = "Prix total : |cffffff<<1>>|r <<2>>" -- 1: price, 2: gold icon
 }
 ZO_ShallowTableCopy(localization, AwesomeGuildStore.Localization)
