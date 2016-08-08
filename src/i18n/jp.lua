@@ -43,6 +43,7 @@ local localization = { -- translated by k0ta0uchi (http://www.esoui.com/forums/m
     SEARCH_SHOW_MORE_LABEL = "さらに結果を表示",
     RESET_ALL_FILTERS_LABEL = "全てのフィルタをリセット",
     RESET_FILTER_LABEL_TEMPLATE = "%s フィルタをリセット",
+    SEARCH_HAS_HIDDEN_RESULTS = "全てのアイテムはローカルフィルタによって非表示にされています。",
 
     CATEGORY_TITLE = "カテゴリ",
     SUBCATEGORY_TITLE = "サブカテゴリ",
@@ -133,9 +134,12 @@ local localization = { -- translated by k0ta0uchi (http://www.esoui.com/forums/m
     INVALID_STATE = "無効な販売状態です。\nこれはゲームのバグで、すぐに修正されるでしょう。",
 
     LOCAL_FILTER_EXPLANATION_TOOLTIP = "このフィルタはローカルで、現在表示されているページにしか適用されません",
+    EXTERNAL_FILTER_EXPLANATION_TOOLTIP = "このフィルタは<<1>>によって提供されています。",
 
     PURCHASE_NOTIFICATION = "<<5>>で<<3>>から<<1>>x <<t:2>>を<<4>>で購入しました。",
     CANCEL_NOTIFICATION = "<<4>>で販売している<<1>>x <<t:2>>で<<3>>をキャンセルしました。",
     LISTED_NOTIFICATION = "<<4>>の販売リストに<<1>>x <<t:2>>を<<3>>で追加しました。",
+
+    LISTING_TAB_OVERALL_PRICE = "全体の価格: |cffffff<<1>>|r <<2>>" -- 1: price, 2: gold icon
 }
 ZO_ShallowTableCopy(localization, AwesomeGuildStore.Localization)
