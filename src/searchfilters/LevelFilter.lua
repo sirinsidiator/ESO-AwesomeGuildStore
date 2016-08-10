@@ -91,30 +91,39 @@ function LevelFilter:InitializeHandlers(tradingHouseWrapper)
     }
     self.currentRange = self.range[TRADING_HOUSE_FILTER_TYPE_LEVEL]
 
-    slider.OnValueChanged = function(slider, min, max)
+    local function SetValues(min, max, skipTextboxUpdate)
         if(self.isRefreshing) then return end
+        self:SetValues(min, max)
+        self:RefreshDisplay(skipTextboxUpdate)
+        self:HandleChange()
+    end
+
+    slider.OnValueChanged = function(slider, min, max)
         if(min == self.currentRange.min) then
             min = nil
         end
         if(max == self.currentRange.max) then
             max = nil
         end
-        self:SetValues(min, max)
-        self:RefreshDisplay()
-        self:HandleChange()
+        SetValues(min, max)
+    end
+
+    local function UpdateSliderFromTextBoxSkipTextboxUpdate()
+        local min = tonumber(minLevelBox:GetText())
+        local max = tonumber(maxLevelBox:GetText())
+        SetValues(min, max, true)
     end
 
     local function UpdateSliderFromTextBox()
-        if(self.isRefreshing) then return end
         local min = tonumber(minLevelBox:GetText())
         local max = tonumber(maxLevelBox:GetText())
-        self:SetValues(min, max)
-        self:RefreshDisplay()
-        self:HandleChange()
+        SetValues(min, max)
     end
 
-    minLevelBox:SetHandler("OnTextChanged", UpdateSliderFromTextBox)
-    maxLevelBox:SetHandler("OnTextChanged", UpdateSliderFromTextBox)
+    minLevelBox:SetHandler("OnTextChanged", UpdateSliderFromTextBoxSkipTextboxUpdate)
+    maxLevelBox:SetHandler("OnTextChanged", UpdateSliderFromTextBoxSkipTextboxUpdate)
+    minLevelBox:SetHandler("OnFocusLost", UpdateSliderFromTextBox)
+    maxLevelBox:SetHandler("OnFocusLost", UpdateSliderFromTextBox)
 
     tradingHouseWrapper:Wrap("ToggleLevelRangeMode", function(originalToggleLevelRangeMode, ...)
         originalToggleLevelRangeMode(...)
@@ -160,11 +169,14 @@ function LevelFilter:SetValues(min, max)
     currentRange.currentMax = max
 end
 
-function LevelFilter:RefreshDisplay()
+function LevelFilter:RefreshDisplay(skipRefreshingTextboxes)
     self.isRefreshing = true
     local currentRange = self.currentRange
-    self.minLevelBox:SetText(currentRange.currentMin or "")
-    self.maxLevelBox:SetText(currentRange.currentMax or "")
+
+    if(not skipRefreshingTextboxes) then
+        self.minLevelBox:SetText(currentRange.currentMin or "")
+        self.maxLevelBox:SetText(currentRange.currentMax or "")
+    end
 
     local slider = self.slider
     slider:SetMinMax(currentRange.min, currentRange.max)
