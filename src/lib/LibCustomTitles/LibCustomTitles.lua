@@ -1,7 +1,7 @@
 --[[
 Author: Ayantir
 Filename: LibCustomTitles.lua
-Version: 12
+Version: 14
 ]]--
 
 --[[
@@ -30,7 +30,7 @@ http://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
 ]]--
 
 local libLoaded
-local LIB_NAME, VERSION = "LibCustomTitles", 12
+local LIB_NAME, VERSION = "LibCustomTitles", 14
 local LibCustomTitles, oldminor = LibStub:NewLibrary(LIB_NAME, VERSION)
 if not LibCustomTitles then return end
 
@@ -275,6 +275,139 @@ function LibCustomTitles:Init()
 				en = "Master",
 				fr = "Maître",
 				de = "Meister",
+			},
+		},
+		
+		["@ScattyThePirate"] = { -- EU v13
+			["Teldryn Dreth"] = {
+				ov = true,
+				en = "Warden",
+				fr = "Sentinelle",
+				de = "Aufseher",
+			},
+			["Ralyn Telvanni"] = {
+				ov = true,
+				en = "Spellwright",
+				fr = "Tisseur de Sorts",
+				--de = "Meister",
+			},
+			["Shabar-Jo"] = {
+				ov = true,
+				en = "Tisseur de Sorts",
+				fr = "Spellwright",
+				--de = "Meister",
+			},
+			["Shurkul gro-Kharzog"] = {
+				ov = {en = "Fighters Guild Victor", fr = "Champion de la guilde des guerriers", de = "Sieger der Kriegergilde"},
+				en = "The Monster",
+				fr = "La Bête",
+				de = "Das Monster",
+			},
+			["Azuk gro-Shakh"] = {
+				ov = {en = "Fighters Guild Victor", fr = "Champion de la guilde des guerriers", de = "Sieger der Kriegergilde"},
+				en = "Windsinger",
+				fr = "Ténor des tempêtes",
+				--de = "Das Monster",
+			},
+			["Xal-Shei"] = {
+				ov = {en = "Fighters Guild Victor", fr = "Champion de la guilde des guerriers", de = "Sieger der Kriegergilde"},
+				en = "Swamp Knight",
+				fr = "Chevalier des Marais",
+				--de = "Das Monster",
+			},
+		},
+		
+		["@ScattyTheWizard"] = { -- v13
+			["Marukh-do"] = {
+				ov = true,
+				en = "Privateer",
+				fr = "Corsaire",
+				--de = "Meister",
+			},
+		},
+
+		["@Karstyll"] = { -- v13
+			ov = true,
+			en = "Forsaken",
+			fr = "L'oublié",
+			de = "Die Verlassene",
+		},
+
+		["@Methuselah86"] = { -- v13
+			ov = true,
+			en = "Wabbajack Warrior",
+			fr = "Guerrier de Wabbajack",
+			--de = "Die Verlassene",
+		},
+
+		["@DaedricAdept"] = { -- v14
+			ov = {en = "Pact Hero", fr = "Héros du Pacte", de = "Held des Paktes"},
+			en = "Hand of Almalexia",
+			fr = "Main d'Almalexia",
+			--de = "Die Verlassene",
+		},
+
+		["@Cloudless"] = { -- v14
+			ov = true,
+			en = "Order of Doctrine",
+			fr = "Ordre de la Doctrine",
+			--de = "Die Verlassene",
+		},
+
+		["@Atomkern"] = { -- v13
+			ov = true,
+			en = "The Refrigerator",
+			fr = "Le glacé",
+			--de = "Die Verlassene",
+		},
+
+		["@Orizonta"] = { -- v13
+			ov = true,
+			en = "Manslayer",
+			fr = "Assassin",
+			--de = "Die Verlassene",
+		},
+
+		["@laksikus"] = { -- v13
+			ov = {en = "Veteran", fr = "Vétéran", de = "Veteran"},
+			en = "Sexy Zogger",
+			fr = "Zog-Zog",
+			--de = "Die Verlassene",
+		},
+
+		["@flyty"] = { -- v13
+			ov = true,
+			en = "Always Drunk",
+			fr = "Toujours bourré",
+			--de = "Die Verlassene",
+		},
+		
+		["@Deltia"] = { -- v13
+			ov = {en = "Tyro", fr = "Première classe", de = "Tyro"},
+			en = "The Destroyer",
+			fr = "Le Destructeur",
+			--de = "Die Verlassene",
+		},
+
+		["@tannips"] = { -- v13
+			ov = true,
+			en = "Potentate",
+			fr = "Potentat",
+			--de = "Die Verlassene",
+		},
+
+		["@sioniann"] = { -- v13
+			["Uloth The Furious Blade"] = {
+				ov = true,
+				en = "Sinister Turkey",
+				fr = "Dindon Sinistre",
+				--de = "Meister",
+			},
+			["Enid an Gleana"] = {
+				ov = true,
+				en = "Fountain of Auridon",
+				fr = "Fontaine d'Auridia",
+				--de = "Meister",
 			},
 		},
 		
