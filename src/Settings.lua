@@ -132,7 +132,7 @@ local function LoadSettings()
             getFunc = function() return saveData.augementMails end,
             setFunc = function(value) saveData.augementMails = value end,
             default = defaultData.augementMails,
-            warning = L["SETTINGS_REQUIRES_RELOADUI_WARNING"]
+            requiresReload = true
         }
         optionsData[#optionsData + 1] = {
             type = "checkbox",
@@ -174,7 +174,7 @@ local function LoadSettings()
             getFunc = function() return saveData.disableCustomSellTabFilter end,
             setFunc = function(value) saveData.disableCustomSellTabFilter = value end,
             default = defaultData.disableCustomSellTabFilter,
-            warning = L["SETTINGS_REQUIRES_RELOADUI_WARNING"]
+            requiresReload = true
         }
         optionsData[#optionsData + 1] = {
             type = "checkbox",

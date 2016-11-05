@@ -90,7 +90,6 @@ local localization = { -- translated by k0ta0uchi (http://www.esoui.com/forums/m
     SELL_LAST_PRICE_BUTTON_LABEL = "最後に販売した価格を選択",
     SELL_MM_PRICE_BUTTON_LABEL = "マスターマーチャント価格を選択",
 
-    SETTINGS_REQUIRES_RELOADUI_WARNING = "UIをリロードしないと反映されません",
     SETTINGS_KEEP_FILTERS_ON_CLOSE_LABEL = "ストア訪問毎にフィルタを記憶する",
     SETTINGS_KEEP_FILTERS_ON_CLOSE_DESCRIPTION = "プレイセッション中、ギルドストアウィンドウを閉じてもフィルタの設定がクリアされず保存され、UIがリロードされても最後の状態が復元されます",
     SETTINGS_OLD_QUALITY_SELECTOR_BEHAVIOR_LABEL = "古い挙動の品質セレクタを使用する",

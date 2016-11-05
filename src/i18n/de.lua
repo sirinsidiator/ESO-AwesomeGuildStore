@@ -90,7 +90,6 @@ local localization = {
     SELL_LAST_PRICE_BUTTON_LABEL = "Zuletzt verkauften Preis wählen",
     SELL_MM_PRICE_BUTTON_LABEL = "Master Merchant Preis wählen",
 
-    SETTINGS_REQUIRES_RELOADUI_WARNING = "Wird erst angewandt wenn das Interface neu geladen wurde",
     SETTINGS_KEEP_FILTERS_ON_CLOSE_LABEL = "Filtereinstellungen merken",
     SETTINGS_KEEP_FILTERS_ON_CLOSE_DESCRIPTION = "Anstatt die Filter beim Schließen des Ladenfensters zurückzusetzen bleiben sie während einer Spielesitzung erhalten, außerdem werden beim Laden der UI die letzten aktiven Einstellungen wiederhergestellt",
     SETTINGS_OLD_QUALITY_SELECTOR_BEHAVIOR_LABEL = "Verwende altes Qualitätsfilterverhalten",

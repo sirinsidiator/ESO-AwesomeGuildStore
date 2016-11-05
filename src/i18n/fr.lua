@@ -90,7 +90,6 @@ local localization = { -- translated by Ayantir (http://www.esoui.com/forums/mem
     SELL_LAST_PRICE_BUTTON_LABEL = "Sélectionner le dernier prix défini",
     SELL_MM_PRICE_BUTTON_LABEL = "Sélectionner le prix de Master Merchant",
 
-    SETTINGS_REQUIRES_RELOADUI_WARNING = "Sera appliqué uniquement après le rechargement de l'interface (ReloadUI)",
     SETTINGS_KEEP_FILTERS_ON_CLOSE_LABEL = "Se souvenir des filtres entre les boutiques",
     SETTINGS_KEEP_FILTERS_ON_CLOSE_DESCRIPTION = "Se souvenir des filtres de recherche entre les différentes boutiques et entre les sessions de jeu",
     SETTINGS_OLD_QUALITY_SELECTOR_BEHAVIOR_LABEL = "Filtres de qualité à la souris",
