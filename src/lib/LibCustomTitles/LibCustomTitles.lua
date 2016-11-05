@@ -1,7 +1,7 @@
 --[[
 Author: Ayantir
 Filename: LibCustomTitles.lua
-Version: 14
+Version: 15
 ]]--
 
 --[[
@@ -30,7 +30,7 @@ http://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
 ]]--
 
 local libLoaded
-local LIB_NAME, VERSION = "LibCustomTitles", 14
+local LIB_NAME, VERSION = "LibCustomTitles", 15
 local LibCustomTitles, oldminor = LibStub:NewLibrary(LIB_NAME, VERSION)
 if not LibCustomTitles then return end
 
@@ -141,6 +141,18 @@ function LibCustomTitles:Init()
 				fr = "Apprenti préféré",
 				de = "Lieblingslehrling",
 			},
+			["Ravani Indoril"] = {
+				ov = true,
+				en = "Warden",
+				fr = "Sentinelle",
+				de = "Aufseher",
+			},
+			["Telvanni Ravani Varo"] = {
+				ov = true,
+				en = "Warden",
+				fr = "Sentinelle",
+				de = "Aufseher",
+			},
 		},
 		
 		["@Valorin"] = { -- EU v10
@@ -150,6 +162,12 @@ function LibCustomTitles:Init()
 				fr = "Lame Ethérée",
 				de = "Ätherklinge",
 			},
+			["Nathyn Varo"] = {
+				ov = true,
+				en = "Warden",
+				fr = "Sentinelle",
+				de = "Aufseher",
+			},
 		},
 		
 		["@Manorin"] = { -- EU v10 (v12 fix)
@@ -158,6 +176,12 @@ function LibCustomTitles:Init()
 				en = "Hero",
 				fr = "Héros",
 				de = "Helt",
+			},
+			["Serjo Vivicah Telvanni"] = {
+				ov = {en = "Master Wizard", fr = "Maître mage", de = "Meisterin der Zauberei"},
+				en = "Archmagister",
+				fr = "Archimage",
+				de = "Erzmagister",
 			},
 		},
 		
