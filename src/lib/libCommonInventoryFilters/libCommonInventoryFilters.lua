@@ -1,4 +1,4 @@
-local myNAME, myVERSION = "libCommonInventoryFilters", 1.4
+local myNAME, myVERSION = "libCommonInventoryFilters", 1.6
 local libCIF = LibStub:NewLibrary(myNAME, myVERSION)
 if not libCIF then return end
 
@@ -32,6 +32,14 @@ local function enableGuildStoreSellFilters()
     end
 end
 
+--if the mouse is enabled, cycle its state to refresh the integrity of the control beneath it
+local function SafeUpdateList(object, ...)
+    local isMouseVisible = SCENE_MANAGER:IsInUIMode()
+    if isMouseVisible then HideMouse() end
+    object:UpdateList(...)
+    if isMouseVisible then ShowMouse() end
+end
+
 local function fixSearchBoxBugs()
     -- http://www.esoui.com/forums/showthread.php?t=4551
     -- search box bug #1: stale searchData after swapping equipment
@@ -47,7 +55,7 @@ local function fixSearchBoxBugs()
     ZO_GuildBankSearchBox:SetHandler("OnTextChanged",
         function(editBox)
             ZO_EditDefaultText_OnTextChanged(editBox)
-            PLAYER_INVENTORY:UpdateList(INVENTORY_GUILD_BANK)
+            SafeUpdateList(PLAYER_INVENTORY, INVENTORY_GUILD_BANK)
         end)
 
     -- guild bank search box bug #3: wrong search box cleared

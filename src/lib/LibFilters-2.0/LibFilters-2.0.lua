@@ -1,4 +1,4 @@
-local MAJOR, MINOR = "LibFilters-2.0", 2
+local MAJOR, MINOR = "LibFilters-2.0", 2.3
 local LibFilters, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 if not LibFilters then return end
 
@@ -93,27 +93,38 @@ local filterTypeToUpdaterName = {
 	[LF_QUICKSLOT] = "QUICKSLOT",
 }
 
+--if the mouse is enabled, cycle its state to refresh the integrity of the control beneath it
+local function SafeUpdateList(object, ...)
+	local isMouseVisible = SCENE_MANAGER:IsInUIMode()
+
+	if isMouseVisible then HideMouse() end
+
+	object:UpdateList(...)
+	
+	if isMouseVisible then ShowMouse() end
+end
+
 local inventoryUpdaters = {
 	INVENTORY = function()
-		PLAYER_INVENTORY:UpdateList(INVENTORY_BACKPACK)
+		SafeUpdateList(PLAYER_INVENTORY, INVENTORY_BACKPACK)
 	end,
 	BANK_WITHDRAW = function()
-		PLAYER_INVENTORY:UpdateList(INVENTORY_BANK)
+		SafeUpdateList(PLAYER_INVENTORY, INVENTORY_BANK)
 	end,
 	GUILDBANK_WITHDRAW = function()
-		PLAYER_INVENTORY:UpdateList(INVENTORY_GUILD_BANK)
+		SafeUpdateList(PLAYER_INVENTORY, INVENTORY_GUILD_BANK)
 	end,
 	VENDOR_BUY = function()
 		if BACKPACK_TRADING_HOUSE_LAYOUT_FRAGMENT.state ~= "shown" then
 			STORE_WINDOW:GetStoreItems()
-			STORE_WINDOW:UpdateList()
+			SafeUpdateList(STORE_WINDOW)
 		end
 	end,
 	VENDOR_BUYBACK = function()
-		BUY_BACK_WINDOW:UpdateList()
+		SafeUpdateList(BUY_BACK_WINDOW)
 	end,
 	VENDOR_REPAIR = function()
-		REPAIR_WINDOW:UpdateList()
+		SafeUpdateList(REPAIR_WINDOW)
 	end,
 	GUILDSTORE_BROWSE = function()
 	end,
@@ -142,10 +153,10 @@ local inventoryUpdaters = {
 	PROVISIONING_BREW = function()
 	end,
 	CRAFTBAG = function()
-		PLAYER_INVENTORY:UpdateList(INVENTORY_CRAFT_BAG)
+		SafeUpdateList(PLAYER_INVENTORY, INVENTORY_CRAFT_BAG)
 	end,
 	QUICKSLOT = function()
-		QUICKSLOT_WINDOW:UpdateList()
+		SafeUpdateList(QUICKSLOT_WINDOW)
 	end,
 }
 
@@ -159,6 +170,7 @@ local function runFilters(filterType, ...)
 			return false
 		end
 	end
+
 	return true
 end
 
