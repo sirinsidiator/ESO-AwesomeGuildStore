@@ -127,8 +127,6 @@ function ListingTabWrapper:InitializeUnitPriceDisplay(tradingHouseWrapper)
     dataType.setupCallback = function(rowControl, postedItem)
         originalSetupCallback(rowControl, postedItem)
 
-        self:AddListingPriceSum(postedItem.purchasePrice) -- we place it here so we do not have to do any extra calls
-
         local sellPriceControl = rowControl:GetNamedChild("SellPrice")
         local perItemPrice = rowControl:GetNamedChild("SellPricePerItem")
         if(saveData.displayPerUnitPrice) then
@@ -277,22 +275,18 @@ function ListingTabWrapper:InitializeOverallPrice(tradingHouseWrapper)
     self.listingPriceSumControl = listingPriceSumControl
 
     tradingHouseWrapper:Wrap("OnListingsRequestSuccess", function(originalOnListingsRequestSuccess, ...)
-        self:ClearListingPriceSum()
         originalOnListingsRequestSuccess(...)
         self:RefreshListingPriceSumDisplay()
     end)
 end
 
-function ListingTabWrapper:ClearListingPriceSum()
-    self.currentListingPriceSum = 0
-end
-
-function ListingTabWrapper:AddListingPriceSum(price)
-    self.currentListingPriceSum = self.currentListingPriceSum + price
-end
-
 function ListingTabWrapper:RefreshListingPriceSumDisplay()
-    local price = zo_strformat(L["LISTING_TAB_OVERALL_PRICE"], ZO_CurrencyControl_FormatCurrency(self.currentListingPriceSum), iconMarkup)
+    local sum = 0
+    for i = 1, GetNumTradingHouseListings() do
+        local _, _, _, _, _, _, price = GetTradingHouseListingItemInfo(i)
+        sum = sum + price
+    end
+    local price = zo_strformat(L["LISTING_TAB_OVERALL_PRICE"], ZO_CurrencyControl_FormatCurrency(sum), iconMarkup)
     self.listingPriceSumControl:SetText(price)
 end
 
