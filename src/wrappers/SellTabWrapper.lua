@@ -483,7 +483,6 @@ function SellTabWrapper:SetPendingItem(bagId, slotIndex)
         self.pendingBagId, self.pendingSlotIndex = bagId, slotIndex
         self.pendingItemLink = GetItemLink(bagId, slotIndex)
         self.pendingItemIdentifier = GetItemIdentifier(self.pendingItemLink)
-        self:UpdateTempSlot()
 
         self.currentStackCount = self.lastSoldStackCount[self.pendingItemIdentifier] or self.pendingStackCount
         if(self.currentStackCount > self.pendingStackCount) then
@@ -491,6 +490,8 @@ function SellTabWrapper:SetPendingItem(bagId, slotIndex)
         end
         self.currentPricePerUnit = self.lastSoldPricePerUnit[self.pendingItemIdentifier] or GetMasterMerchantLastUsedPrice(self.pendingItemLink) or GetMasterMerchantPrice(self.pendingItemLink) or (sellPrice * 3)
         self.currentSellPrice = self.currentPricePerUnit * self.currentStackCount
+
+        self:UpdateTempSlot()
 
         self.ppuSlider:SetMinMax(0, math.max(math.ceil(self.currentPricePerUnit * 3), 100))
         self.priceButtonContainer:ClearAnchors()
