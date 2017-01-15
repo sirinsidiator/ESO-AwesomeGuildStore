@@ -429,6 +429,7 @@ function SellTabWrapper:SetQuantity(value, skipUpdateSlider)
     self.currentStackCount = math.max(1, math.min(self.pendingStackCount, value))
     if(not skipUpdateSlider) then self.quantitySlider:UpdateValue() end
     self:UpdateListing()
+    self:UpdateTempSlot()
 end
 
 function SellTabWrapper:GetQuantity()
