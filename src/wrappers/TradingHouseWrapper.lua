@@ -103,7 +103,8 @@ function TradingHouseWrapper:Initialize(saveData)
     end)
 
     local KIOSK_OPTION_INDEX = 1
-    RegisterForEvent(EVENT_CHATTER_BEGIN, function(_, optionCount)
+    local INTERACT_WINDOW_SHOWN = "Shown"
+    INTERACT_WINDOW:RegisterCallback(INTERACT_WINDOW_SHOWN, function()
         if(IsShiftKeyDown() or not saveData.skipGuildKioskDialog) then return end
         local _, optionType = GetChatterOption(KIOSK_OPTION_INDEX)
         if(optionType == CHATTER_START_TRADINGHOUSE) then
