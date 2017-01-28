@@ -311,6 +311,11 @@ AwesomeGuildStore.Localization = {
     SETTINGS_CLEAR_SELL_PRICE_CACHE_LABEL = "Clear sell price cache",
     SETTINGS_CLEAR_SELL_PRICE_CACHE_DESCRIPTION = "Pressing this button will remove all stored quantity and price values for the sell tab from your save data. While Master Merchant is active, it will take the last sell price from there when selecting an item if no data was found in AwesomeGuildStore's own data",
     SETTINGS_CLEAR_SELL_PRICE_CACHE_WARNING = "The data cannot be restored after you have confirmed the action",
+    SETTINGS_ENABLE_GUILD_TRADER_LIST_LABEL = "Enable guild trader list (BETA)",
+    SETTINGS_ENABLE_GUILD_TRADER_LIST_DESCRIPTION = "When activated, the guild menu will show a new tab with a list of all kiosks in Tamriel. The list will get updated with the owning guilds whenever you visit a kiosk.",
+    SETTINGS_CLEAR_GUILD_TRADER_LIST_LABEL = "Clear guild trader list",
+    SETTINGS_CLEAR_GUILD_TRADER_LIST_DESCRIPTION = "Pressing this button will remove all stored data related to the guild trader list",
+    SETTINGS_CLEAR_GUILD_TRADER_LIST_WARNING = "The UI will reload and the data cannot be restored after you have confirmed the action",
 
     CONTROLS_SUPPRESS_LOCAL_FILTERS = "Suppress Local Filters",
 
@@ -323,5 +328,32 @@ AwesomeGuildStore.Localization = {
     CANCEL_NOTIFICATION = "You have cancelled your listing of <<1>>x <<t:2>> for <<3>> in <<4>>",
     LISTED_NOTIFICATION = "You have listed <<1>>x <<t:2>> for <<3>> in <<4>>",
 
-    LISTING_TAB_OVERALL_PRICE = "Overall Price: |cffffff<<1>>|r <<2>>" -- 1: price, 2: gold icon
+    LISTING_TAB_OVERALL_PRICE = "Overall Price: |cffffff<<1>>|r <<2>>", -- 1: price, 2: gold icon
+
+    KIOSK_INFO_NAME_MATCHING_PATTERN = "(.-) in .-",
+    KIOSK_INFO_NAME_MATCHING_PATTERN2 = "(.-) near .-",
+
+    TRADER_LIST_HEADER_STATS_UP_TO_DATE_LABEL = "Current:",
+    TRADER_LIST_HEADER_STATS_UP_TO_DATE_TOOLTIP = "|cffffff<<1>>|r stores visited this week",
+    TRADER_LIST_HEADER_STATS_VISITED_LABEL = "Visited:",
+    TRADER_LIST_HEADER_STATS_VISITED_TOOLTIP = "|cffffff<<1>>|r stores visited all time",
+    TRADER_LIST_HEADER_STATS_OVERALL_LABEL = "Overall:",
+    TRADER_LIST_HEADER_STATS_OVERALL_TOOLTIP = "|cffffff<<1>>|r stores detected in |cffffff<<2>>|r locations",
+    TRADER_LIST_HEADER_FILTER_LABEL = "Filter By:",
+    TRADER_LIST_HEADER_TRADER_LABEL = "Trader",
+    TRADER_LIST_HEADER_LOCATION_LABEL = "Location",
+    TRADER_LIST_HEADER_OWNER_LABEL = "Guild",
+    TRADER_LIST_HEADER_LAST_VISIT_LABEL = "Last Visited",
+    TRADER_LIST_DETAILS_ZONE_LABEL = "Zone",
+    TRADER_LIST_DETAILS_HISTORY_LABEL = "History",
+    TRADER_LIST_DETAILS_IS_MEMBER_TOOLTIP = "You are a member of this guild.",
+    TRADER_LIST_NEVER_VISITED = "never",
+    TRADER_LIST_MENU_SHOW_DETAILS = "Show Details",
+    TRADER_LIST_MENU_SHOW_ON_MAP = "Show On Map",
+    TRADER_LIST_EMPTY_NOT_READY_LABEL = "Trader database is not initialized yet.",
+    TRADER_LIST_EMPTY_EVERYTHING_FILTERED_LABEL = "No results match your filter text.",
+    TRADER_LIST_LAST_VISIT_IS_GUILD_MEMBER = "joined",
+    TRADER_LIST_LAST_VISIT_IS_GUILD_MEMBER = "rejointe",
+    TRADER_OWNER_LIST_EMPTY_LABEL = "No history data stored.",
+    TRADER_OWNER_LIST_HEADER_WEEK_LABEL = "Week",
 }

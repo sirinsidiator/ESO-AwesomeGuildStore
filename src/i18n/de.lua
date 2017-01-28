@@ -127,6 +127,11 @@ local localization = {
     SETTINGS_CLEAR_SELL_PRICE_CACHE_LABEL = "Verkaufspreisspeicher leeren",
     SETTINGS_CLEAR_SELL_PRICE_CACHE_DESCRIPTION = "Dieser Schalter entfernt alle Stückzahl- und Stückpreiswerte aus den gespeicherten Daten für das Verkaufsfenster. Während Master Merchant aktiv ist, werden beim Selektieren eines Gegenstandes die zuletzt verwendenten Verkaufspreise von dort übernommen solange keine Daten in AwesomeGuildStore vorliegen",
     SETTINGS_CLEAR_SELL_PRICE_CACHE_WARNING = "Die Daten können nicht wiederhergestellt werden sobald die Aktion bestätigt wird",
+    SETTINGS_ENABLE_GUILD_TRADER_LIST_LABEL = "Gildenhändlerliste aktivieren (BETA)",
+    SETTINGS_ENABLE_GUILD_TRADER_LIST_DESCRIPTION = "Wenn aktiv, wird im Gildenmenü ein neuer Reiter mit einer Liste aller Händler in Tamriel hinzugefügt. Die Liste wird mit den Gilden ergänzt, wann immer ihr einen Händler besucht.",
+    SETTINGS_CLEAR_GUILD_TRADER_LIST_LABEL = "Gildenhändlerliste leeren",
+    SETTINGS_CLEAR_GUILD_TRADER_LIST_DESCRIPTION = "Dieser Schalter entfernt alle Daten die mit der Gildenhändlerliste zusammenhängen",
+    SETTINGS_CLEAR_GUILD_TRADER_LIST_WARNING = "Die Benutzeroberfläche wird neu geladen und die Daten können nicht wiederhergestellt werden sobald die Aktion bestätigt wird",
 
     CONTROLS_SUPPRESS_LOCAL_FILTERS = "Lokale Filter unterdrücken",
 
@@ -139,6 +144,32 @@ local localization = {
     CANCEL_NOTIFICATION = "Du hast dein Angebot von <<1>>x <<t:2>> für <<3>> in <<4>> abgebrochen",
     LISTED_NOTIFICATION = "Du hast <<1>>x <<t:2>> für <<3>> in <<4>> angeboten",
 
-    LISTING_TAB_OVERALL_PRICE = "Gesamtpreis: |cffffff<<1>>|r <<2>>" -- 1: price, 2: gold icon
+    LISTING_TAB_OVERALL_PRICE = "Gesamtpreis: |cffffff<<1>>|r <<2>>", -- 1: price, 2: gold icon
+
+    KIOSK_INFO_NAME_MATCHING_PATTERN = "(.-) in .-",
+    KIOSK_INFO_NAME_MATCHING_PATTERN2 = "(.-) nahe .-",
+
+    TRADER_LIST_HEADER_STATS_UP_TO_DATE_LABEL = "Aktuell:",
+    TRADER_LIST_HEADER_STATS_UP_TO_DATE_TOOLTIP = "|cffffff<<1>>|r Händler besucht diese Woche",
+    TRADER_LIST_HEADER_STATS_VISITED_LABEL = "Besucht:",
+    TRADER_LIST_HEADER_STATS_VISITED_TOOLTIP = "|cffffff<<1>>|r Händler besucht insgesamt",
+    TRADER_LIST_HEADER_STATS_OVERALL_LABEL = "Overall:",
+    TRADER_LIST_HEADER_STATS_OVERALL_TOOLTIP = "|cffffff<<1>>|r Händler an |cffffff<<2>>|r Orten gefunden",
+    TRADER_LIST_HEADER_FILTER_LABEL = "Suche nach:",
+    TRADER_LIST_HEADER_TRADER_LABEL = "Händler",
+    TRADER_LIST_HEADER_LOCATION_LABEL = "Ort",
+    TRADER_LIST_HEADER_OWNER_LABEL = "Gilde",
+    TRADER_LIST_HEADER_LAST_VISIT_LABEL = "Letzter Besuch",
+    TRADER_LIST_DETAILS_ZONE_LABEL = "Region",
+    TRADER_LIST_DETAILS_HISTORY_LABEL = "Verlauf",
+    TRADER_LIST_DETAILS_IS_MEMBER_TOOLTIP = "Ihr seit Mitglied dieser Gilde.",
+    TRADER_LIST_NEVER_VISITED = "niemals",
+    TRADER_LIST_MENU_SHOW_DETAILS = "Details anzeigen",
+    TRADER_LIST_MENU_SHOW_ON_MAP = "Auf der Karte zeigen",
+    TRADER_LIST_EMPTY_NOT_READY_LABEL = "Händlerdatenbank ist noch nicht initialisiert.",
+    TRADER_LIST_EMPTY_EVERYTHING_FILTERED_LABEL = "Keine Ergebnisse für eure Suche.",
+    TRADER_LIST_LAST_VISIT_IS_GUILD_MEMBER = "beigetreten",
+    TRADER_OWNER_LIST_EMPTY_LABEL = "Kein Verlauf gespeichert.",
+    TRADER_OWNER_LIST_HEADER_WEEK_LABEL = "Woche",
 }
 ZO_ShallowTableCopy(localization, AwesomeGuildStore.Localization)

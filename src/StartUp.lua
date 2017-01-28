@@ -98,6 +98,9 @@ end
 
 OnAddonLoaded(function()
     local saveData = AwesomeGuildStore.LoadSettings()
+    if(saveData.guildTraderListEnabled) then
+        AwesomeGuildStore.InitializeGuildStoreList(saveData)
+    end
     AwesomeGuildStore.main = AwesomeGuildStore.TradingHouseWrapper:New(saveData)
     AwesomeGuildStore.InitializeAugmentedMails(saveData)
 

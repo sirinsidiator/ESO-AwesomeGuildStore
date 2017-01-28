@@ -38,6 +38,7 @@ function TradingHouseWrapper:Initialize(saveData)
             [ZO_TRADING_HOUSE_MODE_LISTINGS] = listingTab,
         }
 
+    local CollectGuildKiosk = AwesomeGuildStore.CollectGuildKiosk
     self:Wrap("OpenTradingHouse", function(originalOpenTradingHouse, ...)
         originalOpenTradingHouse(...)
         self:SetInterceptInventoryItemClicks(false)
@@ -46,6 +47,9 @@ function TradingHouseWrapper:Initialize(saveData)
             zo_callLater(function() -- TODO: put this in the right spot so that we don't need a callLater
                 searchTab:Search()
             end, 500)
+        end
+        if(saveData.guildTraderListEnabled) then
+            CollectGuildKiosk()
         end
     end)
 

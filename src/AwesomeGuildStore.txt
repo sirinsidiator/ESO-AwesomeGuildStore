@@ -38,6 +38,8 @@ StartUp.lua
 i18n/en.lua
 i18n/$(language).lua
 Settings.lua
+util/misc.lua
+util/Codec.lua
 util/MinMaxRangeSlider.lua
 util/ButtonGroup.lua
 util/ToggleButton.lua
@@ -80,6 +82,15 @@ wrappers/SellTabWrapper.lua
 wrappers/ListingTabWrapper.lua
 wrappers/KeybindStripWrapper.lua
 wrappers/ActivityLogWrapper.lua
+guildstorelist/KioskData.lua
+guildstorelist/StoreData.lua
+guildstorelist/KioskList.lua
+guildstorelist/StoreList.lua
+guildstorelist/OwnerList.lua
+guildstorelist/GuildStoreList.xml
+guildstorelist/TraderListControl.lua
+guildstorelist/OwnerHistoryControl.lua
+guildstorelist/GuildStoreList.lua
 SalesCategorySelector.lua
 AwesomeGuildStore.xml
 Bindings.xml

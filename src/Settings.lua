@@ -1,7 +1,7 @@
 local function LoadSettings()
     local L = AwesomeGuildStore.Localization
     local defaultData = {
-        version = 20,
+        version = 21,
         lastGuildName = "",
         keepFiltersOnClose = true,
         oldQualitySelectorBehavior = false,
@@ -37,7 +37,8 @@ local function LoadSettings()
             favoritesSortField = "searches",
             favoritesSortOrder = ZO_SORT_ORDER_DOWN,
         },
-        hasTouchedAction = {}
+        hasTouchedAction = {},
+        guildTraderListEnabled = false,
     }
 
     local function CreateSettingsDialog(saveData)
@@ -207,6 +208,29 @@ local function LoadSettings()
                 end
             end,
         }
+        optionsData[#optionsData + 1] = {
+            type = "checkbox",
+            name = L["SETTINGS_ENABLE_GUILD_TRADER_LIST_LABEL"],
+            tooltip = L["SETTINGS_ENABLE_GUILD_TRADER_LIST_DESCRIPTION"],
+            requiresReload = true,
+            getFunc = function() return saveData.guildTraderListEnabled end,
+            setFunc = function(value) saveData.guildTraderListEnabled = value end,
+            default = defaultData.guildTraderListEnabled,
+        }
+        optionsData[#optionsData + 1] = {
+            type = "button",
+            name = L["SETTINGS_CLEAR_GUILD_TRADER_LIST_LABEL"],
+            tooltip = L["SETTINGS_CLEAR_GUILD_TRADER_LIST_DESCRIPTION"],
+            warning = L["SETTINGS_CLEAR_GUILD_TRADER_LIST_WARNING"],
+            disabled = function() return not saveData.guildTraderListEnabled end,
+            isDangerous = true,
+            func = function()
+                if(saveData.guildStoreList) then
+                    saveData.guildStoreList = nil
+                    ReloadUI()
+                end
+            end,
+        }
         LAM:RegisterOptionControls("AwesomeGuildStoreOptions", optionsData)
 
         AwesomeGuildStore.OpenSettingsPanel = function()
@@ -327,6 +351,10 @@ local function LoadSettings()
                 end
             end
             saveData.version = 20
+        end
+        if(saveData.version == 20) then
+            saveData.guildTraderListEnabled = defaultData.guildTraderListEnabled
+            saveData.version = 21
         end
     end
 

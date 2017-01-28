@@ -127,6 +127,11 @@ local localization = { -- translated by Ayantir (http://www.esoui.com/forums/mem
     SETTINGS_CLEAR_SELL_PRICE_CACHE_LABEL = "Effacer le cache des prix",
     SETTINGS_CLEAR_SELL_PRICE_CACHE_DESCRIPTION = "Valider cette action supprimera toutes les informations de quantité et de prix de vente relative à l'onglet Vente actuellement en cache. Si Master Merchant est détecté, Awesome Guild Store se basera sur le montant de ses informations si aucune donnée interne n'existe",
     SETTINGS_CLEAR_SELL_PRICE_CACHE_WARNING = "Les données ne pourront être restaurées après avoir effectué cette action",
+    SETTINGS_ENABLE_GUILD_TRADER_LIST_LABEL = "Activer le listing des Boutiques de Guilde (BETA)",
+    SETTINGS_ENABLE_GUILD_TRADER_LIST_DESCRIPTION = "Lorsque activé, la fenêtre de guilde affichera un nouvel onglet listant toutes les boutiques de Tamriel. La liste se mettra à jour à chaque visite de boutique.",
+    SETTINGS_CLEAR_GUILD_TRADER_LIST_LABEL = "Effacer la liste des boutiques",
+    SETTINGS_CLEAR_GUILD_TRADER_LIST_DESCRIPTION = "Supprimera toutes les informations sur les boutiques de guilde",
+    SETTINGS_CLEAR_GUILD_TRADER_LIST_WARNING = "L'interface se rechargera et les données ne pourront être restaurées une fois effectué cette action",
 
     CONTROLS_SUPPRESS_LOCAL_FILTERS = "Désactiver les filtres locaux temporairement",
 
@@ -139,6 +144,32 @@ local localization = { -- translated by Ayantir (http://www.esoui.com/forums/mem
     CANCEL_NOTIFICATION = "Vous avez annulé votre vente de <<1>>x <<t:2>> pour <<3>> chez <<4>>",
     LISTED_NOTIFICATION = "Vous avez placé <<1>>x <<t:2>> pour <<3>> chez <<4>>",
 
-    LISTING_TAB_OVERALL_PRICE = "Prix total : |cffffff<<1>>|r <<2>>" -- 1: price, 2: gold icon
+    LISTING_TAB_OVERALL_PRICE = "Prix total : |cffffff<<1>>|r <<2>>", -- 1: price, 2: gold icon
+
+    KIOSK_INFO_NAME_MATCHING_PATTERN = "(.-) à .-",
+    KIOSK_INFO_NAME_MATCHING_PATTERN2 = "(.-) près .-",
+
+    TRADER_LIST_HEADER_STATS_UP_TO_DATE_LABEL = "Actuel :",
+    TRADER_LIST_HEADER_STATS_UP_TO_DATE_TOOLTIP = "|cffffff<<1>>|r boutiques visitées cette semaine",
+    TRADER_LIST_HEADER_STATS_VISITED_LABEL = "Visités:",
+    TRADER_LIST_HEADER_STATS_VISITED_TOOLTIP = "|cffffff<<1>>|r boutiques visitées au total",
+    TRADER_LIST_HEADER_STATS_OVERALL_LABEL = "Résumé :",
+    TRADER_LIST_HEADER_STATS_OVERALL_TOOLTIP = "|cffffff<<1>>|r boutiques détectées à |cffffff<<2>>|r emplacements",
+    TRADER_LIST_HEADER_FILTER_LABEL = "Filtrer par :",
+    TRADER_LIST_HEADER_TRADER_LABEL = "Marchand",
+    TRADER_LIST_HEADER_LOCATION_LABEL = "Emplacement",
+    TRADER_LIST_HEADER_OWNER_LABEL = "Guilde",
+    TRADER_LIST_HEADER_LAST_VISIT_LABEL = "Dernière visite",
+    TRADER_LIST_DETAILS_ZONE_LABEL = "Zone",
+    TRADER_LIST_DETAILS_HISTORY_LABEL = "Historique",
+    TRADER_LIST_DETAILS_IS_MEMBER_TOOLTIP = "Vous êtes membre de cete guilde.",
+    TRADER_LIST_NEVER_VISITED = "jamais",
+    TRADER_LIST_MENU_SHOW_DETAILS = "Afficher le détail",
+    TRADER_LIST_MENU_SHOW_ON_MAP = "Afficher sur la carte",
+    TRADER_LIST_EMPTY_NOT_READY_LABEL = "La base des marchands n'est pas initialisée.",
+    TRADER_LIST_EMPTY_EVERYTHING_FILTERED_LABEL = "Aucun résultat correspondant à votre filtre.",
+    TRADER_LIST_LAST_VISIT_IS_GUILD_MEMBER = "Guilde rejointe",
+    TRADER_OWNER_LIST_EMPTY_LABEL = "Aucun historique.",
+    TRADER_OWNER_LIST_HEADER_WEEK_LABEL = "Semaine",
 }
 ZO_ShallowTableCopy(localization, AwesomeGuildStore.Localization)
