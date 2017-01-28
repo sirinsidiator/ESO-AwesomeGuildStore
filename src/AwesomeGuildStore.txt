@@ -34,6 +34,8 @@ lib/LibTextFilter/LibTextFilter.lua
 lib/LibCustomTitles/LibCustomTitles.lua
 lib/LibCustomMenu/LibCustomMenu.lua
 lib/LibAnnyoingUpdateNotificationInGame/LibAnnyoingUpdateNotificationInGame.lua
+lib/LibMapPing/LibMapPing.lua
+lib/LibGPS/LibGPS.lua
 StartUp.lua
 i18n/en.lua
 i18n/$(language).lua
