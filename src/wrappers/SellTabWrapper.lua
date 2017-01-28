@@ -332,7 +332,7 @@ function SellTabWrapper:InitializeCraftingBag(tradingHouseWrapper)
             if(self:IsItemAlreadyBeingPosted(currentInventorySlot)) then
                 actionStringId = SI_TRADING_HOUSE_REMOVE_PENDING_POST
                 actionCallback = function()
-                    self:ClearPendingItem()
+                    self.tradingHouse:ClearPendingPost()
                     ZO_InventorySlot_OnMouseEnter(currentInventorySlot)
                 end
             else
@@ -350,8 +350,6 @@ function SellTabWrapper:InitializeCraftingBag(tradingHouseWrapper)
             self:UpdateListing()
             self.quantitySlider:UpdateValue()
             self.ppuSlider:UpdateValue()
-        elseif(self.pendingBagId == BAG_BACKPACK) then
-            self:ClearPendingItem()
         end
     end)
 
@@ -394,19 +392,22 @@ function SellTabWrapper:InitializeCraftingBag(tradingHouseWrapper)
         end
     end)
 
-    RegisterForEvent(EVENT_TRADING_HOUSE_RESPONSE_RECEIVED, function(_, responseType, result)
-        if(responseType == TRADING_HOUSE_RESULT_POST_PENDING and result == TRADING_HOUSE_RESULT_SUCCESS) then
-            self:ClearPendingItem()
-        end
-    end)
+    tradingHouseWrapper:PreHook("ClearPendingPost", function(tradingHouse)
+        if(self.pendingBagId == BAG_BACKPACK) then SetPendingItemPost(BAG_BACKPACK, 0, 0) end
 
-    local lastGuildId
-    ZO_PreHook("SelectTradingHouseGuildId", function(guildId)
-        if(guildId ~= lastGuildId) then
-            self:ClearPendingItem()
-            lastGuildId = guildId
-        end
+        self:ClearPendingItemLockColor()
+        self:ClearPendingItem()
+
+        tradingHouse.m_pendingItemSlot = nil
     end)
+    self.tradingHouse = tradingHouse
+end
+
+function SellTabWrapper:ClearPendingItem()
+    self.pendingIcon, self.pendingStackCount, self.pendingSellPrice = "", 0, 0
+    self.pendingBagId, self.pendingSlotIndex, self.requiresTempSlot = 0, 0, false
+    self.currentStackCount, self.currentPricePerUnit, self.currentSellPrice = 0, 0, 0
+    self.pendingItemLink, self.pendingItemIdentifier = "", ""
 end
 
 function SellTabWrapper:IsItemAlreadyBeingPosted(inventorySlot)
@@ -509,23 +510,6 @@ function SellTabWrapper:SetPendingItem(bagId, slotIndex)
     end
 end
 
-function SellTabWrapper:ClearPendingItem()
-    if(self.pendingBagId == BAG_BACKPACK) then SetPendingItemPost(BAG_BACKPACK, 0, 0) end
-
-    self:ClearPendingItemLockColor()
-
-    self.pendingIcon, self.pendingStackCount, self.pendingSellPrice = "", 0, 0
-    self.pendingBagId, self.pendingSlotIndex, self.requiresTempSlot = 0, 0, false
-    self.currentStackCount, self.currentPricePerUnit, self.currentSellPrice = 0, 0, 0
-    self.pendingItemLink, self.pendingItemIdentifier = "", ""
-
-    local tradingHouse = self.tradingHouse
-    if(tradingHouse) then
-        tradingHouse.m_pendingItemSlot = nil
-        tradingHouse:ClearPendingPost()
-    end
-end
-
 function SellTabWrapper:InitializeListedNotification(tradingHouseWrapper)
     local saveData = self.saveData
     local listedMessage = ""
@@ -562,7 +546,7 @@ function SellTabWrapper:ResetSalesCategoryFilter()
 end
 
 function SellTabWrapper:SetCurrentInventory(bagId)
-    self:ClearPendingItem()
+    self.tradingHouse:ClearPendingPost()
     SCENE_MANAGER:RemoveFragment(self.currentInventoryFragment)
     if(bagId == BAG_BACKPACK) then
         self.currentInventoryFragment = INVENTORY_FRAGMENT

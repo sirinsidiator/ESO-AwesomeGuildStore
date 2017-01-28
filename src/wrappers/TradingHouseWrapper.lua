@@ -99,7 +99,7 @@ function TradingHouseWrapper:Initialize(saveData)
         if currentTab then
             currentTab:OnClose(self)
         end
-        sellTab:ClearPendingItem()
+        tradingHouse:ClearPendingPost()
     end)
 
     local KIOSK_OPTION_INDEX = 1
