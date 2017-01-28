@@ -54,14 +54,16 @@ local function LoadSettings()
         }
         local panel = LAM:RegisterAddonPanel("AwesomeGuildStoreOptions", panelData)
         local optionsData = {}
-        optionsData[#optionsData + 1] = {
-            type = "checkbox",
-            name = L["SETTINGS_KEEP_FILTERS_ON_CLOSE_LABEL"],
-            tooltip = L["SETTINGS_KEEP_FILTERS_ON_CLOSE_DESCRIPTION"],
-            getFunc = function() return saveData.keepFiltersOnClose end,
-            setFunc = function(value) saveData.keepFiltersOnClose = value end,
-            default = defaultData.keepFiltersOnClose
-        }
+        if(GetAPIVersion() < 100018) then
+            optionsData[#optionsData + 1] = {
+                type = "checkbox",
+                name = L["SETTINGS_KEEP_FILTERS_ON_CLOSE_LABEL"],
+                tooltip = L["SETTINGS_KEEP_FILTERS_ON_CLOSE_DESCRIPTION"],
+                getFunc = function() return saveData.keepFiltersOnClose end,
+                setFunc = function(value) saveData.keepFiltersOnClose = value end,
+                default = defaultData.keepFiltersOnClose
+            }
+        end
         optionsData[#optionsData + 1] = {
             type = "checkbox",
             name = L["SETTINGS_OLD_QUALITY_SELECTOR_BEHAVIOR_LABEL"],
