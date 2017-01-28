@@ -36,6 +36,7 @@ lib/LibCustomMenu/LibCustomMenu.lua
 lib/LibAnnyoingUpdateNotificationInGame/LibAnnyoingUpdateNotificationInGame.lua
 lib/LibMapPing/LibMapPing.lua
 lib/LibGPS/LibGPS.lua
+lib/LibDateTime/LibDateTime.lua
 StartUp.lua
 i18n/en.lua
 i18n/$(language).lua
