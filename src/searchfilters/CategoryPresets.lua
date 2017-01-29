@@ -553,9 +553,17 @@ if(GetAPIVersion() > 100017) then -- TODO remove
     }
 
     local consumable = AwesomeGuildStore.FILTER_PRESETS[ITEMFILTERTYPE_CONSUMABLE].subcategories
+    for i = 1, #consumable do
+        local index = i
+        if(i > #consumable - 2) then
+            index = i + 1
+        end
+        consumable[i].index = index
+    end
     consumable[#consumable + 1] =  {
         label = L["FILTER_SUBCATEGORY_MASTER_WRIT"],
         texture = "EsoUI/Art/crafting/formulae_tabicon_%s.dds",
+        index = 8,
         filters = {
             [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_MASTER_WRIT },
         },
