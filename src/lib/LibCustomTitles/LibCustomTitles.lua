@@ -1,7 +1,7 @@
 --[[
 Author: Ayantir
 Filename: LibCustomTitles.lua
-Version: 15
+Version: 17
 ]]--
 
 --[[
@@ -30,7 +30,7 @@ http://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
 ]]--
 
 local libLoaded
-local LIB_NAME, VERSION = "LibCustomTitles", 15
+local LIB_NAME, VERSION = "LibCustomTitles", 16
 local LibCustomTitles, oldminor = LibStub:NewLibrary(LIB_NAME, VERSION)
 if not LibCustomTitles then return end
 
@@ -432,6 +432,34 @@ function LibCustomTitles:Init()
 				en = "Fountain of Auridon",
 				fr = "Fontaine d'Auridia",
 				--de = "Meister",
+			},
+		},
+		
+		["@HMS-Dragonfly"] = { -- v16
+			ov = true,
+			en = "Knight of Stendarr",
+			fr = "Chevalier de Stendarr",
+			--de = "Die Verlassene",
+		},
+
+		["@Faso"] = { -- v16
+			["Fasò"] = {
+				ov = true,
+				en = "Knights Radiant",
+			},
+		},
+
+		["@nifty2g"] = { -- v16
+			["Nifty Jong-Un"] = {
+				ov = true,
+				en = "Dawn of Anu",
+			},
+		},
+
+		["@Twirlz"] = { -- v17
+			["Yirel Virith"] = {
+				ov = true,
+				en = "Nightcaller",
 			},
 		},
 		
