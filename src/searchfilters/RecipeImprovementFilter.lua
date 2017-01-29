@@ -142,10 +142,26 @@ function RecipeImprovementFilter:BeforeRebuildSearchResultsPage(tradingHouseWrap
 	return true
 end
 
+local function GetItemLinkRecipeMinAndMaxRankRequirement(itemLink)
+    local tradeSkill, requiredLevel = GetItemLinkRecipeTradeskillRequirement(itemLink, 1)
+    local min, max = requiredLevel, requiredLevel
+    for i = 2, GetItemLinkRecipeNumTradeskillRequirements(itemLink) do
+        tradeSkill, requiredLevel = GetItemLinkRecipeTradeskillRequirement(itemLink, i)
+        min = math.min(min, requiredLevel)
+        max = math.max(max, requiredLevel)
+    end
+    return min, max
+end
+
 function RecipeImprovementFilter:FilterPageResult(index, icon, name, quality, stackCount, sellerName, timeRemaining, purchasePrice)
-	local itemLink = GetTradingHouseSearchResultItemLink(index, LINK_STYLE_BRACKETS)
-	local rank = GetItemLinkRecipeRankRequirement(itemLink)
-	return not (rank < self.min or rank > self.max)
+    local itemLink = GetTradingHouseSearchResultItemLink(index, LINK_STYLE_BRACKETS)
+    if(GetAPIVersion() > 100017) then -- TODO: remove  local rank = GetItemLinkRecipeRankRequirement(itemLink)
+        local min, max = GetItemLinkRecipeMinAndMaxRankRequirement(itemLink)
+        return not (min < self.min or max > self.max)
+    else
+        local rank = GetItemLinkRecipeRankRequirement(itemLink)
+        return not (rank < self.min or rank > self.max)
+    end
 end
 
 function RecipeImprovementFilter:SetWidth(width)
