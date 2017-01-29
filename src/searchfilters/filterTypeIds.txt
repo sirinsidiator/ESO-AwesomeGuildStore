@@ -33,8 +33,14 @@
 43 - ItemSetSubfilter
 44 - CraftedItemSubfilter
 45 - RecipeImprovementSubfilter
+46 - RecipeTypeSubfilter
+47 - DrinkTypeSubfilter
+48 - FoodTypeSubfilter
+49 - IngredientTypeSubfilter
+50 - SiegeTypeSubfilter
+51 - TrophyTypeSubfilter
 
-46 .. 99 - reserved
+52 .. 99 - reserved
 
 100 - MasterMerchant DealSelector
 101 - MasterMerchant DealFilter
