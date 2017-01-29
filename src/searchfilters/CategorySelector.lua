@@ -107,14 +107,22 @@ function CategorySelector:UpdateSubfilterVisibility()
     local subcategory = self.subcategory[self.category]
     if(subcategory) then subfilters = subfilters[subcategory].subfilters end
 
+    local searchTab = self.searchTabWrapper
+    if(searchTab.levelFilter) then
+        searchTab:DetachFilter(searchTab.levelFilter)
+        if(category.hasLevelFilter) then
+            searchTab:AttachFilter(searchTab.levelFilter)
+        end
+    end
+
     for _, subfilter in pairs(self.subfilters) do
-        self.searchTabWrapper:DetachFilter(subfilter)
+        searchTab:DetachFilter(subfilter)
     end
     if(subfilters) then
         for _, subfilterId in ipairs(subfilters) do
             local subfilter = self.subfilters[subfilterId]
             if(subfilter) then
-                self.searchTabWrapper:AttachFilter(subfilter)
+                searchTab:AttachFilter(subfilter)
             end
         end
     end
