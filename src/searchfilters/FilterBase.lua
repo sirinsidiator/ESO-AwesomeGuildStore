@@ -7,6 +7,15 @@ AwesomeGuildStore.FilterBase = FilterBase
 local RESET_BUTTON_SIZE = 18
 local RESET_BUTTON_TEXTURE = "EsoUI/Art/Buttons/decline_%s.dds"
 
+local LOCAL_FILTER_COLOR = ZO_ColorDef:New("A5D0FF")
+local EXTERNAL_FILTER_COLOR = ZO_ColorDef:New("FFA5A5")
+
+local EXTERNAL_FILTER_PROVIDER = {
+    [100] = "Master Merchant",
+    [101] = "Master Merchant",
+    [102] = "CookeryWiz",
+}
+
 function FilterBase:New(type, name, tradingHouseWrapper, ...)
     local filter = ZO_Object.New(self)
     filter:InitializeBase(type, name)
@@ -17,6 +26,7 @@ end
 function FilterBase:InitializeBase(type, name)
     self.isLocal = true -- set to false if it is not a local filter
     self.type = type
+    self.priority = 0
     self.callbackName = name .. "Changed"
 
     local container = WINDOW_MANAGER:CreateControl(name .. "Container", GuiRoot, CT_CONTROL)
@@ -33,32 +43,36 @@ function FilterBase:InitializeBase(type, name)
     self.resetButton = resetButton
 end
 
-local localFilterLabelColor = ZO_ColorDef:New("A5D0FF")
-local externalFilterLabelColor = ZO_ColorDef:New("FFA5A5")
-local externalFilters = {
-    [100] = "Master Merchant",
-    [101] = "Master Merchant",
-    [102] = "CookeryWiz",
-}
+function FilterBase:InitializeProvider()
+    if(self.color) then return end
+    self.priority = 3
+    if(self.isLocal) then
+        self.priority = 2
+    end
+    self.provider = EXTERNAL_FILTER_PROVIDER[self.type]
+    if(self.provider) then
+        self.priority = self.priority - 1
+        self.color = EXTERNAL_FILTER_COLOR
+    else
+        self.color = LOCAL_FILTER_COLOR
+    end
+end
+
 function FilterBase:SetLabelControl(label)
+    self:InitializeProvider()
     label:ClearAnchors()
     label:SetAnchor(TOPLEFT, self.container, TOPLEFT, 0, 0)
     label:SetAnchor(TOPRIGHT, self.container, TOPLRIGHT, -RESET_BUTTON_SIZE, 0)
     if(self.isLocal) then
-        local provider = externalFilters[self.type]
-        if(provider) then
-            label:SetColor(externalFilterLabelColor:UnpackRGBA())
-        else
-            label:SetColor(localFilterLabelColor:UnpackRGBA())
-        end
+        label:SetColor(self.color:UnpackRGBA())
         label:SetMouseEnabled(true)
         label:SetHandler("OnMouseEnter", function()
             InitializeTooltip(InformationTooltip)
             InformationTooltip:ClearAnchors()
             InformationTooltip:SetOwner(label, BOTTOM, 5, 0)
             local text = L["LOCAL_FILTER_EXPLANATION_TOOLTIP"]
-            if(provider) then
-                text = string.format("%s\n\n%s", text, externalFilterLabelColor:Colorize(zo_strformat(L["EXTERNAL_FILTER_EXPLANATION_TOOLTIP"], provider)))
+            if(self.provider) then
+                text = string.format("%s\n\n%s", text, EXTERNAL_FILTER_COLOR:Colorize(zo_strformat(L["EXTERNAL_FILTER_EXPLANATION_TOOLTIP"], self.provider)))
             end
             SetTooltipText(InformationTooltip, text)
         end)
@@ -99,6 +113,10 @@ end
 
 function FilterBase:SetHidden(hidden)
     self.container:SetHidden(hidden)
+end
+
+function FilterBase:GetControl()
+    return self.container
 end
 
 -- the following functions are used for filtering items on a result page and should be overwritten where necessary

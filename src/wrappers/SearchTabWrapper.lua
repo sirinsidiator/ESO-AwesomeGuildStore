@@ -41,14 +41,34 @@ function SearchTabWrapper:RunInitialSetup(tradingHouseWrapper)
     end)
 end
 
-function SearchTabWrapper:UpdateFilterAnchors()
-    local filterAreaScrollChild = self.filterAreaScrollChild
-    local count = filterAreaScrollChild:GetNumChildren()
+local function SortByFilterPriority(a, b)
+    if(a.priority == b.priority) then
+        return a.type < b.type
+    end
+    return b.priority < a.priority
+end
 
-    local previousChild = filterAreaScrollChild
-    for i = 1, count do
+local function ClearCallLater(id)
+    EVENT_MANAGER:UnregisterForUpdate("CallLaterFunction"..id)
+end
+
+function SearchTabWrapper:RequestUpdateFilterAnchors()
+    if(self.updateFilterAnchorRequest) then
+        ClearCallLater(self.updateFilterAnchorRequest)
+    end
+    self.updateFilterAnchorRequest = zo_callLater(function()
+        self.updateFilterAnchorRequest = nil
+        self:UpdateFilterAnchors()
+    end, 10)
+end
+
+function SearchTabWrapper:UpdateFilterAnchors()
+    table.sort(self.sortedFilters, SortByFilterPriority)
+
+    local previousChild = self.filterAreaScrollChild
+    for i = 1, #self.sortedFilters do
         local isFirst = (i == 1)
-        local filterContainer = filterAreaScrollChild:GetChild(i)
+        local filterContainer = self.sortedFilters[i]:GetControl()
         filterContainer:ClearAnchors()
         filterContainer:SetAnchor(TOPLEFT, previousChild, isFirst and TOPLEFT or BOTTOMLEFT, 0, isFirst and 0 or 10)
         previousChild = filterContainer
@@ -59,10 +79,6 @@ local function HandleFilterChanged(self)
     if(not self.fromSearchLibrary) then
         self:CancelSearch()
     end
-end
-
-local function ClearCallLater(id)
-    EVENT_MANAGER:UnregisterForUpdate("CallLaterFunction"..id)
 end
 
 local function RequestHandleFilterChanged(self)
@@ -83,14 +99,15 @@ function SearchTabWrapper:AttachFilter(filter)
     if(self.attachedFilters[filter.type]) then return end
 
     self.attachedFilters[filter.type] = filter
+    self.sortedFilters[#self.sortedFilters + 1] = filter
     filter:SetParent(self.filterAreaScrollChild)
     filter:SetWidth(FILTER_PANEL_WIDTH)
-    self:UpdateFilterAnchors()
     filter:SetHidden(false)
     CALLBACK_MANAGER:RegisterCallback(filter.callbackName, HandleFilterChanged, self)
     if(filter.isLocal) then
         CALLBACK_MANAGER:RegisterCallback(filter.callbackName, RebuildSearchResultsPage)
     end
+    self:RequestUpdateFilterAnchors()
 end
 
 function SearchTabWrapper:DetachFilter(filter)
@@ -98,12 +115,18 @@ function SearchTabWrapper:DetachFilter(filter)
 
     filter:SetHidden(true)
     filter:SetParent(GuiRoot)
-    self:UpdateFilterAnchors()
     self.attachedFilters[filter.type] = nil
+    for i = 1, #self.sortedFilters do
+        if(self.sortedFilters[i] == filter) then
+            table.remove(self.sortedFilters, i)
+            break
+        end
+    end
     CALLBACK_MANAGER:UnregisterCallback(filter.callbackName, HandleFilterChanged)
     if(filter.isLocal) then
         CALLBACK_MANAGER:UnregisterCallback(filter.callbackName, RebuildSearchResultsPage)
     end
+    self:RequestUpdateFilterAnchors()
 end
 
 function SearchTabWrapper:RefreshFilterDimensions()
@@ -142,6 +165,7 @@ function SearchTabWrapper:InitializeContainers(tradingHouseWrapper)
     local filterAreaScrollChild = filterArea:GetNamedChild("ScrollChild")
     self.filterAreaScrollChild = filterAreaScrollChild
     self.attachedFilters = {}
+    self.sortedFilters = {}
 end
 
 function SearchTabWrapper:InitializePageFiltering(tradingHouseWrapper)
@@ -246,7 +270,6 @@ function SearchTabWrapper:InitializeFilters(tradingHouseWrapper)
     self.priceFilter = priceFilter
 
     local levelFilter = AwesomeGuildStore.LevelFilter:New("AwesomeGuildStoreLevelFilter", tradingHouseWrapper)
-    self:AttachFilter(levelFilter)
     searchLibrary:RegisterFilter(levelFilter)
     self.levelFilter = levelFilter
 
