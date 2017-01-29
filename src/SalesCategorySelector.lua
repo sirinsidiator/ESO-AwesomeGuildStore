@@ -93,7 +93,7 @@ function SalesCategorySelector:CreateSubcategory(name, category, categoryPreset)
     if(#categoryPreset.subcategories == 0) then return end
     local group = self:CreateSubcategoryGroup(name .. categoryPreset.name .. "Group", category)
     local isCrafting = nil
-    if(category == ITEMFILTERTYPE_CRAFTING) then
+    if(category == ITEMFILTERTYPE_CRAFTING) then -- TODO remove in 100018
         self:CreateSubcategoryButton(group, 0, ALL_CRAFTING_PRESET, true)
         isCrafting = true
     end
@@ -103,7 +103,7 @@ function SalesCategorySelector:CreateSubcategory(name, category, categoryPreset)
 end
 
 function SalesCategorySelector:CreateCategoryButton(group, category, preset)
-    local button = ToggleButton:New(group.control, group.control:GetName() .. preset.name .. "Button", preset.texture, 180 + MAJOR_BUTTON_SIZE * category, 0, MAJOR_BUTTON_SIZE, MAJOR_BUTTON_SIZE, preset.label, SOUNDS.MENU_BAR_CLICK)
+    local button = ToggleButton:New(group.control, group.control:GetName() .. preset.name .. "Button", preset.texture, 180 + MAJOR_BUTTON_SIZE * preset.index, 0, MAJOR_BUTTON_SIZE, MAJOR_BUTTON_SIZE, preset.label, SOUNDS.MENU_BAR_CLICK)
     button.HandlePress = function()
         group:ReleaseAllButtons()
         self.category = category
@@ -203,8 +203,13 @@ local function SalesCategoryFilter(slot)
                 isValid = isValid and contains(values, GetItemLinkWeaponType(itemLink))
             elseif(type == TRADING_HOUSE_FILTER_TYPE_ARMOR) then
                 isValid = isValid and contains(values, GetItemLinkArmorType(itemLink))
-            elseif(type == TRADING_HOUSE_FILTER_TYPE_ITEM) then
-                isValid = isValid and contains(values, GetItemLinkItemType(itemLink))
+            elseif(type == TRADING_HOUSE_FILTER_TYPE_ITEM or type == TRADING_HOUSE_FILTER_TYPE_SPECIALIZED_ITEM) then
+                local itemType, specializedItemType = GetItemLinkItemType(itemLink)
+                if(type == TRADING_HOUSE_FILTER_TYPE_ITEM) then
+                    isValid = isValid and contains(values, itemType)
+                else
+                    isValid = isValid and contains(values, specializedItemType)
+                end
             end
             if(not isValid) then break end
         end

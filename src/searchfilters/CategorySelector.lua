@@ -102,21 +102,22 @@ function CategorySelector:New(parent, name, searchTabWrapper, tradingHouseWrappe
 end
 
 function CategorySelector:UpdateSubfilterVisibility()
-	local subfilters = FILTER_PRESETS[self.category].subcategories
-	local subcategory = self.subcategory[self.category]
-	if(subcategory) then subfilters = subfilters[subcategory].subfilters end
+    local category = FILTER_PRESETS[self.category]
+    local subfilters = category.subcategories
+    local subcategory = self.subcategory[self.category]
+    if(subcategory) then subfilters = subfilters[subcategory].subfilters end
 
-	for _, subfilter in pairs(self.subfilters) do
-		self.searchTabWrapper:DetachFilter(subfilter)
-	end
-	if(subfilters) then
-		for _, subfilterId in ipairs(subfilters) do
-			local subfilter = self.subfilters[subfilterId]
-			if(subfilter) then
-				self.searchTabWrapper:AttachFilter(subfilter)
-			end
-		end
-	end
+    for _, subfilter in pairs(self.subfilters) do
+        self.searchTabWrapper:DetachFilter(subfilter)
+    end
+    if(subfilters) then
+        for _, subfilterId in ipairs(subfilters) do
+            local subfilter = self.subfilters[subfilterId]
+            if(subfilter) then
+                self.searchTabWrapper:AttachFilter(subfilter)
+            end
+        end
+    end
 end
 
 function CategorySelector:CreateSubcategory(name, category, categoryPreset)
@@ -128,7 +129,7 @@ function CategorySelector:CreateSubcategory(name, category, categoryPreset)
 end
 
 function CategorySelector:CreateCategoryButton(group, category, preset)
-	local button = ToggleButton:New(group.control, group.control:GetName() .. preset.name .. "Button", preset.texture, 180 + MAJOR_BUTTON_SIZE * category, 0, MAJOR_BUTTON_SIZE, MAJOR_BUTTON_SIZE, preset.label, SOUNDS.MENU_BAR_CLICK)
+	local button = ToggleButton:New(group.control, group.control:GetName() .. preset.name .. "Button", preset.texture, 180 + MAJOR_BUTTON_SIZE * preset.index, 0, MAJOR_BUTTON_SIZE, MAJOR_BUTTON_SIZE, preset.label, SOUNDS.MENU_BAR_CLICK)
 	button.HandlePress = function()
 		group:ReleaseAllButtons()
 		self.category = category
@@ -186,7 +187,7 @@ local function ShowGuildSpecificItems()
 end
 
 function CategorySelector:CreateSubcategoryButton(group, subcategory, preset)
-	local button = ToggleButton:New(group.control, group.control:GetName() .. "SubcategoryButton" .. subcategory, preset.texture, 170 + MINOR_BUTTON_SIZE * subcategory, 0, MINOR_BUTTON_SIZE, MINOR_BUTTON_SIZE, preset.label, SOUNDS.MENU_BAR_CLICK)
+	local button = ToggleButton:New(group.control, group.control:GetName() .. "SubcategoryButton" .. subcategory, preset.texture, 170 + MINOR_BUTTON_SIZE * (preset.index or subcategory), 0, MINOR_BUTTON_SIZE, MINOR_BUTTON_SIZE, preset.label, SOUNDS.MENU_BAR_CLICK)
 	button.HandlePress = function()
 		group:ReleaseAllButtons()
 		group.label:SetText(preset.label)

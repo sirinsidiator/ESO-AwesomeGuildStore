@@ -5,13 +5,17 @@ local SUBFILTER_ARMOR_SLOTS, SUBFILTER_ARMOR_TRAITS, SUBFILTER_ARMOR_ENCHANTMENT
 local SUBFILTER_BLACKSMITHING_MATERIALS, SUBFILTER_CLOTHING_MATERIALS, SUBFILTER_WOODWORKING_MATERIALS, SUBFILTER_ALCHEMY_MATERIALS = 11, 12, 13, 14
 local SUBFILTER_ENCHANTING_MATERIALS, SUBFILTER_GLYPHS, SUBFILTER_JEWELRY_TYPE, SUBFILTER_STYLE_MATERIALS = 15, 16, 17, 18
 local SUBFILTER_RECIPE_KNOWLEDGE, SUBFILTER_MOTIF_KNOWLEDGE, SUBFILTER_TRAIT_KNOWLEDGE, SUBFILTER_RUNE_KNOWLEDGE, SUBFILTER_ITEM_STYLE = 19, 20, 21, 22, 23
-local SUBFILTER_ITEM_SET, SUBFILTER_CRAFTING, SUBFILTER_RECIPE_IMPROVEMENT = 24, 25, 26
+local SUBFILTER_ITEM_SET, SUBFILTER_CRAFTING, SUBFILTER_RECIPE_IMPROVEMENT, SUBFILTER_RECIPE_TYPE = 24, 25, 26, 27
+local SUBFILTER_DRINK_TYPE, SUBFILTER_FOOD_TYPE, SUBFILTER_INGREDIENT_TYPE, SUBFILTER_SIEGE_TYPE = 28, 29, 30, 31
+local SUBFILTER_TROPHY_TYPE = 32
 
 AwesomeGuildStore.FILTER_PRESETS = {
     [ITEMFILTERTYPE_ALL] = {
         name = "All",
         label = L["FILTER_CATEGORY_ALL"],
         texture = "EsoUI/Art/Inventory/inventory_tabIcon_all_%s.dds",
+        index = 0,
+        hasLevelFilter = true,
         isDefault = true,
         subcategories = {}
     },
@@ -19,6 +23,8 @@ AwesomeGuildStore.FILTER_PRESETS = {
         name = "Weapon",
         label = L["FILTER_CATEGORY_WEAPON"],
         texture = "EsoUI/Art/Inventory/inventory_tabIcon_weapons_%s.dds",
+        index = 1,
+        hasLevelFilter = true,
         subcategories = {
             {
                 label = L["FILTER_SUBCATEGORY_ALL"],
@@ -124,6 +130,8 @@ AwesomeGuildStore.FILTER_PRESETS = {
         name = "Armor",
         label = L["FILTER_CATEGORY_ARMOR"],
         texture = "EsoUI/Art/Inventory/inventory_tabIcon_armor_%s.dds",
+        index = 2,
+        hasLevelFilter = true,
         subcategories = {
             {
                 label = L["FILTER_SUBCATEGORY_ALL"],
@@ -237,6 +245,7 @@ AwesomeGuildStore.FILTER_PRESETS = {
         name = "Consumable",
         label = L["FILTER_CATEGORY_CONSUMEABLE"],
         texture = "EsoUI/Art/Inventory/inventory_tabIcon_consumables_%s.dds",
+        index = 3,
         subcategories = {
             {
                 label = L["FILTER_SUBCATEGORY_ALL"],
@@ -253,6 +262,7 @@ AwesomeGuildStore.FILTER_PRESETS = {
                     [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_FOOD },
                 },
                 subfilters = {
+                    SUBFILTER_FOOD_TYPE,
                     SUBFILTER_CRAFTING
                 }
             },
@@ -263,6 +273,7 @@ AwesomeGuildStore.FILTER_PRESETS = {
                     [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_DRINK },
                 },
                 subfilters = {
+                    SUBFILTER_DRINK_TYPE,
                     SUBFILTER_CRAFTING
                 }
             },
@@ -273,8 +284,9 @@ AwesomeGuildStore.FILTER_PRESETS = {
                     [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_RECIPE },
                 },
                 subfilters = {
+                    SUBFILTER_RECIPE_TYPE,
                     SUBFILTER_RECIPE_KNOWLEDGE,
-                    SUBFILTER_RECIPE_IMPROVEMENT
+                    SUBFILTER_RECIPE_IMPROVEMENT,
                 },
             },
             {
@@ -327,6 +339,7 @@ AwesomeGuildStore.FILTER_PRESETS = {
         name = "Crafting",
         label = L["FILTER_CATEGORY_CRAFTING"],
         texture = "EsoUI/Art/Inventory/inventory_tabIcon_crafting_%s.dds",
+        index = 4,
         subcategories = {
             {
                 label = L["FILTER_SUBCATEGORY_BLACKSMITHING"],
@@ -386,6 +399,9 @@ AwesomeGuildStore.FILTER_PRESETS = {
                 filters = {
                     [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_INGREDIENT },
                 },
+                subfilters = {
+                    SUBFILTER_INGREDIENT_TYPE
+                },
             },
             {
                 label = L["FILTER_SUBCATEGORY_STYLE"],
@@ -417,6 +433,7 @@ AwesomeGuildStore.FILTER_PRESETS = {
         name = "Misc",
         label = L["FILTER_CATEGORY_MISC"],
         texture = "EsoUI/Art/Inventory/inventory_tabIcon_misc_%s.dds",
+        index = 5,
         subcategories = {
             {
                 label = L["FILTER_SUBCATEGORY_ALL"],
@@ -450,6 +467,9 @@ AwesomeGuildStore.FILTER_PRESETS = {
                 filters = {
                     [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_SIEGE },
                 },
+                subfilters = {
+                    SUBFILTER_SIEGE_TYPE,
+                },
             },
             {
                 label = L["FILTER_SUBCATEGORY_BAIT"],
@@ -471,10 +491,105 @@ AwesomeGuildStore.FILTER_PRESETS = {
                 filters = {
                     [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_TROPHY },
                 },
+                subfilters = {
+                    SUBFILTER_TROPHY_TYPE,
+                },
             },
         },
     },
 }
+
+if(GetAPIVersion() > 100017) then -- TODO remove
+    AwesomeGuildStore.FILTER_PRESETS[ITEMFILTERTYPE_FURNISHING] = {
+        name = "Furnishing",
+        label = L["FILTER_CATEGORY_FURNISHING"],
+        texture = "EsoUI/Art/treeIcons/collection_indexicon_furnishings_%s.dds",
+        index = 5,
+        subcategories = {
+            {
+                label = L["FILTER_SUBCATEGORY_ALL"],
+                texture = "EsoUI/Art/Inventory/inventory_tabIcon_all_%s.dds",
+                isDefault = true,
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_FURNISHING },
+                },
+            },
+            {
+                label = L["FILTER_SUBCATEGORY_FURNISHING_CRAFTING_STATION"],
+                texture = "EsoUI/Art/treeIcons/housing_indexicon_workshop_%s.dds",
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_SPECIALIZED_ITEM] = { SPECIALIZED_ITEMTYPE_FURNISHING_CRAFTING_STATION },
+                },
+            },
+            {
+                label = L["FILTER_SUBCATEGORY_FURNISHING_LIGHT"],
+                texture = "EsoUI/Art/treeIcons/housing_indexicon_shrine_%s.dds",
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_SPECIALIZED_ITEM] = { SPECIALIZED_ITEMTYPE_FURNISHING_LIGHT },
+                },
+            },
+            {
+                label = L["FILTER_SUBCATEGORY_FURNISHING_ORNAMENTAL"],
+                texture = "EsoUI/Art/treeIcons/housing_indexicon_gallery_%s.dds",
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_SPECIALIZED_ITEM] = { SPECIALIZED_ITEMTYPE_FURNISHING_ORNAMENTAL },
+                },
+            },
+            {
+                label = L["FILTER_SUBCATEGORY_FURNISHING_SEATING"],
+                texture = "EsoUI/Art/treeIcons/collection_indexicon_furnishings_%s.dds",
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_SPECIALIZED_ITEM] = { SPECIALIZED_ITEMTYPE_FURNISHING_SEATING },
+                },
+            },
+            {
+                label = L["FILTER_SUBCATEGORY_FURNISHING_TARGET_DUMMY"],
+                texture = "EsoUI/Art/treeIcons/collection_indexicon_weapons+armor_%s.dds",
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_SPECIALIZED_ITEM] = { SPECIALIZED_ITEMTYPE_FURNISHING_TARGET_DUMMY },
+                },
+            },
+        },
+    }
+
+    local consumable = AwesomeGuildStore.FILTER_PRESETS[ITEMFILTERTYPE_CONSUMABLE].subcategories
+    consumable[#consumable + 1] =  {
+        label = L["FILTER_SUBCATEGORY_MASTER_WRIT"],
+        texture = "EsoUI/Art/crafting/formulae_tabicon_%s.dds",
+        filters = {
+            [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_MASTER_WRIT },
+        },
+    }
+
+    local crafting = AwesomeGuildStore.FILTER_PRESETS[ITEMFILTERTYPE_CRAFTING].subcategories
+    crafting[1].isDefault = false
+    for i = 1, #crafting do
+        crafting[i].index = i + 1
+    end
+    crafting[#consumable + 1] =  {
+        label = L["FILTER_SUBCATEGORY_ALL"],
+        texture = "EsoUI/Art/Inventory/inventory_tabIcon_all_%s.dds",
+        isDefault = true,
+        index = 1,
+        filters = {
+            [TRADING_HOUSE_FILTER_TYPE_ITEM] = { 
+                ITEMTYPE_BLACKSMITHING_RAW_MATERIAL, ITEMTYPE_BLACKSMITHING_MATERIAL, ITEMTYPE_BLACKSMITHING_BOOSTER,
+                ITEMTYPE_CLOTHIER_RAW_MATERIAL, ITEMTYPE_CLOTHIER_MATERIAL, ITEMTYPE_CLOTHIER_BOOSTER,
+                ITEMTYPE_WOODWORKING_RAW_MATERIAL, ITEMTYPE_WOODWORKING_MATERIAL, ITEMTYPE_WOODWORKING_BOOSTER,
+                ITEMTYPE_POTION_BASE, ITEMTYPE_POISON_BASE, ITEMTYPE_REAGENT,
+                ITEMTYPE_ENCHANTING_RUNE_ASPECT, ITEMTYPE_ENCHANTING_RUNE_ESSENCE, ITEMTYPE_ENCHANTING_RUNE_POTENCY,
+                ITEMTYPE_INGREDIENT,
+                ITEMTYPE_STYLE_MATERIAL, ITEMTYPE_RAW_MATERIAL,
+                ITEMTYPE_WEAPON_TRAIT,
+                ITEMTYPE_ARMOR_TRAIT
+            },
+        },
+    }
+
+    AwesomeGuildStore.FILTER_PRESETS[ITEMFILTERTYPE_MISCELLANEOUS].index = 6
+    local all = consumable[1].filters[TRADING_HOUSE_FILTER_TYPE_ITEM]
+    all[#all + 1] = ITEMTYPE_MASTER_WRIT
+end
 
 AwesomeGuildStore.SUBFILTER_PRESETS = {
     [SUBFILTER_WEAPON_TRAITS] = {
@@ -1420,5 +1535,327 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
         label = L["SUBFILTER_RECIPE_IMPROVEMENT_LABEL"],
         class = "RecipeImprovementFilter",
         filter = 45,
-    }
+    },
 }
+if(GetAPIVersion() > 100017) then
+    AwesomeGuildStore.SUBFILTER_PRESETS[SUBFILTER_RECIPE_TYPE] = {
+        type = 46,
+        label = L["SUBFILTER_RECIPE_TYPE_LABEL"],
+        filter = TRADING_HOUSE_FILTER_TYPE_SPECIALIZED_ITEM,
+        buttons = {
+            {
+                label = L["SUBFILTER_RECIPE_TYPE_FOOD"],
+                texture = "EsoUI/Art/Crafting/provisioner_indexIcon_meat_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_RECIPE_PROVISIONING_STANDARD_FOOD,
+            },
+            {
+                label = L["SUBFILTER_RECIPE_TYPE_DRINK"],
+                texture = "EsoUI/Art/Crafting/provisioner_indexIcon_beer_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_RECIPE_PROVISIONING_STANDARD_DRINK,
+            },
+            {
+                label = L["SUBFILTER_RECIPE_TYPE_BLACKSMITHING"],
+                texture = "EsoUI/Art/Crafting/diagrams_tabicon_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_RECIPE_BLACKSMITHING_DIAGRAM_FURNISHING,
+            },
+            {
+                label = L["SUBFILTER_RECIPE_TYPE_CLOTHIER"],
+                texture = "EsoUI/Art/Crafting/patterns_tabicon_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_RECIPE_CLOTHIER_PATTERN_FURNISHING,
+            },
+            {
+                label = L["SUBFILTER_RECIPE_TYPE_WOODWORKING"],
+                texture = "EsoUI/Art/Crafting/blueprints_tabicon_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_RECIPE_WOODWORKING_BLUEPRINT_FURNISHING,
+            },
+            {
+                label = L["SUBFILTER_RECIPE_TYPE_ALCHEMY"],
+                texture = "EsoUI/Art/Crafting/formulae_tabicon_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_RECIPE_ALCHEMY_FORMULA_FURNISHING,
+            },
+            {
+                label = L["SUBFILTER_RECIPE_TYPE_ENCHANTING"],
+                texture = "EsoUI/Art/Crafting/schematics_tabicon_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_RECIPE_ENCHANTING_SCHEMATIC_FURNISHING,
+            },
+            {
+                label = L["SUBFILTER_RECIPE_TYPE_PROVISIONING"],
+                texture = "EsoUI/Art/Crafting/designs_tabicon_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_RECIPE_PROVISIONING_DESIGN_FURNISHING,
+            },
+        },
+    }
+
+    AwesomeGuildStore.SUBFILTER_PRESETS[SUBFILTER_DRINK_TYPE] = {
+        type = 47,
+        label = L["SUBFILTER_DRINK_TYPE_LABEL"],
+        filter = TRADING_HOUSE_FILTER_TYPE_SPECIALIZED_ITEM,
+        buttons = {
+            {
+                label = L["SUBFILTER_DRINK_TYPE_ALCOHOLIC"],
+                texture = "EsoUI/Art/Crafting/provisioner_indexIcon_meat_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_DRINK_ALCOHOLIC,
+            },
+            {
+                label = L["SUBFILTER_DRINK_TYPE_CORDIAL_TEA"],
+                texture = "EsoUI/Art/Crafting/provisioner_indexIcon_beer_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_DRINK_CORDIAL_TEA,
+            },
+            {
+                label = L["SUBFILTER_DRINK_TYPE_DISTILLATE"],
+                texture = "EsoUI/Art/Crafting/diagrams_tabicon_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_DRINK_DISTILLATE,
+            },
+            {
+                label = L["SUBFILTER_DRINK_TYPE_LIQUER"],
+                texture = "EsoUI/Art/Crafting/patterns_tabicon_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_DRINK_LIQUEUR,
+            },
+            {
+                label = L["SUBFILTER_DRINK_TYPE_TEA"],
+                texture = "EsoUI/Art/Crafting/blueprints_tabicon_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_DRINK_TEA,
+            },
+            {
+                label = L["SUBFILTER_DRINK_TYPE_TINCTURE"],
+                texture = "EsoUI/Art/Crafting/formulae_tabicon_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_DRINK_TINCTURE,
+            },
+            {
+                label = L["SUBFILTER_DRINK_TYPE_TONIC"],
+                texture = "EsoUI/Art/Crafting/schematics_tabicon_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_DRINK_TONIC,
+            },
+            {
+                label = L["SUBFILTER_DRINK_TYPE_UNIQUE"],
+                texture = "EsoUI/Art/Crafting/designs_tabicon_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_DRINK_UNIQUE,
+            },
+        },
+    }
+
+    AwesomeGuildStore.SUBFILTER_PRESETS[SUBFILTER_FOOD_TYPE] = {
+        type = 48,
+        label = L["SUBFILTER_FOOD_TYPE_LABEL"],
+        filter = TRADING_HOUSE_FILTER_TYPE_SPECIALIZED_ITEM,
+        buttons = {
+            {
+                label = L["SUBFILTER_FOOD_TYPE_ENTREMET"],
+                texture = "EsoUI/Art/Crafting/provisioner_indexIcon_meat_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_FOOD_ENTREMET,
+            },
+            {
+                label = L["SUBFILTER_FOOD_TYPE_FRUIT"],
+                texture = "EsoUI/Art/Crafting/provisioner_indexIcon_beer_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_FOOD_FRUIT,
+            },
+            {
+                label = L["SUBFILTER_FOOD_TYPE_GOURMET"],
+                texture = "EsoUI/Art/Crafting/diagrams_tabicon_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_FOOD_GOURMET,
+            },
+            {
+                label = L["SUBFILTER_FOOD_TYPE_MEAT"],
+                texture = "EsoUI/Art/Crafting/patterns_tabicon_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_FOOD_MEAT,
+            },
+            {
+                label = L["SUBFILTER_FOOD_TYPE_RAGOUT"],
+                texture = "EsoUI/Art/Crafting/blueprints_tabicon_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_FOOD_RAGOUT,
+            },
+            {
+                label = L["SUBFILTER_FOOD_TYPE_SAVOURY"],
+                texture = "EsoUI/Art/Crafting/formulae_tabicon_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_FOOD_SAVOURY,
+            },
+            {
+                label = L["SUBFILTER_FOOD_TYPE_VEGETABLE"],
+                texture = "EsoUI/Art/Crafting/schematics_tabicon_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_FOOD_VEGETABLE,
+            },
+            {
+                label = L["SUBFILTER_FOOD_TYPE_UNIQUE"],
+                texture = "EsoUI/Art/Crafting/designs_tabicon_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_FOOD_UNIQUE,
+            },
+        },
+    }
+
+    AwesomeGuildStore.SUBFILTER_PRESETS[SUBFILTER_INGREDIENT_TYPE] = {
+        type = 49,
+        label = L["SUBFILTER_INGREDIENT_TYPE_LABEL"],
+        filter = TRADING_HOUSE_FILTER_TYPE_SPECIALIZED_ITEM,
+        buttons = {
+            {
+                label = L["SUBFILTER_INGREDIENT_TYPE_ALCOHOL"],
+                texture = "EsoUI/Art/Crafting/provisioner_indexIcon_meat_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_INGREDIENT_ALCOHOL,
+            },
+            {
+                label = L["SUBFILTER_INGREDIENT_TYPE_DRINK_ADDITIVE"],
+                texture = "EsoUI/Art/Crafting/provisioner_indexIcon_beer_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_INGREDIENT_DRINK_ADDITIVE,
+            },
+            {
+                label = L["SUBFILTER_INGREDIENT_TYPE_FOOD_ADDITIVE"],
+                texture = "EsoUI/Art/Crafting/diagrams_tabicon_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_INGREDIENT_FOOD_ADDITIVE,
+            },
+            {
+                label = L["SUBFILTER_INGREDIENT_TYPE_FRUIT"],
+                texture = "EsoUI/Art/Crafting/patterns_tabicon_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_INGREDIENT_FRUIT,
+            },
+            {
+                label = L["SUBFILTER_INGREDIENT_TYPE_MEAT"],
+                texture = "EsoUI/Art/Crafting/blueprints_tabicon_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_INGREDIENT_MEAT,
+            },
+            {
+                label = L["SUBFILTER_INGREDIENT_TYPE_RARE"],
+                texture = "EsoUI/Art/Crafting/formulae_tabicon_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_INGREDIENT_RARE,
+            },
+            {
+                label = L["SUBFILTER_INGREDIENT_TYPE_TEA"],
+                texture = "EsoUI/Art/Crafting/schematics_tabicon_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_INGREDIENT_TEA,
+            },
+            {
+                label = L["SUBFILTER_INGREDIENT_TYPE_TONIC"],
+                texture = "EsoUI/Art/Crafting/designs_tabicon_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_INGREDIENT_TONIC,
+            },
+            {
+                label = L["SUBFILTER_INGREDIENT_TYPE_VEGETABLE"],
+                texture = "EsoUI/Art/Crafting/designs_tabicon_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_INGREDIENT_VEGETABLE,
+            },
+        },
+    }
+
+    AwesomeGuildStore.SUBFILTER_PRESETS[SUBFILTER_ALCHEMY_MATERIALS] = {
+        type = 35,
+        label = L["SUBFILTER_INGREDIENT_TYPE_LABEL"],
+        filter = TRADING_HOUSE_FILTER_TYPE_SPECIALIZED_ITEM,
+        buttons = {
+            {
+                label = L["SUBFILTER_INGREDIENT_TYPE_POTION_SOLVENT"],
+                texture = "EsoUI/Art/Inventory/inventory_tabIcon_consumables_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_POTION_BASE,
+            },
+            {
+                label = L["SUBFILTER_INGREDIENT_TYPE_POISON_SOLVENT"],
+                texture = "EsoUI/Art/Crafting/alchemy_tabIcon_solvent_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_POISON_BASE,
+            },
+            {
+                label = L["SUBFILTER_INGREDIENT_TYPE_ANIMAL_PART"],
+                texture = "EsoUI/Art/Crafting/alchemy_tabIcon_reagent_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_REAGENT_ANIMAL_PART,
+            },
+            {
+                label = L["SUBFILTER_INGREDIENT_TYPE_FUNGUS"],
+                texture = "EsoUI/Art/Crafting/alchemy_tabIcon_reagent_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_REAGENT_FUNGUS,
+            },
+            {
+                label = L["SUBFILTER_INGREDIENT_TYPE_HERB"],
+                texture = "EsoUI/Art/Crafting/alchemy_tabIcon_reagent_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_REAGENT_HERB,
+            },
+        },
+    }
+
+    AwesomeGuildStore.SUBFILTER_PRESETS[SUBFILTER_SIEGE_TYPE] = {
+        type = 50,
+        label = L["SUBFILTER_SIEGE_TYPE_LABEL"],
+        filter = TRADING_HOUSE_FILTER_TYPE_SPECIALIZED_ITEM,
+        buttons = {
+            {
+                label = L["SUBFILTER_SIEGE_TYPE_BALLISTA"],
+                texture = "EsoUI/Art/Crafting/provisioner_indexIcon_meat_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_SIEGE_BALLISTA,
+            },
+            {
+                label = L["SUBFILTER_SIEGE_TYPE_CATAPULT"],
+                texture = "EsoUI/Art/Crafting/provisioner_indexIcon_beer_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_SIEGE_CATAPULT,
+            },
+            {
+                label = L["SUBFILTER_SIEGE_TYPE_TREBUCHET"],
+                texture = "EsoUI/Art/Crafting/diagrams_tabicon_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_SIEGE_TREBUCHET,
+            },
+            {
+                label = L["SUBFILTER_SIEGE_TYPE_OIL"],
+                texture = "EsoUI/Art/Crafting/patterns_tabicon_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_SIEGE_OIL,
+            },
+            {
+                label = L["SUBFILTER_SIEGE_TYPE_RAM"],
+                texture = "EsoUI/Art/Crafting/blueprints_tabicon_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_SIEGE_RAM,
+            },
+            {
+                label = L["SUBFILTER_SIEGE_TYPE_GRAVEYARD"],
+                texture = "EsoUI/Art/Crafting/formulae_tabicon_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_SIEGE_GRAVEYARD,
+            },
+            {
+                label = L["SUBFILTER_SIEGE_TYPE_UNIVERSAL"],
+                texture = "EsoUI/Art/Crafting/schematics_tabicon_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_SIEGE_UNIVERSAL, -- TODO see what this is and remove if it doesn't exist
+            },
+        },
+    }
+
+    AwesomeGuildStore.SUBFILTER_PRESETS[SUBFILTER_TROPHY_TYPE] = {
+        type = 51,
+        label = L["SUBFILTER_TROPHY_TYPE_LABEL"],
+        filter = TRADING_HOUSE_FILTER_TYPE_SPECIALIZED_ITEM,
+        buttons = {
+            {
+                label = L["SUBFILTER_TROPHY_TYPE_KEY"],
+                texture = "EsoUI/Art/Crafting/provisioner_indexIcon_meat_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_TROPHY_KEY,
+            },
+            {
+                label = L["SUBFILTER_TROPHY_TYPE_KEY_FRAGMENT"],
+                texture = "EsoUI/Art/Crafting/provisioner_indexIcon_beer_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_TROPHY_KEY_FRAGMENT,
+            },
+            {
+                label = L["SUBFILTER_TROPHY_TYPE_MATERIAL_UPGRADER"],
+                texture = "EsoUI/Art/Crafting/diagrams_tabicon_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_TROPHY_MATERIAL_UPGRADER, -- TODO what is that?
+            },
+            {
+                label = L["SUBFILTER_TROPHY_TYPE_MUSEUM_PIECE"],
+                texture = "EsoUI/Art/Crafting/patterns_tabicon_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_TROPHY_MUSEUM_PIECE, -- TODO can they be sold?
+            },
+            {
+                label = L["SUBFILTER_TROPHY_TYPE_RECIPE_FRAGMENT"],
+                texture = "EsoUI/Art/Crafting/blueprints_tabicon_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_TROPHY_RECIPE_FRAGMENT,
+            },
+            {
+                label = L["SUBFILTER_TROPHY_TYPE_SCROLL"],
+                texture = "EsoUI/Art/Crafting/formulae_tabicon_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_TROPHY_SCROLL, -- TODO what is that?
+            },
+            {
+                label = L["SUBFILTER_TROPHY_TYPE_SURVEY_REPORT"],
+                texture = "EsoUI/Art/Crafting/schematics_tabicon_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_TROPHY_SURVEY_REPORT, -- TODO: can they be sold?
+            },
+            {
+                label = L["SUBFILTER_TROPHY_TYPE_TREASURE_MAP"],
+                texture = "EsoUI/Art/Crafting/schematics_tabicon_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_TROPHY_TREASURE_MAP,
+            },
+        },
+    }
+end

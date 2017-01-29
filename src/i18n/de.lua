@@ -10,6 +10,11 @@ local localization = {
     SUBFILTER_INGREDIENT_TYPE_LABEL = "Zutatentyp",
     SUBFILTER_RUNE_TYPE_LABEL = "Runensteintyp",
     SUBFILTER_GLYPH_TYPE_LABEL = "Glyphentyp",
+    SUBFILTER_RECIPE_TYPE_LABEL = "Rezepttyp",
+    SUBFILTER_DRINK_TYPE_LABEL = "Getränketyp",
+    SUBFILTER_FOOD_TYPE_LABEL = "Nahrungstyp",
+    SUBFILTER_SIEGE_TYPE_LABEL = "Belagerungsausrüstungstyp",
+    SUBFILTER_TROPHY_TYPE_LABEL = "Trophäentyp",
 
     SUBFILTER_RECIPE_KNOWLEDGE_LABEL = "Rezeptwissen",
     SUBFILTER_RECIPE_KNOWLEDGE_UNKNOWN = "Unbekannte Rezepte",

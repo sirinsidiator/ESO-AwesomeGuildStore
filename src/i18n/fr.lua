@@ -10,6 +10,11 @@ local localization = { -- translated by Ayantir (http://www.esoui.com/forums/mem
     SUBFILTER_INGREDIENT_TYPE_LABEL = "Type d'ingrédient",
     SUBFILTER_RUNE_TYPE_LABEL = "Type de rune",
     SUBFILTER_GLYPH_TYPE_LABEL = "Type de glyphe",
+    SUBFILTER_RECIPE_TYPE_LABEL = "Type de recette",
+    SUBFILTER_DRINK_TYPE_LABEL = "Type de boisson",
+    SUBFILTER_FOOD_TYPE_LABEL = "Type de nourriture",
+    SUBFILTER_SIEGE_TYPE_LABEL = "Type d'arme de siège",
+    SUBFILTER_TROPHY_TYPE_LABEL = "Type de trophée",
 
     SUBFILTER_RECIPE_KNOWLEDGE_LABEL = "Type de recette",
     SUBFILTER_RECIPE_KNOWLEDGE_UNKNOWN = "Recettes inconnues",
