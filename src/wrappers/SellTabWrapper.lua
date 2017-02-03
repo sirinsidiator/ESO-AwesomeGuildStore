@@ -50,6 +50,8 @@ local function CreateSlider(container, data, name)
     local container = LAMCreateControl.slider(container, data, name)
     container:SetDimensions(203, SLIDER_HEIGHT)
     container.container:SetWidth(190)
+    container.slider:SetAnchor(TOPRIGHT, nil, nil, -90)
+    container.slidervalueBG:SetWidth(90)
 
     local slider = container.slider
     slider:SetHeight(16)
