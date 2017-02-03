@@ -1825,43 +1825,23 @@ if(GetAPIVersion() > 100017) then
         filter = TRADING_HOUSE_FILTER_TYPE_SPECIALIZED_ITEM,
         buttons = {
             {
-                label = L["SUBFILTER_TROPHY_TYPE_KEY"],
-                texture = "EsoUI/Art/Crafting/provisioner_indexIcon_meat_%s.dds",
-                value = SPECIALIZED_ITEMTYPE_TROPHY_KEY,
-            },
-            {
                 label = L["SUBFILTER_TROPHY_TYPE_KEY_FRAGMENT"],
-                texture = "EsoUI/Art/Crafting/provisioner_indexIcon_beer_%s.dds",
+                texture = "EsoUI/Art/worldmap/map_indexicon_key_%s.dds",
                 value = SPECIALIZED_ITEMTYPE_TROPHY_KEY_FRAGMENT,
             },
             {
-                label = L["SUBFILTER_TROPHY_TYPE_MATERIAL_UPGRADER"],
-                texture = "EsoUI/Art/Crafting/diagrams_tabicon_%s.dds",
-                value = SPECIALIZED_ITEMTYPE_TROPHY_MATERIAL_UPGRADER, -- TODO what is that?
-            },
-            {
                 label = L["SUBFILTER_TROPHY_TYPE_MUSEUM_PIECE"],
-                texture = "EsoUI/Art/Crafting/patterns_tabicon_%s.dds",
-                value = SPECIALIZED_ITEMTYPE_TROPHY_MUSEUM_PIECE, -- TODO can they be sold?
+                texture = "EsoUI/Art/Inventory/inventory_tabIcon_craftbag_stylematerial_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_TROPHY_MUSEUM_PIECE,
             },
             {
                 label = L["SUBFILTER_TROPHY_TYPE_RECIPE_FRAGMENT"],
-                texture = "EsoUI/Art/Crafting/blueprints_tabicon_%s.dds",
+                texture = "EsoUI/Art/Guild/tabIcon_roster_%s.dds",
                 value = SPECIALIZED_ITEMTYPE_TROPHY_RECIPE_FRAGMENT,
             },
             {
-                label = L["SUBFILTER_TROPHY_TYPE_SCROLL"],
-                texture = "EsoUI/Art/Crafting/formulae_tabicon_%s.dds",
-                value = SPECIALIZED_ITEMTYPE_TROPHY_SCROLL, -- TODO what is that?
-            },
-            {
-                label = L["SUBFILTER_TROPHY_TYPE_SURVEY_REPORT"],
-                texture = "EsoUI/Art/Crafting/schematics_tabicon_%s.dds",
-                value = SPECIALIZED_ITEMTYPE_TROPHY_SURVEY_REPORT, -- TODO: can they be sold?
-            },
-            {
                 label = L["SUBFILTER_TROPHY_TYPE_TREASURE_MAP"],
-                texture = "EsoUI/Art/Crafting/schematics_tabicon_%s.dds",
+                texture = "EsoUI/Art/icons/achievements_indexicon_exploration_%s.dds",
                 value = SPECIALIZED_ITEMTYPE_TROPHY_TREASURE_MAP,
             },
         },
