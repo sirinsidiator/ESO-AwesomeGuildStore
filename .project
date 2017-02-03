@@ -6,6 +6,11 @@
 	</projects>
 	<buildSpec>
 		<buildCommand>
+			<name>org.eclipse.jdt.core.javabuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
 			<name>org.eclipse.dltk.core.scriptbuilder</name>
 			<arguments>
 			</arguments>
@@ -16,12 +21,15 @@
 			<arguments>
 				<dictionary>
 					<key>LaunchConfigHandle</key>
-					<value>&lt;project&gt;/.externalToolBuilders/AwesomeGuildStoreCopyAddon.launch</value>
+					<value>&lt;project&gt;/.externalToolBuilders/AwesomeGuildStore buildForDevelopment [Builder].launch</value>
 				</dictionary>
 			</arguments>
 		</buildCommand>
 	</buildSpec>
 	<natures>
+		<nature>org.springsource.ide.eclipse.gradle.core.nature</nature>
+		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>org.eclipse.koneki.ldt.nature</nature>
+		<nature>org.eclipse.ldt.nature</nature>
 	</natures>
 </projectDescription>

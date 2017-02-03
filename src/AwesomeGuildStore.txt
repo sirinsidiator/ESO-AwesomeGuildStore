@@ -1,6 +1,6 @@
 ## Title: AwesomeGuildStore
 ## Author: sirinsidiator
-## Version: VERSION_NUMBER
+## Version: @VERSION_NUMBER@
 ## APIVersion: 100017 100018
 ## OptionalDependsOn: LibStub LibAddonMenu-2.0 libFilters libCommonInventoryFilters LibTextFilter LibCustomTitles LibCustomMenu LibMapPing LibGPS LibDateTime
 ## SavedVariables: AwesomeGuildStore_Data

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.springsource.ide.eclipse.gradle.launch">
+<stringAttribute key="org.eclipse.debug.core.ATTR_REFRESH_SCOPE" value="${workspace}"/>
+<booleanAttribute key="org.eclipse.debug.ui.ATTR_LAUNCH_IN_BACKGROUND" value="false"/>
+<booleanAttribute key="org.eclipse.ui.externaltools.ATTR_TRIGGERS_CONFIGURED" value="true"/>
+<stringAttribute key="org.springsource.ide.eclipse.gradle.launch.PGM_ARGS" value="-PtargetVersion=development"/>
+<stringAttribute key="org.springsource.ide.eclipse.gradle.launch.PROJECT" value="AwesomeGuildStore"/>
+<stringAttribute key="org.springsource.ide.eclipse.gradle.launch.TASKTEXT" value="buildForDevelopment"/>
+</launchConfiguration>
