@@ -76,6 +76,8 @@ function OwnerHistoryControl:SetSelectedKiosk(kioskName)
     self.selectedKioskName = kioskName
 end
 
+local LDT = LibStub("LibDateTime")
+
 function OwnerHistoryControl:BuildMasterList()
     ZO_ClearNumericallyIndexedTable(self.masterList)
     if(not self.selectedKioskName) then return end
@@ -84,9 +86,9 @@ function OwnerHistoryControl:BuildMasterList()
     local kioskName = self.selectedKioskName
 
     local history = ownerList:GetOwnerHistory(kioskName)
-    for week, owner in pairs(history) do
-        local startTime, endTime = ownerList:GetStartAndEndForWeek(week)
-        local isoWeek, isoYear = startTime:GetIsoWeek()
+    for yearAndWeek, owner in pairs(history) do
+        local startTime, endTime = ownerList:GetStartAndEndForWeek(yearAndWeek)
+        local isoYear, isoWeek = LDT:SeparateIsoWeekAndYear(yearAndWeek)
         local startTimeString = startTime:Format("%Y-%m-%d %H:%M")
         local endTimeString = endTime:Format("%Y-%m-%d %H:%M")
         self.masterList[#self.masterList + 1] = {

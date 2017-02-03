@@ -1,5 +1,5 @@
 local LIB_IDENTIFIER = "LibDateTime"
-local lib = LibStub:NewLibrary(LIB_IDENTIFIER, 1)
+local lib = LibStub:NewLibrary(LIB_IDENTIFIER, 2)
 
 if not lib then
     return	-- already loaded and no upgrade necessary
@@ -273,15 +273,19 @@ function lib:New(...)
     return DateTime:New(...)
 end
 
-local function GetStartTimeOfTraderWeek(date)
+function lib:GetStartTimeOfTraderWeek(date)
     local timeDiff = date:GetUTCSecondOfDay() - lib.TRADER_CHANGE_SECOND_OF_DAY
     local dayDiff = (date:GetDayOfWeek() - lib.TRADER_CHANGE_DAY_OF_WEEK) * SECONDS_PER_DAY
-    return date:GetTimeStamp() - dayDiff - timeDiff
+    local diff = dayDiff + timeDiff
+    if(diff < 0) then
+        diff = diff + 7 * SECONDS_PER_DAY
+    end
+    return date:GetTimeStamp() - diff
 end
 
 function lib:GetTraderWeek(weekOffset)
     local date = DateTime:New(GetTimeStamp() + (weekOffset or 0) * SECONDS_PER_WEEK)
-    local startTime = DateTime:New(GetStartTimeOfTraderWeek(date))
+    local startTime = DateTime:New(lib:GetStartTimeOfTraderWeek(date))
     local endTime = DateTime:New(startTime:GetTimeStamp() + SECONDS_PER_WEEK)
 
     -- we add a few days because ISO week starts on Monday so the majority of days would be in the wrong week with trader change happening on Sunday
@@ -293,7 +297,7 @@ end
 function lib:IsInTraderWeek(date, weekOffset)
     local time = date:GetTimeStamp()
     local week = DateTime:New(GetTimeStamp() + (weekOffset or 0) * SECONDS_PER_WEEK)
-    local startTime = GetStartTimeOfTraderWeek(week)
+    local startTime = lib:GetStartTimeOfTraderWeek(week)
     if(time < startTime) then return false end
     local endTime = startTime + SECONDS_PER_WEEK
     if(time >= endTime) then return false end

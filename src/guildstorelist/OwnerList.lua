@@ -31,7 +31,8 @@ function OwnerList:IsTimeInCurrentWeek(time)
 end
 
 function OwnerList:GetStartAndEndForWeek(yearAndWeek)
-    local weekA, yearA = LDT:New():GetIsoWeek()
+    local currentYearAndWeek = LDT:GetTraderWeek()
+    local yearA, weekA = LDT:SeparateIsoWeekAndYear(currentYearAndWeek)
     local yearB, weekB = LDT:SeparateIsoWeekAndYear(yearAndWeek)
     local weekOffset = LDT:CalculateIsoWeekDifference(yearA, weekA, yearB, weekB)
     local _, startTime, endTime = LDT:GetTraderWeek(weekOffset)

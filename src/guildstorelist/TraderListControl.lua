@@ -203,20 +203,21 @@ function TraderListControl:BuildMasterList()
         storeCount = storeCount + 1
         for _, traderName in ipairs(store.kiosks) do
             overallCount = overallCount + 1
-            
+
             local kiosk = kioskList:GetKiosk(traderName)
+            local lastVisited, realLastVisited = GetLastVisited(kiosk)
+            local hasVisitedThisWeek = ownerList:IsTimeInCurrentWeek(lastVisited)
+
             if(kiosk and kiosk.lastVisited and kiosk.lastVisited > 0) then
                 visitedCount = visitedCount + 1
-                if(ownerList:IsTimeInCurrentWeek(kiosk.lastVisited)) then
+                if(hasVisitedThisWeek or kiosk.isMember) then
                     upToDateCount = upToDateCount + 1
                 end
             end
 
-            local lastVisited, realLastVisited = GetLastVisited(kiosk)
             local zoneName = GetZoneLabel(store)
             local poi = GetPoiLabel(store)
             local owner = ownerList:GetLastKnownOwner(traderName)
-            local hasVisitedThisWeek = ownerList:IsTimeInCurrentWeek(lastVisited)
             local isHired = true
             if(hasVisitedThisWeek and ownerList:GetCurrentOwner(traderName) == false) then
                 isHired = false
