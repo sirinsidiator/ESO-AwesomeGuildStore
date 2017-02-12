@@ -596,6 +596,7 @@ function SellTabWrapper:InitializeListedNotification(tradingHouseWrapper)
 
     RegisterForEvent(EVENT_TRADING_HOUSE_RESPONSE_RECEIVED, function(_, responseType, result)
         if(responseType == TRADING_HOUSE_RESULT_POST_PENDING and result == TRADING_HOUSE_RESULT_SUCCESS) then
+            self.tradingHouse:ClearPendingPost()
             if(saveData.listedNotification and listedMessage ~= "") then
                 df("[AwesomeGuildStore] %s", listedMessage)
                 listedMessage = ""
