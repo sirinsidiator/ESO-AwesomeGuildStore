@@ -3,6 +3,7 @@ local RegisterForEvent = AwesomeGuildStore.RegisterForEvent
 local UnregisterForEvent = AwesomeGuildStore.UnregisterForEvent
 local ToggleButton = AwesomeGuildStore.ToggleButton
 local ClearCallLater = AwesomeGuildStore.ClearCallLater
+local GetItemLinkWritCount = AwesomeGuildStore.GetItemLinkWritCount
 
 local SellTabWrapper = ZO_Object:Subclass()
 AwesomeGuildStore.SellTabWrapper = SellTabWrapper
@@ -476,7 +477,7 @@ function SellTabWrapper:ClearPendingItem()
     self.pendingIcon, self.pendingStackCount, self.pendingSellPrice = "", 0, 0
     self.pendingBagId, self.pendingSlotIndex, self.requiresTempSlot = 0, 0, false
     self.currentStackCount, self.currentPricePerUnit, self.currentSellPrice = 0, 0, 0
-    self.pendingItemLink, self.pendingItemIdentifier = "", ""
+    self.pendingItemLink, self.pendingItemIdentifier, self.isMasterWrit = "", "", false
 end
 
 function SellTabWrapper:IsItemAlreadyBeingPosted(inventorySlot)
@@ -517,7 +518,7 @@ function SellTabWrapper:GetUnitPrice()
 end
 
 function SellTabWrapper:UpdateTempSlot()
-    self.requiresTempSlot = (self.currentStackCount ~= self.pendingStackCount or self.pendingBagId ~= BAG_BACKPACK)
+    self.requiresTempSlot = (not self.isMasterWrit) and (self.currentStackCount ~= self.pendingStackCount or self.pendingBagId ~= BAG_BACKPACK)
     if(self.requiresTempSlot) then
         self.tempSlot = FindFirstEmptySlotInBag(BAG_BACKPACK)
         if(not self.tempSlot) then
@@ -546,6 +547,11 @@ function SellTabWrapper:ClearPendingItemLockColor()
     end
 end
 
+local function IsMasterWrit(bagId, slotIndex)
+    local itemType = GetItemType(bagId, slotIndex)
+    return itemType == ITEMTYPE_MASTER_WRIT
+end
+
 function SellTabWrapper:SetPendingItem(bagId, slotIndex)
     local icon, stackCount, sellPrice = GetItemInfo(bagId, slotIndex)
     if(stackCount > 0) then
@@ -555,11 +561,22 @@ function SellTabWrapper:SetPendingItem(bagId, slotIndex)
         self.pendingItemLink = GetItemLink(bagId, slotIndex)
         self.pendingItemIdentifier = GetItemIdentifier(self.pendingItemLink)
 
-        self.currentStackCount = self.lastSoldStackCount[self.pendingItemIdentifier] or self.pendingStackCount
-        if(self.currentStackCount > self.pendingStackCount) then
-            self.currentStackCount = self.pendingStackCount
+        self.isMasterWrit = IsMasterWrit(bagId, slotIndex)
+        if(self.isMasterWrit) then
+            self.currentStackCount = GetItemLinkWritCount(self.pendingItemLink) * self.pendingStackCount
+        else
+            self.currentStackCount = self.lastSoldStackCount[self.pendingItemIdentifier] or self.pendingStackCount
+            if(self.currentStackCount > self.pendingStackCount) then
+                self.currentStackCount = self.pendingStackCount
+            end
         end
-        self.currentPricePerUnit = self.lastSoldPricePerUnit[self.pendingItemIdentifier] or GetMasterMerchantLastUsedPrice(self.pendingItemLink) or GetMasterMerchantPrice(self.pendingItemLink) or (sellPrice * 3)
+        self.currentPricePerUnit = self.lastSoldPricePerUnit[self.pendingItemIdentifier]
+        if(not self.currentPricePerUnit) then
+            self.currentPricePerUnit = GetMasterMerchantLastUsedPrice(self.pendingItemLink) or GetMasterMerchantPrice(self.pendingItemLink) or (sellPrice * 3)
+            if(self.isMasterWrit) then
+                self.currentPricePerUnit = self.currentPricePerUnit / self.currentStackCount
+            end
+        end
         self.currentSellPrice = self.currentPricePerUnit * self.currentStackCount
 
         self:UpdateTempSlot()
@@ -569,6 +586,10 @@ function SellTabWrapper:SetPendingItem(bagId, slotIndex)
         if(self.pendingStackCount > 1) then
             self.quantitySlider:SetMinMax(1, self.pendingStackCount)
             self.quantitySlider:Show()
+            self.ppuSlider:Show()
+            self.priceButtonContainer:SetAnchor(TOPRIGHT, self.ppuSlider, TOPRIGHT, 0, 0)
+        elseif(self.isMasterWrit) then
+            self.quantitySlider:Hide()
             self.ppuSlider:Show()
             self.priceButtonContainer:SetAnchor(TOPRIGHT, self.ppuSlider, TOPRIGHT, 0, 0)
         else
