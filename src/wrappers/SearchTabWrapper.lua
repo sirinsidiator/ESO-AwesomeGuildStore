@@ -574,14 +574,28 @@ function SearchTabWrapper:InitializeNavigation(tradingHouseWrapper)
     end)
 end
 
-function SearchTabWrapper:InitializeUnitPriceDisplay(tradingHouseWrapper)
-    local PER_UNIT_PRICE_CURRENCY_OPTIONS = {
-        showTooltips = false,
-        iconSide = RIGHT,
-    }
-    local UNIT_PRICE_FONT = "/esoui/common/fonts/univers67.otf|14|soft-shadow-thin"
-    local SEARCH_RESULTS_DATA_TYPE = 1
+local PER_UNIT_PRICE_CURRENCY_OPTIONS = {
+    showTooltips = false,
+    iconSide = RIGHT,
+}
+local UNIT_PRICE_FONT = "/esoui/common/fonts/univers67.otf|14|soft-shadow-thin"
+local SEARCH_RESULTS_DATA_TYPE = 1
 
+local function SetUnitPrice(tradingHouse, rowControl, sellPriceControl, perItemPrice, result, unitPrice)
+    ZO_CurrencyControl_SetSimpleCurrency(perItemPrice, result.currencyType, unitPrice, PER_UNIT_PRICE_CURRENCY_OPTIONS, nil, tradingHouse.m_playerMoney[result.currencyType] < result.purchasePrice)
+    perItemPrice:SetText("@" .. perItemPrice:GetText():gsub("|t.-:.-:", "|t12:12:"))
+    perItemPrice:SetHidden(false)
+    sellPriceControl:ClearAnchors()
+    sellPriceControl:SetAnchor(RIGHT, rowControl, RIGHT, -5, -8)
+end
+
+local function GetItemLinkWritCount(itemLink)
+    local data = itemLink:match("|H.-:.-:(.-)|h.-|h")
+    local writCount = select(21, zo_strsplit(":", data))
+    return tonumber(string.format("%.0f", (writCount / 10000)))
+end
+
+function SearchTabWrapper:InitializeUnitPriceDisplay(tradingHouseWrapper)
     local saveData = self.saveData
     local tradingHouse = tradingHouseWrapper.tradingHouse
     local dataType = tradingHouse.m_searchResultsList.dataTypes[SEARCH_RESULTS_DATA_TYPE]
@@ -592,6 +606,7 @@ function SearchTabWrapper:InitializeUnitPriceDisplay(tradingHouseWrapper)
 
         local sellPriceControl = rowControl:GetNamedChild("SellPrice")
         local perItemPrice = rowControl:GetNamedChild("SellPricePerItem")
+        local shouldShow = false
         if(saveData.displayPerUnitPrice) then
             if(not perItemPrice) then
                 local controlName = rowControl:GetName() .. "SellPricePerItem"
@@ -602,16 +617,21 @@ function SearchTabWrapper:InitializeUnitPriceDisplay(tradingHouseWrapper)
 
             if(result.stackCount > 1) then
                 local unitPrice = tonumber(string.format("%.2f", result.purchasePrice / result.stackCount))
-                ZO_CurrencyControl_SetSimpleCurrency(perItemPrice, result.currencyType, unitPrice, PER_UNIT_PRICE_CURRENCY_OPTIONS, nil, tradingHouse.m_playerMoney[result.currencyType] < result.purchasePrice)
-                perItemPrice:SetText("@" .. perItemPrice:GetText():gsub("|t.-:.-:", "|t12:12:"))
-                perItemPrice:SetHidden(false)
-                sellPriceControl:ClearAnchors()
-                sellPriceControl:SetAnchor(RIGHT, rowControl, RIGHT, -5, -8)
-                perItemPrice = nil
+                SetUnitPrice(tradingHouse, rowControl, sellPriceControl, perItemPrice, result, unitPrice)
+                shouldShow = true
+            else
+                local itemLink = GetTradingHouseSearchResultItemLink(result.slotIndex)
+                local itemType = GetItemLinkItemType(itemLink)
+                if(itemType == ITEMTYPE_MASTER_WRIT) then
+                    local writCount = GetItemLinkWritCount(itemLink)
+                    local unitPrice = tonumber(string.format("%.2f", result.purchasePrice / writCount))
+                    SetUnitPrice(tradingHouse, rowControl, sellPriceControl, perItemPrice, result, unitPrice)
+                    shouldShow = true
+                end
             end
         end
 
-        if(perItemPrice) then
+        if(perItemPrice and not shouldShow) then
             perItemPrice:SetHidden(true)
             sellPriceControl:ClearAnchors()
             sellPriceControl:SetAnchor(RIGHT, rowControl, RIGHT, -5, 0)
