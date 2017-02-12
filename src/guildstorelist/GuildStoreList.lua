@@ -149,21 +149,6 @@ local function GetKioskNamesFromLocationTooltip(locationIndex)
     return kiosks
 end
 
-if(not GetMapIndexByZoneId) then -- TODO remove
-    local mapIndexByZoneIndex
-    function GetMapIndexByZoneId(zoneId)
-        if(not mapIndexByZoneIndex) then
-            mapIndexByZoneIndex = {}
-            for mapIndex = 1, GetNumMaps() do
-                SetMapToMapListIndex(mapIndex)
-                local zoneIndex = GetCurrentMapZoneIndex()
-                mapIndexByZoneIndex[zoneIndex] = mapIndex
-            end
-        end
-        return mapIndexByZoneIndex[GetZoneIndex(zoneId)]
-    end
-end
-
 local function InitializeStoreListWindow(saveData, kioskList, storeList, ownerList)
     local GetLastVisitLabel = AwesomeGuildStore.GetLastVisitLabel
     local guildTradersFragment = ZO_FadeSceneFragment:New(AwesomeGuildStoreGuildTraders, nil, 0)

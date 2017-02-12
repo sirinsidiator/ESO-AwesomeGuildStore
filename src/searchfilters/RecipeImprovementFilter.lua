@@ -155,13 +155,8 @@ end
 
 function RecipeImprovementFilter:FilterPageResult(index, icon, name, quality, stackCount, sellerName, timeRemaining, purchasePrice)
     local itemLink = GetTradingHouseSearchResultItemLink(index, LINK_STYLE_BRACKETS)
-    if(GetAPIVersion() > 100017) then -- TODO: remove  local rank = GetItemLinkRecipeRankRequirement(itemLink)
-        local min, max = GetItemLinkRecipeMinAndMaxRankRequirement(itemLink)
-        return not (min < self.min or max > self.max)
-    else
-        local rank = GetItemLinkRecipeRankRequirement(itemLink)
-        return not (rank < self.min or rank > self.max)
-    end
+    local min, max = GetItemLinkRecipeMinAndMaxRankRequirement(itemLink)
+    return not (min < self.min or max > self.max)
 end
 
 function RecipeImprovementFilter:SetWidth(width)

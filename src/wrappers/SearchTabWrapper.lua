@@ -383,26 +383,14 @@ function SearchTabWrapper:InitializeButtons(tradingHouseWrapper)
     resetButton.OnClick = function()
         local originalClearSearchResults = tradingHouse.ClearSearchResults
         tradingHouse.ClearSearchResults = function() end
-        tradingHouse:ResetAllSearchData(true) -- TODO remove parameter
+        tradingHouse:ResetAllSearchData()
         tradingHouse.ClearSearchResults = originalClearSearchResults
         RequestHandleFilterChanged(self)
     end
 
-    if(GetAPIVersion() > 100017) then -- TODO remove
-        tradingHouseWrapper:PreHook("ResetAllSearchData", function()
-            self.searchLibrary:ResetFilters()
-        end)
-    else
-        tradingHouseWrapper:PreHook("ResetAllSearchData", function(tradingHouse, doReset)
-            if(doReset or not saveData.keepFiltersOnClose) then
-                self.searchLibrary:ResetFilters()
-                if(doReset) then return end
-            end
-            tradingHouse:ClearSearchResults()
-            if(not saveData.keepFiltersOnClose) then return end
-            return true
-        end)
-    end
+    tradingHouseWrapper:PreHook("ResetAllSearchData", function()
+        self.searchLibrary:ResetFilters()
+    end)
 
     local autoSearchButton = ToggleButton:New(browseItemsControl:GetNamedChild("Header"), "AwesomeGuildStoreAutoSearchButton", "EsoUI/Art/lfg/lfg_tabIcon_groupTools_%s.dds", 0, 0, 28, 28, L["AUTO_SEARCH_TOGGLE_LABEL"])
     autoSearchButton.control:ClearAnchors()
