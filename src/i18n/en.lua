@@ -340,6 +340,11 @@ AwesomeGuildStore.Localization = {
     SELL_SELECT_INVENTORY_LABEL = zo_strformat(GetString(SI_INVENTORY_MENU_INVENTORY)),
     SELL_SELECT_CRAFTING_BAG_LABEL = zo_strformat(GetString(SI_GAMEPAD_INVENTORY_CRAFT_BAG_HEADER)),
 
+    TEMP_STACK_ERROR_INVALID_SELL_PRICE = GetString(SI_TRADINGHOUSERESULT21),
+    TEMP_STACK_ERROR_INVENTORY_FULL = GetString(SI_INVENTORY_ERROR_INVENTORY_FULL),
+    TEMP_STACK_ERROR_TIMEOUT_ON_SPLIT = "Failed to split stack", -- TODO
+    TEMP_STACK_ERROR_TIMEOUT_ON_SET_PENDING = "Failed to set stack pending", -- TODO
+
     SETTINGS_KEEP_FILTERS_ON_CLOSE_LABEL = "Remember filters between store visits",
     SETTINGS_KEEP_FILTERS_ON_CLOSE_DESCRIPTION = "Leaves the store filters set during a play session instead of clearing it when you close the guild store window and restores the last active state when the UI is loaded",
     SETTINGS_OLD_QUALITY_SELECTOR_BEHAVIOR_LABEL = "Use old quality selector behavior",

@@ -2,6 +2,7 @@ local L = AwesomeGuildStore.Localization
 local RegisterForEvent = AwesomeGuildStore.RegisterForEvent
 local UnregisterForEvent = AwesomeGuildStore.UnregisterForEvent
 local ToggleButton = AwesomeGuildStore.ToggleButton
+local ClearCallLater = AwesomeGuildStore.ClearCallLater
 
 local SellTabWrapper = ZO_Object:Subclass()
 AwesomeGuildStore.SellTabWrapper = SellTabWrapper
@@ -355,41 +356,107 @@ function SellTabWrapper:InitializeCraftingBag(tradingHouseWrapper)
         end
     end)
 
-    tradingHouseWrapper:Wrap("PostPendingItem", function(originalPostPendingItem, tradingHouse)
-        if(self.requiresTempSlot) then
-            if(self.currentSellPrice <= 0) then return end
-            local eventHandle
+    local Promise = LibStub("LibPromises")
+    local TEMP_STACK_ERROR_INVALID_SELL_PRICE = 1
+    local TEMP_STACK_ERROR_INVENTORY_FULL = 2
+    local TEMP_STACK_ERROR_TIMEOUT_ON_SPLIT = 3
+    local TEMP_STACK_ERROR_TIMEOUT_ON_SET_PENDING = 4
+    local TEMP_STACK_ERROR_MESSAGE = {}
+    TEMP_STACK_ERROR_MESSAGE[TEMP_STACK_ERROR_INVALID_SELL_PRICE] = L["TEMP_STACK_ERROR_INVALID_SELL_PRICE"]
+    TEMP_STACK_ERROR_MESSAGE[TEMP_STACK_ERROR_INVENTORY_FULL] = L["TEMP_STACK_ERROR_INVENTORY_FULL"]
+    TEMP_STACK_ERROR_MESSAGE[TEMP_STACK_ERROR_TIMEOUT_ON_SPLIT] = L["TEMP_STACK_ERROR_TIMEOUT_ON_SPLIT"]
+    TEMP_STACK_ERROR_MESSAGE[TEMP_STACK_ERROR_TIMEOUT_ON_SET_PENDING] = L["TEMP_STACK_ERROR_TIMEOUT_ON_SET_PENDING"]
+    local TEMP_STACK_WATCHDOG_TIMEOUT = 5000
+
+    local function CreateTempStack()
+        local promise = Promise:New()
+        if(self.currentSellPrice <= 0) then 
+            promise:Reject(TEMP_STACK_ERROR_INVALID_SELL_PRICE)
+        elseif(self.tempSlot) then
+            local eventHandle, timeout
+
+            local function CleanUp()
+                UnregisterForEvent(EVENT_INVENTORY_SINGLE_SLOT_UPDATE, eventHandle)
+                ClearCallLater(timeout)
+            end
+
+            timeout = zo_callLater(function()
+                CleanUp()
+                promise:Reject(TEMP_STACK_ERROR_TIMEOUT_ON_SPLIT)
+            end, TEMP_STACK_WATCHDOG_TIMEOUT)
+
             eventHandle = RegisterForEvent(EVENT_INVENTORY_SINGLE_SLOT_UPDATE, function(_, bagId, slotId, isNewItem, itemSoundCategory, inventoryUpdateReason, stackCountChange)
                 if(bagId == BAG_BACKPACK and slotId == self.tempSlot) then
-                    UnregisterForEvent(EVENT_INVENTORY_SINGLE_SLOT_UPDATE, eventHandle)
-
-                    local sellPrice = self.currentSellPrice -- save the current data before it is cleared
-                    local pricePerUnit = self.currentPricePerUnit
-                    local stackCount = self.currentStackCount
-                    EVENT_MANAGER:RegisterForEvent(POST_ITEM_PENDING_UPDATE_NAMESPACE, EVENT_TRADING_HOUSE_PENDING_ITEM_UPDATE, function(_, slotId, isPending)
-                        if(isPending) then
-                            UnregisterForEvent(EVENT_TRADING_HOUSE_PENDING_ITEM_UPDATE, POST_ITEM_PENDING_UPDATE_NAMESPACE)
-                            self.currentPricePerUnit = pricePerUnit -- no updates necessary as it is only used so the lastSold data is updated correctly
-                            self.currentStackCount = stackCount
-                            tradingHouse:SetPendingPostPrice(sellPrice, SUPPRESS_PRICE_PER_PIECE_UPDATE)
-                            tradingHouse:PostPendingItem() -- call everything from the beginning - now with the real item
-                        end
-                    end)
-
-                    SetPendingItemPost(bagId, slotId, self.currentStackCount)
+                    CleanUp()
+                    promise:Resolve()
                 end
             end)
 
-            if(self.tempSlot) then
-                MoveItem(self.pendingBagId, self.pendingSlotIndex, BAG_BACKPACK, self.tempSlot, self.currentStackCount)
-            else
-                ZO_Alert(UI_ALERT_CATEGORY_ERROR, SOUNDS.NEGATIVE_CLICK, SI_INVENTORY_ERROR_INVENTORY_FULL)
-            end
+            MoveItem(self.pendingBagId, self.pendingSlotIndex, BAG_BACKPACK, self.tempSlot, self.currentStackCount)
         else
-            if(IsItemLinkStackable(self.pendingItemLink)) then
-                self.lastSoldStackCount[self.pendingItemIdentifier] = self.currentStackCount
+            promise:Reject(TEMP_STACK_ERROR_INVENTORY_FULL)
+        end
+        return promise
+    end
+
+    local function SetTempStackPending()
+        local promise = Promise:New()
+
+        local eventHandle, timeout
+
+        local function CleanUp()
+            UnregisterForEvent(EVENT_TRADING_HOUSE_PENDING_ITEM_UPDATE, POST_ITEM_PENDING_UPDATE_NAMESPACE)
+            ClearCallLater(timeout)
+        end
+
+        timeout = zo_callLater(function()
+            CleanUp()
+            promise:Reject(TEMP_STACK_ERROR_TIMEOUT_ON_SET_PENDING)
+        end, TEMP_STACK_WATCHDOG_TIMEOUT)
+
+        -- save the current data before it is cleared
+        local sellPrice = self.currentSellPrice
+        local pricePerUnit = self.currentPricePerUnit
+        local stackCount = self.currentStackCount
+
+        EVENT_MANAGER:RegisterForEvent(POST_ITEM_PENDING_UPDATE_NAMESPACE, EVENT_TRADING_HOUSE_PENDING_ITEM_UPDATE, function(_, slotId, isPending)
+            if(isPending) then
+                CleanUp()
+                -- no UI updates necessary as it is only used so the lastSold data is updated correctly
+                self.currentPricePerUnit = pricePerUnit
+                self.currentStackCount = stackCount
+                tradingHouse:SetPendingPostPrice(sellPrice, SUPPRESS_PRICE_PER_PIECE_UPDATE)
+                promise:Resolve()
             end
-            self.lastSoldPricePerUnit[self.pendingItemIdentifier] = self.currentPricePerUnit
+        end)
+
+        SetPendingItemPost(BAG_BACKPACK, self.tempSlot, self.currentStackCount)
+        return promise
+    end
+
+    local function UpdateLastSoldData()
+        if(IsItemLinkStackable(self.pendingItemLink)) then
+            self.lastSoldStackCount[self.pendingItemIdentifier] = self.currentStackCount
+        end
+        self.lastSoldPricePerUnit[self.pendingItemIdentifier] = self.currentPricePerUnit
+    end
+
+    tradingHouseWrapper:Wrap("PostPendingItem", function(originalPostPendingItem, tradingHouse)
+        if(self.requiresTempSlot) then
+            CreateTempStack():Then(SetTempStackPending):Then(function()
+                 -- now we can post the item for real
+                tradingHouse:PostPendingItem()
+            end, function(error)
+                local message = TEMP_STACK_ERROR_MESSAGE[error]
+                if(message) then
+                    ZO_Alert(UI_ALERT_CATEGORY_ERROR, SOUNDS.NEGATIVE_CLICK, message)
+                else
+                    PlaySound(SOUNDS.NEGATIVE_CLICK)
+                    d("[AwesomeGuildStore] Could not create temporary stack", error)
+                end
+            end)
+        else
+            UpdateLastSoldData()
             originalPostPendingItem(tradingHouse)
         end
     end)
