@@ -61,3 +61,12 @@ local function ClearCallLater(id)
 end
 
 AwesomeGuildStore.ClearCallLater = ClearCallLater
+
+
+local function GetItemLinkWritCount(itemLink)
+    local data = itemLink:match("|H.-:.-:(.-)|h.-|h")
+    local writCount = select(21, zo_strsplit(":", data))
+    return tonumber(string.format("%.0f", (writCount / 10000)))
+end
+
+AwesomeGuildStore.GetItemLinkWritCount = GetItemLinkWritCount

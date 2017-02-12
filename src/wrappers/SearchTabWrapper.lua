@@ -2,6 +2,7 @@ local L = AwesomeGuildStore.Localization
 local ToggleButton = AwesomeGuildStore.ToggleButton
 local ExecuteSearchOperation = AwesomeGuildStore.ExecuteSearchOperation
 local ClearCallLater = AwesomeGuildStore.ClearCallLater
+local GetItemLinkWritCount = AwesomeGuildStore.GetItemLinkWritCount
 
 local SearchTabWrapper = ZO_Object:Subclass()
 AwesomeGuildStore.SearchTabWrapper = SearchTabWrapper
@@ -587,12 +588,6 @@ local function SetUnitPrice(tradingHouse, rowControl, sellPriceControl, perItemP
     perItemPrice:SetHidden(false)
     sellPriceControl:ClearAnchors()
     sellPriceControl:SetAnchor(RIGHT, rowControl, RIGHT, -5, -8)
-end
-
-local function GetItemLinkWritCount(itemLink)
-    local data = itemLink:match("|H.-:.-:(.-)|h.-|h")
-    local writCount = select(21, zo_strsplit(":", data))
-    return tonumber(string.format("%.0f", (writCount / 10000)))
 end
 
 function SearchTabWrapper:InitializeUnitPriceDisplay(tradingHouseWrapper)
