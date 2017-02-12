@@ -1,5 +1,6 @@
 local L = AwesomeGuildStore.Localization
 local SimpleIconButton = AwesomeGuildStore.SimpleIconButton
+local ClearCallLater = AwesomeGuildStore.ClearCallLater
 
 local FilterBase = ZO_Object:Subclass()
 AwesomeGuildStore.FilterBase = FilterBase
@@ -85,10 +86,6 @@ end
 
 -- the following functions are placeholders and can be overwritten
 function FilterBase:Initialize(name, tradingHouseWrapper)
-end
-
-local function ClearCallLater(id)
-    EVENT_MANAGER:UnregisterForUpdate("CallLaterFunction"..id)
 end
 
 function FilterBase:HandleChange()

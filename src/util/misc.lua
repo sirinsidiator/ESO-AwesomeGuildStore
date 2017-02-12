@@ -54,3 +54,10 @@ local function GetKioskName(guildId)
 end
 
 AwesomeGuildStore.GetKioskName = GetKioskName
+
+
+local function ClearCallLater(id)
+    EVENT_MANAGER:UnregisterForUpdate("CallLaterFunction"..id)
+end
+
+AwesomeGuildStore.ClearCallLater = ClearCallLater

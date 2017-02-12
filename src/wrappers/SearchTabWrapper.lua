@@ -1,6 +1,7 @@
 local L = AwesomeGuildStore.Localization
 local ToggleButton = AwesomeGuildStore.ToggleButton
 local ExecuteSearchOperation = AwesomeGuildStore.ExecuteSearchOperation
+local ClearCallLater = AwesomeGuildStore.ClearCallLater
 
 local SearchTabWrapper = ZO_Object:Subclass()
 AwesomeGuildStore.SearchTabWrapper = SearchTabWrapper
@@ -46,10 +47,6 @@ local function SortByFilterPriority(a, b)
         return a.type < b.type
     end
     return b.priority < a.priority
-end
-
-local function ClearCallLater(id)
-    EVENT_MANAGER:UnregisterForUpdate("CallLaterFunction"..id)
 end
 
 function SearchTabWrapper:RequestUpdateFilterAnchors()
