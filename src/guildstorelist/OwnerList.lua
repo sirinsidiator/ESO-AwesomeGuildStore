@@ -22,8 +22,8 @@ function OwnerList:Initialize(saveData)
 end
 
 function OwnerList:GetCurrentWeek()
-    local week, year = LDT:New():GetIsoWeek()
-    return LDT:CombineIsoWeekAndYear(year, week)
+    local currentYearAndWeek = LDT:GetTraderWeek()
+    return currentYearAndWeek
 end
 
 function OwnerList:IsTimeInCurrentWeek(time)
