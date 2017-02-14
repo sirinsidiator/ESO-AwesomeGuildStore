@@ -17,14 +17,9 @@ AwesomeGuildStore.InitializeAugmentedMails = function(saveData)
 	local button
 
 	local playerName = GetDisplayName()
-	local IS_GUILD_STORE_MAIL_SUBJECT = {
-		["Item Sold"] = true, -- en
-		["Gegenstand verkauft"] = true, -- de
-		["Objet vendu"] = true, -- fr
-	}
 
 	local function IsGuildStoreMail(dataTable)
-		return dataTable.fromSystem and IS_GUILD_STORE_MAIL_SUBJECT[dataTable.subject]
+		return dataTable.fromSystem and dataTable.subject == L["MAIL_AUGMENTATION_ITEM_SOLD_SUBJECT"]
 	end
 
 	local function GetTransaction(secsSinceReceived, attachedMoney)

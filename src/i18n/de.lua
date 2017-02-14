@@ -87,6 +87,7 @@ local localization = {
     MAIL_AUGMENTATION_INVOICE_COMMISSION = "Provision",
     MAIL_AUGMENTATION_INVOICE_LISTING_FEE_REFUND = GetString(SI_TRADING_HOUSE_POSTING_LISTING_FEE) .. " (Rückzahlung)",
     MAIL_AUGMENTATION_REQUEST_DATA = "Lade Details",
+    MAIL_AUGMENTATION_ITEM_SOLD_SUBJECT = "Gegenstand verkauft",
 
     SELL_FULL_QUANTITY_BUTTON_LABEL = "Volle Stückzahl wählen",
     SELL_LAST_QUANTITY_BUTTON_LABEL = "Zuletzt verkaufte Stückzahl wählen",

@@ -87,6 +87,7 @@ local localization = { -- translated by Ayantir (http://www.esoui.com/forums/mem
     MAIL_AUGMENTATION_INVOICE_COMMISSION = "Commission",
     MAIL_AUGMENTATION_INVOICE_LISTING_FEE_REFUND = GetString(SI_TRADING_HOUSE_POSTING_LISTING_FEE) .. " (remboursement)",
     MAIL_AUGMENTATION_REQUEST_DATA = "Chargement des détails",
+    MAIL_AUGMENTATION_ITEM_SOLD_SUBJECT = "Objet vendu",
 
     SELL_FULL_QUANTITY_BUTTON_LABEL = "Totalité du stack",
     SELL_LAST_QUANTITY_BUTTON_LABEL = "Dernière quantité définie",
