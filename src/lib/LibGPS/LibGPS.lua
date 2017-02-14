@@ -3,7 +3,7 @@
 ------------------------------------------------------------------
 
 local LIB_NAME = "LibGPS2"
-local lib = LibStub:NewLibrary(LIB_NAME, 10)
+local lib = LibStub:NewLibrary(LIB_NAME, 11)
 
 if not lib then
     return
@@ -281,12 +281,9 @@ end
 
 local function InterceptMapPinManager()
     if (lib.mapPinManager) then return end
-    ZO_WorldMap_AddCustomPin(DUMMY_PIN_TYPE, function(pinManager)
-        lib.mapPinManager = pinManager
-        ZO_WorldMap_SetCustomPinEnabled(_G[DUMMY_PIN_TYPE], false)
-    end , nil, { level = 0, size = 0, texture = "" })
-    ZO_WorldMap_SetCustomPinEnabled(_G[DUMMY_PIN_TYPE], true)
-    ZO_WorldMap_RefreshCustomPinsOfType(_G[DUMMY_PIN_TYPE])
+    lib.mapPinManager = ZO_WorldMap_GetPinManager()
+    ZO_WorldMap_AddCustomPin(DUMMY_PIN_TYPE, function(pinManager) end , nil, { level = 0, size = 0, texture = "" })
+    ZO_WorldMap_SetCustomPinEnabled(_G[DUMMY_PIN_TYPE], false)
 end
 
 local function HookSetMapToQuestCondition()
@@ -296,10 +293,11 @@ local function HookSetMapToQuestCondition()
         if(result ~= SET_MAP_RESULT_MAP_FAILED and not IsMapMeasured()) then
             LogMessage(LOG_DEBUG, "SetMapToQuestCondition")
 
-            local success, mapResult = lib:CalculateMapMeasurements()
+            local success, mapResult = lib:CalculateMapMeasurements(false)
             if(mapResult ~= SET_MAP_RESULT_CURRENT_MAP_UNCHANGED) then
                 result = mapResult
             end
+            orgSetMapToQuestCondition(...)
         end
         -- All stuff is done before anyone triggers an "OnWorldMapChanged" event due to this result
         return result
@@ -314,10 +312,11 @@ local function HookSetMapToQuestZone()
         if(result ~= SET_MAP_RESULT_MAP_FAILED and not IsMapMeasured()) then
             LogMessage(LOG_DEBUG, "SetMapToQuestZone")
 
-            local success, mapResult = lib:CalculateMapMeasurements()
+            local success, mapResult = lib:CalculateMapMeasurements(false)
             if(mapResult ~= SET_MAP_RESULT_CURRENT_MAP_UNCHANGED) then
                 result = mapResult
             end
+            orgSetMapToQuestZone(...)
         end
         -- All stuff is done before anyone triggers an "OnWorldMapChanged" event due to this result
         return result
@@ -333,10 +332,11 @@ local function HookSetMapToPlayerLocation()
         if(result ~= SET_MAP_RESULT_MAP_FAILED and not IsMapMeasured()) then
             LogMessage(LOG_DEBUG, "SetMapToPlayerLocation")
 
-            local success, mapResult = lib:CalculateMapMeasurements()
+            local success, mapResult = lib:CalculateMapMeasurements(false)
             if(mapResult ~= SET_MAP_RESULT_CURRENT_MAP_UNCHANGED) then
                 result = mapResult
             end
+            orgSetMapToPlayerLocation(...)
         end
         -- All stuff is done before anyone triggers an "OnWorldMapChanged" event due to this result
         return result
@@ -351,10 +351,11 @@ local function HookSetMapToMapListIndex()
         if(result ~= SET_MAP_RESULT_MAP_FAILED and not IsMapMeasured()) then
             LogMessage(LOG_DEBUG, "SetMapToMapListIndex")
 
-            local success, mapResult = lib:CalculateMapMeasurements()
+            local success, mapResult = lib:CalculateMapMeasurements(false)
             if(mapResult ~= SET_MAP_RESULT_CURRENT_MAP_UNCHANGED) then
                 result = mapResult
             end
+            orgSetMapToMapListIndex(mapIndex)
         end
 
         -- All stuff is done before anyone triggers an "OnWorldMapChanged" event due to this result
@@ -369,10 +370,11 @@ local function HookProcessMapClick()
         local result = orgProcessMapClick(...)
         if(result ~= SET_MAP_RESULT_MAP_FAILED and not IsMapMeasured()) then
             LogMessage(LOG_DEBUG, "ProcessMapClick")
-            local success, mapResult = lib:CalculateMapMeasurements()
+            local success, mapResult = lib:CalculateMapMeasurements(true)
             if(mapResult ~= SET_MAP_RESULT_CURRENT_MAP_UNCHANGED) then
                 result = mapResult
             end
+            -- Returning is done via clicking already
         end
         return result
     end
@@ -385,10 +387,11 @@ local function HookSetMapFloor()
         local result = orgSetMapFloor(...)
         if result ~= SET_MAP_RESULT_MAP_FAILED and not IsMapMeasured() then
             LogMessage(LOG_DEBUG, "SetMapFloor")
-            local success, mapResult = lib:CalculateMapMeasurements()
+            local success, mapResult = lib:CalculateMapMeasurements(true)
             if(mapResult ~= SET_MAP_RESULT_CURRENT_MAP_UNCHANGED) then
                 result = mapResult
             end
+            orgSetMapFloor(...)
         end
         return result
     end
@@ -586,20 +589,14 @@ end
 function lib:PanToMapPosition(x, y)
     -- if we don't have access to the mapPinManager we cannot do anything
     if (not lib.mapPinManager) then return end
-
+    local panAndZoom = ZO_WorldMap_GetPanAndZoom()
     local mapPinManager = lib.mapPinManager
     -- create dummy pin
     local pin = mapPinManager:CreatePin(_G[DUMMY_PIN_TYPE], "libgpsdummy", x, y)
 
-    -- replace GetPlayerPin to return our dummy pin
-    local getPlayerPin = mapPinManager.GetPlayerPin
-    mapPinManager.GetPlayerPin = function() return pin end
-
-    -- let the map pan to our dummy pin
-    ZO_WorldMap_PanToPlayer()
+    panAndZoom:PanToPin(pin)
 
     -- cleanup
-    mapPinManager.GetPlayerPin = getPlayerPin
     mapPinManager:RemovePins(DUMMY_PIN_TYPE)
 end
 
