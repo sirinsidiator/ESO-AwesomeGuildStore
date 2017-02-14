@@ -48,7 +48,7 @@ function TradingHouseWrapper:Initialize(saveData)
                 searchTab:Search()
             end, 500)
         end
-        if(saveData.guildTraderListEnabled) then
+        if(CollectGuildKiosk) then
             CollectGuildKiosk()
         end
     end)
