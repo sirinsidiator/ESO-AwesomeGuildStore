@@ -354,6 +354,9 @@ function SellTabWrapper:InitializeCraftingBag(tradingHouseWrapper)
             self:UpdateListing()
             self.quantitySlider:UpdateValue()
             self.ppuSlider:UpdateValue()
+            if(self.pendingItemUpdateCallback) then
+                self.pendingItemUpdateCallback(slotId)
+            end
         end
     end)
 
@@ -362,18 +365,22 @@ function SellTabWrapper:InitializeCraftingBag(tradingHouseWrapper)
     local TEMP_STACK_ERROR_INVENTORY_FULL = 2
     local TEMP_STACK_ERROR_TIMEOUT_ON_SPLIT = 3
     local TEMP_STACK_ERROR_TIMEOUT_ON_SET_PENDING = 4
+    local TEMP_STACK_ERROR_SLOT_DID_NOT_UPDATE = 4
     local TEMP_STACK_ERROR_MESSAGE = {}
     TEMP_STACK_ERROR_MESSAGE[TEMP_STACK_ERROR_INVALID_SELL_PRICE] = L["TEMP_STACK_ERROR_INVALID_SELL_PRICE"]
     TEMP_STACK_ERROR_MESSAGE[TEMP_STACK_ERROR_INVENTORY_FULL] = L["TEMP_STACK_ERROR_INVENTORY_FULL"]
     TEMP_STACK_ERROR_MESSAGE[TEMP_STACK_ERROR_TIMEOUT_ON_SPLIT] = L["TEMP_STACK_ERROR_TIMEOUT_ON_SPLIT"]
     TEMP_STACK_ERROR_MESSAGE[TEMP_STACK_ERROR_TIMEOUT_ON_SET_PENDING] = L["TEMP_STACK_ERROR_TIMEOUT_ON_SET_PENDING"]
+    TEMP_STACK_ERROR_MESSAGE[TEMP_STACK_ERROR_SLOT_DID_NOT_UPDATE] = L["TEMP_STACK_ERROR_SLOT_DID_NOT_UPDATE"]
     local TEMP_STACK_WATCHDOG_TIMEOUT = 5000
 
     local function CreateTempStack()
         local promise = Promise:New()
         if(self.currentSellPrice <= 0) then 
             promise:Reject(TEMP_STACK_ERROR_INVALID_SELL_PRICE)
-        elseif(self.tempSlot) then
+        elseif(not self.tempSlot) then
+            promise:Reject(TEMP_STACK_ERROR_INVENTORY_FULL)
+        else
             local eventHandle, timeout
 
             local function CleanUp()
@@ -394,8 +401,6 @@ function SellTabWrapper:InitializeCraftingBag(tradingHouseWrapper)
             end)
 
             MoveItem(self.pendingBagId, self.pendingSlotIndex, BAG_BACKPACK, self.tempSlot, self.currentStackCount)
-        else
-            promise:Reject(TEMP_STACK_ERROR_INVENTORY_FULL)
         end
         return promise
     end
@@ -406,7 +411,7 @@ function SellTabWrapper:InitializeCraftingBag(tradingHouseWrapper)
         local eventHandle, timeout
 
         local function CleanUp()
-            UnregisterForEvent(EVENT_TRADING_HOUSE_PENDING_ITEM_UPDATE, POST_ITEM_PENDING_UPDATE_NAMESPACE)
+            self.pendingItemUpdateCallback = nil
             ClearCallLater(timeout)
         end
 
@@ -417,19 +422,16 @@ function SellTabWrapper:InitializeCraftingBag(tradingHouseWrapper)
 
         -- save the current data before it is cleared
         local sellPrice = self.currentSellPrice
-        local pricePerUnit = self.currentPricePerUnit
-        local stackCount = self.currentStackCount
 
-        EVENT_MANAGER:RegisterForEvent(POST_ITEM_PENDING_UPDATE_NAMESPACE, EVENT_TRADING_HOUSE_PENDING_ITEM_UPDATE, function(_, slotId, isPending)
-            if(isPending) then
-                CleanUp()
-                -- no UI updates necessary as it is only used so the lastSold data is updated correctly
-                self.currentPricePerUnit = pricePerUnit
-                self.currentStackCount = stackCount
-                tradingHouse:SetPendingPostPrice(sellPrice, SUPPRESS_PRICE_PER_PIECE_UPDATE)
+        self.pendingItemUpdateCallback = function(slotId)
+            CleanUp()
+            tradingHouse:SetPendingPostPrice(sellPrice, SUPPRESS_PRICE_PER_PIECE_UPDATE)
+            if(self.tempSlot ~= self.pendingSlotIndex) then
+                promise:Reject(TEMP_STACK_ERROR_SLOT_DID_NOT_UPDATE)
+            else
                 promise:Resolve()
             end
-        end)
+        end
 
         SetPendingItemPost(BAG_BACKPACK, self.tempSlot, self.currentStackCount)
         return promise
@@ -443,6 +445,7 @@ function SellTabWrapper:InitializeCraftingBag(tradingHouseWrapper)
     end
 
     tradingHouseWrapper:Wrap("PostPendingItem", function(originalPostPendingItem, tradingHouse)
+        UpdateLastSoldData() -- update regardless of the outcome
         if(self.requiresTempSlot) then
             CreateTempStack():Then(SetTempStackPending):Then(function()
                  -- now we can post the item for real
@@ -457,7 +460,6 @@ function SellTabWrapper:InitializeCraftingBag(tradingHouseWrapper)
                 end
             end)
         else
-            UpdateLastSoldData()
             originalPostPendingItem(tradingHouse)
         end
     end)
