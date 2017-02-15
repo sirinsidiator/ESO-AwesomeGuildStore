@@ -96,6 +96,11 @@ local localization = { -- translated by Ayantir (http://www.esoui.com/forums/mem
     SELL_LAST_PRICE_BUTTON_LABEL = "Sélectionner le dernier prix défini",
     SELL_MM_PRICE_BUTTON_LABEL = "Sélectionner le prix de Master Merchant",
 
+    TEMP_STACK_ERROR_INVALID_SELL_PRICE = "Impossible de mettre à jour la liste des prix",
+    TEMP_STACK_ERROR_TIMEOUT_ON_SPLIT = "Impossible de diviser la pile d'objets",
+    TEMP_STACK_ERROR_TIMEOUT_ON_SET_PENDING = "Impossible de définir le slot temporaire",
+    TEMP_STACK_ERROR_SLOT_DID_NOT_UPDATE = "Impossible de mettre à jour le slot temporaire",
+
     SETTINGS_KEEP_FILTERS_ON_CLOSE_LABEL = "Se souvenir des filtres entre les boutiques",
     SETTINGS_KEEP_FILTERS_ON_CLOSE_DESCRIPTION = "Se souvenir des filtres de recherche entre les différentes boutiques et entre les sessions de jeu",
     SETTINGS_OLD_QUALITY_SELECTOR_BEHAVIOR_LABEL = "Filtres de qualité à la souris",
