@@ -96,6 +96,11 @@ local localization = {
     SELL_LAST_PRICE_BUTTON_LABEL = "Zuletzt verkauften Preis wählen",
     SELL_MM_PRICE_BUTTON_LABEL = "Master Merchant Preis wählen",
 
+    TEMP_STACK_ERROR_INVALID_SELL_PRICE = "Verkaufspreis konnte nicht aktualisiert werden",
+    TEMP_STACK_ERROR_TIMEOUT_ON_SPLIT = "Stapel konnte nicht geteilt werden",
+    TEMP_STACK_ERROR_TIMEOUT_ON_SET_PENDING = "Stapel konnte nicht ausgewählt werden",
+    TEMP_STACK_ERROR_SLOT_DID_NOT_UPDATE = "Auswahl konnte nicht aktualisiert werden",
+
     SETTINGS_KEEP_FILTERS_ON_CLOSE_LABEL = "Filtereinstellungen merken",
     SETTINGS_KEEP_FILTERS_ON_CLOSE_DESCRIPTION = "Anstatt die Filter beim Schließen des Ladenfensters zurückzusetzen bleiben sie während einer Spielesitzung erhalten, außerdem werden beim Laden der UI die letzten aktiven Einstellungen wiederhergestellt",
     SETTINGS_OLD_QUALITY_SELECTOR_BEHAVIOR_LABEL = "Verwende altes Qualitätsfilterverhalten",
