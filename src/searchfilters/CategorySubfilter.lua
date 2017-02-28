@@ -71,6 +71,11 @@ function CategorySubfilter:ApplyFilterValues(filterArray)
     local subfilterValues = {}
     for _, button in pairs(group.buttons) do
         if(button:IsPressed()) then
+            if(button.value == ITEM_TRAIT_TYPE_ARMOR_INTRICATE) then
+                -- this is a hack to make the trait filter for shields work
+                -- they are using the wrong type of intricate trait so we just put the other one into the filter too
+                table.insert(subfilterValues, ITEM_TRAIT_TYPE_WEAPON_INTRICATE)
+            end
             table.insert(subfilterValues, button.value)
         end
     end
