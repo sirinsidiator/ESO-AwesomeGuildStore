@@ -360,8 +360,7 @@ AwesomeGuildStore.FILTER_PRESETS = {
             {
                 label = L["FILTER_SUBCATEGORY_BLACKSMITHING"],
                 texture = "EsoUI/Art/Inventory/inventory_tabIcon_craftbag_blacksmithing_%s.dds",
-                isDefault = true,
---                index = 2,
+                index = 2,
                 filters = {
                     [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_BLACKSMITHING_RAW_MATERIAL, ITEMTYPE_BLACKSMITHING_MATERIAL, ITEMTYPE_BLACKSMITHING_BOOSTER },
                 },
@@ -372,7 +371,7 @@ AwesomeGuildStore.FILTER_PRESETS = {
             {
                 label = L["FILTER_SUBCATEGORY_CLOTHING"],
                 texture = "EsoUI/Art/Inventory/inventory_tabIcon_craftbag_clothing_%s.dds",
---                index = 3,
+                index = 3,
                 filters = {
                     [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_CLOTHIER_RAW_MATERIAL, ITEMTYPE_CLOTHIER_MATERIAL, ITEMTYPE_CLOTHIER_BOOSTER },
                 },
@@ -383,7 +382,7 @@ AwesomeGuildStore.FILTER_PRESETS = {
             {
                 label = L["FILTER_SUBCATEGORY_WOODWORKING"],
                 texture = "EsoUI/Art/Inventory/inventory_tabIcon_craftbag_woodworking_%s.dds",
---                index = 4,
+                index = 4,
                 filters = {
                     [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_WOODWORKING_RAW_MATERIAL, ITEMTYPE_WOODWORKING_MATERIAL, ITEMTYPE_WOODWORKING_BOOSTER },
                 },
@@ -394,7 +393,7 @@ AwesomeGuildStore.FILTER_PRESETS = {
             {
                 label = L["FILTER_SUBCATEGORY_ALCHEMY"],
                 texture = "EsoUI/Art/Inventory/inventory_tabIcon_craftbag_alchemy_%s.dds",
---                index = 5,
+                index = 5,
                 filters = {
                     [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_POTION_BASE, ITEMTYPE_POISON_BASE, ITEMTYPE_REAGENT },
                 },
@@ -405,7 +404,7 @@ AwesomeGuildStore.FILTER_PRESETS = {
             {
                 label = L["FILTER_SUBCATEGORY_ENCHANTING"],
                 texture = "EsoUI/Art/Inventory/inventory_tabIcon_craftbag_enchanting_%s.dds",
---                index = 6,
+                index = 6,
                 filters = {
                     [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_ENCHANTING_RUNE_ASPECT, ITEMTYPE_ENCHANTING_RUNE_ESSENCE, ITEMTYPE_ENCHANTING_RUNE_POTENCY },
                 },
@@ -417,7 +416,7 @@ AwesomeGuildStore.FILTER_PRESETS = {
             {
                 label = L["FILTER_SUBCATEGORY_PROVISIONING"],
                 texture = "EsoUI/Art/Inventory/inventory_tabIcon_craftbag_provisioning_%s.dds",
---                index = 7,
+                index = 7,
                 filters = {
 --                    [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_INGREDIENT },
                     [TRADING_HOUSE_FILTER_TYPE_SPECIALIZED_ITEM] = { 
@@ -438,7 +437,7 @@ AwesomeGuildStore.FILTER_PRESETS = {
             {
                 label = L["FILTER_SUBCATEGORY_STYLE"],
                 texture = "EsoUI/Art/Inventory/inventory_tabIcon_craftbag_stylematerial_%s.dds",
---                index = 8,
+                index = 8,
                 filters = {
                     [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_STYLE_MATERIAL, ITEMTYPE_RAW_MATERIAL },
                 },
@@ -449,7 +448,7 @@ AwesomeGuildStore.FILTER_PRESETS = {
             {
                 label = L["FILTER_SUBCATEGORY_WEAPONTRAIT"],
                 texture = "EsoUI/Art/Crafting/smithing_tabIcon_weaponSet_%s.dds",
---                index = 9,
+                index = 9,
                 filters = {
                     [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_WEAPON_TRAIT },
                 }
@@ -457,7 +456,7 @@ AwesomeGuildStore.FILTER_PRESETS = {
             {
                 label = L["FILTER_SUBCATEGORY_ARMORTRAIT"],
                 texture = "EsoUI/Art/Crafting/smithing_tabIcon_armorSet_%s.dds",
---                index = 10,
+                index = 10,
                 filters = {
                     [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_ARMOR_TRAIT },
                 }
@@ -465,30 +464,30 @@ AwesomeGuildStore.FILTER_PRESETS = {
             {
                 label = L["FILTER_SUBCATEGORY_FURNISHING_ORNAMENTAL"],
                 texture = "EsoUI/Art/treeIcons/collection_indexicon_furnishings_%s.dds",
---                index = 11,
+                index = 11,
                 filters = {
                     [TRADING_HOUSE_FILTER_TYPE_SPECIALIZED_ITEM] = { SPECIALIZED_ITEMTYPE_INGREDIENT_RARE },
                 },
             },
---            { -- needs to stay here because the table index is used for the save data
---                label = L["FILTER_SUBCATEGORY_ALL"],
---                texture = "EsoUI/Art/Inventory/inventory_tabIcon_all_%s.dds",
---                isDefault = true,
---                index = 1,
---                filters = {
---                    [TRADING_HOUSE_FILTER_TYPE_ITEM] = { 
---                        ITEMTYPE_BLACKSMITHING_RAW_MATERIAL, ITEMTYPE_BLACKSMITHING_MATERIAL, ITEMTYPE_BLACKSMITHING_BOOSTER,
---                        ITEMTYPE_CLOTHIER_RAW_MATERIAL, ITEMTYPE_CLOTHIER_MATERIAL, ITEMTYPE_CLOTHIER_BOOSTER,
---                        ITEMTYPE_WOODWORKING_RAW_MATERIAL, ITEMTYPE_WOODWORKING_MATERIAL, ITEMTYPE_WOODWORKING_BOOSTER,
---                        ITEMTYPE_POTION_BASE, ITEMTYPE_POISON_BASE, ITEMTYPE_REAGENT,
---                        ITEMTYPE_ENCHANTING_RUNE_ASPECT, ITEMTYPE_ENCHANTING_RUNE_ESSENCE, ITEMTYPE_ENCHANTING_RUNE_POTENCY,
---                        ITEMTYPE_INGREDIENT,
---                        ITEMTYPE_STYLE_MATERIAL, ITEMTYPE_RAW_MATERIAL,
---                        ITEMTYPE_WEAPON_TRAIT,
---                        ITEMTYPE_ARMOR_TRAIT
---                    },
---                },
---            },
+            { -- needs to stay here because the table index is used for the save data
+                label = L["FILTER_SUBCATEGORY_ALL"],
+                texture = "EsoUI/Art/Inventory/inventory_tabIcon_all_%s.dds",
+                isDefault = true,
+                index = 1,
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_ITEM] = { 
+                        ITEMTYPE_BLACKSMITHING_RAW_MATERIAL, ITEMTYPE_BLACKSMITHING_MATERIAL, ITEMTYPE_BLACKSMITHING_BOOSTER,
+                        ITEMTYPE_CLOTHIER_RAW_MATERIAL, ITEMTYPE_CLOTHIER_MATERIAL, ITEMTYPE_CLOTHIER_BOOSTER,
+                        ITEMTYPE_WOODWORKING_RAW_MATERIAL, ITEMTYPE_WOODWORKING_MATERIAL, ITEMTYPE_WOODWORKING_BOOSTER,
+                        ITEMTYPE_POTION_BASE, ITEMTYPE_POISON_BASE, ITEMTYPE_REAGENT,
+                        ITEMTYPE_ENCHANTING_RUNE_ASPECT, ITEMTYPE_ENCHANTING_RUNE_ESSENCE, ITEMTYPE_ENCHANTING_RUNE_POTENCY,
+                        ITEMTYPE_INGREDIENT,
+                        ITEMTYPE_STYLE_MATERIAL, ITEMTYPE_RAW_MATERIAL,
+                        ITEMTYPE_WEAPON_TRAIT,
+                        ITEMTYPE_ARMOR_TRAIT
+                    },
+                },
+            },
         }
     },
     [ITEMFILTERTYPE_FURNISHING] = {
