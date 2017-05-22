@@ -461,7 +461,8 @@ local function IsUndergroundKiosk()
 end
 
 local IRREGULAR_TOOLTIP_HEADER = { -- TODO exceptions in other languages
-    ["Orsinium Outlaw Refuge"] = "Orsinium Outlaws Refuge"
+    ["Orsinium Outlaw Refuge"] = "Orsinium Outlaws Refuge",
+    ["Vivec City Outlaws Refuge"] = "Vivec Outlaws Refuge"
 }
 
 local function GetMapLocationName(locationIndex)
@@ -480,7 +481,7 @@ local function GetLocationEntranceIndices(mapName)
         end
     end
 
-    assert(#entranceIndices > 0, "Could not match current map to entrance pins")
+    assert(#entranceIndices > 0, string.format("Could not match current map (%s) to entrance pins", mapName))
     return entranceIndices, entranceCoordinates
 end
 
@@ -580,7 +581,8 @@ local function InitializeGuildStoreList(globalSaveData)
         end
     end
 
-    if(storeList:IsEmpty()) then
+    local currentVersion = GetAPIVersion() 
+    if(storeList:IsEmpty() or not saveData.lastScannedVersion or saveData.lastScannedVersion < currentVersion) then
         local visitedMaps = {}
         local mapIndex, numMaps = 1, GetNumMaps()
 
@@ -617,6 +619,7 @@ local function InitializeGuildStoreList(globalSaveData)
                 end, 500)
                 storeList:InitializeConfirmedKiosks(kioskList)
                 EVENT_MANAGER:UnregisterForUpdate(UPDATE_NAMESPACE)
+                saveData.lastScannedVersion = currentVersion
             end
         end
         EVENT_MANAGER:RegisterForUpdate(UPDATE_NAMESPACE, UPDATE_INTERVAL, DoCollectStores)
