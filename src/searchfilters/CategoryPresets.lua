@@ -502,14 +502,19 @@ AwesomeGuildStore.FILTER_PRESETS = {
                 label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_FURNISHING_CRAFTING_STATION)),
                 texture = "EsoUI/Art/treeIcons/housing_indexicon_workshop_%s.dds",
                 filters = {
-                    [TRADING_HOUSE_FILTER_TYPE_SPECIALIZED_ITEM] = { SPECIALIZED_ITEMTYPE_FURNISHING_CRAFTING_STATION },
+--                    [TRADING_HOUSE_FILTER_TYPE_SPECIALIZED_ITEM] = { SPECIALIZED_ITEMTYPE_FURNISHING_CRAFTING_STATION },
+                    [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_FURNISHING },
+                    [TRADING_HOUSE_FILTER_TYPE_FURNITURE_CATEGORY] = { 25 }, -- services
+                    [TRADING_HOUSE_FILTER_TYPE_FURNITURE_SUBCATEGORY] = { 104 }, -- crafting stations
                 },
             },
             {
                 label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_FURNISHING_LIGHT)),
                 texture = "EsoUI/Art/treeIcons/housing_indexicon_shrine_%s.dds",
                 filters = {
-                    [TRADING_HOUSE_FILTER_TYPE_SPECIALIZED_ITEM] = { SPECIALIZED_ITEMTYPE_FURNISHING_LIGHT },
+--                    [TRADING_HOUSE_FILTER_TYPE_SPECIALIZED_ITEM] = { SPECIALIZED_ITEMTYPE_FURNISHING_LIGHT },
+                    [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_FURNISHING },
+                    [TRADING_HOUSE_FILTER_TYPE_FURNITURE_CATEGORY] = { 11 }, -- lighting
                 },
             },
             {
@@ -530,7 +535,10 @@ AwesomeGuildStore.FILTER_PRESETS = {
                 label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_FURNISHING_TARGET_DUMMY)),
                 texture = "EsoUI/Art/treeIcons/collection_indexicon_weapons+armor_%s.dds",
                 filters = {
-                    [TRADING_HOUSE_FILTER_TYPE_SPECIALIZED_ITEM] = { SPECIALIZED_ITEMTYPE_FURNISHING_TARGET_DUMMY },
+--                    [TRADING_HOUSE_FILTER_TYPE_SPECIALIZED_ITEM] = { SPECIALIZED_ITEMTYPE_FURNISHING_TARGET_DUMMY },
+                    [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_FURNISHING },
+                    [TRADING_HOUSE_FILTER_TYPE_FURNITURE_CATEGORY] = { 25 }, -- services
+                    [TRADING_HOUSE_FILTER_TYPE_FURNITURE_SUBCATEGORY] = { 98 }, -- training dummies
                 },
             },
         },
