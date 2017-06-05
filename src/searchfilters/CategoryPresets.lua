@@ -418,17 +418,7 @@ AwesomeGuildStore.FILTER_PRESETS = {
                 texture = "EsoUI/Art/Inventory/inventory_tabIcon_craftbag_provisioning_%s.dds",
                 index = 7,
                 filters = {
---                    [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_INGREDIENT },
-                    [TRADING_HOUSE_FILTER_TYPE_SPECIALIZED_ITEM] = { 
-                        SPECIALIZED_ITEMTYPE_INGREDIENT_ALCOHOL,
-                        SPECIALIZED_ITEMTYPE_INGREDIENT_DRINK_ADDITIVE,
-                        SPECIALIZED_ITEMTYPE_INGREDIENT_FOOD_ADDITIVE,
-                        SPECIALIZED_ITEMTYPE_INGREDIENT_FRUIT,
-                        SPECIALIZED_ITEMTYPE_INGREDIENT_MEAT,
-                        SPECIALIZED_ITEMTYPE_INGREDIENT_TEA,
-                        SPECIALIZED_ITEMTYPE_INGREDIENT_TONIC,
-                        SPECIALIZED_ITEMTYPE_INGREDIENT_VEGETABLE,
-                    },
+                    [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_INGREDIENT },
                 },
                 subfilters = {
                     SUBFILTER_INGREDIENT_TYPE
