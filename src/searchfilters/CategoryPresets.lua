@@ -7,7 +7,7 @@ local SUBFILTER_ENCHANTING_MATERIALS, SUBFILTER_GLYPHS, SUBFILTER_JEWELRY_TYPE, 
 local SUBFILTER_RECIPE_KNOWLEDGE, SUBFILTER_MOTIF_KNOWLEDGE, SUBFILTER_TRAIT_KNOWLEDGE, SUBFILTER_RUNE_KNOWLEDGE, SUBFILTER_ITEM_STYLE = 19, 20, 21, 22, 23
 local SUBFILTER_ITEM_SET, SUBFILTER_CRAFTING, SUBFILTER_RECIPE_IMPROVEMENT, SUBFILTER_RECIPE_TYPE = 24, 25, 26, 27
 local SUBFILTER_DRINK_TYPE, SUBFILTER_FOOD_TYPE, SUBFILTER_INGREDIENT_TYPE, SUBFILTER_SIEGE_TYPE = 28, 29, 30, 31
-local SUBFILTER_TROPHY_TYPE = 32
+local SUBFILTER_TROPHY_TYPE, SUBFILTER_FURNISHING_MATERIAL_TYPE = 32, 33
 
 AwesomeGuildStore.FILTER_PRESETS = {
     [ITEMFILTERTYPE_ALL] = {
@@ -466,7 +466,10 @@ AwesomeGuildStore.FILTER_PRESETS = {
                 texture = "EsoUI/Art/treeIcons/collection_indexicon_furnishings_%s.dds",
                 index = 11,
                 filters = {
-                    [TRADING_HOUSE_FILTER_TYPE_SPECIALIZED_ITEM] = { SPECIALIZED_ITEMTYPE_INGREDIENT_RARE },
+                    [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_FURNISHING_MATERIAL },
+                },
+                subfilters = {
+                    SUBFILTER_FURNISHING_MATERIAL_TYPE
                 },
             },
             { -- needs to stay here because the table index is used for the save data
@@ -484,7 +487,8 @@ AwesomeGuildStore.FILTER_PRESETS = {
                         ITEMTYPE_INGREDIENT,
                         ITEMTYPE_STYLE_MATERIAL, ITEMTYPE_RAW_MATERIAL,
                         ITEMTYPE_WEAPON_TRAIT,
-                        ITEMTYPE_ARMOR_TRAIT
+                        ITEMTYPE_ARMOR_TRAIT,
+                        ITEMTYPE_FURNISHING_MATERIAL
                     },
                 },
             },
@@ -1855,6 +1859,44 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
                 label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_TROPHY_TREASURE_MAP)),
                 texture = "EsoUI/Art/icons/achievements_indexicon_exploration_%s.dds",
                 value = SPECIALIZED_ITEMTYPE_TROPHY_TREASURE_MAP,
+            },
+        },
+    },
+    [SUBFILTER_FURNISHING_MATERIAL_TYPE] = {
+        type = 52,
+        -- TRANSLATORS: title of the furnishing material type filter in the left panel on the search tab
+        label = gettext("Material Type"),
+        filter = TRADING_HOUSE_FILTER_TYPE_SPECIALIZED_ITEM,
+        buttons = {
+            {
+                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, ZO_GetCraftingSkillName(CRAFTING_TYPE_BLACKSMITHING)),
+                texture = "EsoUI/Art/Inventory/inventory_tabIcon_craftbag_blacksmithing_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_FURNISHING_MATERIAL_BLACKSMITHING,
+            },
+            {
+                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, ZO_GetCraftingSkillName(CRAFTING_TYPE_CLOTHIER)),
+                texture = "EsoUI/Art/Inventory/inventory_tabIcon_craftbag_clothing_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_FURNISHING_MATERIAL_CLOTHIER,
+            },
+            {
+                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, ZO_GetCraftingSkillName(CRAFTING_TYPE_WOODWORKING)),
+                texture = "EsoUI/Art/Inventory/inventory_tabIcon_craftbag_woodworking_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_FURNISHING_MATERIAL_WOODWORKING,
+            },
+            {
+                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, ZO_GetCraftingSkillName(CRAFTING_TYPE_ALCHEMY)),
+                texture = "EsoUI/Art/Inventory/inventory_tabIcon_craftbag_alchemy_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_FURNISHING_MATERIAL_ALCHEMY,
+            },
+            {
+                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, ZO_GetCraftingSkillName(CRAFTING_TYPE_ENCHANTING)),
+                texture = "EsoUI/Art/Inventory/inventory_tabIcon_craftbag_enchanting_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_FURNISHING_MATERIAL_ENCHANTING,
+            },
+            {
+                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, ZO_GetCraftingSkillName(CRAFTING_TYPE_PROVISIONING)),
+                texture = "EsoUI/Art/Inventory/inventory_tabIcon_craftbag_provisioning_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_INGREDIENT_RARE,
             },
         },
     }
