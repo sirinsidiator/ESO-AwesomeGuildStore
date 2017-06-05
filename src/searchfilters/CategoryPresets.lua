@@ -275,7 +275,7 @@ AwesomeGuildStore.FILTER_PRESETS = {
                     [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_DRINK },
                 },
                 subfilters = {
---                    SUBFILTER_DRINK_TYPE,
+                    SUBFILTER_DRINK_TYPE,
                     SUBFILTER_CRAFTING
                 }
             },
@@ -1652,42 +1652,42 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
         buttons = {
             {
                 label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_DRINK_ALCOHOLIC)),
-                texture = "EsoUI/Art/Crafting/provisioner_indexIcon_meat_%s.dds",
+                texture = "/EsoUI/Art/TreeIcons/provisioner_indexIcon_beer_%s.dds",
                 value = SPECIALIZED_ITEMTYPE_DRINK_ALCOHOLIC,
             },
             {
+                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_DRINK_TEA)),
+                texture = "/EsoUI/Art/WorldMap/map_indexIcon_filters_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_DRINK_TEA,
+            },
+            {
+                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_DRINK_TONIC)),
+                texture =  "EsoUI/Art/Crafting/alchemy_tabIcon_solvent_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_DRINK_TONIC,
+            },
+            {
+                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_DRINK_LIQUEUR)),
+                texture = "/EsoUI/Art/TreeIcons/provisioner_indexIcon_spirits_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_DRINK_LIQUEUR,
+            },
+            {
+                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_DRINK_TINCTURE)),
+                texture = "/EsoUI/Art/TreeIcons/provisioner_indexIcon_wine_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_DRINK_TINCTURE,
+            },
+            {
                 label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_DRINK_CORDIAL_TEA)),
-                texture = "EsoUI/Art/Crafting/provisioner_indexIcon_beer_%s.dds",
+                texture = "AwesomeGuildStore/images/crafting/tea_%s.dds",
                 value = SPECIALIZED_ITEMTYPE_DRINK_CORDIAL_TEA,
             },
             {
                 label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_DRINK_DISTILLATE)),
-                texture = "EsoUI/Art/Crafting/diagrams_tabicon_%s.dds",
+                texture = "EsoUI/Art/Inventory/inventory_tabIcon_consumables_%s.dds",
                 value = SPECIALIZED_ITEMTYPE_DRINK_DISTILLATE,
             },
             {
-                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_DRINK_LIQUEUR)),
-                texture = "EsoUI/Art/Crafting/patterns_tabicon_%s.dds",
-                value = SPECIALIZED_ITEMTYPE_DRINK_LIQUEUR,
-            },
-            {
-                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_DRINK_TEA)),
-                texture = "EsoUI/Art/Crafting/blueprints_tabicon_%s.dds",
-                value = SPECIALIZED_ITEMTYPE_DRINK_TEA,
-            },
-            {
-                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_DRINK_TINCTURE)),
-                texture = "EsoUI/Art/Crafting/formulae_tabicon_%s.dds",
-                value = SPECIALIZED_ITEMTYPE_DRINK_TINCTURE,
-            },
-            {
-                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_DRINK_TONIC)),
-                texture = "EsoUI/Art/Crafting/schematics_tabicon_%s.dds",
-                value = SPECIALIZED_ITEMTYPE_DRINK_TONIC,
-            },
-            {
-                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_DRINK_UNIQUE)),
-                texture = "EsoUI/Art/Crafting/designs_tabicon_%s.dds",
+                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_FOOD_UNIQUE)), -- SPECIALIZED_ITEMTYPE_DRINK_UNIQUE is labeled as "Drink", so we use this for now
+                texture = "/EsoUI/Art/TreeIcons/collection_indexIcon_dyes_%s.dds",
                 value = SPECIALIZED_ITEMTYPE_DRINK_UNIQUE,
             },
         },
