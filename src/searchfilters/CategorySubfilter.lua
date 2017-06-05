@@ -11,6 +11,7 @@ local BUTTON_SIZE = 32
 local BUTTONS_PER_ROW = 7
 local BUTTON_OFFSET_Y = 20
 local LINE_SPACING = 4
+local FILTER_ARGS_LIMIT = 24
 
 function CategorySubfilter:New(name, tradingHouseWrapper, subfilterPreset, ...)
     return FilterBase.New(self, subfilterPreset.type, name, tradingHouseWrapper, subfilterPreset, ...)
@@ -37,9 +38,9 @@ function CategorySubfilter:Initialize(name, tradingHouseWrapper, subfilterPreset
     for index, buttonPreset in ipairs(subfilterPreset.buttons) do
         local button = ToggleButton:New(group.control, group.control:GetName() .. "Button" .. index, buttonPreset.texture, 0, 0, BUTTON_SIZE, BUTTON_SIZE, buttonPreset.label)
         button.HandlePress = function()
-            if(not subfilterPreset.isLocal and group.pressedButtonCount > 8) then
+            if(not subfilterPreset.isLocal and group.pressedButtonCount > FILTER_ARGS_LIMIT) then
                 -- TRANSLATORS: alert text when more than the maximum possible amount of filter categories are selected
-                local message = gettext("Cannot filter for more than 8 at a time") -- TODO: increase limit
+                local message = gettext("Cannot filter for more than %d at a time"):format(FILTER_ARGS_LIMIT)
                 ZO_Alert(UI_ALERT_CATEGORY_ERROR, SOUNDS.GENERAL_ALERT_ERROR, message)
                 self.resetButton:SetHidden(false)
                 return false

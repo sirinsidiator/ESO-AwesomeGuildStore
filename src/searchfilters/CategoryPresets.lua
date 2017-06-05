@@ -1368,7 +1368,7 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
         label = GetString(SI_SMITHING_HEADER_STYLE),
         class = "ItemStyleFilter",
         filter = 42,
-        isLocal = true, -- TODO: this is just a quick hack to prevent the 8 button warning from showing
+        isLocal = true, -- TODO: this is just a quick hack to prevent the 24 button warning from showing
         buttons = {
             {
                 label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_ITEMSTYLE", ITEMSTYLE_RACIAL_BRETON)),
