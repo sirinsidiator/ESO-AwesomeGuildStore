@@ -1699,9 +1699,9 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
         filter = TRADING_HOUSE_FILTER_TYPE_SPECIALIZED_ITEM,
         buttons = {
             {
-                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_FOOD_ENTREMET)),
-                texture = "AwesomeGuildStore/images/consumable/entremet_%s.dds",
-                value = SPECIALIZED_ITEMTYPE_FOOD_ENTREMET,
+                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_FOOD_MEAT)),
+                texture = "EsoUI/Art/treeicons/provisioner_indexicon_meat_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_FOOD_MEAT,
             },
             {
                 label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_FOOD_FRUIT)),
@@ -1709,19 +1709,9 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
                 value = SPECIALIZED_ITEMTYPE_FOOD_FRUIT,
             },
             {
-                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_FOOD_GOURMET)),
-                texture = "EsoUI/Art/Inventory/inventory_tabIcon_craftbag_provisioning_%s.dds",
-                value = SPECIALIZED_ITEMTYPE_FOOD_GOURMET,
-            },
-            {
-                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_FOOD_MEAT)),
-                texture = "EsoUI/Art/treeicons/provisioner_indexicon_meat_%s.dds",
-                value = SPECIALIZED_ITEMTYPE_FOOD_MEAT,
-            },
-            {
-                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_FOOD_RAGOUT)),
-                texture = "EsoUI/Art/treeicons/provisioner_indexicon_stew_%s.dds",
-                value = SPECIALIZED_ITEMTYPE_FOOD_RAGOUT,
+                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_FOOD_VEGETABLE)),
+                texture = "EsoUI/Art/worldmap/map_ava_tabicon_foodfarm_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_FOOD_VEGETABLE,
             },
             {
                 label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_FOOD_SAVOURY)),
@@ -1729,9 +1719,19 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
                 value = SPECIALIZED_ITEMTYPE_FOOD_SAVOURY,
             },
             {
-                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_FOOD_VEGETABLE)),
-                texture = "EsoUI/Art/worldmap/map_ava_tabicon_foodfarm_%s.dds",
-                value = SPECIALIZED_ITEMTYPE_FOOD_VEGETABLE,
+                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_FOOD_RAGOUT)),
+                texture = "EsoUI/Art/treeicons/provisioner_indexicon_stew_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_FOOD_RAGOUT,
+            },
+            {
+                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_FOOD_ENTREMET)),
+                texture = "AwesomeGuildStore/images/consumable/entremet_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_FOOD_ENTREMET,
+            },
+            {
+                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_FOOD_GOURMET)),
+                texture = "EsoUI/Art/Inventory/inventory_tabIcon_craftbag_provisioning_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_FOOD_GOURMET,
             },
             {
                 label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_FOOD_UNIQUE)),
