@@ -46,7 +46,7 @@ local function GetKioskName(guildId)
     if(name) then
         local ownerName = GetGuildName(guildId)
         -- TRANSLATORS: patterns to match trader names from the label that is shown on the home tab in the guild menu
-        local kioskName = name:match(gettext("(.-) in .-")) or name:match(gettext("(.-) near .-"))
+        local kioskName = name:match(gettext("(.-) in the .-")) or name:match(gettext("(.-) in .-")) or name:match(gettext("(.-) near .-")) or name:match(gettext("(.-) on .-"))
         if(not kioskName) then
             -- TRANSLATORS: chat text when a kiosk name could not be matched. <<1>> is replaced by the label on the home tab in the guild menu
             df("[AwesomeGuildStore] %s", gettext("Warning: Could not match kiosk name: '<<1>>' -- please report this to the author", name))
