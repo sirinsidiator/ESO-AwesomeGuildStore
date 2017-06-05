@@ -85,7 +85,7 @@ def createConfigDialog() {
     }
 }
 
-def addonBaseDir = System.getProperty("user.home") + "/Documents/Elder Scrolls Online/liveeu/AddOns/"
+def addonBaseDir = System.getProperty("user.home") + "/Documents/Elder Scrolls Online/live/AddOns/"
 def sourceDir = "src/"
 def addonDir = addonBaseDir + "AwesomeGuildStore"
 
