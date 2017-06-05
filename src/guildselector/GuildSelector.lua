@@ -1,4 +1,3 @@
-local L = AwesomeGuildStore.Localization
 local HiredTraderTooltip = AwesomeGuildStore.HiredTraderTooltip
 
 local GuildSelector = ZO_Object:Subclass()
@@ -133,9 +132,6 @@ function GuildSelector:SetupGuildList()
 	for i = 1, GetNumTradingHouseGuilds() do
 		local guildId, guildName, guildAlliance = GetTradingHouseGuildDetails(i)
 		local iconPath = GetAllianceBannerIcon(guildAlliance)
-		if(not iconPath or #iconPath == 0) then
-			ZO_Alert(UI_ALERT_CATEGORY_ALERT, SOUNDS.GENERAL_ALERT_ERROR, L["INVALID_STATE"])
-		end
 		local entryText = iconPath and zo_iconTextFormat(iconPath, 36, 36, guildName) or guildName
 		local entry = comboBox:CreateItemEntry(entryText, OnGuildChanged)
 		entry.guildId = guildId

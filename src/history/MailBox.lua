@@ -2,7 +2,7 @@ AwesomeGuildStore.InitializeAugmentedMails = function(saveData)
 	if(not saveData.augementMails) then return end
 	local RegisterForEvent = AwesomeGuildStore.RegisterForEvent
 	local WrapFunction = AwesomeGuildStore.WrapFunction
-	local L = AwesomeGuildStore.Localization
+	local gettext = LibStub("LibGetText")("AwesomeGuildStore").gettext
 
 	local iconMarkup = string.format("|t%u:%u:%s|t", 16, 16, "EsoUI/Art/currency/currency_gold.dds")
 	local positiveColor = ZO_ColorDef:New("00FF00")
@@ -18,8 +18,10 @@ AwesomeGuildStore.InitializeAugmentedMails = function(saveData)
 
 	local playerName = GetDisplayName()
 
+    -- TRANSLATORS: this is used to find guild store sell mails. it has to be exactly the same as the subject of the ingame mails, otherwise the detection will fail
+    local ITEM_SOLD_SUBJECT = gettext("Item Sold")
 	local function IsGuildStoreMail(dataTable)
-		return dataTable.fromSystem and dataTable.subject == L["MAIL_AUGMENTATION_ITEM_SOLD_SUBJECT"]
+		return dataTable.fromSystem and dataTable.subject == ITEM_SOLD_SUBJECT
 	end
 
 	local function GetTransaction(secsSinceReceived, attachedMoney)
@@ -129,16 +131,18 @@ AwesomeGuildStore.InitializeAugmentedMails = function(saveData)
 		container:SetHidden(true)
 		container.previousLine = container
 
-		container.sellValue = CreateLine(container, L["MAIL_AUGMENTATION_INVOICE_SELL_VALUE"])
+		container.sellValue = CreateLine(container, GetString(SI_TRADING_HOUSE_POSTING_PRICE_TOTAL):gsub(":", ""))
 		CreateDivider(container)
-		container.listingFee = CreateLine(container, L["MAIL_AUGMENTATION_INVOICE_LISTING_FEE"], "-")
-		container.guildBank = CreateLine(container, L["MAIL_AUGMENTATION_INVOICE_GUILD_BANK"], "-")
-		container.commission = CreateLine(container, L["MAIL_AUGMENTATION_INVOICE_COMMISSION"], "-")
+		container.listingFee = CreateLine(container, GetString(SI_TRADING_HOUSE_POSTING_LISTING_FEE), "-")
+		container.guildBank = CreateLine(container, GetString(SI_TRADING_HOUSE_POSTING_TH_CUT), "-")
+		-- TRANSLATORS: label for the commission line in the guild store sell mail invoice
+		container.commission = CreateLine(container, gettext("Commission"), "-")
 		CreateDivider(container)
-		container.profit = CreateLine(container, L["MAIL_AUGMENTATION_INVOICE_PROFIT"])
-		container.listingFeeRefund = CreateLine(container, L["MAIL_AUGMENTATION_INVOICE_LISTING_FEE_REFUND"], "+")
+		container.profit = CreateLine(container, GetString(SI_TRADING_HOUSE_POSTING_PROFIT))
+        -- TRANSLATORS: suffix for the refunded listing fee line in the guild store sell mail invoice. The other part of the string is taken from the ingame translation. The result is something like "Listing Fee (refund)"
+		container.listingFeeRefund = CreateLine(container, GetString(SI_TRADING_HOUSE_POSTING_LISTING_FEE) .. gettext(" (refund)"), "+")
 		CreateDivider(container)
-		container.received = CreateLine(container, L["MAIL_AUGMENTATION_INVOICE_RECEIVED"])
+		container.received = CreateLine(container, GetString(SI_MAIL_READ_SENT_GOLD_LABEL):gsub(":", ""))
 
 		return container
 	end
@@ -158,7 +162,8 @@ AwesomeGuildStore.InitializeAugmentedMails = function(saveData)
 	local function CreateDataRequestButton()
 		local button = CreateControlFromVirtual("AwesomeGuildStoreMailSaleRequestDataButton", ZO_MailInboxMessagePaneScrollChild, "ZO_DefaultButton")
 		button:SetAnchor(TOP, ZO_MailInboxMessageBody, BOTTOM, 0, 30)
-		button:SetText(L["MAIL_AUGMENTATION_REQUEST_DATA"])
+        -- TRANSLATORS: label for the load details button in guild store sell mails where the invoice can not be shown due to lack of data
+		button:SetText(gettext("Load Details"))
 		button:SetWidth(200)
 		button:SetHandler("OnMouseUp",function(control, button, isInside)
 			if(control:GetState() == BSTATE_NORMAL and button == 1 and isInside) then
@@ -221,11 +226,11 @@ AwesomeGuildStore.InitializeAugmentedMails = function(saveData)
 		end
 		local transactionData = transactionDataByMailIdString[mailIdString]
 		if(transactionData) then
-			local format = L["MAIL_AUGMENTATION_MESSAGE_BODY"]
 			local buyerLink = neutralColor:Colorize(ZO_LinkHandler_CreateDisplayNameLink(transactionData.buyerName)):gsub("[%[%]]", "")
 			local itemCount = neutralColor:Colorize(transactionData.itemCount .. "x")
 			local sellPrice = neutralColor:Colorize(zo_strformat("<<1>> <<2>>", ZO_CurrencyControl_FormatCurrency(transactionData.sellPrice), iconMarkup))
-			return zo_strformat(format, transactionData.itemLink, itemCount, buyerLink, sellPrice)
+			-- TRANSLATORS: Mail body for item sold mails from the guild store. <<t:1>> is replaced by the itemlink, <<2>> by the item count, <<3>> by the buyer name and <<4>> by the sell price. e.g. You sold 1 Rosin to sirinsidiator for 5000g.  
+			return gettext("You sold <<2>> <<t:1>> to <<3>> for <<4>>.", transactionData.itemLink, itemCount, buyerLink, sellPrice)
 		else
 			return originalReadMail(mailId)
 		end

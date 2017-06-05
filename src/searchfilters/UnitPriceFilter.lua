@@ -1,4 +1,4 @@
-local L = AwesomeGuildStore.Localization
+local gettext = LibStub("LibGetText")("AwesomeGuildStore").gettext
 local MinMaxRangeSlider = AwesomeGuildStore.MinMaxRangeSlider
 local FilterBase = AwesomeGuildStore.FilterBase
 local GetItemLinkWritCount = AwesomeGuildStore.GetItemLinkWritCount
@@ -28,7 +28,8 @@ function UnitPriceFilter:InitializeControls(name)
 
     local label = container:CreateControl(name .. "Label", CT_LABEL)
     label:SetFont("ZoFontWinH4")
-    label:SetText(L["UNIT_PRICE_FILTER_TITLE"])
+    -- TRANSLATORS: title of the unit price filter in the left panel on the search tab
+    label:SetText(gettext("Unit Price Filter:"))
     self:SetLabelControl(label)
 
     local slider = MinMaxRangeSlider:New(container, name .. "Slider")
@@ -50,7 +51,7 @@ function UnitPriceFilter:InitializeControls(name)
     self.maxPriceBox = inputContainer:GetNamedChild("MaxPriceBox")
     self.maxPriceBox:SetTextType(TEXT_TYPE_NUMERIC)
 
-    local tooltipText = L["RESET_FILTER_LABEL_TEMPLATE"]:format(label:GetText():gsub(":", ""))
+    local tooltipText = gettext("Reset <<1>> Filter", label:GetText():gsub(":", ""))
     self.resetButton:SetTooltipText(tooltipText)
 end
 
@@ -185,15 +186,15 @@ function UnitPriceFilter:GetTooltipText(state)
     maxPrice = tonumber(maxPrice)
     local priceText = ""
     if(minPrice and maxPrice) then
-        priceText = GetFormattedPrice(minPrice) .. " - " .. GetFormattedPrice(maxPrice)
+        priceText = gettext("<<1>> - <<2>>", GetFormattedPrice(minPrice), GetFormattedPrice(maxPrice))
     elseif(minPrice) then
-        priceText = L["TOOLTIP_GREATER_THAN"] .. GetFormattedPrice(minPrice)
+        priceText = gettext("over <<1>>", GetFormattedPrice(minPrice))
     elseif(maxPrice) then
-        priceText = L["TOOLTIP_LESS_THAN"] .. GetFormattedPrice(maxPrice)
+        priceText = gettext("under <<1>>", GetFormattedPrice(maxPrice))
     end
 
     if(priceText ~= "") then
-        return {{label = L["UNIT_PRICE_FILTER_TITLE"]:sub(0, -2), text = priceText}}
+        return {{label = gettext("Unit Price Filter:"):sub(0, -2), text = priceText}}
     end
     return {}
 end

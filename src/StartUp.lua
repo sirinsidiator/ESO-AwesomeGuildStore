@@ -39,7 +39,7 @@ AwesomeGuildStore.RegisterForEvent = RegisterForEvent
 AwesomeGuildStore.WrapFunction = WrapFunction
 -----------------------------------------------------------------------------------------
 
-AwesomeGuildStore.GetAPIVersion = function() return 2 end
+AwesomeGuildStore.GetAPIVersion = function() return 3 end
 
 -- convenience functions for using the callback object:
 function AwesomeGuildStore:RegisterBeforeInitialSetupCallback(...)
@@ -104,10 +104,11 @@ OnAddonLoaded(function()
     AwesomeGuildStore.main = AwesomeGuildStore.TradingHouseWrapper:New(saveData)
     AwesomeGuildStore.InitializeAugmentedMails(saveData)
 
-    local L = AwesomeGuildStore.Localization
+    local gettext = LibStub("LibGetText")("AwesomeGuildStore").gettext
 
     local actionName, defaultKey = "AGS_SUPPRESS_LOCAL_FILTERS", KEY_CTRL
-    ZO_CreateStringId("SI_BINDING_NAME_AGS_SUPPRESS_LOCAL_FILTERS", L["CONTROLS_SUPPRESS_LOCAL_FILTERS"])
+    -- TRANSLATORS: keybind label in the controls menu
+    ZO_CreateStringId("SI_BINDING_NAME_AGS_SUPPRESS_LOCAL_FILTERS", gettext("Suppress Local Filters"))
 
     local function HandleKeyBindReset()
         saveData.hasTouchedAction = {}

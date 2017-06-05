@@ -1,4 +1,4 @@
-local L = AwesomeGuildStore.Localization
+local gettext = LibStub("LibGetText")("AwesomeGuildStore").gettext
 local MinMaxRangeSlider = AwesomeGuildStore.MinMaxRangeSlider
 local FilterBase = AwesomeGuildStore.FilterBase
 
@@ -57,7 +57,7 @@ function PriceFilter:InitializeControls(name, tradingHouse)
 	self.minPriceBox = common:GetNamedChild("MinPriceBox")
 	self.maxPriceBox = common:GetNamedChild("MaxPriceBox")
 
-	local tooltipText = L["RESET_FILTER_LABEL_TEMPLATE"]:format(priceRangeLabel:GetText():gsub(":", ""))
+	local tooltipText = gettext("Reset <<1>> Filter", priceRangeLabel:GetText():gsub(":", ""))
 	self.resetButton:SetTooltipText(tooltipText)
 end
 
@@ -166,15 +166,18 @@ function PriceFilter:GetTooltipText(state)
 	maxPrice = tonumber(maxPrice)
 	local priceText = ""
 	if(minPrice and maxPrice) then
-		priceText = GetFormattedPrice(minPrice) .. " - " .. GetFormattedPrice(maxPrice)
+	   -- TRANSLATORS: tooltip format for search library entries with a range filter where min and max value have been set
+		priceText = gettext("<<1>> - <<2>>", GetFormattedPrice(minPrice), GetFormattedPrice(maxPrice))
 	elseif(minPrice) then
-		priceText = L["TOOLTIP_GREATER_THAN"] .. GetFormattedPrice(minPrice)
+       -- TRANSLATORS: tooltip format for search library entries with a range filter where only the min value has been set
+		priceText = gettext("over <<1>>", GetFormattedPrice(minPrice))
 	elseif(maxPrice) then
-		priceText = L["TOOLTIP_LESS_THAN"] .. GetFormattedPrice(maxPrice)
+       -- TRANSLATORS: tooltip format for search library entries with a range filter where only the max value has been set
+		priceText = gettext("under <<1>>", GetFormattedPrice(maxPrice))
 	end
 
 	if(priceText ~= "") then
-		return {{label = L["PRICE_SELECTOR_TITLE"]:sub(0, -2), text = priceText}}
+		return {{label = GetString(SI_TRADING_HOUSE_BROWSE_PRICE_RANGE_LABEL):sub(0, -2), text = priceText}}
 	end
 	return {}
 end

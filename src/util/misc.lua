@@ -1,4 +1,4 @@
-local L = AwesomeGuildStore.Localization
+local gettext = LibStub("LibGetText")("AwesomeGuildStore").gettext
 local guildKioskWithoutNameCaption = GetString(SI_GUILD_TRADER_OWNERSHIP_HEADER)
 
 local function IsUnitGuildKiosk(unitTag)
@@ -45,9 +45,11 @@ local function GetKioskName(guildId)
     local name = GetGuildOwnedKioskInfo(guildId)
     if(name) then
         local ownerName = GetGuildName(guildId)
-        local kioskName = name:match(L["KIOSK_INFO_NAME_MATCHING_PATTERN"]) or name:match(L["KIOSK_INFO_NAME_MATCHING_PATTERN2"])
+        -- TRANSLATORS: patterns to match trader names from the label that is shown on the home tab in the guild menu
+        local kioskName = name:match(gettext("(.-) in .-")) or name:match(gettext("(.-) near .-"))
         if(not kioskName) then
-            df("[AwesomeGuildStore] Warning: Could not match kiosk name: '%s' -- please report this to the author", name)
+            -- TRANSLATORS: chat text when a kiosk name could not be matched. <<1>> is replaced by the label on the home tab in the guild menu
+            df("[AwesomeGuildStore] %s", gettext("Warning: Could not match kiosk name: '<<1>>' -- please report this to the author", name))
         end
         return kioskName
     end

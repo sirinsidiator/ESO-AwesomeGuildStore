@@ -1,186 +1,159 @@
-local localization = {
-    SUBFILTER_WEAPON_ENCHANTMENT_LABEL = "Waffenverzauberung",
-    SUBFILTER_WEAPON_TYPE_LABEL = "Waffentyp",
-    SUBFILTER_ARMOR_TYPE_LABEL = "Rüstungstyp",
-    SUBFILTER_ARMOR_ENCHANTMENT_LABEL = "Rüstungsverzauberung",
-    SUBFILTER_JEWELRY_TYPE_LABEL = "Schmucktyp",
-    SUBFILTER_JEWELRY_TRAIT_LABEL = "Schmuckeigenschaften",
-    SUBFILTER_JEWELRY_ENCHANTMENT_LABEL = "Schmuckverzauberung",
-    SUBFILTER_MATERIAL_TYPE_LABEL = "Materialtyp",
-    SUBFILTER_INGREDIENT_TYPE_LABEL = "Zutatentyp",
-    SUBFILTER_RUNE_TYPE_LABEL = "Runensteintyp",
-    SUBFILTER_GLYPH_TYPE_LABEL = "Glyphentyp",
-    SUBFILTER_RECIPE_TYPE_LABEL = "Rezepttyp",
-    SUBFILTER_DRINK_TYPE_LABEL = "Getränketyp",
-    SUBFILTER_FOOD_TYPE_LABEL = "Nahrungstyp",
-    SUBFILTER_SIEGE_TYPE_LABEL = "Belagerungsausrüstungstyp",
-    SUBFILTER_TROPHY_TYPE_LABEL = "Trophäentyp",
-
-    SUBFILTER_RECIPE_KNOWLEDGE_LABEL = "Rezeptwissen",
-    SUBFILTER_RECIPE_KNOWLEDGE_UNKNOWN = "Unbekannte Rezepte",
-    SUBFILTER_RECIPE_KNOWLEDGE_KNOWN = "Bekannte Rezepte",
-
-    SUBFILTER_MOTIF_KNOWLEDGE_LABEL = "Motivwissen",
-    SUBFILTER_MOTIF_KNOWLEDGE_UNKNOWN = "Unbekannte Motive",
-    SUBFILTER_MOTIF_KNOWLEDGE_KNOWN = "Bekannte Motive",
-
-    SUBFILTER_TRAIT_KNOWLEDGE_LABEL = "Eigenschaftenwissen",
-    SUBFILTER_TRAIT_KNOWLEDGE_UNKNOWN = "Unbekannte Eigenschaften",
-    SUBFILTER_TRAIT_KNOWLEDGE_KNOWN = "Bekannte Eigenschaften",
-
-    SUBFILTER_RUNE_KNOWLEDGE_LABEL = "Runensteinwissen",
-    SUBFILTER_RUNE_KNOWLEDGE_UNKNOWN = "Unbekannte Runensteine",
-    SUBFILTER_RUNE_KNOWLEDGE_KNOWN = "Bekannte Runensteine",
-
-    SUBFILTER_ITEM_SET_LABEL = "Set Gegenstand",
-    SUBFILTER_ITEM_SET_NORMAL = "Individueller Gegenstand",
-    SUBFILTER_ITEM_SET_HAS_SET = "Set Gegenstand",
-
-    SUBFILTER_CRAFTING_LABEL = "Handwerk",
-    SUBFILTER_CRAFTING_IS_CRAFTED = "Hergestellter Gegenstand",
-    SUBFILTER_CRAFTING_IS_LOOT = "Erbeuteter Gegenstand",
-
-    SUBFILTER_RECIPE_IMPROVEMENT_LABEL = "Rezeptverbesserung",
-    SUBFILTER_RECIPE_IMPROVEMENT_TOOLTIP = "Rezeptverbesserung <<1>> <<2>>",
-
-    AUTO_SEARCH_TOGGLE_LABEL = "Automatische Suche umschalten",
-    SEARCH_PREVIOUS_PAGE_LABEL = "Vorherige Seite anzeigen",
-    SEARCH_SHOW_MORE_LABEL = "Mehr Ergebnisse anzeigen",
-    RESET_ALL_FILTERS_LABEL = "Alle Filter zurücksetzen",
-    RESET_FILTER_LABEL_TEMPLATE = "%s zurücksetzen",
-    SEARCH_HAS_HIDDEN_RESULTS = "Alle Gegenstände werden durch lokale Filter ausgeblendet.",
-
-    CATEGORY_TITLE = "Kategorie",
-    SUBCATEGORY_TITLE = "Unterkategorie",
-
-    QUALITY_SELECTOR_TITLE = "Qualität:",
-
-    TEXT_FILTER_TITLE = "Textfilter:",
-    TEXT_FILTER_TEXT = "Nach Text filtern",
-
-    UNIT_PRICE_FILTER_TITLE = "Stückpreisfilter:",
-
-    WARNING_SUBFILTER_LIMIT = "Kann nur nach 8 gleichzeitig filtern",
-
-    SEARCH_LIBRARY_TOGGLE_LABEL = "Suchbibliothek umschalten",
-    SEARCH_LIBRARY_HISTORY_LABEL = "Verlauf",
-    SEARCH_LIBRARY_FAVORITES_LABEL = "Favoriten",
-    SEARCH_LIBRARY_FAVORITE_BUTTON_ADD_TOOLTIP = "Zu Favoriten hinzufügen",
-    SEARCH_LIBRARY_FAVORITE_BUTTON_REMOVE_TOOLTIP = "Von Favoriten entfernen",
-    SEARCH_LIBRARY_EDIT_LABEL_BUTTON_TOOLTIP = "Eintrag umbenennen",
-    SEARCH_LIBRARY_DELETE_LABEL_BUTTON_TOOLTIP = "Aus Verlauf entfernen",
-    SEARCH_LIBRARY_MENU_OPEN_SETTINGS = "Einstellungen öffnen",
-    SEARCH_LIBRARY_MENU_CLEAR_HISTORY = "Verlauf löschen",
-    SEARCH_LIBRARY_MENU_CLEAR_FAVORITES = "Favoriten löschen",
-    SEARCH_LIBRARY_MENU_UNDO_ACTION = "Aktion rückgängig machen",
-    SEARCH_LIBRARY_MENU_UNLOCK_WINDOW = "Fenster entsperren",
-    SEARCH_LIBRARY_MENU_LOCK_WINDOW = "Fenster sperren",
-    SEARCH_LIBRARY_MENU_RESET_WINDOW = "Fenster zurücksetzen",
-    SEARCH_LIBRARY_MENU_CLOSE_WINDOW = "Fenster schließen",
-    SEARCH_LIBRARY_SORT_HEADER_NAME = "Name",
-    SEARCH_LIBRARY_SORT_HEADER_SEARCHES = "Suchen",
-
-    TOOLTIP_LESS_THAN = "unter ",
-    TOOLTIP_GREATER_THAN = "über ",
-
-    MAIL_AUGMENTATION_MESSAGE_BODY = "Du hast <<2>> <<t:1>> an <<3>> verkauft für <<4>>.",
-    MAIL_AUGMENTATION_INVOICE_COMMISSION = "Provision",
-    MAIL_AUGMENTATION_INVOICE_LISTING_FEE_REFUND = GetString(SI_TRADING_HOUSE_POSTING_LISTING_FEE) .. " (Rückzahlung)",
-    MAIL_AUGMENTATION_REQUEST_DATA = "Lade Details",
-    MAIL_AUGMENTATION_ITEM_SOLD_SUBJECT = "Gegenstand verkauft",
-
-    SELL_FULL_QUANTITY_BUTTON_LABEL = "Volle Stückzahl wählen",
-    SELL_LAST_QUANTITY_BUTTON_LABEL = "Zuletzt verkaufte Stückzahl wählen",
-    SELL_PPU_SLIDER_LABEL = "Stückpreis:",
-    SELL_DEFAULT_PRICE_BUTTON_LABEL = "Grundpreis wählen",
-    SELL_LAST_PRICE_BUTTON_LABEL = "Zuletzt verkauften Preis wählen",
-    SELL_MM_PRICE_BUTTON_LABEL = "Master Merchant Preis wählen",
-
-    TEMP_STACK_ERROR_INVALID_SELL_PRICE = "Verkaufspreis konnte nicht aktualisiert werden",
-    TEMP_STACK_ERROR_TIMEOUT_ON_SPLIT = "Stapel konnte nicht geteilt werden",
-    TEMP_STACK_ERROR_TIMEOUT_ON_SET_PENDING = "Stapel konnte nicht ausgewählt werden",
-    TEMP_STACK_ERROR_SLOT_DID_NOT_UPDATE = "Auswahl konnte nicht aktualisiert werden",
-
-    SETTINGS_KEEP_FILTERS_ON_CLOSE_LABEL = "Filtereinstellungen merken",
-    SETTINGS_KEEP_FILTERS_ON_CLOSE_DESCRIPTION = "Anstatt die Filter beim Schließen des Ladenfensters zurückzusetzen bleiben sie während einer Spielesitzung erhalten, außerdem werden beim Laden der UI die letzten aktiven Einstellungen wiederhergestellt",
-    SETTINGS_OLD_QUALITY_SELECTOR_BEHAVIOR_LABEL = "Verwende altes Qualitätsfilterverhalten",
-    SETTINGS_OLD_QUALITY_SELECTOR_BEHAVIOR_DESCRIPTION = "Wenn aktiviert, setzt ein Links- und Rechtsklick die Unter- bzw. Obergrenze und Doppel- oder Shift-Klick beide Grenzen auf den selben Wert",
-    SETTINGS_DISPLAY_PER_UNIT_PRICE_LABEL = "Stückpreis in Ergebnissen anzeigen",
-    SETTINGS_DISPLAY_PER_UNIT_PRICE_DESCRIPTION = "Wenn aktiviert, wird in Suchergebnissen unterhalb des Gesamtpreises eines Stapels der Stückpreis angezeigt",
-    SETTINGS_SORT_WITHOUT_SEARCH_LABEL = "Sortierung ohne Suchen wählen",
-    SETTINGS_SORT_WITHOUT_SEARCH_DESCRIPTION = "Erlaubt das Ändern der Sortierung ohne automatisch eine neue Suche zu starten. Die angezeigten Resultate ändern sich erst bei einer manuellen Suche",
-    SETTINGS_KEEP_SORTORDER_ON_CLOSE_LABEL = "Sortierung merken",
-    SETTINGS_KEEP_SORTORDER_ON_CLOSE_DESCRIPTION = "Speichert die Sortierung im Ladenfensters zwischen Spielesitzungen",
-    SETTINGS_LIST_WITH_SINGLE_CLICK_LABEL = "Mit einem Klick anbieten",
-    SETTINGS_LIST_WITH_SINGLE_CLICK_DESCRIPTION = "Gegenstände werden im Verkaufsreiter mit einem Klick angeboten",
-    SETTINGS_SHOW_SEARCH_LIBRARY_TOOLTIPS_LABEL = "Kurzinfo in der Suchbibliothek",
-    SETTINGS_SHOW_SEARCH_LIBRARY_TOOLTIPS_DESCRIPTION = "Wenn aktiviert, werden Kurzinfos mit Details wie Level und Qualität zu den Einträgen in der Suchbibliothek angezeigt",
-    SETTINGS_SHOW_TRADER_TOOLTIPS_LABEL = "Händler Kurzinfo",
-    SETTINGS_SHOW_TRADER_TOOLTIPS_DESCRIPTION = "Zeigt den derzeit angeheuerten Händler einer Gilde der du angehörst, wenn du die Maus über den Namen oder einen Eintrag in der Selektion bewegst",
-    SETTINGS_AUTO_CLEAR_HISTORY_LABEL = "Verlauf automatisch entleeren",
-    SETTINGS_AUTO_CLEAR_HISTORY_DESCRIPTION = "Löscht automatisch alle Einträge im Verlauf wenn du den Gildenladen zum ersten Mal während einer Spielesitzung besuchst. Du kannst die Löschung über das Menü in der Suchbibliothek rückgängig machen",
-    SETTINGS_MAIL_AUGMENTATION_LABEL = "Postverbesserung",
-    SETTINGS_MAIL_AUGMENTATION_DESCRIPTION = "Fügt detailiertere Informationen über eine Transaktion in die eintreffende Gildenladen Post ein, solange die Daten in den Gildenaufzeichnungen vorhanden sind.",
-    SETTINGS_MAIL_AUGMENTATION_INVOICE_LABEL = "Zeige Rechnung in Nachrichten",
-    SETTINGS_MAIL_AUGMENTATION_INVOICE_DESCRIPTION = "Zeigt eine detailierte Rechnung an, die alle Abzüge auflistet",
-    SETTINGS_PURCHASE_NOTIFICATION_LABEL = "Kaufbenachrichtigung",
-    SETTINGS_PURCHASE_NOTIFICATION_DESCRIPTION = "Zeigt eine Meldung im Chat, nachdem ein Kauf in einem Gildenladen abgeschlossen wurde",
-    SETTINGS_CANCEL_NOTIFICATION_LABEL = "Abbruchbenachrichtigung",
-    SETTINGS_CANCEL_NOTIFICATION_DESCRIPTION = "Zeigt eine Meldung im Chat, nachdem ein Angebot in einem Gildenladen abgeborchen wurde",
-    SETTINGS_LISTED_NOTIFICATION_LABEL = "Angebotsbenachrichtigung",
-    SETTINGS_LISTED_NOTIFICATION_DESCRIPTION = "Zeigt eine Meldung im Chat, nachdem ein Angebot in einem Gildenladen erstellt wurde",
-    SETTINGS_DISABLE_CUSTOM_SELL_TAB_FILTER_LABEL = "Deaktiviere Verkaufsreiter Filter",
-    SETTINGS_DISABLE_CUSTOM_SELL_TAB_FILTER_DESCRIPTION = "Zeigt die Inventarfilter der normalen Benutzeroberfläche anstelle der AGS-eigenen Version",
-    SETTINGS_SKIP_GUILD_KIOSK_DIALOG_LABEL = "Gildenkioskdialog überspringen",
-    SETTINGS_SKIP_GUILD_KIOSK_DIALOG_DESCRIPTION = "Der Dialog bei Gildenläden (nicht in der Bank) wird übersprungen und der Laden automatisch geöffnet, wenn diese Option aktiv ist. Dies kann unterdrückt werden, indem die Shift Taste gedrückt gehalten wird während man den Händler anspricht",
-    SETTINGS_SKIP_EMPTY_PAGES_LABEL = "Leere Seiten überspringen",
-    SETTINGS_SKIP_EMPTY_PAGES_DESCRIPTION = "Wenn aktiviert, wechseln leere Seiten, die keine Ergebnisse aufgrund der lokalen Filter anzeigen, automatisch zur nächsten Seite. Durch drücken der Strg Taste bevor die Ergebnisse aufscheinen, kann diese Verhalten unterdrückt werden.",
-    SETTINGS_CLEAR_SELL_PRICE_CACHE_LABEL = "Verkaufspreisspeicher leeren",
-    SETTINGS_CLEAR_SELL_PRICE_CACHE_DESCRIPTION = "Dieser Schalter entfernt alle Stückzahl- und Stückpreiswerte aus den gespeicherten Daten für das Verkaufsfenster. Während Master Merchant aktiv ist, werden beim Selektieren eines Gegenstandes die zuletzt verwendenten Verkaufspreise von dort übernommen solange keine Daten in AwesomeGuildStore vorliegen",
-    SETTINGS_CLEAR_SELL_PRICE_CACHE_WARNING = "Die Daten können nicht wiederhergestellt werden sobald die Aktion bestätigt wird",
-    SETTINGS_ENABLE_GUILD_TRADER_LIST_LABEL = "Gildenhändlerliste aktivieren (BETA)",
-    SETTINGS_ENABLE_GUILD_TRADER_LIST_DESCRIPTION = "Wenn aktiv, wird im Gildenmenü ein neuer Reiter mit einer Liste aller Händler in Tamriel hinzugefügt. Die Liste wird mit den Gilden ergänzt, wann immer ihr einen Händler besucht.",
-    SETTINGS_CLEAR_GUILD_TRADER_LIST_LABEL = "Gildenhändlerliste leeren",
-    SETTINGS_CLEAR_GUILD_TRADER_LIST_DESCRIPTION = "Dieser Schalter entfernt alle Daten die mit der Gildenhändlerliste zusammenhängen",
-    SETTINGS_CLEAR_GUILD_TRADER_LIST_WARNING = "Die Benutzeroberfläche wird neu geladen und die Daten können nicht wiederhergestellt werden sobald die Aktion bestätigt wird",
-
-    CONTROLS_SUPPRESS_LOCAL_FILTERS = "Lokale Filter unterdrücken",
-
-    INVALID_STATE = "Ungültiger Händlerzustand.\nDas ist ein Fehler im Spiel und sollte bald behoben werden.",
-
-    LOCAL_FILTER_EXPLANATION_TOOLTIP = "Dieser Filter ist lokal und wirkt nur auf der derzeit sichtbaren Seite",
-    EXTERNAL_FILTER_EXPLANATION_TOOLTIP = "Dieser Filter wird von <<1>> bereitgestellt",
-
-    PURCHASE_NOTIFICATION = "Du hast <<1>>x <<t:2>> von <<3>> für <<4>> in <<5>> gekauft",
-    CANCEL_NOTIFICATION = "Du hast dein Angebot von <<1>>x <<t:2>> für <<3>> in <<4>> abgebrochen",
-    LISTED_NOTIFICATION = "Du hast <<1>>x <<t:2>> für <<3>> in <<4>> angeboten",
-
-    LISTING_TAB_OVERALL_PRICE = "Gesamtpreis: |cffffff<<1>>|r <<2>>", -- 1: price, 2: gold icon
-
-    KIOSK_INFO_NAME_MATCHING_PATTERN = "(.-) in .-",
-    KIOSK_INFO_NAME_MATCHING_PATTERN2 = "(.-) nahe .-",
-
-    TRADER_LIST_HEADER_STATS_UP_TO_DATE_LABEL = "Aktuell:",
-    TRADER_LIST_HEADER_STATS_UP_TO_DATE_TOOLTIP = "|cffffff<<1>>|r Händler besucht diese Woche",
-    TRADER_LIST_HEADER_STATS_VISITED_LABEL = "Besucht:",
-    TRADER_LIST_HEADER_STATS_VISITED_TOOLTIP = "|cffffff<<1>>|r Händler besucht insgesamt",
-    TRADER_LIST_HEADER_STATS_OVERALL_LABEL = "Overall:",
-    TRADER_LIST_HEADER_STATS_OVERALL_TOOLTIP = "|cffffff<<1>>|r Händler an |cffffff<<2>>|r Orten gefunden",
-    TRADER_LIST_HEADER_FILTER_LABEL = "Suche nach:",
-    TRADER_LIST_HEADER_TRADER_LABEL = "Händler",
-    TRADER_LIST_HEADER_LOCATION_LABEL = "Ort",
-    TRADER_LIST_HEADER_OWNER_LABEL = "Gilde",
-    TRADER_LIST_HEADER_LAST_VISIT_LABEL = "Letzter Besuch",
-    TRADER_LIST_DETAILS_ZONE_LABEL = "Region",
-    TRADER_LIST_DETAILS_HISTORY_LABEL = "Verlauf",
-    TRADER_LIST_DETAILS_IS_MEMBER_TOOLTIP = "Ihr seit Mitglied dieser Gilde.",
-    TRADER_LIST_NEVER_VISITED = "niemals",
-    TRADER_LIST_MENU_SHOW_DETAILS = "Details anzeigen",
-    TRADER_LIST_MENU_SHOW_ON_MAP = "Auf der Karte zeigen",
-    TRADER_LIST_EMPTY_NOT_READY_LABEL = "Händlerdatenbank ist noch nicht initialisiert.",
-    TRADER_LIST_EMPTY_EVERYTHING_FILTERED_LABEL = "Keine Ergebnisse für eure Suche.",
-    TRADER_LIST_LAST_VISIT_IS_GUILD_MEMBER = "beigetreten",
-    TRADER_OWNER_LIST_EMPTY_LABEL = "Kein Verlauf gespeichert.",
-    TRADER_OWNER_LIST_HEADER_WEEK_LABEL = "Woche",
-}
-ZO_ShallowTableCopy(localization, AwesomeGuildStore.Localization)
+-- this file is automatically generated. DO NOT EDIT IT DIRECTLY!
+local settext = LibStub("LibGetText")("AwesomeGuildStore").settext
+settext("Use old quality selector behavior", "Verwende altes Qualitätsfilterverhalten")
+settext("When enabled left and right click set lower and upper quality and double or shift click sets both to the same value", "Wenn aktiviert, setzt ein Links- und Rechtsklick die Unter- bzw. Obergrenze und Doppel- oder Shift-Klick beide Grenzen auf den selben Wert")
+settext("Show per unit price in search results", "Stückpreis in Ergebnissen anzeigen")
+settext("When enabled the results of a guild store search show the per unit price of a stack below the overall price", "Wenn aktiviert, wird in Suchergebnissen unterhalb des Gesamtpreises eines Stapels der Stückpreis angezeigt")
+settext("Select order without search", "Sortierung ohne Suchen wählen")
+settext("Allows you to change the sort order without triggering a new search. The currently shown results will only change after a manual search", "Erlaubt das Ändern der Sortierung ohne automatisch eine neue Suche zu starten. Die angezeigten Resultate ändern sich erst bei einer manuellen Suche")
+settext("Remember sort order", "Sortierung merken")
+settext("Leaves the store sort order set between play sessions instead of clearing it.", "Speichert die Sortierung im Ladenfensters zwischen Spielesitzungen")
+settext("Single click item listing", "Mit einem Klick anbieten")
+settext("Select items for sale with a single click in the sell tab.", "Gegenstände werden im Verkaufsreiter mit einem Klick angeboten")
+settext("Tooltips in Search Library", "Kurzinfo in der Suchbibliothek")
+settext("When active, a tooltip with details like level and quality is shown for each entry in the search library.", "Wenn aktiviert, werden Kurzinfos mit Details wie Level und Qualität zu den Einträgen in der Suchbibliothek angezeigt")
+settext("Trader Tooltips", "Händler Kurzinfo")
+settext("Show the currently hired trader for a guild that you are a member of, when hovering over the name or an entry in the drop down menu", "Zeigt den derzeit angeheuerten Händler einer Gilde der du angehörst, wenn du die Maus über den Namen oder einen Eintrag in der Selektion bewegst")
+settext("Auto clear history", "Verlauf automatisch entleeren")
+settext("Automatically deletes all history entries when you open the guild store for the first time in a game session. You can undo the deletion via the menu in the search library", "Löscht automatisch alle Einträge im Verlauf wenn du den Gildenladen zum ersten Mal während einer Spielesitzung besuchst. Du kannst die Löschung über das Menü in der Suchbibliothek rückgängig machen")
+settext("Mail augmentation", "Postverbesserung")
+settext("Adds more detailed information about a transaction to an incoming Guild Store Mail if the data is available in the Guild Activity Log.", "Fügt detailiertere Informationen über eine Transaktion in die eintreffende Gildenladen Post ein, solange die Daten in den Gildenaufzeichnungen vorhanden sind.")
+settext("Show invoice on mails", "Zeige Rechnung in Nachrichten")
+settext("Adds a detailed invoice to the mail which lists all deductions.", "Zeigt eine detailierte Rechnung an, die alle Abzüge auflistet.")
+settext("Purchase notifications", "Kaufbenachrichtigung")
+settext("Shows a message in chat after you have purchased an item in a guild store", "Zeigt eine Meldung im Chat, nachdem ein Kauf in einem Gildenladen abgeschlossen wurde")
+settext("Cancel notifications", "Abbruchbenachrichtigung")
+settext("Shows a message in chat after you have cancelled an item listing from a guild store", "Zeigt eine Meldung im Chat, nachdem ein Angebot in einem Gildenladen abgeborchen wurde")
+settext("Listed item notifications", "Angebotsbenachrichtigung")
+settext("Shows a message in chat after you have created a new item listing in a guild store", "Zeigt eine Meldung im Chat, nachdem ein Angebot in einem Gildenladen erstellt wurde")
+settext("Disable custom selltab filter", "Deaktiviere Verkaufsreiter Filter")
+settext("Shows the ingame inventory filter instead of AGS own version when deactivated.", "Zeigt die Inventarfilter der normalen Benutzeroberfläche anstelle der AGS-eigenen Version")
+settext("Skip guild kiosk dialog", "Gildenkioskdialog überspringen")
+settext("When activated, the dialog at guild traders (not at banks) is skipped and the store opened automatically. This can be suppressed by holding the shift key when talking to a trader.", "Der Dialog bei Gildenläden (nicht in der Bank) wird übersprungen und der Laden automatisch geöffnet, wenn diese Option aktiv ist. Dies kann unterdrückt werden, indem die Shift Taste gedrückt gehalten wird während man den Händler anspricht")
+settext("Skip empty result pages", "Leere Seiten überspringen")
+settext("When activated, pages that show no results due to local filters will automatically trigger a search for the next page. This can be suppressed by holding the ctrl key before the results are returned.", "Wenn aktiviert, wechseln leere Seiten, die keine Ergebnisse aufgrund der lokalen Filter anzeigen, automatisch zur nächsten Seite. Durch drücken der Strg Taste bevor die Ergebnisse aufscheinen, kann diese Verhalten unterdrückt werden.")
+settext("Clear sell price cache", "Verkaufsspeicher leeren")
+settext("Pressing this button will remove all stored quantity and price values for the sell tab from your save data. While Master Merchant is active, it will take the last sell price from there when selecting an item if no data was found in AwesomeGuildStore's own data", "Dieser Schalter entfernt alle Stückzahl- und Stückpreiswerte aus den gespeicherten Daten für das Verkaufsfenster. Während Master Merchant aktiv ist, werden beim Selektieren eines Gegenstandes die zuletzt verwendenten Verkaufspreise von dort übernommen solange keine Daten in AwesomeGuildStore vorliegen")
+settext("The data cannot be restored after you have confirmed the action", "Die Daten können nicht wiederhergestellt werden sobald die Aktion bestätigt wird")
+settext("Enable guild trader list (BETA)", "Gildenhändlerliste aktivieren (BETA)")
+settext("When activated, the guild menu will show a new tab with a list of all kiosks in Tamriel. The list will get updated with the owning guilds whenever you visit a kiosk.", "Wenn aktiv, wird im Gildenmenü ein neuer Reiter mit einer Liste aller Händler in Tamriel hinzugefügt. Die Liste wird mit den Gilden ergänzt, wann immer ihr einen Händler besucht.")
+settext("Clear guild trader list", "Gildenhändlerliste leeren")
+settext("Pressing this button will remove all stored data related to the guild trader list", "Dieser Schalter entfernt alle Daten die mit der Gildenhändlerliste zusammenhängen")
+settext("The UI will reload and the data cannot be restored after you have confirmed the action", "Die Benutzeroberfläche wird neu geladen und die Daten können nicht wiederhergestellt werden sobald die Aktion bestätigt wird")
+settext("Suppress Local Filters", "Lokale Filter unterdrücken")
+settext("Trader", "Händler")
+settext("Location", "Ort")
+settext("Guild", "Gilde")
+settext("Last Visited", "Letzter Besuch")
+settext("Zone", "Region")
+settext("History", "Verlauf")
+settext("Week", "Woche")
+settext("never", "niemals")
+settext("Show Details", "Details anzeigen")
+settext("Show On Map", "Auf der Karte zeigen")
+settext("You are a member of this guild.", "Ihr seit Mitglied dieser Gilde.")
+settext("|cffffff<<1>>|r stores visited this week", "|cffffff<<1>>|r Händler besucht diese Woche")
+settext("|cffffff<<1>>|r stores visited all time", "|cffffff<<1>>|r Händler besucht insgesamt")
+settext("|cffffff<<1>>|r stores detected in |cffffff<<2>>|r locations", "|cffffff<<1>>|r Händler an |cffffff<<2>>|r Orten gefunden")
+settext("No history data stored.", "Kein Verlauf gespeichert.")
+settext("Trader database is not initialized yet.", "Händlerdatenbank ist noch nicht initialisiert.")
+settext("No results match your filter text.", "Keine Ergebnisse für eure Suche.")
+settext("joined", "beigetreten")
+settext("Filter By:", "Suche nach:")
+settext("Current:", "Aktuell:")
+settext("Visited:", "Besucht:")
+settext("Overall:", "Overall:")
+settext("Item Sold", "Gegenstand verkauft")
+settext("Commission", "Provision")
+settext(" (refund)", " (Rückzahlung)")
+settext("Load Details", "Lade Details")
+settext("You sold <<2>> <<t:1>> to <<3>> for <<4>>.", "Du hast <<2>> <<t:1>> an <<3>> verkauft für <<4>>.")
+settext("Toggle Search Library", "Suchbibliothek umschalten")
+settext("Add to Favorites", "Zu Favoriten hinzufügen")
+settext("Remove from Favorites", "Von Favoriten entfernen")
+settext("Open Addon Settings", "Einstellungen öffnen")
+settext("Clear History", "Verlauf löschen")
+settext("Clear Favorites", "Favoriten löschen")
+settext("Undo Last Action", "Aktion rückgängig machen")
+settext("Unlock Window", "Fenster entsperren")
+settext("Lock Window", "Fenster sperren")
+settext("Reset Window", "Fenster zurücksetzen")
+settext("Close Window", "Fenster schließen")
+settext("Rename Entry", "Eintrag umbenennen")
+settext("Remove from History", "Aus Verlauf entfernen")
+settext("Favorites", "Favoriten")
+settext("Name", "Name")
+settext("Searches", "Suchen")
+settext("Weapon Enchantment", "Waffenverzauberung")
+settext("Weapon Type", "Waffentyp")
+settext("Armor Type", "Rüstungstyp")
+settext("Armor Enchantment", "Rüstungsverzauberung")
+settext("Jewelry Type", "Schmucktyp")
+settext("Jewelry Trait", "Schmuckeigenschaften")
+settext("Jewelry Enchantment", "Schmuckverzauberung")
+settext("Material Type", "Materialtyp")
+settext("Ingredient Type", "Zutatentyp")
+settext("Rune Type", "Runensteintyp")
+settext("Glyph Type", "Glyphentyp")
+settext("Recipe Knowledge", "Rezeptwissen")
+settext("Unknown Recipes", "Unbekannte Rezepte")
+settext("Known Recipes", "Bekannte Rezepte")
+settext("Motif Knowledge", "Motivwissen")
+settext("Unknown Motifs", "Unbekannte Motive")
+settext("Known Motifs", "Bekannte Motive")
+settext("Trait Knowledge", "Eigenschaftenwissen")
+settext("Unknown Trait", "Unbekannte Eigenschaften")
+settext("Known Trait", "Bekannte Eigenschaften")
+settext("Rune Knowledge", "Runensteinwissen")
+settext("Unknown Rune", "Unbekannte Runensteine")
+settext("Known Rune", "Bekannte Runensteine")
+settext("Itemset", "Set Gegenstand")
+settext("Individual item", "Individueller Gegenstand")
+settext("Set item", "Set Gegenstand")
+settext("Crafting", "Handwerk")
+settext("Crafted item", "Hergestellter Gegenstand")
+settext("Looted item", "Erbeuteter Gegenstand")
+settext("Recipe Improvement", "Rezeptverbesserung")
+settext("Recipe Type", "Rezepttyp")
+settext("Drink Type", "Getränketyp")
+settext("Food Type", "Nahrungstyp")
+settext("Siege Type", "Belagerungsausrüstungstyp")
+settext("Trophy Type", "Trophäentyp")
+settext("Category", "Kategorie")
+settext("Subcategory", "Unterkategorie")
+settext("Cannot filter for more than 8 at a time", "Kann nur nach 8 gleichzeitig filtern")
+settext("Reset <<1>> Filter", "<<1>> zurücksetzen")
+settext("This filter is local and only applies to the currently visible page", "Dieser Filter ist lokal und wirkt nur auf der derzeit sichtbaren Seite")
+settext("This filter is provided by <<1>>", "Dieser Filter wird von <<1>> bereitgestellt")
+settext("<<1>> - <<2>>", "<<1>> - <<2>>")
+settext("over <<1>>", "über <<1>>")
+settext("under <<1>>", "unter <<1>>")
+settext("Quality Range:", "Qualität:")
+settext("Recipe Improvement <<1>> <<2>>", "Rezeptverbesserung <<1>> <<2>>")
+settext("Text Filter:", "Textfilter:")
+settext("Filter by text", "Nach Text filtern")
+settext("Unit Price Filter:", "Stückpreisfilter:")
+settext("(.-) in the .-", "(.-) im .-")
+settext("(.-) in .-", "(.-) in .-")
+settext("(.-) near .-", "(.-) nahe .-")
+settext("(.-) on .-", "(.-) auf .-")
+settext("Warning: Could not match kiosk name: '<<1>>' -- please report this to the author", "Warnung: Kioskname konnte nicht zugeordnet werden: '<<1>>' -- bitte benachrichtige den Author")
+settext("You have cancelled your listing of <<1>>x <<t:2>> for <<3>> in <<4>>", "Du hast dein Angebot von <<1>>x <<t:2>> für <<3>> in <<4>> abgebrochen")
+settext("Overall Price: <<1>>", "Gesamtpreis: <<1>>")
+settext("Reset All Filters", "Alle Filter zurücksetzen")
+settext("Toggle Auto Search", "Automatische Suche umschalten")
+settext("Show Previous Page", "Vorherige Seite anzeigen")
+settext("Show More Results", "Mehr Ergebnisse anzeigen")
+settext("All items are hidden by local filters.", "Alle Gegenstände werden durch lokale Filter ausgeblendet.")
+settext("You have bought <<1>>x <<t:2>> from <<3>> for <<4>> in <<5>>", "Du hast <<1>>x <<t:2>> von <<3>> für <<4>> in <<5>> gekauft")
+settext("Select Full Quantity", "Volle Stückzahl wählen")
+settext("Select Last Sold Quantity", "Zuletzt verkaufte Stückzahl wählen")
+settext("Unit Price:", "Stückpreis:")
+settext("Select Default Price", "Grundpreis wählen")
+settext("Select Last Sell Price", "Zuletzt verkauften Preis wählen")
+settext("Select Master Merchant Price", "Master Merchant Preis wählen")
+settext("Failed to update listing price", "Verkaufspreis konnte nicht aktualisiert werden")
+settext("Failed to split stack", "Stapel konnte nicht geteilt werden")
+settext("Failed to set stack pending", "Stapel konnte nicht ausgewählt werden")
+settext("Failed to update pending slot", "Auswahl konnte nicht aktualisiert werden")
+settext("You have listed <<1>>x <<t:2>> for <<3>> in <<4>>", "Du hast <<1>>x <<t:2>> für <<3>> in <<4>> angeboten")

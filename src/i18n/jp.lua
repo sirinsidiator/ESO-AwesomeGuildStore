@@ -1,144 +1,117 @@
-local localization = { -- translated by k0ta0uchi (http://www.esoui.com/forums/member.php?u=25811)
-    SUBFILTER_WEAPON_ENCHANTMENT_LABEL = "武器エンチャント",
-    SUBFILTER_WEAPON_TYPE_LABEL = "武器タイプ",
-    SUBFILTER_ARMOR_TYPE_LABEL = "防具タイプ",
-    SUBFILTER_ARMOR_ENCHANTMENT_LABEL = "防具エンチャント",
-    SUBFILTER_JEWELRY_TYPE_LABEL = "宝石タイプ",
-    SUBFILTER_JEWELRY_TRAIT_LABEL = "宝石トレイト",
-    SUBFILTER_JEWELRY_ENCHANTMENT_LABEL = "宝石エンチャント",
-    SUBFILTER_MATERIAL_TYPE_LABEL = "消費タイプ",
-    SUBFILTER_INGREDIENT_TYPE_LABEL = "素材タイプ",
-    SUBFILTER_RUNE_TYPE_LABEL = "ルーンタイプ",
-    SUBFILTER_GLYPH_TYPE_LABEL = "グリフタイプ",
-
-    SUBFILTER_RECIPE_KNOWLEDGE_LABEL = "レシピ知識",
-    SUBFILTER_RECIPE_KNOWLEDGE_UNKNOWN = "不明のレシピ",
-    SUBFILTER_RECIPE_KNOWLEDGE_KNOWN = "既知のレシピ",
-
-    SUBFILTER_MOTIF_KNOWLEDGE_LABEL = "モチーフ知識",
-    SUBFILTER_MOTIF_KNOWLEDGE_UNKNOWN = "不明のモチーフ",
-    SUBFILTER_MOTIF_KNOWLEDGE_KNOWN = "既知のモチーフ",
-
-    SUBFILTER_TRAIT_KNOWLEDGE_LABEL = "トレイト知識",
-    SUBFILTER_TRAIT_KNOWLEDGE_UNKNOWN = "不明なトレイト",
-    SUBFILTER_TRAIT_KNOWLEDGE_KNOWN = "既知のトレイト",
-
-    SUBFILTER_RUNE_KNOWLEDGE_LABEL = "ルーン知識",
-    SUBFILTER_RUNE_KNOWLEDGE_UNKNOWN = "不明のルーン",
-    SUBFILTER_RUNE_KNOWLEDGE_KNOWN = "既知のルーン",
-
-    SUBFILTER_ITEM_SET_LABEL = "アイテムセット",
-    SUBFILTER_ITEM_SET_NORMAL = "個別アイテム",
-    SUBFILTER_ITEM_SET_HAS_SET = "アイテムを設定",
-
-    SUBFILTER_CRAFTING_LABEL = "クラフト",
-    SUBFILTER_CRAFTING_IS_CRAFTED = "クラフトアイテム",
-    SUBFILTER_CRAFTING_IS_LOOT = "ルートアイテム",
-
-    SUBFILTER_RECIPE_IMPROVEMENT_LABEL = "レシピ改良",
-    SUBFILTER_RECIPE_IMPROVEMENT_TOOLTIP = "レシピ改良 <<1>> <<2>>",
-
-    AUTO_SEARCH_TOGGLE_LABEL = "自動検索を切り替える",
-    SEARCH_PREVIOUS_PAGE_LABEL = "前ページを表示",
-    SEARCH_SHOW_MORE_LABEL = "さらに結果を表示",
-    RESET_ALL_FILTERS_LABEL = "全てのフィルタをリセット",
-    RESET_FILTER_LABEL_TEMPLATE = "%s フィルタをリセット",
-    SEARCH_HAS_HIDDEN_RESULTS = "全てのアイテムはローカルフィルタによって非表示にされています。",
-
-    CATEGORY_TITLE = "カテゴリ",
-    SUBCATEGORY_TITLE = "サブカテゴリ",
-
-    QUALITY_SELECTOR_TITLE = "品質レンジ:",
-
-    TEXT_FILTER_TITLE = "テキストフィルタ:",
-    TEXT_FILTER_TEXT = "テキストによるフィルタ",
-
-    UNIT_PRICE_FILTER_TITLE = "単位価格フィルタ:",
-
-    WARNING_SUBFILTER_LIMIT = "8個よりも多いフィルタを一度に使用することはできません",
-
-    SEARCH_LIBRARY_TOGGLE_LABEL = "ライブラリ検索をON/OFF",
-    SEARCH_LIBRARY_HISTORY_LABEL = "履歴",
-    SEARCH_LIBRARY_FAVORITES_LABEL = "お気に入り",
-    SEARCH_LIBRARY_FAVORITE_BUTTON_ADD_TOOLTIP = "お気に入りに追加",
-    SEARCH_LIBRARY_FAVORITE_BUTTON_REMOVE_TOOLTIP = "お気に入りから削除",
-    SEARCH_LIBRARY_EDIT_LABEL_BUTTON_TOOLTIP = "エントリをリネーム",
-    SEARCH_LIBRARY_DELETE_LABEL_BUTTON_TOOLTIP = "履歴から削除",
-    SEARCH_LIBRARY_MENU_OPEN_SETTINGS = "Addon設定を開く",
-    SEARCH_LIBRARY_MENU_CLEAR_HISTORY = "履歴をクリア",
-    SEARCH_LIBRARY_MENU_CLEAR_FAVORITES = "お気に入りをクリア",
-    SEARCH_LIBRARY_MENU_UNDO_ACTION = "最後のアクションをやり直す",
-    SEARCH_LIBRARY_MENU_UNLOCK_WINDOW = "ウィンドウをアンロック",
-    SEARCH_LIBRARY_MENU_LOCK_WINDOW = "ウィンドウをロック",
-    SEARCH_LIBRARY_MENU_RESET_WINDOW = "ウィンドウをリセット",
-    SEARCH_LIBRARY_MENU_CLOSE_WINDOW = "ウィンドウを閉じる",
-    SEARCH_LIBRARY_SORT_HEADER_NAME = "名前",
-    SEARCH_LIBRARY_SORT_HEADER_SEARCHES = "検索",
-
-    TOOLTIP_LESS_THAN = "未満 ",
-    TOOLTIP_GREATER_THAN = "より多い ",
-
-    MAIL_AUGMENTATION_MESSAGE_BODY = "<<3>>に<<2>> <<t:1>>を<<4>>で販売しました。",
-    MAIL_AUGMENTATION_INVOICE_COMMISSION = "手数料",
-    MAIL_AUGMENTATION_INVOICE_LISTING_FEE_REFUND = GetString(SI_TRADING_HOUSE_POSTING_LISTING_FEE) .. " (払い戻し)",
-    MAIL_AUGMENTATION_REQUEST_DATA = "詳細をロード",
-
-    SELL_FULL_QUANTITY_BUTTON_LABEL = "全数量を選択",
-    SELL_LAST_QUANTITY_BUTTON_LABEL = "最後に販売した数量を選択",
-    SELL_PPU_SLIDER_LABEL = "単価:",
-    SELL_DEFAULT_PRICE_BUTTON_LABEL = "デフォルト価格を選択",
-    SELL_LAST_PRICE_BUTTON_LABEL = "最後に販売した価格を選択",
-    SELL_MM_PRICE_BUTTON_LABEL = "マスターマーチャント価格を選択",
-
-    SETTINGS_KEEP_FILTERS_ON_CLOSE_LABEL = "ストア訪問毎にフィルタを記憶する",
-    SETTINGS_KEEP_FILTERS_ON_CLOSE_DESCRIPTION = "プレイセッション中、ギルドストアウィンドウを閉じてもフィルタの設定がクリアされず保存され、UIがリロードされても最後の状態が復元されます",
-    SETTINGS_OLD_QUALITY_SELECTOR_BEHAVIOR_LABEL = "古い挙動の品質セレクタを使用する",
-    SETTINGS_OLD_QUALITY_SELECTOR_BEHAVIOR_DESCRIPTION = "有効化時、左クリックが低品質側、右クリックが高品質側に対応しダブルクリックもしくはShiftキー+左クリックで両方の品質を同価格にします",
-    SETTINGS_DISPLAY_PER_UNIT_PRICE_LABEL = "単価を検索結果に表示",
-    SETTINGS_DISPLAY_PER_UNIT_PRICE_DESCRIPTION = "有効化時、ギルド検索の結果に合計金額より単価が低い場合、単価を表示します。",
-    SETTINGS_SORT_WITHOUT_SEARCH_LABEL = "検索無しでソートを選択",
-    SETTINGS_SORT_WITHOUT_SEARCH_DESCRIPTION = "新しく検索を行うことなくソートの種類を変更することを許可します。現在表示されている結果は手動検索後のみ変更されます",
-    SETTINGS_KEEP_SORTORDER_ON_CLOSE_LABEL = "ソートの種類を記憶",
-    SETTINGS_KEEP_SORTORDER_ON_CLOSE_DESCRIPTION = "プレイセッション中設定されたストアのソートの種類をクリアすることなく保存します。",
-    SETTINGS_LIST_WITH_SINGLE_CLICK_LABEL = "シングルクリックで売却",
-    SETTINGS_LIST_WITH_SINGLE_CLICK_DESCRIPTION = "売却タブにある売却するアイテムを、シングルクリックして選択します。",
-    SETTINGS_SHOW_SEARCH_LIBRARY_TOOLTIPS_LABEL = "検索ライブラリ内ツールチップ",
-    SETTINGS_SHOW_SEARCH_LIBRARY_TOOLTIPS_DESCRIPTION = "有効化時、レベルや品質などの詳細が記載されたツールチップを検索ライブラリのエントリごとに表示します。",
-    SETTINGS_SHOW_TRADER_TOOLTIPS_LABEL = "トレーダーツールチップ",
-    SETTINGS_SHOW_TRADER_TOOLTIPS_DESCRIPTION = "現在所属しているギルド用に雇われたトレーダーを、名前、エントリもしくはドロップダウン内エントリにカーソルを合わせた時表示します",
-    SETTINGS_AUTO_CLEAR_HISTORY_LABEL = "履歴自動クリア",
-    SETTINGS_AUTO_CLEAR_HISTORY_DESCRIPTION = "プレイセッションで最初にギルドストアを開いた時に、自動的に全てのエントリ履歴を削除します。検索ライブラリ内のメニューで元に戻すことができます",
-    SETTINGS_MAIL_AUGMENTATION_LABEL = "メール添付",
-    SETTINGS_MAIL_AUGMENTATION_DESCRIPTION = "ギルドアクティビティログにデータが存在している場合、取引に関するより詳細な情報を受信するギルドストアメールに追加します。",
-    SETTINGS_MAIL_AUGMENTATION_INVOICE_LABEL = "メールに納品書をを表示",
-    SETTINGS_MAIL_AUGMENTATION_INVOICE_DESCRIPTION = "全ての差し引きのリストが記載された納品書をメールに追加します。",
-    SETTINGS_PURCHASE_NOTIFICATION_LABEL = "購入通知",
-    SETTINGS_PURCHASE_NOTIFICATION_DESCRIPTION = "ギルドストアでアイテムを購入後チャットにメッセージを表示します。",
-    SETTINGS_CANCEL_NOTIFICATION_LABEL = "キャンセル通知",
-    SETTINGS_CANCEL_NOTIFICATION_DESCRIPTION = "ギルドストアのアイテム販売リストからキャンセルした後、チャットにメッセージを表示します",
-    SETTINGS_LISTED_NOTIFICATION_LABEL = "アイテム販売リスト通知",
-    SETTINGS_LISTED_NOTIFICATION_DESCRIPTION = "ギルドストアで新しくアイテム販売リストを作成した後、チャットにメッセージを表示します",
-    SETTINGS_DISABLE_CUSTOM_SELL_TAB_FILTER_LABEL = "カスタム販売タブフィルタを無効化",
-    SETTINGS_DISABLE_CUSTOM_SELL_TAB_FILTER_DESCRIPTION = "無効化時、AwesomeGuildStore固有バージョンのフィルタではなくゲーム内インベントリのフィルタを使用します。",
-    SETTINGS_SKIP_GUILD_KIOSK_DIALOG_LABEL = "ギルドキオスクダイアログをスキップ",
-    SETTINGS_SKIP_GUILD_KIOSK_DIALOG_DESCRIPTION = "有効化時、ギルドトレーダーのダイアログ（銀行ではなく）がスキップされ、自動的にストアが開きます。これはShiftキーを押しながらトレーダーに話すと抑制することができます。",
-    SETTINGS_SKIP_EMPTY_PAGES_LABEL = "空の結果ページをスキップ",
-    SETTINGS_SKIP_EMPTY_PAGES_DESCRIPTION = "有効化時、ローカルフィルタによって空の結果ページの場合、自動的に次のページを検索します。これは結果が返ってくる前にCtrlキーを押しておくと抑制することができます。",
-    SETTINGS_CLEAR_SELL_PRICE_CACHE_LABEL = "販売価格ｷｬｯｼｭｸﾘｱ",
-    SETTINGS_CLEAR_SELL_PRICE_CACHE_DESCRIPTION = "このボタンを押すと、セーブデータの販売タブに保存されている、全ての数量、価格が削除されます。マスターマーチャントが有効になっている場合はAwesomeGuildStoreのデータが存在しない場合、マスターマーチャントから最後に販売した価格を参照します",
-    SETTINGS_CLEAR_SELL_PRICE_CACHE_WARNING = "このデータは、アクションを承認した後復元することはできません",
-
-    CONTROLS_SUPPRESS_LOCAL_FILTERS = "ローカルフィルターを抑制",
-
-    INVALID_STATE = "無効な販売状態です。\nこれはゲームのバグで、すぐに修正されるでしょう。",
-
-    LOCAL_FILTER_EXPLANATION_TOOLTIP = "このフィルタはローカルで、現在表示されているページにしか適用されません",
-    EXTERNAL_FILTER_EXPLANATION_TOOLTIP = "このフィルタは<<1>>によって提供されています。",
-
-    PURCHASE_NOTIFICATION = "<<5>>で<<3>>から<<1>>x <<t:2>>を<<4>>で購入しました。",
-    CANCEL_NOTIFICATION = "<<4>>で販売している<<1>>x <<t:2>>で<<3>>をキャンセルしました。",
-    LISTED_NOTIFICATION = "<<4>>の販売リストに<<1>>x <<t:2>>を<<3>>で追加しました。",
-
-    LISTING_TAB_OVERALL_PRICE = "全体の価格: |cffffff<<1>>|r <<2>>" -- 1: price, 2: gold icon
-}
-ZO_ShallowTableCopy(localization, AwesomeGuildStore.Localization)
+-- this file is automatically generated. DO NOT EDIT IT DIRECTLY!
+local settext = LibStub("LibGetText")("AwesomeGuildStore").settext
+settext("Use old quality selector behavior", "古い挙動の品質セレクタを使用する")
+settext("When enabled left and right click set lower and upper quality and double or shift click sets both to the same value", "有効化時、左クリックが低品質側、右クリックが高品質側に対応しダブルクリックもしくはShiftキー+左クリックで両方の品質を同価格にします")
+settext("Show per unit price in search results", "単価を検索結果に表示")
+settext("When enabled the results of a guild store search show the per unit price of a stack below the overall price", "有効化時、ギルド検索の結果に合計金額より単価が低い場合、単価を表示します。")
+settext("Select order without search", "検索無しでソートを選択")
+settext("Allows you to change the sort order without triggering a new search. The currently shown results will only change after a manual search", "新しく検索を行うことなくソートの種類を変更することを許可します。現在表示されている結果は手動検索後のみ変更されます")
+settext("Remember sort order", "ソートの種類を記憶")
+settext("Leaves the store sort order set between play sessions instead of clearing it.", "プレイセッション中設定されたストアのソートの種類をクリアすることなく保存します。")
+settext("Single click item listing", "シングルクリックで売却")
+settext("Select items for sale with a single click in the sell tab.", "売却タブにある売却するアイテムを、シングルクリックして選択します。")
+settext("Tooltips in Search Library", "検索ライブラリ内ツールチップ")
+settext("When active, a tooltip with details like level and quality is shown for each entry in the search library.", "有効化時、レベルや品質などの詳細が記載されたツールチップを検索ライブラリのエントリごとに表示します。")
+settext("Trader Tooltips", "トレーダーツールチップ")
+settext("Show the currently hired trader for a guild that you are a member of, when hovering over the name or an entry in the drop down menu", "現在所属しているギルド用に雇われたトレーダーを、名前、エントリもしくはドロップダウン内エントリにカーソルを合わせた時表示します")
+settext("Auto clear history", "履歴自動クリア")
+settext("Automatically deletes all history entries when you open the guild store for the first time in a game session. You can undo the deletion via the menu in the search library", "プレイセッションで最初にギルドストアを開いた時に、自動的に全てのエントリ履歴を削除します。検索ライブラリ内のメニューで元に戻すことができます")
+settext("Mail augmentation", "メール添付")
+settext("Adds more detailed information about a transaction to an incoming Guild Store Mail if the data is available in the Guild Activity Log.", "ギルドアクティビティログにデータが存在している場合、取引に関するより詳細な情報を受信するギルドストアメールに追加します。")
+settext("Show invoice on mails", "メールに納品書をを表示")
+settext("Adds a detailed invoice to the mail which lists all deductions.", "全ての差し引きのリストが記載された納品書をメールに追加します。")
+settext("Purchase notifications", "購入通知")
+settext("Shows a message in chat after you have purchased an item in a guild store", "ギルドストアでアイテムを購入後チャットにメッセージを表示します。")
+settext("Cancel notifications", "キャンセル通知")
+settext("Shows a message in chat after you have cancelled an item listing from a guild store", "ギルドストアのアイテム販売リストからキャンセルした後、チャットにメッセージを表示します")
+settext("Listed item notifications", "アイテム販売リスト通知")
+settext("Shows a message in chat after you have created a new item listing in a guild store", "ギルドストアで新しくアイテム販売リストを作成した後、チャットにメッセージを表示します")
+settext("Disable custom selltab filter", "カスタム販売タブフィルタを無効化")
+settext("Shows the ingame inventory filter instead of AGS own version when deactivated.", "無効化時、AwesomeGuildStore固有バージョンのフィルタではなくゲーム内インベントリのフィルタを使用します。")
+settext("Skip guild kiosk dialog", "ギルドキオスクダイアログをスキップ")
+settext("When activated, the dialog at guild traders (not at banks) is skipped and the store opened automatically. This can be suppressed by holding the shift key when talking to a trader.", "有効化時、ギルドトレーダーのダイアログ（銀行ではなく）がスキップされ、自動的にストアが開きます。これはShiftキーを押しながらトレーダーに話すと抑制することができます。")
+settext("Skip empty result pages", "空の結果ページをスキップ")
+settext("When activated, pages that show no results due to local filters will automatically trigger a search for the next page. This can be suppressed by holding the ctrl key before the results are returned.", "有効化時、ローカルフィルタによって空の結果ページの場合、自動的に次のページを検索します。これは結果が返ってくる前にCtrlキーを押しておくと抑制することができます。")
+settext("Clear sell price cache", "販売価格ｷｬｯｼｭｸﾘｱ")
+settext("Pressing this button will remove all stored quantity and price values for the sell tab from your save data. While Master Merchant is active, it will take the last sell price from there when selecting an item if no data was found in AwesomeGuildStore's own data", "このボタンを押すと、セーブデータの販売タブに保存されている、全ての数量、価格が削除されます。マスターマーチャントが有効になっている場合はAwesomeGuildStoreのデータが存在しない場合、マスターマーチャントから最後に販売した価格を参照します")
+settext("The data cannot be restored after you have confirmed the action", "このデータは、アクションを承認した後復元することはできません")
+settext("Suppress Local Filters", "ローカルフィルターを抑制")
+settext("History", "履歴")
+settext("Commission", "手数料")
+settext(" (refund)", " (払い戻し)")
+settext("Load Details", "詳細をロード")
+settext("You sold <<2>> <<t:1>> to <<3>> for <<4>>.", "<<3>>に<<2>> <<t:1>>を<<4>>で販売しました。")
+settext("Toggle Search Library", "ライブラリ検索をON/OFF")
+settext("Add to Favorites", "お気に入りに追加")
+settext("Remove from Favorites", "お気に入りから削除")
+settext("Open Addon Settings", "Addon設定を開く")
+settext("Clear History", "履歴をクリア")
+settext("Clear Favorites", "お気に入りをクリア")
+settext("Undo Last Action", "最後のアクションをやり直す")
+settext("Unlock Window", "ウィンドウをアンロック")
+settext("Lock Window", "ウィンドウをロック")
+settext("Reset Window", "ウィンドウをリセット")
+settext("Close Window", "ウィンドウを閉じる")
+settext("Rename Entry", "エントリをリネーム")
+settext("Remove from History", "履歴から削除")
+settext("Favorites", "お気に入り")
+settext("Name", "名前")
+settext("Searches", "検索")
+settext("Weapon Enchantment", "武器エンチャント")
+settext("Weapon Type", "武器タイプ")
+settext("Armor Type", "防具タイプ")
+settext("Armor Enchantment", "防具エンチャント")
+settext("Jewelry Type", "宝石タイプ")
+settext("Jewelry Trait", "宝石トレイト")
+settext("Jewelry Enchantment", "宝石エンチャント")
+settext("Material Type", "消費タイプ")
+settext("Ingredient Type", "素材タイプ")
+settext("Rune Type", "ルーンタイプ")
+settext("Glyph Type", "グリフタイプ")
+settext("Recipe Knowledge", "レシピ知識")
+settext("Unknown Recipes", "不明のレシピ")
+settext("Known Recipes", "既知のレシピ")
+settext("Motif Knowledge", "モチーフ知識")
+settext("Unknown Motifs", "不明のモチーフ")
+settext("Known Motifs", "既知のモチーフ")
+settext("Trait Knowledge", "トレイト知識")
+settext("Unknown Trait", "不明なトレイト")
+settext("Known Trait", "既知のトレイト")
+settext("Rune Knowledge", "ルーン知識")
+settext("Unknown Rune", "不明のルーン")
+settext("Known Rune", "既知のルーン")
+settext("Itemset", "アイテムセット")
+settext("Individual item", "個別アイテム")
+settext("Set item", "アイテムを設定")
+settext("Crafting", "クラフト")
+settext("Crafted item", "クラフトアイテム")
+settext("Looted item", "ルートアイテム")
+settext("Recipe Improvement", "レシピ改良")
+settext("Category", "カテゴリ")
+settext("Subcategory", "サブカテゴリ")
+settext("Cannot filter for more than 8 at a time", "8個よりも多いフィルタを一度に使用することはできません")
+settext("Reset <<1>> Filter", "<<1>> フィルタをリセット")
+settext("This filter is local and only applies to the currently visible page", "このフィルタはローカルで、現在表示されているページにしか適用されません")
+settext("This filter is provided by <<1>>", "このフィルタは<<1>>によって提供されています。")
+settext("over <<1>>", "より多い <<1>>")
+settext("under <<1>>", "未満 <<1>>")
+settext("Quality Range:", "品質レンジ:")
+settext("Recipe Improvement <<1>> <<2>>", "レシピ改良 <<1>> <<2>>")
+settext("Text Filter:", "テキストフィルタ:")
+settext("Filter by text", "テキストによるフィルタ")
+settext("Unit Price Filter:", "単位価格フィルタ:")
+settext("You have cancelled your listing of <<1>>x <<t:2>> for <<3>> in <<4>>", "<<4>>で販売している<<1>>x <<t:2>>で<<3>>をキャンセルしました。")
+settext("Overall Price: <<1>>", "全体の価格: <<1>>")
+settext("Reset All Filters", "全てのフィルタをリセット")
+settext("Toggle Auto Search", "自動検索を切り替える")
+settext("Show Previous Page", "前ページを表示")
+settext("Show More Results", "さらに結果を表示")
+settext("All items are hidden by local filters.", "全てのアイテムはローカルフィルタによって非表示にされています。")
+settext("You have bought <<1>>x <<t:2>> from <<3>> for <<4>> in <<5>>", "<<5>>で<<3>>から<<1>>x <<t:2>>を<<4>>で購入しました。")
+settext("Select Full Quantity", "全数量を選択")
+settext("Select Last Sold Quantity", "最後に販売した数量を選択")
+settext("Unit Price:", "単価:")
+settext("Select Default Price", "デフォルト価格を選択")
+settext("Select Last Sell Price", "最後に販売した価格を選択")
+settext("Select Master Merchant Price", "マスターマーチャント価格を選択")
+settext("You have listed <<1>>x <<t:2>> for <<3>> in <<4>>", "<<4>>の販売リストに<<1>>x <<t:2>>を<<3>>で追加しました。")

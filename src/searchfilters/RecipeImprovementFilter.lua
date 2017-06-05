@@ -1,4 +1,4 @@
-local L = AwesomeGuildStore.Localization
+local gettext = LibStub("LibGetText")("AwesomeGuildStore").gettext
 local MinMaxRangeSlider = AwesomeGuildStore.MinMaxRangeSlider
 local SimpleIconButton = AwesomeGuildStore.SimpleIconButton
 local FilterBase = AwesomeGuildStore.FilterBase
@@ -81,7 +81,8 @@ function RecipeImprovementFilter:InitializeControls(name)
 
 	local function CreateNumeralButtonControl(value)
 		local textureName = zo_strformat(BUTTON_FOLDER .. "<<R:1>>_%s.dds", value)
-		local tooltipText = zo_strformat(L["SUBFILTER_RECIPE_IMPROVEMENT_TOOLTIP"], value, GetLevelRangeFromImprovement(value))
+		-- TRANSLATORS: tooltip text for the recipe improvement filter buttons
+		local tooltipText = gettext("Recipe Improvement <<1>> <<2>>", value, GetLevelRangeFromImprovement(value))
 		local button = SimpleIconButton:New(name .. "Level" .. value .. "Button", textureName, BUTTON_SIZE, tooltipText)
 		button.control:SetHandler("OnMouseDoubleClick", function(control, button)
 			SafeSetRangeValue(MOUSE_MIDDLE, value)
@@ -106,7 +107,7 @@ function RecipeImprovementFilter:InitializeControls(name)
 
 	container:SetHeight(71)
 
-	local tooltipText = L["RESET_FILTER_LABEL_TEMPLATE"]:format(self.preset.label)
+	local tooltipText = gettext("Reset <<1>> Filter", self.preset.label)
 	self.resetButton:SetTooltipText(tooltipText)
 end
 
@@ -200,11 +201,11 @@ function RecipeImprovementFilter:GetTooltipText(state)
 	maxImprovement = tonumber(maxImprovement)
 	local improvement = ""
 	if(minImprovement and maxImprovement) then
-		improvement = minImprovement .. " - " .. maxImprovement
+		improvement = gettext("<<1>> - <<2>>", minImprovement, maxImprovement) 
 	elseif(minImprovement) then
-		improvement = L["TOOLTIP_GREATER_THAN"] .. minImprovement
+		improvement = gettext("over <<1>>", minImprovement)
 	elseif(maxImprovement) then
-		improvement = L["TOOLTIP_LESS_THAN"] .. maxImprovement
+		improvement = gettext("under <<1>>", maxImprovement)
 	end
 
 	if(improvement ~= "") then

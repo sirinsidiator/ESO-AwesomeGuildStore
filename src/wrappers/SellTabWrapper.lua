@@ -1,4 +1,4 @@
-local L = AwesomeGuildStore.Localization
+local gettext = LibStub("LibGetText")("AwesomeGuildStore").gettext
 local RegisterForEvent = AwesomeGuildStore.RegisterForEvent
 local UnregisterForEvent = AwesomeGuildStore.UnregisterForEvent
 local ToggleButton = AwesomeGuildStore.ToggleButton
@@ -177,7 +177,7 @@ function SellTabWrapper:InitializeListingInput(tradingHouseWrapper)
     self.sellPriceControl = container:GetNamedChild("SellPrice")
 
     local quantitySlider = CreateSlider(container, {
-        name = L["SELL_QUANTITY_SLIDER_LABEL"],
+        name = zo_strformat(GetString(SI_TRADING_HOUSE_POSTING_QUANTITY)) .. ":",
         getFunc = function() return self.currentStackCount end,
         setFunc = function(value)
             self:SetQuantity(value, SKIP_UPDATE_SLIDER)
@@ -187,13 +187,18 @@ function SellTabWrapper:InitializeListingInput(tradingHouseWrapper)
     quantitySlider:SetAnchor(TOPLEFT, container, TOPLEFT, 0, 0)
     self.quantitySlider = quantitySlider
 
-    local fullQuantityButton = ToggleButton:New(quantitySlider, "$(parent)FullQuantityButton", FULL_QUANTITY_TEXTURE, 0, 0, LISTING_INPUT_BUTTON_SIZE, LISTING_INPUT_BUTTON_SIZE, L["SELL_FULL_QUANTITY_BUTTON_LABEL"])
+    -- TRANSLATORS: tooltip text for the quantity selection buttons on the sell tab
+    local fullQuantityButtonLabel = gettext("Select Full Quantity")
+    local fullQuantityButton = ToggleButton:New(quantitySlider, "$(parent)FullQuantityButton", FULL_QUANTITY_TEXTURE, 0, 0, LISTING_INPUT_BUTTON_SIZE, LISTING_INPUT_BUTTON_SIZE, fullQuantityButtonLabel)
     fullQuantityButton.control:ClearAnchors()
     fullQuantityButton.control:SetAnchor(TOPRIGHT, quantitySlider, TOPRIGHT, 0, 0)
     fullQuantityButton.HandlePress = function(button)
         self:SetQuantity(self.pendingStackCount)
     end
-    local lastSoldQuantityButton = ToggleButton:New(quantitySlider, "$(parent)LastSoldQuantityButton", LAST_SOLD_QUANTITY_TEXTURE, 0, 0, LISTING_INPUT_BUTTON_SIZE, LISTING_INPUT_BUTTON_SIZE, L["SELL_LAST_QUANTITY_BUTTON_LABEL"])
+
+    -- TRANSLATORS: tooltip text for the quantity selection buttons on the sell tab
+    local lastSoldQuantityButtonLabel = gettext("Select Last Sold Quantity")
+    local lastSoldQuantityButton = ToggleButton:New(quantitySlider, "$(parent)LastSoldQuantityButton", LAST_SOLD_QUANTITY_TEXTURE, 0, 0, LISTING_INPUT_BUTTON_SIZE, LISTING_INPUT_BUTTON_SIZE, lastSoldQuantityButtonLabel)
     lastSoldQuantityButton.control:ClearAnchors()
     lastSoldQuantityButton.control:SetAnchor(RIGHT, fullQuantityButton.control, LEFT, 0, 0)
     lastSoldQuantityButton.HandlePress = function(button)
@@ -207,7 +212,8 @@ function SellTabWrapper:InitializeListingInput(tradingHouseWrapper)
     end
 
     local ppuSlider = CreateSlider(container, {
-        name = L["SELL_PPU_SLIDER_LABEL"],
+        -- TRANSLATORS: title text for the unit price selection on the sell tab
+        name = gettext("Unit Price:"),
         getFunc = function() return tonumber(string.format("%.2f", self.currentPricePerUnit)) end,
         setFunc = function(value) self:SetUnitPrice(value, SKIP_UPDATE_SLIDER) end,
         decimals = 2,
@@ -223,13 +229,18 @@ function SellTabWrapper:InitializeListingInput(tradingHouseWrapper)
     buttonContainer:SetDrawLevel(1)
     self.priceButtonContainer = buttonContainer
 
-    local defaultPriceButton = ToggleButton:New(buttonContainer, "$(parent)DefaultPriceButton", DEFAULT_PRICE_TEXTURE, 0, 0, LISTING_INPUT_BUTTON_SIZE, LISTING_INPUT_BUTTON_SIZE, L["SELL_DEFAULT_PRICE_BUTTON_LABEL"])
+    -- TRANSLATORS: tooltip text for the unit price selection buttons on the sell tab
+    local defaultPriceButtonLabel = gettext("Select Default Price")
+    local defaultPriceButton = ToggleButton:New(buttonContainer, "$(parent)DefaultPriceButton", DEFAULT_PRICE_TEXTURE, 0, 0, LISTING_INPUT_BUTTON_SIZE, LISTING_INPUT_BUTTON_SIZE, defaultPriceButtonLabel)
     defaultPriceButton.control:ClearAnchors()
     defaultPriceButton.control:SetAnchor(TOPRIGHT, buttonContainer, TOPRIGHT, 0, 0)
     defaultPriceButton.HandlePress = function(button)
         self:SetUnitPrice(self.pendingSellPrice * 3)
     end
-    local lastSellPriceButton = ToggleButton:New(buttonContainer, "$(parent)LastSellPriceButton", LAST_SELL_PRICE_TEXTURE, 0, 0, LISTING_INPUT_BUTTON_SIZE, LISTING_INPUT_BUTTON_SIZE, L["SELL_LAST_PRICE_BUTTON_LABEL"])
+
+    -- TRANSLATORS: tooltip text for the unit price selection buttons on the sell tab
+    local lastSellPriceButtonLabel = gettext("Select Last Sell Price")
+    local lastSellPriceButton = ToggleButton:New(buttonContainer, "$(parent)LastSellPriceButton", LAST_SELL_PRICE_TEXTURE, 0, 0, LISTING_INPUT_BUTTON_SIZE, LISTING_INPUT_BUTTON_SIZE, lastSellPriceButtonLabel)
     lastSellPriceButton.control:ClearAnchors()
     lastSellPriceButton.control:SetAnchor(RIGHT, defaultPriceButton.control, LEFT, 0, 0)
     lastSellPriceButton.HandlePress = function(button)
@@ -238,8 +249,11 @@ function SellTabWrapper:InitializeListingInput(tradingHouseWrapper)
             self:SetUnitPrice(lastSoldPricePerUnit)
         end
     end
+
     if(MasterMerchant) then
-        local averagePriceButton = ToggleButton:New(buttonContainer, "$(parent)AveragePriceButton", AVERAGE_PRICE_TEXTURE, 0, 0, LISTING_INPUT_BUTTON_SIZE, LISTING_INPUT_BUTTON_SIZE, L["SELL_MM_PRICE_BUTTON_LABEL"])
+        -- TRANSLATORS: tooltip text for the unit price selection buttons on the sell tab
+        local averagePriceButtonLabel = gettext("Select Master Merchant Price")
+        local averagePriceButton = ToggleButton:New(buttonContainer, "$(parent)AveragePriceButton", AVERAGE_PRICE_TEXTURE, 0, 0, LISTING_INPUT_BUTTON_SIZE, LISTING_INPUT_BUTTON_SIZE, averagePriceButtonLabel)
         averagePriceButton.control:ClearAnchors()
         averagePriceButton.control:SetAnchor(RIGHT, lastSellPriceButton.control, LEFT, 0, 0)
         averagePriceButton.HandlePress = function(button)
@@ -281,8 +295,8 @@ function SellTabWrapper:InitializeCraftingBag(tradingHouseWrapper)
     local container = tradingHouse.m_postItems:CreateControl("AwesomeGuildStoreSellTabButtons", CT_CONTROL)
     container:SetAnchor(BOTTOM, tradingHouse.m_postItems, TOP, 0, 10)
     container:SetDimensions(INVENTORY_BUTTON_SIZE * 2, INVENTORY_BUTTON_SIZE)
-    local inventoryButton = ToggleButton:New(container, "$(parent)InventoryButton", INVENTORY_TEXTURE, 0, 0, INVENTORY_BUTTON_SIZE, INVENTORY_BUTTON_SIZE, L["SELL_SELECT_INVENTORY_LABEL"], SOUNDS.MENU_BAR_CLICK)
-    local craftbagButton = ToggleButton:New(container, "$(parent)CraftingBagButton", CRAFTING_BAG_TEXTURE, INVENTORY_BUTTON_SIZE, 0, INVENTORY_BUTTON_SIZE, INVENTORY_BUTTON_SIZE, L["SELL_SELECT_CRAFTING_BAG_LABEL"], SOUNDS.MENU_BAR_CLICK)
+    local inventoryButton = ToggleButton:New(container, "$(parent)InventoryButton", INVENTORY_TEXTURE, 0, 0, INVENTORY_BUTTON_SIZE, INVENTORY_BUTTON_SIZE, zo_strformat(GetString(SI_INVENTORY_MENU_INVENTORY)), SOUNDS.MENU_BAR_CLICK)
+    local craftbagButton = ToggleButton:New(container, "$(parent)CraftingBagButton", CRAFTING_BAG_TEXTURE, INVENTORY_BUTTON_SIZE, 0, INVENTORY_BUTTON_SIZE, INVENTORY_BUTTON_SIZE, zo_strformat(GetString(SI_GAMEPAD_INVENTORY_CRAFT_BAG_HEADER)), SOUNDS.MENU_BAR_CLICK)
     inventoryButton:Press()
     inventoryButton.HandlePress = function(button)
         if(not button:IsPressed()) then
@@ -367,11 +381,15 @@ function SellTabWrapper:InitializeCraftingBag(tradingHouseWrapper)
     local TEMP_STACK_ERROR_TIMEOUT_ON_SET_PENDING = 4
     local TEMP_STACK_ERROR_SLOT_DID_NOT_UPDATE = 4
     local TEMP_STACK_ERROR_MESSAGE = {}
-    TEMP_STACK_ERROR_MESSAGE[TEMP_STACK_ERROR_INVALID_SELL_PRICE] = L["TEMP_STACK_ERROR_INVALID_SELL_PRICE"]
-    TEMP_STACK_ERROR_MESSAGE[TEMP_STACK_ERROR_INVENTORY_FULL] = L["TEMP_STACK_ERROR_INVENTORY_FULL"]
-    TEMP_STACK_ERROR_MESSAGE[TEMP_STACK_ERROR_TIMEOUT_ON_SPLIT] = L["TEMP_STACK_ERROR_TIMEOUT_ON_SPLIT"]
-    TEMP_STACK_ERROR_MESSAGE[TEMP_STACK_ERROR_TIMEOUT_ON_SET_PENDING] = L["TEMP_STACK_ERROR_TIMEOUT_ON_SET_PENDING"]
-    TEMP_STACK_ERROR_MESSAGE[TEMP_STACK_ERROR_SLOT_DID_NOT_UPDATE] = L["TEMP_STACK_ERROR_SLOT_DID_NOT_UPDATE"]
+    -- TRANSLATORS: error message when splitting a stack fails while trying to list an item on a store
+    TEMP_STACK_ERROR_MESSAGE[TEMP_STACK_ERROR_INVALID_SELL_PRICE] = gettext("Failed to update listing price")
+    TEMP_STACK_ERROR_MESSAGE[TEMP_STACK_ERROR_INVENTORY_FULL] = GetString(SI_INVENTORY_ERROR_INVENTORY_FULL)
+    -- TRANSLATORS: error message when splitting a stack fails while trying to list an item on a store
+    TEMP_STACK_ERROR_MESSAGE[TEMP_STACK_ERROR_TIMEOUT_ON_SPLIT] = gettext("Failed to split stack")
+    -- TRANSLATORS: error message when splitting a stack fails while trying to list an item on a store
+    TEMP_STACK_ERROR_MESSAGE[TEMP_STACK_ERROR_TIMEOUT_ON_SET_PENDING] = gettext("Failed to set stack pending")
+    -- TRANSLATORS: error message when splitting a stack fails while trying to list an item on a store
+    TEMP_STACK_ERROR_MESSAGE[TEMP_STACK_ERROR_SLOT_DID_NOT_UPDATE] = gettext("Failed to update pending slot")
     local TEMP_STACK_WATCHDOG_TIMEOUT = 5000
 
     local function CreateTempStack()
@@ -612,7 +630,8 @@ function SellTabWrapper:InitializeListedNotification(tradingHouseWrapper)
             local _, guildName = GetCurrentTradingHouseGuildDetails()
             local itemLink = GetItemLink(BAG_BACKPACK, self.m_pendingItemSlot)
 
-            listedMessage = zo_strformat(L["LISTED_NOTIFICATION"], count, itemLink, price, guildName)
+            -- TRANSLATORS: chat message when a item is listed on a store. <<1>> is replaced with the item count, <<t:2>> with the item link, <<3>> with the price and <<4>> with the guild store name. e.g. You have listed 1x [Rosin] for 5000g in Imperial Trading Company
+            listedMessage = gettext("You have listed <<1>>x <<t:2>> for <<3>> in <<4>>", count, itemLink, price, guildName)
         end
         originalPostPendingItem(self)
     end)

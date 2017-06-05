@@ -1,4 +1,4 @@
-local L = AwesomeGuildStore.Localization
+local gettext = LibStub("LibGetText")("AwesomeGuildStore").gettext
 local MinMaxRangeSlider = AwesomeGuildStore.MinMaxRangeSlider
 local FilterBase = AwesomeGuildStore.FilterBase
 
@@ -64,7 +64,7 @@ function LevelFilter:InitializeControls(name, tradingHouseWrapper)
 
     container:SetHeight(levelRangeLabel:GetHeight() + LINE_SPACING + slider.control:GetHeight() + LINE_SPACING + minLevel:GetHeight())
 
-    local tooltipText = L["RESET_FILTER_LABEL_TEMPLATE"]:format(levelRangeLabel:GetText():gsub(":", ""))
+    local tooltipText = gettext("Reset <<1>> Filter", levelRangeLabel:GetText():gsub(":", ""))
     self.resetButton:SetTooltipText(tooltipText)
 end
 
@@ -250,7 +250,7 @@ end
 function LevelFilter:GetTooltipText(state, version)
     local isNormal, min, max = Deserialize(state, version)
     if(min or max) then
-        local label = isNormal and L["LEVEL_SELECTOR_TITLE"] or L["CP_SELECTOR_TITLE"]
+        local label = isNormal and GetString(SI_TRADING_HOUSE_BROWSE_LEVEL_RANGE_LABEL) or GetString(SI_TRADING_HOUSE_BROWSE_CHAMPION_POINTS_RANGE_LABEL)
         local text
         if(not min) then
             max = max or (isNormal and MAX_LEVEL or MAX_POINTS)

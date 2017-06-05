@@ -1,4 +1,4 @@
-local L = AwesomeGuildStore.Localization
+local gettext = LibStub("LibGetText")("AwesomeGuildStore").gettext
 local RegisterForEvent = AwesomeGuildStore.RegisterForEvent
 local ToggleButton = AwesomeGuildStore.ToggleButton
 local FILTER_PRESETS = AwesomeGuildStore.FILTER_PRESETS
@@ -78,7 +78,9 @@ function SearchLibrary:Initialize(saveData)
 	end)
 
 	local parent = TRADING_HOUSE.m_browseItems
-	local toggleButton = ToggleButton:New(parent, control:GetName() .. "ToggleButton", "EsoUI/Art/Journal/journal_tabIcon_loreLibrary_%s.dds", 0, 0, 28, 28, L["SEARCH_LIBRARY_TOGGLE_LABEL"])
+	-- TRANSLATORS: tooltip text for the toggle search library button on the search tab
+	local toggleButtonLabel = gettext("Toggle Search Library")
+	local toggleButton = ToggleButton:New(parent, control:GetName() .. "ToggleButton", "EsoUI/Art/Journal/journal_tabIcon_loreLibrary_%s.dds", 0, 0, 28, 28, toggleButtonLabel)
 	toggleButton.control:ClearAnchors()
 	toggleButton.control:SetAnchor(TOPRIGHT, parent:GetNamedChild("Header"), TOPLEFT, 225, -2)
 	if(saveData.isActive) then
@@ -117,7 +119,11 @@ function SearchLibrary:Initialize(saveData)
 	self:InitializeEditBox()
 	self:InitializeOptions()
 
-	local favoriteCurrentButton = ToggleButton:New(parent, control:GetName() .. "FavoriteCurrentButton", "AwesomeGuildStore/images/favorite_%s.dds", 0, 0, 28, 28, L["SEARCH_LIBRARY_FAVORITE_BUTTON_ADD_TOOLTIP"])
+    -- TRANSLATORS: tooltip text of the favorite button on a search library entry that has not been added to the favorites yet
+    local addToFavoritesText = gettext("Add to Favorites")
+    -- TRANSLATORS: tooltip text of the favorite button on a search library entry that has already been added to the favorites
+    local removeFromFavoritesText = gettext("Remove from Favorites")
+	local favoriteCurrentButton = ToggleButton:New(parent, control:GetName() .. "FavoriteCurrentButton", "AwesomeGuildStore/images/favorite_%s.dds", 0, 0, 28, 28, addToFavoritesText)
 	favoriteCurrentButton.control:ClearAnchors()
 	favoriteCurrentButton.control:SetAnchor(LEFT, toggleButton.control, RIGHT, 0, 0)
 	self.favoriteCurrentButton = favoriteCurrentButton
@@ -128,7 +134,7 @@ function SearchLibrary:Initialize(saveData)
 			self:AddFavoriteEntry(saveData.lastState)
 			self:RebuildFavorites()
 		end
-		favoriteCurrentButton:SetTooltipText(L["SEARCH_LIBRARY_FAVORITE_BUTTON_REMOVE_TOOLTIP"])
+		favoriteCurrentButton:SetTooltipText(removeFromFavoritesText)
 		return true
 	end
 	favoriteCurrentButton.HandleRelease = function(button, ignore)
@@ -136,7 +142,7 @@ function SearchLibrary:Initialize(saveData)
 			self:RemoveFavoriteEntry(saveData.lastState)
 			self:RebuildFavorites()
 		end
-		favoriteCurrentButton:SetTooltipText(L["SEARCH_LIBRARY_FAVORITE_BUTTON_ADD_TOOLTIP"])
+		favoriteCurrentButton:SetTooltipText(addToFavoritesText)
 		return true
 	end
 
@@ -154,29 +160,46 @@ function SearchLibrary:UpdateFavoriteButtonState()
 	local currentEntry = self:GetEntry(self.saveData.lastState, true)
 	if(currentEntry and currentEntry.favorite) then
 		self.favoriteCurrentButton:Press(true)
-		self.favoriteCurrentButton:SetTooltipText(L["SEARCH_LIBRARY_FAVORITE_BUTTON_REMOVE_TOOLTIP"])
+		self.favoriteCurrentButton:SetTooltipText(gettext("Remove from Favorites"))
 	else
 		self.favoriteCurrentButton:Release(true)
-		self.favoriteCurrentButton:SetTooltipText(L["SEARCH_LIBRARY_FAVORITE_BUTTON_ADD_TOOLTIP"])
+		self.favoriteCurrentButton:SetTooltipText(gettext("Add to Favorites"))
 	end
 end
 
 function SearchLibrary:InitializeOptions()
-	local optionsControl = self.control:GetNamedChild("Options")
+    -- TRANSLATORS: Label for a context menu entry in the search library settings
+    local openSettingsLabel = gettext("Open Addon Settings")
+    -- TRANSLATORS: Label for a context menu entry in the search library settings
+    local clearHistoryLabel = gettext("Clear History")
+    -- TRANSLATORS: Label for a context menu entry in the search library settings
+    local clearFavoritesLabel = gettext("Clear Favorites")
+    -- TRANSLATORS: Label for a context menu entry in the search library settings
+    local undoLabel = gettext("Undo Last Action")
+    -- TRANSLATORS: Label for a context menu entry in the search library settings
+    local unlockLabel = gettext("Unlock Window")
+    -- TRANSLATORS: Label for a context menu entry in the search library settings
+    local lockLabel = gettext("Lock Window")
+    -- TRANSLATORS: Label for a context menu entry in the search library settings
+    local resetLabel = gettext("Reset Window")
+    -- TRANSLATORS: Label for a context menu entry in the search library settings
+    local closeLabel = gettext("Close Window")
+
+    local optionsControl = self.control:GetNamedChild("Options")
 	optionsControl:SetHandler("OnClicked", function(control)
 		ClearMenu()
 
-		AddCustomMenuItem(L["SEARCH_LIBRARY_MENU_OPEN_SETTINGS"], AwesomeGuildStore.OpenSettingsPanel)
-		AddCustomMenuItem(L["SEARCH_LIBRARY_MENU_CLEAR_HISTORY"], function()
+		AddCustomMenuItem(openSettingsLabel, AwesomeGuildStore.OpenSettingsPanel)
+		AddCustomMenuItem(clearHistoryLabel, function()
 			self:ClearHistory()
 			self:Refresh()
 		end)
-		AddCustomMenuItem(L["SEARCH_LIBRARY_MENU_CLEAR_FAVORITES"], function()
+		AddCustomMenuItem(clearFavoritesLabel, function()
 			self:ClearFavorites()
 			self:Refresh()
 		end)
 		if(self.undo) then
-			AddCustomMenuItem(L["SEARCH_LIBRARY_MENU_UNDO_ACTION"], function()
+			AddCustomMenuItem(undoLabel, function()
 				if(self.undo) then
 					self.undo()
 					self:Refresh()
@@ -184,12 +207,12 @@ function SearchLibrary:InitializeOptions()
 			end)
 		end
 		if(self:IsLocked()) then
-			AddCustomMenuItem(L["SEARCH_LIBRARY_MENU_UNLOCK_WINDOW"], function() self:Unlock() end)
+			AddCustomMenuItem(unlockLabel, function() self:Unlock() end)
 		else
-			AddCustomMenuItem(L["SEARCH_LIBRARY_MENU_LOCK_WINDOW"], function() self:Lock() end)
-			AddCustomMenuItem(L["SEARCH_LIBRARY_MENU_RESET_WINDOW"], function() self:ResetPosition() end)
+			AddCustomMenuItem(lockLabel, function() self:Lock() end)
+			AddCustomMenuItem(resetLabel, function() self:ResetPosition() end)
 		end
-		AddCustomMenuItem(L["SEARCH_LIBRARY_MENU_CLOSE_WINDOW"], function() self.toggleButton:Release() end)
+		AddCustomMenuItem(closeLabel, function() self.toggleButton:Release() end)
 
 		ShowMenu(optionsControl)
 	end)
@@ -393,11 +416,12 @@ local function InitializeBaseRow(self, rowControl, entry, fadeFavorite)
 
 	local saveButton = GetRowButton(rowControl, SAVE_BUTTON_TEMPLATE)
 	saveButton.control:SetAlpha((entry.favorite and not fadeFavorite) and 1 or 0)
-	saveButton:SetTooltipText(entry.favorite and L["SEARCH_LIBRARY_FAVORITE_BUTTON_REMOVE_TOOLTIP"] or L["SEARCH_LIBRARY_FAVORITE_BUTTON_ADD_TOOLTIP"])
+	saveButton:SetTooltipText(entry.favorite and gettext("Remove from Favorites") or gettext("Add to Favorites"))
 
 	local editButton = GetRowButton(rowControl, EDIT_BUTTON_TEMPLATE)
 	editButton.control:SetAlpha(0)
-	editButton:SetTooltipText(L["SEARCH_LIBRARY_EDIT_LABEL_BUTTON_TOOLTIP"])
+	-- TRANSLATORS: tooltip text for the rename button on an entry in the search library
+	editButton:SetTooltipText(gettext("Rename Entry"))
 
 	local highlight = rowControl:GetNamedChild("Highlight")
 	if not highlight.animation then
@@ -486,7 +510,8 @@ local function DestroyBaseRow(rowControl)
 end
 
 function SearchLibrary:InitializeHistory()
-	self.control:GetNamedChild("HistoryLabel"):SetText(L["SEARCH_LIBRARY_HISTORY_LABEL"])
+    -- TRANSLATORS: title of the history section in the search library
+	self.control:GetNamedChild("HistoryLabel"):SetText(gettext("History"))
 	local historyControl = self.control:GetNamedChild("History")
 	self.historyControl = historyControl
 	self.historyDirty = true
@@ -496,7 +521,8 @@ function SearchLibrary:InitializeHistory()
 
 		local deleteButton = GetRowButton(rowControl, DELETE_BUTTON_TEMPLATE)
 		deleteButton.control:SetAlpha(0)
-		deleteButton:SetTooltipText(L["SEARCH_LIBRARY_DELETE_LABEL_BUTTON_TOOLTIP"])
+        -- TRANSLATORS: tooltip text of the remove from history button on an entry in the search library
+		deleteButton:SetTooltipText(gettext("Remove from History"))
 
 		ZO_PreHookHandler(rowControl, "OnMouseEnter", function()
 			deleteButton.animation:PlayForward()
@@ -519,7 +545,7 @@ function SearchLibrary:InitializeHistory()
 			self:AddFavoriteEntry(entry.state)
 			self:RebuildFavorites()
 			entry.favorite = true
-			rowControl.SaveButton:SetTooltipText(L["SEARCH_LIBRARY_FAVORITE_BUTTON_REMOVE_TOOLTIP"])
+			rowControl.SaveButton:SetTooltipText(gettext("Remove from Favorites"))
 			return true
 		end
 
@@ -527,7 +553,7 @@ function SearchLibrary:InitializeHistory()
 			self:RemoveFavoriteEntry(entry.state)
 			self:RebuildFavorites()
 			entry.favorite = false
-			rowControl.SaveButton:SetTooltipText(L["SEARCH_LIBRARY_FAVORITE_BUTTON_ADD_TOOLTIP"])
+			rowControl.SaveButton:SetTooltipText(gettext("Add to Favorites"))
 			return true
 		end
 	end
@@ -544,7 +570,8 @@ end
 
 function SearchLibrary:InitializeFavorites()
 	local favoritesLabel = self.control:GetNamedChild("FavoritesLabel")
-	favoritesLabel:SetText(L["SEARCH_LIBRARY_FAVORITES_LABEL"])
+    -- TRANSLATORS: title of the favorites section in the search library
+	favoritesLabel:SetText(gettext("Favorites"))
 
 	local favoritesControl = self.control:GetNamedChild("Favorites")
 	self.favoritesControl = favoritesControl
@@ -555,12 +582,14 @@ function SearchLibrary:InitializeFavorites()
 	headers:SetDimensions(180, 32)
 
 	local nameHeader = CreateControlFromVirtual("$(parent)Name", headers, "ZO_SortHeader")
-	ZO_SortHeader_Initialize(nameHeader, L["SEARCH_LIBRARY_SORT_HEADER_NAME"], "name", ZO_SORT_ORDER_UP, TEXT_ALIGN_LEFT, "ZoFontGameLargeBold")
+	-- TRANSLATORS: sort header in the favorites section of the search library
+	ZO_SortHeader_Initialize(nameHeader, gettext("Name"), "name", ZO_SORT_ORDER_UP, TEXT_ALIGN_LEFT, "ZoFontGameLargeBold")
 	nameHeader:SetAnchor(TOPLEFT, nil, TOPLEFT, 0, 0)
 	nameHeader:SetDimensions(80, 32)
 
 	local searchCountHeader = CreateControlFromVirtual("$(parent)SearchCount", headers, "ZO_SortHeader")
-	ZO_SortHeader_Initialize(searchCountHeader, L["SEARCH_LIBRARY_SORT_HEADER_SEARCHES"], "searches", ZO_SORT_ORDER_UP, TEXT_ALIGN_LEFT, "ZoFontGameLargeBold")
+    -- TRANSLATORS: sort header in the favorites section of the search library
+	ZO_SortHeader_Initialize(searchCountHeader, gettext("Searches"), "searches", ZO_SORT_ORDER_UP, TEXT_ALIGN_LEFT, "ZoFontGameLargeBold")
 	searchCountHeader:SetAnchor(TOPLEFT, nameHeader, TOPRIGHT, 0, 0)
 	searchCountHeader:SetDimensions(80, 32)
 

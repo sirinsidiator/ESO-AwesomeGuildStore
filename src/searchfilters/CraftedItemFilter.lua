@@ -1,4 +1,3 @@
-local L = AwesomeGuildStore.Localization
 local CategorySubfilter = AwesomeGuildStore.CategorySubfilter
 
 local CraftedItemFilter = CategorySubfilter:Subclass()

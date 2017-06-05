@@ -1,4 +1,4 @@
-local L = AwesomeGuildStore.Localization
+local gettext = LibStub("LibGetText")("AwesomeGuildStore").gettext
 local FILTER_PRESETS = AwesomeGuildStore.FILTER_PRESETS
 local SUBFILTER_PRESETS = AwesomeGuildStore.SUBFILTER_PRESETS
 
@@ -302,16 +302,20 @@ function CategorySelector:GetTooltipText(state)
 
 	local category, subcategory
 	local lines = {}
+	-- TRANSLATORS: label for the selected category in the search library entry tooltip
+	local categoryTitle = gettext("Category")
+    -- TRANSLATORS: label for the selected subcategory in the search library entry tooltip
+	local subcategoryTitle = gettext("Subcategory")
 	for index, value in ipairs(values) do
 		if(index == 1) then
 			category = FILTER_PRESETS[tonumber(value)]
 			if(category) then
-				lines[#lines + 1] = {label = L["CATEGORY_TITLE"], text = category.label}
+				lines[#lines + 1] = {label = categoryTitle, text = category.label}
 			end
 		elseif(index == 2 and category) then
 			subcategory = category.subcategories[tonumber(value)]
 			if(subcategory) then
-				lines[#lines + 1] = {label = L["SUBCATEGORY_TITLE"], text = subcategory.label}
+				lines[#lines + 1] = {label = subcategoryTitle, text = subcategory.label}
 			end
 		elseif(subcategory) then
 			local subfilterId, subfilterValues = zo_strsplit(",", value)

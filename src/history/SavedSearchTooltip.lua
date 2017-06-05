@@ -1,4 +1,3 @@
-local L = AwesomeGuildStore.Localization
 local RegisterForEvent = AwesomeGuildStore.RegisterForEvent
 local FILTER_PRESETS = AwesomeGuildStore.FILTER_PRESETS
 local SUBFILTER_PRESETS = AwesomeGuildStore.SUBFILTER_PRESETS

@@ -1,4 +1,3 @@
-local L = AwesomeGuildStore.Localization
 local FILTER_PRESETS = AwesomeGuildStore.FILTER_PRESETS
 
 local MAJOR_BUTTON_SIZE = 46
@@ -15,7 +14,7 @@ local SalesCategorySelector = ZO_Object:Subclass()
 AwesomeGuildStore.SalesCategorySelector = SalesCategorySelector
 
 local ALL_CRAFTING_PRESET = {
-    label = L["FILTER_SUBCATEGORY_ALL"],
+    label = GetString("SI_ITEMFILTERTYPE", ITEMFILTERTYPE_ALL),
     texture = "EsoUI/Art/Inventory/inventory_tabIcon_all_%s.dds",
     isDefault = true,
     filters = {

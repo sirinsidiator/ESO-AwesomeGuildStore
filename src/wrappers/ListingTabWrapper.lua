@@ -1,4 +1,4 @@
-local L = AwesomeGuildStore.Localization
+local gettext = LibStub("LibGetText")("AwesomeGuildStore").gettext
 local RegisterForEvent = AwesomeGuildStore.RegisterForEvent
 
 local TRADING_HOUSE_SORT_LISTING_NAME = 1
@@ -250,7 +250,8 @@ function ListingTabWrapper:InitializeCancelNotification(tradingHouseWrapper)
         price = zo_strformat("<<1>> <<2>>", ZO_CurrencyControl_FormatCurrency(price), iconMarkup)
         local itemLink = GetTradingHouseListingItemLink(listingIndex)
         local _, guildName = GetCurrentTradingHouseGuildDetails()
-        cancelMessage = zo_strformat(L["CANCEL_NOTIFICATION"], count, itemLink, price, guildName)
+        -- TRANSLATORS: chat message when an item listing is cancelled on the listing tab. <<1>> is replaced with the item count, <<t:2>> with the item link, <<3>> with the price and <<4>> with the guild store name. e.g. You have cancelled your listing of 1x [Rosin] for 5000g in Imperial Trading Company
+        cancelMessage = gettext("You have cancelled your listing of <<1>>x <<t:2>> for <<3>> in <<4>>", count, itemLink, price, guildName)
 
         originalShowCancelListingConfirmation(self, listingIndex)
     end)
@@ -270,7 +271,8 @@ function ListingTabWrapper:InitializeOverallPrice(tradingHouseWrapper)
     listingPriceSumControl:SetFont("ZoFontWinH4")
     listingPriceSumControl:SetColor(ZO_NORMAL_TEXT:UnpackRGBA())
     listingPriceSumControl:SetAnchor(TOPRIGHT, self.postedItemsControl, TOPRIGHT, -165, -47)
-    listingPriceSumControl:SetText(zo_strformat(L["LISTING_TAB_OVERALL_PRICE"], "-", ""))
+    -- TRANSLATORS: the overall price of all listed items in a store on the listing tab. <<1>> is replaced by the price
+    listingPriceSumControl:SetText(gettext("Overall Price: <<1>>", "|cffffff-|r"))
     listingPriceSumControl:SetHidden(true)
     self.listingPriceSumControl = listingPriceSumControl
 
@@ -286,8 +288,8 @@ function ListingTabWrapper:RefreshListingPriceSumDisplay()
         local _, _, _, _, _, _, price = GetTradingHouseListingItemInfo(i)
         sum = sum + price
     end
-    local price = zo_strformat(L["LISTING_TAB_OVERALL_PRICE"], ZO_CurrencyControl_FormatCurrency(sum), iconMarkup)
-    self.listingPriceSumControl:SetText(price)
+    sum = zo_strformat("|cffffff<<1>>|r <<2>>", ZO_CurrencyControl_FormatCurrency(sum), iconMarkup)
+    self.listingPriceSumControl:SetText(gettext("Overall Price: <<1>>", sum))
 end
 
 function ListingTabWrapper:ChangeSort(key, order)

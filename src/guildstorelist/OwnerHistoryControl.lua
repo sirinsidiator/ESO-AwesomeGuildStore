@@ -1,4 +1,4 @@
-local L = AwesomeGuildStore.Localization
+local gettext = LibStub("LibGetText")("AwesomeGuildStore").gettext
 
 local HISTORY_DATA = 1
 local HISTORY_ROW_HEIGHT = 30
@@ -26,7 +26,9 @@ function OwnerHistoryControl:InitializeList(control, storeList, kioskList, owner
     self.masterList = {}
 
     self:SetAlternateRowBackgrounds(true)
-    self:SetEmptyText(L["TRADER_OWNER_LIST_EMPTY_LABEL"])
+    -- TRANSLATORS: placeholder text when the history list of an entry on the guild kiosk tab is empty
+    self:SetEmptyText(gettext("No history data stored."))
+
     -- call it twice to set the sort order to down
     self.sortHeaderGroup:SelectHeaderByKey(SORT_KEY_WEEK, ZO_SortHeaderGroup.SUPPRESS_CALLBACKS)
     self.sortHeaderGroup:SelectHeaderByKey(SORT_KEY_WEEK)

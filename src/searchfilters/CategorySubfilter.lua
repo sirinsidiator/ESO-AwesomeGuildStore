@@ -1,4 +1,4 @@
-local L = AwesomeGuildStore.Localization
+local gettext = LibStub("LibGetText")("AwesomeGuildStore").gettext
 local ButtonGroup = AwesomeGuildStore.ButtonGroup
 local ToggleButton = AwesomeGuildStore.ToggleButton
 local SimpleIconButton = AwesomeGuildStore.SimpleIconButton
@@ -38,7 +38,9 @@ function CategorySubfilter:Initialize(name, tradingHouseWrapper, subfilterPreset
         local button = ToggleButton:New(group.control, group.control:GetName() .. "Button" .. index, buttonPreset.texture, 0, 0, BUTTON_SIZE, BUTTON_SIZE, buttonPreset.label)
         button.HandlePress = function()
             if(not subfilterPreset.isLocal and group.pressedButtonCount > 8) then
-                ZO_Alert(UI_ALERT_CATEGORY_ERROR, SOUNDS.GENERAL_ALERT_ERROR, L["WARNING_SUBFILTER_LIMIT"])
+                -- TRANSLATORS: alert text when more than the maximum possible amount of filter categories are selected
+                local message = gettext("Cannot filter for more than 8 at a time") -- TODO: increase limit
+                ZO_Alert(UI_ALERT_CATEGORY_ERROR, SOUNDS.GENERAL_ALERT_ERROR, message)
                 self.resetButton:SetHidden(false)
                 return false
             end
@@ -62,7 +64,8 @@ function CategorySubfilter:Initialize(name, tradingHouseWrapper, subfilterPreset
 
     container:SetHeight(label:GetHeight() + LINE_SPACING + group.control:GetHeight())
 
-    local tooltipText = L["RESET_FILTER_LABEL_TEMPLATE"]:format(subfilterPreset.label)
+    -- TRANSLATORS: tooltip text for the reset filter buttons. will automatically insert the filter title (e.g. "Reset Weapon Type Filter")
+    local tooltipText = gettext("Reset <<1>> Filter", subfilterPreset.label)
     self.resetButton:SetTooltipText(tooltipText)
 end
 

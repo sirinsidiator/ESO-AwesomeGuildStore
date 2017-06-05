@@ -1,5 +1,5 @@
 local function LoadSettings()
-    local L = AwesomeGuildStore.Localization
+    local gettext = LibStub("LibGetText")("AwesomeGuildStore").gettext
     local defaultData = {
         version = 21,
         lastGuildName = "",
@@ -56,72 +56,90 @@ local function LoadSettings()
         local optionsData = {}
         optionsData[#optionsData + 1] = {
             type = "checkbox",
-            name = L["SETTINGS_OLD_QUALITY_SELECTOR_BEHAVIOR_LABEL"],
-            tooltip = L["SETTINGS_OLD_QUALITY_SELECTOR_BEHAVIOR_DESCRIPTION"],
+            -- TRANSLATORS: label for an entry in the addon settings
+            name = gettext("Use old quality selector behavior"),
+            -- TRANSLATORS: tooltip text for an entry in the addon settings
+            tooltip = gettext("When enabled left and right click set lower and upper quality and double or shift click sets both to the same value"),
             getFunc = function() return saveData.oldQualitySelectorBehavior end,
             setFunc = function(value) saveData.oldQualitySelectorBehavior = value end,
             default = defaultData.oldQualitySelectorBehavior
         }
         optionsData[#optionsData + 1] = {
             type = "checkbox",
-            name = L["SETTINGS_DISPLAY_PER_UNIT_PRICE_LABEL"],
-            tooltip = L["SETTINGS_DISPLAY_PER_UNIT_PRICE_DESCRIPTION"],
+            -- TRANSLATORS: label for an entry in the addon settings
+            name = gettext("Show per unit price in search results"),
+            -- TRANSLATORS: tooltip text for an entry in the addon settings
+            tooltip = gettext("When enabled the results of a guild store search show the per unit price of a stack below the overall price"),
             getFunc = function() return saveData.displayPerUnitPrice end,
             setFunc = function(value) saveData.displayPerUnitPrice = value end,
             default = defaultData.displayPerUnitPrice
         }
         optionsData[#optionsData + 1] = {
             type = "checkbox",
-            name = L["SETTINGS_SORT_WITHOUT_SEARCH_LABEL"],
-            tooltip = L["SETTINGS_SORT_WITHOUT_SEARCH_DESCRIPTION"],
+            -- TRANSLATORS: label for an entry in the addon settings
+            name = gettext("Select order without search"),
+            -- TRANSLATORS: tooltip text for an entry in the addon settings
+            tooltip = gettext("Allows you to change the sort order without triggering a new search. The currently shown results will only change after a manual search"),
             getFunc = function() return saveData.sortWithoutSearch end,
             setFunc = function(value) saveData.sortWithoutSearch = value end,
             default = defaultData.sortWithoutSearch
         }
         optionsData[#optionsData + 1] = {
             type = "checkbox",
-            name = L["SETTINGS_KEEP_SORTORDER_ON_CLOSE_LABEL"],
-            tooltip = L["SETTINGS_KEEP_SORTORDER_ON_CLOSE_DESCRIPTION"],
+            -- TRANSLATORS: label for an entry in the addon settings
+            name = gettext("Remember sort order"),
+            -- TRANSLATORS: tooltip text for an entry in the addon settings
+            tooltip = gettext("Leaves the store sort order set between play sessions instead of clearing it."),
             getFunc = function() return saveData.keepSortOrderOnClose end,
             setFunc = function(value) saveData.keepSortOrderOnClose = value end,
             default = defaultData.keepSortOrderOnClose
         }
         optionsData[#optionsData + 1] = {
             type = "checkbox",
-            name = L["SETTINGS_LIST_WITH_SINGLE_CLICK_LABEL"],
-            tooltip = L["SETTINGS_LIST_WITH_SINGLE_CLICK_DESCRIPTION"],
+            -- TRANSLATORS: label for an entry in the addon settings
+            name = gettext("Single click item listing"),
+            -- TRANSLATORS: tooltip text for an entry in the addon settings
+            tooltip = gettext("Select items for sale with a single click in the sell tab."),
             getFunc = function() return saveData.listWithSingleClick end,
             setFunc = function(value) saveData.listWithSingleClick = value end,
             default = defaultData.listWithSingleClick
         }
         optionsData[#optionsData + 1] = {
             type = "checkbox",
-            name = L["SETTINGS_SHOW_SEARCH_LIBRARY_TOOLTIPS_LABEL"],
-            tooltip = L["SETTINGS_SHOW_SEARCH_LIBRARY_TOOLTIPS_DESCRIPTION"],
+            -- TRANSLATORS: label for an entry in the addon settings
+            name = gettext("Tooltips in Search Library"),
+            -- TRANSLATORS: tooltip text for an entry in the addon settings
+            tooltip = gettext("When active, a tooltip with details like level and quality is shown for each entry in the search library."),
             getFunc = function() return saveData.searchLibrary.showTooltips end,
             setFunc = function(value) saveData.searchLibrary.showTooltips = value end,
             default = defaultData.searchLibrary.showTooltips
         }
         optionsData[#optionsData + 1] = {
             type = "checkbox",
-            name = L["SETTINGS_SHOW_TRADER_TOOLTIPS_LABEL"],
-            tooltip = L["SETTINGS_SHOW_TRADER_TOOLTIPS_DESCRIPTION"],
+            -- TRANSLATORS: label for an entry in the addon settings
+            name = gettext("Trader Tooltips"),
+            -- TRANSLATORS: tooltip text for an entry in the addon settings
+            tooltip = gettext("Show the currently hired trader for a guild that you are a member of, when hovering over the name or an entry in the drop down menu"),
             getFunc = function() return saveData.showTraderTooltip end,
             setFunc = function(value) saveData.showTraderTooltip = value end,
             default = defaultData.showTraderTooltip
         }
         optionsData[#optionsData + 1] = {
             type = "checkbox",
-            name = L["SETTINGS_AUTO_CLEAR_HISTORY_LABEL"],
-            tooltip = L["SETTINGS_AUTO_CLEAR_HISTORY_DESCRIPTION"],
+            -- TRANSLATORS: label for an entry in the addon settings
+            name = gettext("Auto clear history"),
+            -- TRANSLATORS: tooltip text for an entry in the addon settings
+            tooltip = gettext("Automatically deletes all history entries when you open the guild store for the first time in a game session. You can undo the deletion via the menu in the search library"),
             getFunc = function() return saveData.searchLibrary.autoClearHistory end,
             setFunc = function(value) saveData.searchLibrary.autoClearHistory = value end,
             default = defaultData.searchLibrary.autoClearHistory
         }
         optionsData[#optionsData + 1] = {
             type = "checkbox",
-            name = L["SETTINGS_MAIL_AUGMENTATION_LABEL"],
-            tooltip = L["SETTINGS_MAIL_AUGMENTATION_DESCRIPTION"],
+            -- TRANSLATORS: label for an entry in the addon settings
+            name = gettext("Mail augmentation"),
+            -- TRANSLATORS: tooltip text for an entry in the addon settings
+            tooltip = gettext("Adds more detailed information about a transaction to an incoming Guild Store Mail if the data is available in the Guild Activity Log."),
             getFunc = function() return saveData.augementMails end,
             setFunc = function(value) saveData.augementMails = value end,
             default = defaultData.augementMails,
@@ -129,8 +147,10 @@ local function LoadSettings()
         }
         optionsData[#optionsData + 1] = {
             type = "checkbox",
-            name = L["SETTINGS_MAIL_AUGMENTATION_INVOICE_LABEL"],
-            tooltip = L["SETTINGS_MAIL_AUGMENTATION_INVOICE_DESCRIPTION"],
+            -- TRANSLATORS: label for an entry in the addon settings
+            name = gettext("Show invoice on mails"),
+            -- TRANSLATORS: tooltip text for an entry in the addon settings
+            tooltip = gettext("Adds a detailed invoice to the mail which lists all deductions."),
             getFunc = function() return saveData.mailAugmentationShowInvoice end,
             setFunc = function(value) saveData.mailAugmentationShowInvoice = value end,
             default = defaultData.mailAugmentationShowInvoice,
@@ -138,32 +158,40 @@ local function LoadSettings()
         }
         optionsData[#optionsData + 1] = {
             type = "checkbox",
-            name = L["SETTINGS_PURCHASE_NOTIFICATION_LABEL"],
-            tooltip = L["SETTINGS_PURCHASE_NOTIFICATION_DESCRIPTION"],
+            -- TRANSLATORS: label for an entry in the addon settings
+            name = gettext("Purchase notifications"),
+            -- TRANSLATORS: tooltip text for an entry in the addon settings
+            tooltip = gettext("Shows a message in chat after you have purchased an item in a guild store"),
             getFunc = function() return saveData.purchaseNotification end,
             setFunc = function(value) saveData.purchaseNotification = value end,
             default = defaultData.purchaseNotification,
         }
         optionsData[#optionsData + 1] = {
             type = "checkbox",
-            name = L["SETTINGS_CANCEL_NOTIFICATION_LABEL"],
-            tooltip = L["SETTINGS_CANCEL_NOTIFICATION_DESCRIPTION"],
+            -- TRANSLATORS: label for an entry in the addon settings
+            name = gettext("Cancel notifications"),
+            -- TRANSLATORS: tooltip text for an entry in the addon settings
+            tooltip = gettext("Shows a message in chat after you have cancelled an item listing from a guild store"),
             getFunc = function() return saveData.cancelNotification end,
             setFunc = function(value) saveData.cancelNotification = value end,
             default = defaultData.cancelNotification,
         }
         optionsData[#optionsData + 1] = {
             type = "checkbox",
-            name = L["SETTINGS_LISTED_NOTIFICATION_LABEL"],
-            tooltip = L["SETTINGS_LISTED_NOTIFICATION_DESCRIPTION"],
+            -- TRANSLATORS: label for an entry in the addon settings
+            name = gettext("Listed item notifications"),
+            -- TRANSLATORS: tooltip text for an entry in the addon settings
+            tooltip = gettext("Shows a message in chat after you have created a new item listing in a guild store"),
             getFunc = function() return saveData.listedNotification end,
             setFunc = function(value) saveData.listedNotification = value end,
             default = defaultData.listedNotification,
         }
         optionsData[#optionsData + 1] = {
             type = "checkbox",
-            name = L["SETTINGS_DISABLE_CUSTOM_SELL_TAB_FILTER_LABEL"],
-            tooltip = L["SETTINGS_DISABLE_CUSTOM_SELL_TAB_FILTER_DESCRIPTION"],
+            -- TRANSLATORS: label for an entry in the addon settings
+            name = gettext("Disable custom selltab filter"),
+            -- TRANSLATORS: tooltip text for an entry in the addon settings
+            tooltip = gettext("Shows the ingame inventory filter instead of AGS own version when deactivated."),
             getFunc = function() return saveData.disableCustomSellTabFilter end,
             setFunc = function(value) saveData.disableCustomSellTabFilter = value end,
             default = defaultData.disableCustomSellTabFilter,
@@ -171,25 +199,32 @@ local function LoadSettings()
         }
         optionsData[#optionsData + 1] = {
             type = "checkbox",
-            name = L["SETTINGS_SKIP_GUILD_KIOSK_DIALOG_LABEL"],
-            tooltip = L["SETTINGS_SKIP_GUILD_KIOSK_DIALOG_DESCRIPTION"],
+            -- TRANSLATORS: label for an entry in the addon settings
+            name = gettext("Skip guild kiosk dialog"),
+            -- TRANSLATORS: tooltip text for an entry in the addon settings
+            tooltip = gettext("When activated, the dialog at guild traders (not at banks) is skipped and the store opened automatically. This can be suppressed by holding the shift key when talking to a trader."),
             getFunc = function() return saveData.skipGuildKioskDialog end,
             setFunc = function(value) saveData.skipGuildKioskDialog = value end,
             default = defaultData.skipGuildKioskDialog,
         }
         optionsData[#optionsData + 1] = {
             type = "checkbox",
-            name = L["SETTINGS_SKIP_EMPTY_PAGES_LABEL"],
-            tooltip = L["SETTINGS_SKIP_EMPTY_PAGES_DESCRIPTION"],
+            -- TRANSLATORS: label for an entry in the addon settings
+            name = gettext("Skip empty result pages"),
+            -- TRANSLATORS: tooltip text for an entry in the addon settings
+            tooltip = gettext("When activated, pages that show no results due to local filters will automatically trigger a search for the next page. This can be suppressed by holding the ctrl key before the results are returned."),
             getFunc = function() return saveData.skipEmptyPages end,
             setFunc = function(value) saveData.skipEmptyPages = value end,
             default = defaultData.skipEmptyPages,
         }
         optionsData[#optionsData + 1] = {
             type = "button",
-            name = L["SETTINGS_CLEAR_SELL_PRICE_CACHE_LABEL"],
-            tooltip = L["SETTINGS_CLEAR_SELL_PRICE_CACHE_DESCRIPTION"],
-            warning = L["SETTINGS_CLEAR_SELL_PRICE_CACHE_WARNING"],
+            -- TRANSLATORS: label for an entry in the addon settings
+            name = gettext("Clear sell price cache"),
+            -- TRANSLATORS: tooltip text for an entry in the addon settings
+            tooltip = gettext("Pressing this button will remove all stored quantity and price values for the sell tab from your save data. While Master Merchant is active, it will take the last sell price from there when selecting an item if no data was found in AwesomeGuildStore's own data"),
+            -- TRANSLATORS: warning tooltip text for an entry in the addon settings
+            warning = gettext("The data cannot be restored after you have confirmed the action"),
             isDangerous = true,
             func = function()
                 if(saveData.lastSoldStackCount) then
@@ -202,8 +237,10 @@ local function LoadSettings()
         }
         optionsData[#optionsData + 1] = {
             type = "checkbox",
-            name = L["SETTINGS_ENABLE_GUILD_TRADER_LIST_LABEL"],
-            tooltip = L["SETTINGS_ENABLE_GUILD_TRADER_LIST_DESCRIPTION"],
+            -- TRANSLATORS: label for an entry in the addon settings
+            name = gettext("Enable guild trader list (BETA)"),
+            -- TRANSLATORS: tooltip text for an entry in the addon settings
+            tooltip = gettext("When activated, the guild menu will show a new tab with a list of all kiosks in Tamriel. The list will get updated with the owning guilds whenever you visit a kiosk."),
             requiresReload = true,
             getFunc = function() return saveData.guildTraderListEnabled end,
             setFunc = function(value) saveData.guildTraderListEnabled = value end,
@@ -211,9 +248,12 @@ local function LoadSettings()
         }
         optionsData[#optionsData + 1] = {
             type = "button",
-            name = L["SETTINGS_CLEAR_GUILD_TRADER_LIST_LABEL"],
-            tooltip = L["SETTINGS_CLEAR_GUILD_TRADER_LIST_DESCRIPTION"],
-            warning = L["SETTINGS_CLEAR_GUILD_TRADER_LIST_WARNING"],
+            -- TRANSLATORS: label for an entry in the addon settings
+            name = gettext("Clear guild trader list"),
+            -- TRANSLATORS: tooltip text for an entry in the addon settings
+            tooltip = gettext("Pressing this button will remove all stored data related to the guild trader list"),
+            -- TRANSLATORS: warning tooltip text for an entry in the addon settings
+            warning = gettext("The UI will reload and the data cannot be restored after you have confirmed the action"),
             disabled = function() return not saveData.guildTraderListEnabled end,
             isDangerous = true,
             func = function()

@@ -1,4 +1,4 @@
-local L = AwesomeGuildStore.Localization
+local gettext = LibStub("LibGetText")("AwesomeGuildStore").gettext
 local ToggleButton = AwesomeGuildStore.ToggleButton
 local ExecuteSearchOperation = AwesomeGuildStore.ExecuteSearchOperation
 local ClearCallLater = AwesomeGuildStore.ClearCallLater
@@ -229,7 +229,7 @@ function SearchTabWrapper:InitializePageFiltering(tradingHouseWrapper)
         AfterRebuildSearchResultsPage(tradingHouseWrapper)
         if(isFiltering and not searchTabWrapper.suppressLocalFilters) then
             GetTradingHouseSearchResultItemInfo = OriginalGetTradingHouseSearchResultItemInfo
-            self.m_resultCount:SetText(zo_strformat(L["TEXT_FILTER_ITEMCOUNT_TEMPLATE"], itemCount, filteredItemCount))
+            self.m_resultCount:SetText(zo_strformat(GetString(SI_TRADING_HOUSE_RESULT_COUNT) .. " (<<2>>)", itemCount, filteredItemCount))
 
             local shouldHide = (filteredItemCount ~= 0 or self.m_search:HasPreviousPage() or self.m_search:HasNextPage())
             self.m_noItemsLabel:SetHidden(shouldHide)
@@ -366,7 +366,7 @@ function SearchTabWrapper:InitializeButtons(tradingHouseWrapper)
     local common = browseItemsControl:GetNamedChild("Common")
 
     local searchButton = CreateControlFromVirtual("AwesomeGuildStoreStartSearchButton", GuiRoot, "ZO_DefaultButton")
-    searchButton:SetText(L["START_SEARCH_LABEL"])
+    searchButton:SetText(GetString(SI_TRADING_HOUSE_DO_SEARCH))
     searchButton:SetHandler("OnMouseUp",function(control, button, isInside)
         if(control:GetState() == BSTATE_NORMAL and button == 1 and isInside) then
             self:Search()
@@ -378,7 +378,9 @@ function SearchTabWrapper:InitializeButtons(tradingHouseWrapper)
     local RESET_BUTTON_SIZE = 24
     local RESET_BUTTON_TEXTURE = "EsoUI/Art/Buttons/decline_%s.dds"
 
-    local resetButton = AwesomeGuildStore.SimpleIconButton:New("AwesomeGuildStoreFilterResetButton", RESET_BUTTON_TEXTURE, RESET_BUTTON_SIZE, L["RESET_ALL_FILTERS_LABEL"])
+    -- TRANSLATORS: tooltip text for the reset all filters button on the search tab
+    local resetButtonLabel = gettext("Reset All Filters")
+    local resetButton = AwesomeGuildStore.SimpleIconButton:New("AwesomeGuildStoreFilterResetButton", RESET_BUTTON_TEXTURE, RESET_BUTTON_SIZE, resetButtonLabel)
     resetButton:SetAnchor(TOPRIGHT, browseItemsControl:GetNamedChild("Header"), TOPLEFT, 196, 0)
     resetButton.OnClick = function()
         local originalClearSearchResults = tradingHouse.ClearSearchResults
@@ -392,7 +394,9 @@ function SearchTabWrapper:InitializeButtons(tradingHouseWrapper)
         self.searchLibrary:ResetFilters()
     end)
 
-    local autoSearchButton = ToggleButton:New(browseItemsControl:GetNamedChild("Header"), "AwesomeGuildStoreAutoSearchButton", "EsoUI/Art/lfg/lfg_tabIcon_groupTools_%s.dds", 0, 0, 28, 28, L["AUTO_SEARCH_TOGGLE_LABEL"])
+    -- TRANSLATORS: tooltip text for the toggle auto search button on the search tab
+    local autoSearchButtonLabel = gettext("Toggle Auto Search")
+    local autoSearchButton = ToggleButton:New(browseItemsControl:GetNamedChild("Header"), "AwesomeGuildStoreAutoSearchButton", "EsoUI/Art/lfg/lfg_tabIcon_groupTools_%s.dds", 0, 0, 28, 28, autoSearchButtonLabel)
     autoSearchButton.control:ClearAnchors()
     autoSearchButton.control:SetAnchor(TOPRIGHT, browseItemsControl:GetNamedChild("Header"), TOPLEFT, 278, -2)
     if(saveData.autoSearch) then
@@ -458,7 +462,8 @@ function SearchTabWrapper:InitializeNavigation(tradingHouseWrapper)
     local search = tradingHouse.m_search
 
     local showPreviousPageEntry =  {
-        label = L["SEARCH_PREVIOUS_PAGE_LABEL"],
+        -- TRANSLATORS: Label for the row at the beginning of the search results which toggles the search of the previous page 
+        label = gettext("Show Previous Page"),
         callback = function() self:SearchPreviousPage() end,
         updateState = function(rowControl)
             rowControl:SetEnabled(true)
@@ -467,7 +472,8 @@ function SearchTabWrapper:InitializeNavigation(tradingHouseWrapper)
     }
 
     local showNextPageEntry =  {
-        label = L["SEARCH_SHOW_MORE_LABEL"],
+        -- TRANSLATORS: Label for the row at the end of the search results which toggles the search of the next page 
+        label = gettext("Show More Results"),
         callback = function() self:SearchNextPage() end,
         updateState = function(rowControl)
             rowControl:SetEnabled(true)
@@ -527,7 +533,8 @@ function SearchTabWrapper:InitializeNavigation(tradingHouseWrapper)
 
     ZO_ScrollList_AddDataType(tradingHouse.m_searchResultsList, HAS_HIDDEN_DATA_TYPE, "AwesomeGuildStoreHasHiddenRowTemplate", 24, function(rowControl, entry)
         local label = rowControl:GetNamedChild("Text")
-        label:SetText(L["SEARCH_HAS_HIDDEN_RESULTS"])
+        -- TRANSLATORS: placeholder text when all search results are hidden by local filters
+        label:SetText(gettext("All items are hidden by local filters."))
     end, nil, nil, function(rowControl)
         ZO_ObjectPool_DefaultResetControl(rowControl)
     end)
@@ -631,7 +638,8 @@ function SearchTabWrapper:InitializePurchaseNotification(tradingHouseWrapper)
         price = zo_strformat("<<1>> <<2>>", ZO_CurrencyControl_FormatCurrency(price), iconMarkup)
         local itemLink = GetTradingHouseSearchResultItemLink(pendingPurchaseIndex)
         local _, guildName = GetCurrentTradingHouseGuildDetails()
-        purchaseMessage = zo_strformat(L["PURCHASE_NOTIFICATION"], count, itemLink, seller, price, guildName)
+        -- TRANSLATORS: chat message when an item is bought from the store. <<1>> is replaced with the item count, <<t:2>> with the item link, <<3>> with the seller name, <<4>> with price and <<5>> with the guild store name. e.g. You have bought 1x [Rosin] from sirinsidiator for 5000g in Imperial Trading Company
+        purchaseMessage = gettext("You have bought <<1>>x <<t:2>> from <<3>> for <<4>> in <<5>>", count, itemLink, seller, price, guildName)
         originalConfirmPendingPurchase(self, pendingPurchaseIndex)
     end)
     tradingHouseWrapper:Wrap("OnPurchaseSuccess", function(originalOnPurchaseSuccess, self)

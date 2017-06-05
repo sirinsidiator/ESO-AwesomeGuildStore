@@ -1,4 +1,4 @@
-local L = AwesomeGuildStore.Localization
+local gettext = LibStub("LibGetText")("AwesomeGuildStore").gettext
 
 local TRADER_DATA = 1
 local TRADER_ROW_HEIGHT = 30
@@ -79,9 +79,11 @@ end
 function TraderListControl:UpdateEmptyText()
     local emptyText
     if(self.storeList:IsEmpty()) then
-        emptyText = L["TRADER_LIST_EMPTY_NOT_READY_LABEL"]
+        -- TRANSLATORS: placeholder text when the list on the guild kiosk tab is not yet initialized
+        emptyText = gettext("Trader database is not initialized yet.")
     else
-        emptyText = L["TRADER_LIST_EMPTY_EVERYTHING_FILTERED_LABEL"]
+        -- TRANSLATORS: placeholder text when no entry on the list on the guild kiosk tab matches the text filter
+        emptyText = gettext("No results match your filter text.")
     end
 
     if(not self.emptyRow) then
@@ -120,7 +122,8 @@ function TraderListControl:InitializeList(control, storeList, kioskList, ownerLi
         local lastVisited = GetControl(control, "LastVisited")
         local lastVisitedLabel = GetLastVisitLabel(data.lastVisited)
         if(data.isMember) then
-            lastVisitedLabel =  L["TRADER_LIST_LAST_VISIT_IS_GUILD_MEMBER"]
+            -- TRANSLATORS: label for the last visited field of a joined guild on the guild kiosk tab
+            lastVisitedLabel = gettext("joined")
         end
         lastVisited:SetText(lastVisitedLabel)
     end)
@@ -155,7 +158,8 @@ function TraderListControl:InitializeList(control, storeList, kioskList, ownerLi
 
     local utils = control:GetNamedChild("Utils")
 
-    utils:GetNamedChild("SearchLabel"):SetText(L["TRADER_LIST_HEADER_FILTER_LABEL"])
+    -- TRANSLATORS: label for the search box on the guild kiosk tab
+    utils:GetNamedChild("SearchLabel"):SetText(gettext("Filter By:"))
     self.searchBox = utils:GetNamedChild("SearchBox")
     self.searchBox:SetHandler("OnTextChanged", function() self:OnSearchTextChanged() end)
 
@@ -168,11 +172,14 @@ function TraderListControl:InitializeList(control, storeList, kioskList, ownerLi
     self.visitedValue = utils:GetNamedChild("VisitedValue")
     self.overallValue = utils:GetNamedChild("OverallValue")
 
-    utils:GetNamedChild("UpToDateLabel"):SetText(L["TRADER_LIST_HEADER_STATS_UP_TO_DATE_LABEL"])
+    -- TRANSLATORS: label on the guild kiosk tab showing how many kiosks the player has visited in the current trading week
+    utils:GetNamedChild("UpToDateLabel"):SetText(gettext("Current:"))
     self.upToDateValue:SetText("-")
-    utils:GetNamedChild("VisitedLabel"):SetText(L["TRADER_LIST_HEADER_STATS_VISITED_LABEL"])
+    -- TRANSLATORS: label on the guild kiosk tab showing how many kiosks the player has visited at all times
+    utils:GetNamedChild("VisitedLabel"):SetText(gettext("Visited:"))
     self.visitedValue:SetText("-")
-    utils:GetNamedChild("OverallLabel"):SetText(L["TRADER_LIST_HEADER_STATS_OVERALL_LABEL"])
+    -- TRANSLATORS: label on the guild kiosk tab showing how many kiosks there are in the game
+    utils:GetNamedChild("OverallLabel"):SetText(gettext("Overall:"))
     self.overallValue:SetText("-")
 end
 

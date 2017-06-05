@@ -219,30 +219,18 @@
                     <Dimensions y="32"/>
                     <Controls>
                         <Control name="$(parent)TraderName" inherits="ZO_SortHeader">
-                            <OnInitialized>
-                                ZO_SortHeader_Initialize(self, AwesomeGuildStore.Localization["TRADER_LIST_HEADER_TRADER_LABEL"], "traderName", ZO_SORT_ORDER_UP, TEXT_ALIGN_LEFT, "ZoFontGameLargeBold")
-                            </OnInitialized>
                             <Anchor point="TOPLEFT" relativePoint="TOPLEFT" offsetX="0" offsetY="0"/>
                             <Dimensions x="160" y="32"/>
                         </Control>
                         <Control name="$(parent)Location" inherits="ZO_SortHeader">
-                            <OnInitialized>
-                                ZO_SortHeader_Initialize(self, AwesomeGuildStore.Localization["TRADER_LIST_HEADER_LOCATION_LABEL"], "location", ZO_SORT_ORDER_UP, TEXT_ALIGN_LEFT, "ZoFontGameLargeBold")
-                            </OnInitialized>
                             <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$(parent)TraderName" offsetX="18"/>
                             <Dimensions x="300" y="32"/>
                         </Control>
                         <Control name="$(parent)Owner" inherits="ZO_SortHeader">
-                            <OnInitialized>
-                                ZO_SortHeader_Initialize(self, AwesomeGuildStore.Localization["TRADER_LIST_HEADER_OWNER_LABEL"], "owner", ZO_SORT_ORDER_UP, TEXT_ALIGN_LEFT, "ZoFontGameLargeBold")
-                            </OnInitialized>
                             <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$(parent)Location" offsetX="18"/>
                             <Dimensions x="215" y="32"/>
                         </Control>
                         <Control name="$(parent)LastVisited" inherits="ZO_SortHeader">
-                            <OnInitialized>
-                                ZO_SortHeader_Initialize(self, AwesomeGuildStore.Localization["TRADER_LIST_HEADER_LAST_VISIT_LABEL"], "lastVisited", ZO_SORT_ORDER_UP, TEXT_ALIGN_LEFT, "ZoFontGameLargeBold")
-                            </OnInitialized>
                             <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$(parent)Owner" offsetX="18"/>
                             <Dimensions x="150" y="32"/>
                         </Control>
@@ -313,16 +301,10 @@
                                     <Dimensions y="32"/>
                                     <Controls>
                                         <Control name="$(parent)Week" inherits="ZO_SortHeader">
-                                            <OnInitialized>
-                                                ZO_SortHeader_Initialize(self, AwesomeGuildStore.Localization["TRADER_OWNER_LIST_HEADER_WEEK_LABEL"], "week", ZO_SORT_ORDER_UP, TEXT_ALIGN_LEFT, "ZoFontGameLargeBold")
-                                            </OnInitialized>
                                             <Anchor point="TOPLEFT" relativePoint="TOPLEFT" offsetX="0" offsetY="0"/>
                                             <Dimensions x="100" y="32"/>
                                         </Control>
                                         <Control name="$(parent)Owner" inherits="ZO_SortHeader">
-                                            <OnInitialized>
-                                                ZO_SortHeader_Initialize(self, AwesomeGuildStore.Localization["TRADER_LIST_HEADER_OWNER_LABEL"], "owner", ZO_SORT_ORDER_UP, TEXT_ALIGN_LEFT, "ZoFontGameLargeBold")
-                                            </OnInitialized>
                                             <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$(parent)Week" offsetX="18"/>
                                             <Dimensions x="300" y="32"/>
                                         </Control>

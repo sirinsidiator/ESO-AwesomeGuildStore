@@ -1,4 +1,4 @@
-local L = AwesomeGuildStore.Localization
+local gettext = LibStub("LibGetText")("AwesomeGuildStore").gettext
 local FilterBase = AwesomeGuildStore.FilterBase
 
 local TextFilter = FilterBase:Subclass()
@@ -22,7 +22,8 @@ function TextFilter:InitializeControls(name)
 
 	local label = container:CreateControl(name .. "Label", CT_LABEL)
 	label:SetFont("ZoFontWinH4")
-	label:SetText(L["TEXT_FILTER_TITLE"])
+    -- TRANSLATORS: title of the text filter in the left panel on the search tab
+	label:SetText(gettext("Text Filter:"))
 	self:SetLabelControl(label)
 
 	local input = CreateControlFromVirtual(name .. "Input", container, "AwesomeGuildStoreNameFilterTemplate")
@@ -30,13 +31,14 @@ function TextFilter:InitializeControls(name)
 	input:SetAnchor(BOTTOMLEFT, container, BOTTOMLEFT, 0, 0)
 	input:SetAnchor(BOTTOMRIGHT, container, BOTTOMRIGHT, 0, 0)
 	local inputBox = input:GetNamedChild("Box")
-	ZO_EditDefaultText_Initialize(inputBox, L["TEXT_FILTER_TEXT"])
+    -- TRANSLATORS: placeholder text for the text filter input box
+	ZO_EditDefaultText_Initialize(inputBox, gettext("Filter by text"))
 	inputBox:SetMaxInputChars(250)
 	self.inputBox = inputBox
 
 	container:SetHeight(22 + 4 + 28)
 
-	local tooltipText = L["RESET_FILTER_LABEL_TEMPLATE"]:format(label:GetText():gsub(":", ""))
+	local tooltipText = gettext("Reset <<1>> Filter", label:GetText():gsub(":", ""))
 	self.resetButton:SetTooltipText(tooltipText)
 end
 
@@ -93,7 +95,7 @@ end
 
 function TextFilter:GetTooltipText(state)
 	if(state and state ~= "") then
-		return {{label = L["TEXT_FILTER_TITLE"]:sub(0, -2), text = state}}
+		return {{label = gettext("Text Filter:"):sub(0, -2), text = state}}
 	end
 	return {}
 end

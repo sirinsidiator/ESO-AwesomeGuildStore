@@ -1,4 +1,4 @@
-local L = AwesomeGuildStore.Localization
+local gettext = LibStub("LibGetText")("AwesomeGuildStore").gettext
 local SimpleIconButton = AwesomeGuildStore.SimpleIconButton
 local ClearCallLater = AwesomeGuildStore.ClearCallLater
 
@@ -71,9 +71,11 @@ function FilterBase:SetLabelControl(label)
             InitializeTooltip(InformationTooltip)
             InformationTooltip:ClearAnchors()
             InformationTooltip:SetOwner(label, BOTTOM, 5, 0)
-            local text = L["LOCAL_FILTER_EXPLANATION_TOOLTIP"]
+            -- TRANSLATORS: tooltip text explaining the type of a filter in the left panel on the search tab
+            local text = gettext("This filter is local and only applies to the currently visible page")
             if(self.provider) then
-                text = string.format("%s\n\n%s", text, EXTERNAL_FILTER_COLOR:Colorize(zo_strformat(L["EXTERNAL_FILTER_EXPLANATION_TOOLTIP"], self.provider)))
+                -- TRANSLATORS: tooltip text explaining the type of a filter in the left panel on the search tab. <<1>> is replaced with an addon name
+                text = string.format("%s\n\n%s", text, EXTERNAL_FILTER_COLOR:Colorize(gettext("This filter is provided by <<1>>", self.provider)))
             end
             SetTooltipText(InformationTooltip, text)
         end)

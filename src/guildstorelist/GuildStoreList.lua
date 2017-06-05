@@ -4,7 +4,7 @@ local IsLocationVisible = AwesomeGuildStore.IsLocationVisible
 local IsCurrentMapZoneMap = AwesomeGuildStore.IsCurrentMapZoneMap
 local GetKioskName = AwesomeGuildStore.GetKioskName
 local RegisterForEvent = AwesomeGuildStore.RegisterForEvent
-local L = AwesomeGuildStore.Localization
+local gettext = LibStub("LibGetText")("AwesomeGuildStore").gettext
 
 local KIOSK_ICON = "/esoui/art/icons/servicemappins/servicepin_guildkiosk.dds"
 local VENDOR_ICON = "/esoui/art/icons/servicemappins/servicepin_vendor.dds"
@@ -171,6 +171,16 @@ local function InitializeStoreListWindow(saveData, kioskList, storeList, ownerLi
 
     local window = AwesomeGuildStoreGuildTraders
 
+    local headers = window:GetNamedChild("Headers")
+    -- TRANSLATORS: sort header label for the list on the guild kiosk tab
+    ZO_SortHeader_Initialize(headers:GetNamedChild("TraderName"), gettext("Trader"), "traderName", ZO_SORT_ORDER_UP, TEXT_ALIGN_LEFT, "ZoFontGameLargeBold")
+    -- TRANSLATORS: sort header label for the list on the guild kiosk tab
+    ZO_SortHeader_Initialize(headers:GetNamedChild("Location"), gettext("Location"), "location", ZO_SORT_ORDER_UP, TEXT_ALIGN_LEFT, "ZoFontGameLargeBold")
+    -- TRANSLATORS: sort header label for the list on the guild kiosk tab
+    ZO_SortHeader_Initialize(headers:GetNamedChild("Owner"), gettext("Guild"), "owner", ZO_SORT_ORDER_UP, TEXT_ALIGN_LEFT, "ZoFontGameLargeBold")
+    -- TRANSLATORS: sort header label for the list on the guild kiosk tab
+    ZO_SortHeader_Initialize(headers:GetNamedChild("LastVisited"), gettext("Last Visited"), "lastVisited", ZO_SORT_ORDER_UP, TEXT_ALIGN_LEFT, "ZoFontGameLargeBold")
+
     local traderList = AwesomeGuildStore.TraderListControl:New(window, storeList, kioskList, ownerList)
     window.traderList = traderList
 
@@ -183,16 +193,22 @@ local function InitializeStoreListWindow(saveData, kioskList, storeList, ownerLi
 
     local details = window:GetNamedChild("Details")
     local detailTraderName = details:GetNamedChild("TraderName")
-    details:GetNamedChild("LastVisitedLabel"):SetText(L["TRADER_LIST_HEADER_LAST_VISIT_LABEL"] .. ":")
+    details:GetNamedChild("LastVisitedLabel"):SetText(gettext("Last Visited") .. ":")
     local detailLastVisited = details:GetNamedChild("LastVisitedValue")
-    details:GetNamedChild("ZoneLabel"):SetText(L["TRADER_LIST_DETAILS_ZONE_LABEL"] .. ":")
+    -- TRANSLATORS: label for the detail view on the guild kiosk tab
+    details:GetNamedChild("ZoneLabel"):SetText(gettext("Zone") .. ":")
     local detailZone = details:GetNamedChild("ZoneValue")
-    details:GetNamedChild("LocationLabel"):SetText(L["TRADER_LIST_HEADER_LOCATION_LABEL"] .. ":")
+    details:GetNamedChild("LocationLabel"):SetText(gettext("Location") .. ":")
     local detailLocation = details:GetNamedChild("LocationValue")
-    details:GetNamedChild("OwnerLabel"):SetText(L["TRADER_LIST_HEADER_OWNER_LABEL"] .. ":")
+    details:GetNamedChild("OwnerLabel"):SetText(gettext("Guild") .. ":")
     local detailOwner = details:GetNamedChild("OwnerValue")
-    details:GetNamedChild("HistoryLabel"):SetText(L["TRADER_LIST_DETAILS_HISTORY_LABEL"] .. ":")
+    details:GetNamedChild("HistoryLabel"):SetText(gettext("History") .. ":")
     local detailOwnerHistory = details:GetNamedChild("History")
+
+    local historyHeaders = detailOwnerHistory:GetNamedChild("Headers")
+    -- TRANSLATORS: sort header label for the history list on the guild kiosk tab
+    ZO_SortHeader_Initialize(historyHeaders:GetNamedChild("Week"), gettext("Week"), "week", ZO_SORT_ORDER_UP, TEXT_ALIGN_LEFT, "ZoFontGameLargeBold")
+    ZO_SortHeader_Initialize(historyHeaders:GetNamedChild("Owner"), gettext("Guild"), "owner", ZO_SORT_ORDER_UP, TEXT_ALIGN_LEFT, "ZoFontGameLargeBold")
 
     local historyList = AwesomeGuildStore.OwnerHistoryControl:New(detailOwnerHistory, storeList, kioskList, ownerList)
     window.historyList = historyList
@@ -220,7 +236,8 @@ local function InitializeStoreListWindow(saveData, kioskList, storeList, ownerLi
             local date = LDT:New(lastVisited)
             return date:Format("%Y-%m-%d %H:%M")
         else
-            return L["TRADER_LIST_NEVER_VISITED"]
+            -- TRANSLATORS: text for the last visited field of an unvisited kiosk on the guild kiosk tab
+            return gettext("never")
         end
     end
 
@@ -306,14 +323,18 @@ local function InitializeStoreListWindow(saveData, kioskList, storeList, ownerLi
         end
     end)
 
+    -- TRANSLATORS: label for a context menu entry for a row on the guild kiosk tab
+    local showDetailsLabel = gettext("Show Details")
+    -- TRANSLATORS: label for a context menu entry for a row on the guild kiosk tab
+    local showOnMapLabel = gettext("Show On Map")
     local function ShowTraderContextMenu(control)
         ClearMenu()
 
-        AddCustomMenuItem(L["TRADER_LIST_MENU_SHOW_DETAILS"], function()
+        AddCustomMenuItem(showDetailsLabel, function()
             SetSelectedDetails(ZO_ScrollList_GetData(control))
         end)
 
-        AddCustomMenuItem(L["TRADER_LIST_MENU_SHOW_ON_MAP"], function()
+        AddCustomMenuItem(showOnMapLabel, function()
             ShowTraderOnMap(ZO_ScrollList_GetData(control))
         end)
 
@@ -357,7 +378,8 @@ local function InitializeStoreListWindow(saveData, kioskList, storeList, ownerLi
         local data = ZO_ScrollList_GetData(control:GetParent())
         local text = GetExactLastVisitLabel(data.lastVisited)
         if(data.isMember) then
-            text = L["TRADER_LIST_DETAILS_IS_MEMBER_TOOLTIP"]
+            -- TRANSLATORS: tooltip for the last visited field of a joined guild on the guild kiosk tab
+            text = gettext("You are a member of this guild.")
         end
         SetTooltipText(InformationTooltip, text)
     end
@@ -415,17 +437,20 @@ local function InitializeStoreListWindow(saveData, kioskList, storeList, ownerLi
     -- mouse handlers for the stats
     local function OnUpToDateStatEnter(control)
         InitializeTooltip(InformationTooltip, control, BOTTOM, 0, 0)
-        SetTooltipText(InformationTooltip, zo_strformat(L["TRADER_LIST_HEADER_STATS_UP_TO_DATE_TOOLTIP"], traderList.upToDateCount))
+        -- TRANSLATORS: tooltip text for the store stats on the guild kiosk tab. <<1>> is replaced with the kiosk count
+        SetTooltipText(InformationTooltip, gettext("|cffffff<<1>>|r stores visited this week", traderList.upToDateCount))
     end
 
     local function OnVisitedStatEnter(control)
         InitializeTooltip(InformationTooltip, control, BOTTOM, 0, 0)
-        SetTooltipText(InformationTooltip, zo_strformat(L["TRADER_LIST_HEADER_STATS_VISITED_TOOLTIP"], traderList.visitedCount))
+        -- TRANSLATORS: tooltip text for the store stats on the guild kiosk tab. <<1>> is replaced with the kiosk count
+        SetTooltipText(InformationTooltip, gettext("|cffffff<<1>>|r stores visited all time", traderList.visitedCount))
     end
 
     local function OnOverallStatEnter(control)
         InitializeTooltip(InformationTooltip, control, BOTTOM, 0, 0)
-        SetTooltipText(InformationTooltip, zo_strformat(L["TRADER_LIST_HEADER_STATS_OVERALL_TOOLTIP"], traderList.overallCount, traderList.storeCount))
+        -- TRANSLATORS: tooltip text for the store stats on the guild kiosk tab. <<1>> is replaced with the kiosk count and <<2>> with the amount of distinct locations
+        SetTooltipText(InformationTooltip, gettext("|cffffff<<1>>|r stores detected in |cffffff<<2>>|r locations", traderList.overallCount, traderList.storeCount))
     end
 
     local function OnStatExit(control)

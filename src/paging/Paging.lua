@@ -1,5 +1,3 @@
-local L = AwesomeGuildStore.Localization
-
 local Paging = ZO_Object:Subclass()
 AwesomeGuildStore.Paging = Paging
 
