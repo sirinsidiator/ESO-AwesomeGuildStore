@@ -580,7 +580,7 @@ AwesomeGuildStore.FILTER_PRESETS = {
                     [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_SIEGE },
                 },
                 subfilters = {
---                    SUBFILTER_SIEGE_TYPE,
+                    SUBFILTER_SIEGE_TYPE,
                 },
             },
             {
@@ -1800,38 +1800,33 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
         buttons = {
             {
                 label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_SIEGE_BALLISTA)),
-                texture = "EsoUI/Art/Crafting/provisioner_indexIcon_meat_%s.dds",
+                texture = "EsoUI/Art/Icons/progression_tabIcon_solspear_%s.dds",
                 value = SPECIALIZED_ITEMTYPE_SIEGE_BALLISTA,
             },
             {
                 label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_SIEGE_CATAPULT)),
-                texture = "EsoUI/Art/Crafting/provisioner_indexIcon_beer_%s.dds",
+                texture = "EsoUI/Art/Icons/progression_tabIcon_avasiege_%s.dds",
                 value = SPECIALIZED_ITEMTYPE_SIEGE_CATAPULT,
             },
             {
                 label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_SIEGE_TREBUCHET)),
-                texture = "EsoUI/Art/Crafting/diagrams_tabicon_%s.dds",
+                texture = "EsoUI/Art/MainMenu/menuBar_ava_%s.dds",
                 value = SPECIALIZED_ITEMTYPE_SIEGE_TREBUCHET,
             },
             {
                 label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_SIEGE_OIL)),
-                texture = "EsoUI/Art/Crafting/patterns_tabicon_%s.dds",
+                texture = "EsoUI/Art/Icons/progression_tabIcon_flames_%s.dds",
                 value = SPECIALIZED_ITEMTYPE_SIEGE_OIL,
             },
             {
                 label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_SIEGE_RAM)),
-                texture = "EsoUI/Art/Crafting/blueprints_tabicon_%s.dds",
+                texture = "EsoUI/Art/WorldMap/map_ava_tabIcon_woodmill_%s.dds",
                 value = SPECIALIZED_ITEMTYPE_SIEGE_RAM,
             },
             {
                 label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_SIEGE_GRAVEYARD)),
-                texture = "EsoUI/Art/Crafting/formulae_tabicon_%s.dds",
+                texture = "EsoUI/Art/Guild/tabIcon_home_%s.dds",
                 value = SPECIALIZED_ITEMTYPE_SIEGE_GRAVEYARD,
-            },
-            {
-                label = L["SUBFILTER_SIEGE_TYPE_UNIVERSAL"],
-                texture = "EsoUI/Art/Crafting/schematics_tabicon_%s.dds",
-                value = SPECIALIZED_ITEMTYPE_SIEGE_UNIVERSAL, -- TODO see what this is and remove if it doesn't exist
             },
         },
     },
