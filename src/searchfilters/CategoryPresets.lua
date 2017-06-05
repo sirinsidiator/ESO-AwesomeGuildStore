@@ -546,7 +546,7 @@ AwesomeGuildStore.FILTER_PRESETS = {
                 texture = "EsoUI/Art/Inventory/inventory_tabIcon_all_%s.dds",
                 isDefault = true,
                 filters = {
-                    [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_GLYPH_WEAPON, ITEMTYPE_GLYPH_JEWELRY, ITEMTYPE_GLYPH_ARMOR, ITEMTYPE_SOUL_GEM, ITEMTYPE_SIEGE, ITEMTYPE_LURE, ITEMTYPE_TOOL, ITEMTYPE_TROPHY },
+                    [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_GLYPH_WEAPON, ITEMTYPE_GLYPH_JEWELRY, ITEMTYPE_GLYPH_ARMOR, ITEMTYPE_SOUL_GEM, ITEMTYPE_SIEGE, ITEMTYPE_LURE, ITEMTYPE_TOOL, ITEMTYPE_TROPHY, ITEMTYPE_COLLECTIBLE },
                 },
             },
             {
@@ -595,7 +595,7 @@ AwesomeGuildStore.FILTER_PRESETS = {
                 label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_ITEMTYPE", ITEMTYPE_TROPHY)),
                 texture = "EsoUI/Art/Journal/journal_tabIcon_leaderboard_%s.dds",
                 filters = {
-                    [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_TROPHY },
+                    [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_TROPHY, ITEMTYPE_COLLECTIBLE },
                 },
                 subfilters = {
                     SUBFILTER_TROPHY_TYPE,
@@ -1849,6 +1849,11 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
                 label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_TROPHY_TREASURE_MAP)),
                 texture = "EsoUI/Art/icons/achievements_indexicon_exploration_%s.dds",
                 value = SPECIALIZED_ITEMTYPE_TROPHY_TREASURE_MAP,
+            },
+            {
+                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_COLLECTIBLE_RARE_FISH)),
+                texture = "EsoUI/Art/treeicons/tutorial_idexicon_fishing_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_COLLECTIBLE_RARE_FISH,
             },
         },
     },
