@@ -652,6 +652,17 @@ local function InitializeGuildStoreList(globalSaveData)
         storeList:InitializeConfirmedKiosks(kioskList)
     end
 
+    local function SetMapToParentMap()
+        if(GetMapTileTexture() == "Art/maps/vvardenfell/vvardenfelloutlawrefuge_base_0.dds") then
+            -- when zooming out on the Vivec Outlaws Refuge map, we end up on the Vvardenfell map instead of Vivec City and cannot match the entrance pins
+            -- TODO: remove once ZOS fixes the incorrect link
+            MapZoomOut()
+            ProcessMapClick(0.476, 0.874)
+        else
+            MapZoomOut()
+        end
+    end
+
     local function UpdateKioskAndStore(kioskName, isInteracting)
         SetMapToPlayerLocation()
         local x, y = GetMapPlayerPosition(PLAYER_UNIT_TAG) -- "interact" coordinates are identical for all traders in one spot
@@ -697,7 +708,7 @@ local function InitializeGuildStoreList(globalSaveData)
 
             SetMapToPlayerLocation()
             if(isUnderground) then
-                MapZoomOut()
+                SetMapToParentMap()
                 local entranceIndices, entranceCoordinates = GetLocationEntranceIndices(mapName)
                 store.entranceIndices = entranceIndices
 
