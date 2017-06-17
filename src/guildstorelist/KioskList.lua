@@ -3,6 +3,13 @@ local KioskData = AwesomeGuildStore.KioskData
 local KioskList = ZO_Object:Subclass()
 AwesomeGuildStore.KioskList = KioskList
 
+function KioskList.UpdateStoreIds(saveData)
+    for kioskName, serializedData in pairs(saveData) do
+        saveData[kioskName] = serializedData:gsub("(.-)^.-%.(.-)", "%1.%2")
+    end
+    return saveData
+end
+
 function KioskList:New(...)
     local object = ZO_Object.New(self)
     object:Initialize(...)

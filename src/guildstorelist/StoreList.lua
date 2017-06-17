@@ -9,6 +9,15 @@ function StoreList:New(...)
     return object
 end
 
+function StoreList.UpdateStoreIds(saveData)
+    local newSaveData = {}
+    for storeIndex, serializedData in pairs(saveData) do
+        local newIndex = storeIndex:gsub("(.-)^.-%.(.-)", "%1.%2")
+        newSaveData[newIndex] = serializedData
+    end
+    return newSaveData
+end
+
 function StoreList:Initialize(saveData)
     self.saveData = saveData
     self.store = {}

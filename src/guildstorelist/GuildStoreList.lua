@@ -80,6 +80,7 @@ local function FindNearestStoreLocation(x, y)
 end
 
 local function BuildStoreIndex(mapName, locationIndex)
+    mapName = mapName:match("(.-)^.-") or mapName
     return string.format("%s.%d", mapName, locationIndex)
 end
 
@@ -90,14 +91,24 @@ local function GetUnitStoreIndex(unitTag)
     return BuildStoreIndex(mapName, locationIndex)
 end
 
+local function UpdateSaveData(saveData)
+    if(saveData.version == 1) then
+        saveData.stores = AwesomeGuildStore.StoreList.UpdateStoreIds(saveData.stores)
+        saveData.kiosks = AwesomeGuildStore.KioskList.UpdateStoreIds(saveData.kiosks)
+        saveData.version = 2
+    end
+end
+
 local function InitializeSaveData(saveData)
     if(not saveData.guildStoreList) then
         saveData.guildStoreList = {
-            version = 1,
+            version = 2,
             owners = {},
             stores = {},
             kiosks = {},
         }
+    else
+        UpdateSaveData(saveData.guildStoreList)
     end
     return saveData.guildStoreList
 end
@@ -672,7 +683,7 @@ local function InitializeGuildStoreList(globalSaveData)
         local storeIndex
 
         if(isUnderground) then
-            storeIndex = mapName
+            storeIndex = mapName:match("(.-)^.-") or mapName
         else
             storeIndex = BuildStoreIndex(mapName, locationIndex)
         end
@@ -709,7 +720,7 @@ local function InitializeGuildStoreList(globalSaveData)
             SetMapToPlayerLocation()
             if(isUnderground) then
                 SetMapToParentMap()
-                local entranceIndices, entranceCoordinates = GetLocationEntranceIndices(mapName)
+                local entranceIndices, entranceCoordinates = GetLocationEntranceIndices(storeIndex)
                 store.entranceIndices = entranceIndices
 
                 SetMapToMapListIndex(mapIndex)
