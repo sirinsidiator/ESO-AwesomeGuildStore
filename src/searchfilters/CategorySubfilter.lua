@@ -39,7 +39,7 @@ function CategorySubfilter:Initialize(name, tradingHouseWrapper, subfilterPreset
         local button = ToggleButton:New(group.control, group.control:GetName() .. "Button" .. index, buttonPreset.texture, 0, 0, BUTTON_SIZE, BUTTON_SIZE, buttonPreset.label)
         button.HandlePress = function()
             if(not subfilterPreset.isLocal and group.pressedButtonCount > FILTER_ARGS_LIMIT) then
-                -- TRANSLATORS: alert text when more than the maximum possible amount of filter categories are selected
+                -- TRANSLATORS: alert text when more than the maximum possible amount of filter categories is selected
                 local message = gettext("Cannot filter for more than %d at a time"):format(FILTER_ARGS_LIMIT)
                 ZO_Alert(UI_ALERT_CATEGORY_ERROR, SOUNDS.GENERAL_ALERT_ERROR, message)
                 self.resetButton:SetHidden(false)
