@@ -102,15 +102,18 @@ function CategorySelector:New(parent, name, searchTabWrapper, tradingHouseWrappe
 end
 
 function CategorySelector:UpdateSubfilterVisibility()
-    local category = FILTER_PRESETS[self.category]
-    local subfilters = category.subcategories
+    local categoryPreset = FILTER_PRESETS[self.category]
+    local subcategoryPreset, subfilters
     local subcategory = self.subcategory[self.category]
-    if(subcategory) then subfilters = subfilters[subcategory].subfilters end
+    if(subcategory) then
+        subcategoryPreset = categoryPreset.subcategories[subcategory]
+        subfilters = subcategoryPreset.subfilters
+    end
 
     local searchTab = self.searchTabWrapper
     if(searchTab.levelFilter) then
         searchTab:DetachFilter(searchTab.levelFilter)
-        if(category.hasLevelFilter) then
+        if(categoryPreset.hasLevelFilter or (subcategoryPreset and subcategoryPreset.hasLevelFilter)) then
             searchTab:AttachFilter(searchTab.levelFilter)
         end
     end

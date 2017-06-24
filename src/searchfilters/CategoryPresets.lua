@@ -251,6 +251,7 @@ AwesomeGuildStore.FILTER_PRESETS = {
                 texture = "EsoUI/Art/Inventory/inventory_tabIcon_all_%s.dds",
                 isDefault = true,
                 index = 1,
+                hasLevelFilter = true,
                 filters = {
                     [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_FOOD, ITEMTYPE_DRINK, ITEMTYPE_RECIPE, ITEMTYPE_POTION, ITEMTYPE_POISON, ITEMTYPE_RACIAL_STYLE_MOTIF, ITEMTYPE_CONTAINER, ITEMTYPE_FISH, ITEMTYPE_AVA_REPAIR, ITEMTYPE_MASTER_WRIT }
                 },
@@ -259,6 +260,7 @@ AwesomeGuildStore.FILTER_PRESETS = {
                 label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_ITEMTYPE", ITEMTYPE_FOOD)),
                 texture = "EsoUI/Art/Crafting/provisioner_indexIcon_meat_%s.dds",
                 index = 2,
+                hasLevelFilter = true,
                 filters = {
                     [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_FOOD },
                 },
@@ -271,6 +273,7 @@ AwesomeGuildStore.FILTER_PRESETS = {
                 label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_ITEMTYPE", ITEMTYPE_DRINK)),
                 texture = "EsoUI/Art/Crafting/provisioner_indexIcon_beer_%s.dds",
                 index = 3,
+                hasLevelFilter = true,
                 filters = {
                     [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_DRINK },
                 },
@@ -296,6 +299,7 @@ AwesomeGuildStore.FILTER_PRESETS = {
                 label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_ITEMTYPE", ITEMTYPE_POTION)),
                 texture = "EsoUI/Art/Inventory/inventory_tabIcon_consumables_%s.dds",
                 index = 5,
+                hasLevelFilter = true,
                 filters = {
                     [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_POTION },
                 },
@@ -307,6 +311,7 @@ AwesomeGuildStore.FILTER_PRESETS = {
                 label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_ITEMTYPE", ITEMTYPE_POISON)),
                 texture = "EsoUI/Art/Crafting/alchemy_tabIcon_solvent_%s.dds",
                 index = 6,
+                hasLevelFilter = true,
                 filters = {
                     [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_POISON },
                 },
