@@ -133,15 +133,18 @@ function LevelFilter:InitializeHandlers(tradingHouseWrapper)
 
     ZO_PreHook(tradingHouse.m_search, "InternalExecuteSearch", function(search)
         local filter = search.m_filters[tradingHouse.m_levelRangeFilterType]
-        local currentRange = self.currentRange
-        local min = currentRange.currentMin
-        local max = currentRange.currentMax
-        if(min ~= nil and min == max) then
-            max = nil
-        elseif(min == nil and max ~= nil) then
-            min = currentRange.min
-        elseif(min ~= nil and max == nil) then
-            max = currentRange.max
+        local min, max
+        if(self.isAttached) then
+            local currentRange = self.currentRange
+            min = currentRange.currentMin
+            max = currentRange.currentMax
+            if(min ~= nil and min == max) then
+                max = nil
+            elseif(min == nil and max ~= nil) then
+                min = currentRange.min
+            elseif(min ~= nil and max == nil) then
+                max = currentRange.max
+            end
         end
         filter.values[1] = min
         filter.values[2] = max
@@ -266,4 +269,12 @@ function LevelFilter:GetTooltipText(state, version)
         return {{label = label:sub(0, -2), text = text}}
     end
     return {}
+end
+
+function LevelFilter:OnAttached()
+    self.isAttached = true
+end
+
+function LevelFilter:OnDetached()
+    self.isAttached = false
 end

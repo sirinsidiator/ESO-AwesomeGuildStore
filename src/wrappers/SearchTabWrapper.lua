@@ -105,6 +105,7 @@ function SearchTabWrapper:AttachFilter(filter)
     if(filter.isLocal) then
         CALLBACK_MANAGER:RegisterCallback(filter.callbackName, RebuildSearchResultsPage)
     end
+    filter:OnAttached()
     self:RequestUpdateFilterAnchors()
 end
 
@@ -124,6 +125,7 @@ function SearchTabWrapper:DetachFilter(filter)
     if(filter.isLocal) then
         CALLBACK_MANAGER:UnregisterCallback(filter.callbackName, RebuildSearchResultsPage)
     end
+    filter:OnDetached()
     self:RequestUpdateFilterAnchors()
 end
 

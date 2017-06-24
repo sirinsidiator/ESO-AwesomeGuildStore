@@ -152,3 +152,11 @@ end
 function FilterBase:GetTooltipText(state)
     return {}
 end
+
+function FilterBase:OnAttached()
+-- can be used for setup up when the filter is added to the panel
+end
+
+function FilterBase:OnDetached()
+-- can be used for cleaning up when the filter is removed from the panel
+end
