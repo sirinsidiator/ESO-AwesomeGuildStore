@@ -1,3 +1,4 @@
+# Kirill <hell-spam@mail.ru>, 2017. #zanata
 # sirinsidiator <insidiator@cmos.at>, 2017. #zanata
 msgid ""
 msgstr ""
@@ -7,8 +8,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2017-06-17 12:45-0400\n"
-"Last-Translator: sirinsidiator <insidiator@cmos.at>\n"
+"PO-Revision-Date: 2017-07-06 01:49-0400\n"
+"Last-Translator: Kirill <hell-spam@mail.ru>\n"
 "Language-Team: Russian\n"
 "Language: ru\n"
 "X-Generator: Zanata 3.9.6\n"
@@ -418,7 +419,7 @@ msgstr "Посещено:"
 #. TRANSLATORS: label on the guild kiosk tab showing how many kiosks there are in the game
 #: d:\projects\esoaddons\awesomeguildstore\src\guildstorelist\traderlistcontrol.lua:182
 msgid "Overall:"
-msgstr ""
+msgstr "Всего:"
 
 #. TRANSLATORS: this is used to find guild store sell mails. it has to be exactly the same as the subject of the ingame mails, otherwise the detection will fail
 #: d:\projects\esoaddons\awesomeguildstore\src\history\mailbox.lua:22
@@ -756,7 +757,7 @@ msgstr "Этот фильтр предоставлен пользователе�
 #: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\recipeimprovementfilter.lua:204
 #: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\unitpricefilter.lua:189
 msgid "<<1>> - <<2>>"
-msgstr ""
+msgstr "<<1>> - <<2>>"
 
 #. TRANSLATORS: tooltip format for search library entries with a range filter where only the min value has been set
 #: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\pricefilter.lua:173
@@ -803,7 +804,7 @@ msgstr "Фильтp пo цeнaм:"
 #. TRANSLATORS: patterns to match trader names from the label that is shown on the home tab in the guild menu
 #: d:\projects\esoaddons\awesomeguildstore\src\util\misc.lua:49
 msgid "(.-) in the .-"
-msgstr ""
+msgstr "(.-) в месте под названием .-"
 
 #: d:\projects\esoaddons\awesomeguildstore\src\util\misc.lua:49
 msgid "(.-) in .-"
@@ -815,7 +816,7 @@ msgstr "(.-) около .-"
 
 #: d:\projects\esoaddons\awesomeguildstore\src\util\misc.lua:49
 msgid "(.-) on .-"
-msgstr ""
+msgstr "(.-) на .-"
 
 #. TRANSLATORS: chat text when a kiosk name could not be matched. <<1>> is replaced by the label on the home tab in the guild menu
 #: d:\projects\esoaddons\awesomeguildstore\src\util\misc.lua:52
@@ -823,6 +824,8 @@ msgid ""
 "Warning: Could not match kiosk name: '<<1>>' -- please report this to the "
 "author"
 msgstr ""
+"Внимание: Не удалось определить лавку под названием: '<<1>>' -- пожалуйста, "
+"сообщите об этом автору"
 
 #. TRANSLATORS: chat message when an item listing is cancelled on the listing tab. <<1>> is replaced with the item count, <<t:2>> with the item link, <<3>> with the price and <<4>> with the guild store name. e.g. You have cancelled your listing of 1x [Rosin] for 5000g in Imperial Trading Company
 #: d:\projects\esoaddons\awesomeguildstore\src\wrappers\listingtabwrapper.lua:254
