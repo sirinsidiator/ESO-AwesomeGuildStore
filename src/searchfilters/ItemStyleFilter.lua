@@ -37,7 +37,6 @@ local OLD_FILTER_VALUE_CONVERSION = {
     ITEMSTYLE_ORG_DARK_BROTHERHOOD,
     ITEMSTYLE_ENEMY_MINOTAUR,
     {
-        ITEMSTYLE_NONE,
         ITEMSTYLE_UNIQUE,
         ITEMSTYLE_ENEMY_BANDIT,
         ITEMSTYLE_RAIDS_CRAGLORN,
@@ -66,9 +65,19 @@ local OLD_FILTER_VALUE_CONVERSION = {
     }
 }
 
+local NEXT_UNASSIGNED_STYLE_ID = 60
+local STYLE_ENTRY = 1
+local FILTER_ARGS_LIMIT = 24
+local BASE_HEIGHT = 50
+local ROW_HEIGHT = 24
+local MAX_LIST_ROWS = 5
+local SUPPRESS_UPDATE = true
+local ARRAY_SEPARATOR = ":"
+local r, g, b = ZO_TOOLTIP_DEFAULT_COLOR:UnpackRGB()
+
 local newStyles = {37, 38}
 -- automatically fill in new styles if there are any
-for styleId = 60, GetHighestItemStyleId() do
+for styleId = NEXT_UNASSIGNED_STYLE_ID, GetHighestItemStyleId() do 
     newStyles[#newStyles + 1] = styleId
 end
 
@@ -98,19 +107,6 @@ local STYLE_CATEGORIES = {
         styles = newStyles,
     },
 }
-
-local STYLE_ENTRY = 1
-local FILTER_ARGS_LIMIT = 24
-local BASE_HEIGHT = 50
-local ROW_HEIGHT = 24
-local MAX_LIST_ROWS = 5
-local SUPPRESS_UPDATE = true
-local ARRAY_SEPARATOR = ":"
-local r, g, b = ZO_TOOLTIP_DEFAULT_COLOR:UnpackRGB()
-
-local GetItemStyleName = GetItemStyleName or function(styleId) -- TODO: remove
-    return GetString("SI_ITEMSTYLE", styleId)
-end
 
 local ItemStyleFilter = FilterBase:Subclass()
 AwesomeGuildStore.ItemStyleFilter = ItemStyleFilter
