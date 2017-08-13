@@ -63,7 +63,7 @@ function FilterBase:SetLabelControl(label)
     self:InitializeProvider()
     label:ClearAnchors()
     label:SetAnchor(TOPLEFT, self.container, TOPLEFT, 0, 0)
-    label:SetAnchor(TOPRIGHT, self.container, TOPLRIGHT, -RESET_BUTTON_SIZE, 0)
+    label:SetAnchor(TOPRIGHT, self.container, TOPRIGHT, -RESET_BUTTON_SIZE, 0)
     if(self.isLocal) then
         label:SetColor(self.color:UnpackRGBA())
         label:SetMouseEnabled(true)
