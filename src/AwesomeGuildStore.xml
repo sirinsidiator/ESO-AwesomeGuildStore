@@ -60,6 +60,28 @@
             </Controls>
         </Backdrop>
 
+        <Control name="AwesomeGuildStoreStyleFilterRowTemplate" mouseEnabled="true" virtual="true">
+            <Dimensions y="24" />
+
+            <Controls>
+                <Texture name="$(parent)Bg" textureFile="EsoUI/Art/Miscellaneous/listItem_backdrop.dds">
+                    <AnchorFill />
+                    <TextureCoords left="0" right="1" top="0" bottom=".8125" />
+                </Texture>
+
+                <Texture name="$(parent)Highlight" textureFile="EsoUI/Art/Miscellaneous/listItem_highlight.dds" alpha="0">
+                    <AnchorFill />
+                    <TextureCoords left="0" right="1" top="0" bottom=".625" />
+                </Texture>
+
+                <Label name="$(parent)Label" font="ZoFontGameShadow" wrapMode="ELLIPSIS" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_TOOLTIP_DEFAULT">
+                    <Dimensions y="24" />
+                    <Anchor point="LEFT" />
+                    <Anchor point="RIGHT" />
+                </Label>
+            </Controls>
+        </Control>
+
         <Control name="AwesomeGuildStorePriceInputTemplate" virtual="true"> <!-- copy pasta from tradinghouse.xml -->
             <Controls>
                 <Backdrop name="$(parent)MinPrice" inherits="ZO_EditBackdrop">
