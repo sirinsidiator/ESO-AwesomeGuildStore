@@ -1726,7 +1726,7 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
             {
                 label = zo_strformat(SI_TOOLTIP_ITEM_NAME, ZO_GetCraftingSkillName(CRAFTING_TYPE_PROVISIONING)),
                 texture = "EsoUI/Art/Inventory/inventory_tabIcon_craftbag_provisioning_%s.dds",
-                value = SPECIALIZED_ITEMTYPE_INGREDIENT_RARE,
+                value = SPECIALIZED_ITEMTYPE_FURNISHING_MATERIAL_PROVISIONING,
             },
         },
     }
