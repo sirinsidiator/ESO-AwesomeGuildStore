@@ -261,7 +261,7 @@ function CategorySelector:Serialize()
 		if(subfilters) then
 			for _, subfilterId in ipairs(subfilters) do
 				local subfilter = self.subfilters[subfilterId]
-				if(subfilter) then
+				if(subfilter and not subfilter:IsDefault()) then
 					local subfilterValues = subfilter:Serialize()
 					state = state .. ";" .. tostring(subfilterId) .. "," .. tostring(subfilterValues)
 				end
@@ -294,8 +294,10 @@ function CategorySelector:Deserialize(state)
 		else
 			local subfilterId, subfilterValues = zo_strsplit(",", value)
 			local subfilter = self.subfilters[tonumber(subfilterId)]
-			assert(subfilterId and subfilterValues and subfilter)
-			subfilter:Deserialize(subfilterValues)
+			assert(subfilterId and subfilter)
+			if(subfilterValues) then
+    			subfilter:Deserialize(subfilterValues)
+			end
 		end
 	end
 end

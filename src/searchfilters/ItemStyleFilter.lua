@@ -262,6 +262,9 @@ function ItemStyleFilter:Serialize()
             selection[#selection + 1] = styleId
         end
     end
+    if(#selection == 0) then
+        error("tried to serialize empty style filter")
+    end
     return table.concat(selection, ARRAY_SEPARATOR)
 end
 
