@@ -97,12 +97,20 @@ local function UpdateSaveData(saveData)
         saveData.kiosks = AwesomeGuildStore.KioskList.UpdateStoreIds(saveData.kiosks)
         saveData.version = 2
     end
+    if(saveData.version == 2) then
+        local oldName, newName = "Vivec Outlaws Refuge", "Vivec City Outlaws Refuge"
+        if(not saveData.stores[newName]) then
+            saveData.stores[newName] = saveData.stores[oldName]:gsub(oldName, newName)
+        end
+        saveData.stores[oldName] = nil
+        saveData.version = 3
+    end
 end
 
 local function InitializeSaveData(saveData)
     if(not saveData.guildStoreList) then
         saveData.guildStoreList = {
-            version = 2,
+            version = 3,
             owners = {},
             stores = {},
             kiosks = {},
@@ -498,7 +506,6 @@ end
 
 local IRREGULAR_TOOLTIP_HEADER = { -- TODO exceptions in other languages
     ["Orsinium Outlaw Refuge"] = "Orsinium Outlaws Refuge",
-    ["Vivec City Outlaws Refuge"] = "Vivec Outlaws Refuge"
 }
 
 local function GetMapLocationName(locationIndex)
