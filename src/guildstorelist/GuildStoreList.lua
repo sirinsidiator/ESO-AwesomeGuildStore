@@ -99,7 +99,7 @@ local function UpdateSaveData(saveData)
     end
     if(saveData.version == 2) then
         local oldName, newName = "Vivec Outlaws Refuge", "Vivec City Outlaws Refuge"
-        if(not saveData.stores[newName]) then
+        if(saveData.stores[oldName] and not saveData.stores[newName]) then
             saveData.stores[newName] = saveData.stores[oldName]:gsub(oldName, newName)
         end
         saveData.stores[oldName] = nil
