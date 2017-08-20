@@ -108,6 +108,10 @@ local STYLE_CATEGORIES = {
     },
 }
 
+local function GetFormattedItemStyleName(styleId)
+    return zo_strformat("<<1>>", GetItemStyleName(styleId))
+end
+
 local ItemStyleFilter = FilterBase:Subclass()
 AwesomeGuildStore.ItemStyleFilter = ItemStyleFilter
 
@@ -202,7 +206,7 @@ function ItemStyleFilter:UpdateSelectionList()
     for styleId, selected in pairs(self.selectedStyles) do
         if(selected) then
             scrollData[#scrollData + 1] = ZO_ScrollList_CreateDataEntry(STYLE_ENTRY, {
-                label = GetItemStyleName(styleId),
+                label = GetFormattedItemStyleName(styleId),
                 style = styleId
             })
         end
@@ -280,7 +284,7 @@ end
 
 function ItemStyleFilter:CreateCheckboxMenuItem(styleId)
     return {
-        label = GetItemStyleName(styleId),
+        label = GetFormattedItemStyleName(styleId),
         callback = function(checked)
             if(checked) then
                 self:AddStyleSelection(styleId)
@@ -353,7 +357,7 @@ function ItemStyleFilter:GetTooltipText(state)
     if(not tonumber(state)) then -- new save data
         local selection = {zo_strsplit(ARRAY_SEPARATOR, state)}
         for i = 1, #selection do
-            styleNames[#styleNames + 1] = GetItemStyleName(tonumber(selection[i]))
+            styleNames[#styleNames + 1] = GetFormattedItemStyleName(tonumber(selection[i]))
         end
     else
         local subfilterValues = tonumber(state)
@@ -364,10 +368,10 @@ function ItemStyleFilter:GetTooltipText(state)
                 local selected = OLD_FILTER_VALUE_CONVERSION[buttonValue]
                 if(type(selected) == "table") then
                     for _, styleId in ipairs(selected) do
-                        styleNames[#styleNames + 1] = GetItemStyleName(styleId)
+                        styleNames[#styleNames + 1] = GetFormattedItemStyleName(styleId)
                     end
                 elseif(type(selected) == "number") then
-                    styleNames[#styleNames + 1] = GetItemStyleName(selected)
+                    styleNames[#styleNames + 1] = GetFormattedItemStyleName(selected)
                 end
             end
             subfilterValues = math.floor(subfilterValues / 2)
