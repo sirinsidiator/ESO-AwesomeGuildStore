@@ -77,7 +77,7 @@ local r, g, b = ZO_TOOLTIP_DEFAULT_COLOR:UnpackRGB()
 
 local newStyles = {37, 38}
 -- automatically fill in new styles if there are any
-for styleId = NEXT_UNASSIGNED_STYLE_ID, GetHighestItemStyleId() do 
+for styleId = NEXT_UNASSIGNED_STYLE_ID, GetHighestItemStyleId() do
     newStyles[#newStyles + 1] = styleId
 end
 
@@ -170,7 +170,7 @@ function ItemStyleFilter:InitializeRow(rowControl, entry)
         InitializeTooltip(InformationTooltip)
         InformationTooltip:ClearAnchors()
         InformationTooltip:SetOwner(rowControl, RIGHT, -5, 0)
-        -- TRANSLATORS: tooltip text for entries in the selected style list of the item style filter on the search tab 
+        -- TRANSLATORS: tooltip text for entries in the selected style list of the item style filter on the search tab
         InformationTooltip:AddLine(gettext("Click to remove style"), "", r, g, b)
     end
 
@@ -278,15 +278,27 @@ function ItemStyleFilter:IsDefault()
     return (self.selectionCount == 0)
 end
 
+function ItemStyleFilter:CreateCheckboxMenuItem(styleId)
+    return {
+        label = GetItemStyleName(styleId),
+        callback = function(checked)
+            if(checked) then
+                self:AddStyleSelection(styleId)
+            else
+                self:RemoveStyleSelection(styleId)
+            end
+        end,
+        checked = function() return self.selectedStyles[styleId] end,
+        itemType = MENU_ADD_OPTION_CHECKBOX,
+    }
+end
+
 function ItemStyleFilter:ShowStyleSelectionMenu()
     ClearMenu()
     for _, category in ipairs(STYLE_CATEGORIES) do
         local entries = {}
         for _, styleId in ipairs(category.styles) do
-            entries[#entries + 1] = {
-                label = GetItemStyleName(styleId),
-                callback = function() self:AddStyleSelection(styleId) end
-            }
+            entries[#entries + 1] = self:CreateCheckboxMenuItem(styleId)
         end
         AddCustomSubMenuItem(category.label, entries)
     end
