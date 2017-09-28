@@ -9,6 +9,12 @@ AwesomeGuildStore.SearchTabWrapper = SearchTabWrapper
 
 local ACTION_LAYER_NAME = "AwesomeGuildStore"
 local FILTER_PANEL_WIDTH = 220
+local MISSING_ICON = "/esoui/art/icons/icon_missing.dds"
+local PURCHASED_BG_TEXTURE = "EsoUI/Art/Miscellaneous/listItem_highlight.dds"
+local PURCHASED_VERTEX_COORDS = {0, 1, 0, 0.625}
+local DEFAULT_BG_TEXTURE = "EsoUI/Art/Miscellaneous/listItem_backdrop.dds"
+local DEFAULT_VERTEX_COORDS = {0, 1, 0, 0.8125}
+local PURCHASED_TEXTURE = "EsoUI/Art/hud/gamepad/gp_radialicon_accept_down.dds"
 
 function SearchTabWrapper:New(saveData)
     local wrapper = ZO_Object.New(self)
@@ -25,7 +31,7 @@ function SearchTabWrapper:RunInitialSetup(tradingHouseWrapper)
     self:InitializeSearchSortHeaders(tradingHouseWrapper)
     self:InitializeNavigation(tradingHouseWrapper)
     self:InitializeUnitPriceDisplay(tradingHouseWrapper)
-    self:InitializePurchaseNotification(tradingHouseWrapper)
+    self:InitializeSearchResultMasterList(tradingHouseWrapper)
     self:InitializeKeybinds(tradingHouseWrapper)
     zo_callLater(function()
         self:RefreshFilterDimensions() -- call this after the layout has been updated
@@ -210,7 +216,7 @@ function SearchTabWrapper:InitializePageFiltering(tradingHouseWrapper)
                 return icon, name, quality, stackCount, sellerName, timeRemaining, purchasePrice
             end
         end
-        return nil, "", nil, 0
+        return MISSING_ICON, "", 0, 0, "", 0, 0, 0
     end
 
     local saveData = self.saveData
@@ -464,7 +470,7 @@ function SearchTabWrapper:InitializeNavigation(tradingHouseWrapper)
     local search = tradingHouse.m_search
 
     local showPreviousPageEntry =  {
-        -- TRANSLATORS: Label for the row at the beginning of the search results which toggles the search of the previous page 
+        -- TRANSLATORS: Label for the row at the beginning of the search results which toggles the search of the previous page
         label = gettext("Show Previous Page"),
         callback = function() self:SearchPreviousPage() end,
         updateState = function(rowControl)
@@ -474,7 +480,7 @@ function SearchTabWrapper:InitializeNavigation(tradingHouseWrapper)
     }
 
     local showNextPageEntry =  {
-        -- TRANSLATORS: Label for the row at the end of the search results which toggles the search of the next page 
+        -- TRANSLATORS: Label for the row at the end of the search results which toggles the search of the next page
         label = gettext("Show More Results"),
         callback = function() self:SearchNextPage() end,
         updateState = function(rowControl)
@@ -601,8 +607,7 @@ function SearchTabWrapper:InitializeUnitPriceDisplay(tradingHouseWrapper)
         local shouldShow = false
         if(saveData.displayPerUnitPrice) then
             if(not perItemPrice) then
-                local controlName = rowControl:GetName() .. "SellPricePerItem"
-                perItemPrice = rowControl:CreateControl(controlName, CT_LABEL)
+                perItemPrice = rowControl:CreateControl("$(parent)SellPricePerItem", CT_LABEL)
                 perItemPrice:SetAnchor(TOPRIGHT, sellPriceControl, BOTTOMRIGHT, 0, 0)
                 perItemPrice:SetFont(UNIT_PRICE_FONT)
             end
@@ -631,26 +636,169 @@ function SearchTabWrapper:InitializeUnitPriceDisplay(tradingHouseWrapper)
     end
 end
 
-function SearchTabWrapper:InitializePurchaseNotification(tradingHouseWrapper)
+function SearchTabWrapper:CreateResultEntry(slotIndex, guildId, currentPage)
+    local icon, itemName, quality, stackCount, sellerName, timeRemaining, price, currencyType = self.originalGetTradingHouseSearchResultItemInfo(slotIndex)
+    local entry = {}
+    entry.icon = icon
+    entry.itemName = itemName
+    entry.quality = quality
+    entry.stackCount = stackCount
+    entry.sellerName = sellerName
+    entry.timeRemaining = timeRemaining
+    entry.price = price
+    entry.currencyType = currencyType
+    entry.itemLink = self.originalGetTradingHouseSearchResultItemLink(slotIndex)
+    entry.guildId = guildId
+    entry.page = currentPage
+    entry.purchased = false
+    return entry
+end
+
+function SearchTabWrapper:RebuildSearchResultsMasterList(guildId, numItemsOnPage, currentPage, hasMorePages)
+    local masterList = self.masterList
+    for i = 1, numItemsOnPage do
+        masterList[i] = self:CreateResultEntry(i, guildId)
+    end
+    self.numItemsOnPage = numItemsOnPage
+    self.hasMorePages = hasMorePages
+end
+
+function SearchTabWrapper:PrintPurchaseMessageForEntry(entry)
+    local count = entry.stackCount
+    local seller = ZO_LinkHandler_CreateDisplayNameLink(entry.sellerName:gsub("|c.-$", "")) -- have to strip the stuff that MM is adding to the end
+    local price = zo_strformat("<<1>> <<2>>", ZO_CurrencyControl_FormatCurrency(entry.price), iconMarkup)
+    local itemLink = entry.itemLink
+    local guildName = GetGuildName(entry.guildId)
+    -- TRANSLATORS: chat message when an item is bought from the store. <<1>> is replaced with the item count, <<t:2>> with the item link, <<3>> with the seller name, <<4>> with price and <<5>> with the guild store name. e.g. You have bought 1x [Rosin] from sirinsidiator for 5000g in Imperial Trading Company
+    local message = gettext("You have bought <<1>>x <<t:2>> from <<3>> for <<4>> in <<5>>", count, itemLink, seller, price, guildName)
+    df("[AwesomeGuildStore] %s", message)
+end
+
+function SearchTabWrapper:IsTradingHouseSearchResultPurchased(slotIndex)
+    local entry = self.masterList[slotIndex]
+    return (entry ~= nil) and entry.purchased
+end
+
+function SearchTabWrapper:GetTradingHouseSearchResultItemInfoAfterPurchase(slotIndex)
+    self.returnPurchasedEntries = true
+    local result = {GetTradingHouseSearchResultItemInfo(slotIndex)}
+    self.returnPurchasedEntries = false
+    return unpack(result)
+end
+
+function SearchTabWrapper:GetTradingHouseSearchResultItemLinkAfterPurchase(slotIndex, linkStyle)
+    self.returnPurchasedEntries = true
+    local link = GetTradingHouseSearchResultItemLink(slotIndex, linkStyle)
+    self.returnPurchasedEntries = false
+    return link
+end
+
+function SearchTabWrapper:InitializeSearchResultMasterList(tradingHouseWrapper)
+    self.masterList = {}
+    self.numItemsOnPage = 0
+    self.returnPurchasedEntries = false
     local saveData = self.saveData
-    local purchaseMessage = ""
-    tradingHouseWrapper:Wrap("ConfirmPendingPurchase", function(originalConfirmPendingPurchase, self, pendingPurchaseIndex)
-        local _, _, _, count, seller, _, price = GetTradingHouseSearchResultItemInfo(pendingPurchaseIndex)
-        seller = ZO_LinkHandler_CreateDisplayNameLink(seller:gsub("|c.-$", "")) -- have to strip the stuff that MM is adding to the end
-        price = zo_strformat("<<1>> <<2>>", ZO_CurrencyControl_FormatCurrency(price), iconMarkup)
-        local itemLink = GetTradingHouseSearchResultItemLink(pendingPurchaseIndex)
-        local _, guildName = GetCurrentTradingHouseGuildDetails()
-        -- TRANSLATORS: chat message when an item is bought from the store. <<1>> is replaced with the item count, <<t:2>> with the item link, <<3>> with the seller name, <<4>> with price and <<5>> with the guild store name. e.g. You have bought 1x [Rosin] from sirinsidiator for 5000g in Imperial Trading Company
-        purchaseMessage = gettext("You have bought <<1>>x <<t:2>> from <<3>> for <<4>> in <<5>>", count, itemLink, seller, price, guildName)
-        originalConfirmPendingPurchase(self, pendingPurchaseIndex)
+    local masterList = self.masterList
+    local tradingHouse = tradingHouseWrapper.tradingHouse
+    local pendingPurchaseIndex = 0
+
+    local list = tradingHouse.m_searchResultsList
+    local originalScrollbarSetValue = list.scrollbar.SetValue
+    local dummyScrollbarSetValue = function() end
+
+    tradingHouseWrapper:Wrap("OnSearchResultsReceived", function(originalOnSearchResultsReceived, tradingHouse, guildId, numItemsOnPage, currentPage, hasMorePages)
+        self:RebuildSearchResultsMasterList(guildId, numItemsOnPage, currentPage, hasMorePages)
+        originalOnSearchResultsReceived(tradingHouse, guildId, numItemsOnPage, currentPage, hasMorePages)
     end)
-    tradingHouseWrapper:Wrap("OnPurchaseSuccess", function(originalOnPurchaseSuccess, self)
-        if(saveData.purchaseNotification and purchaseMessage ~= "") then
-            df("[AwesomeGuildStore] %s", purchaseMessage)
-            purchaseMessage = ""
+
+    tradingHouseWrapper:Wrap("ConfirmPendingPurchase", function(originalConfirmPendingPurchase, tradingHouse, slotIndex)
+        pendingPurchaseIndex = slotIndex
+        originalConfirmPendingPurchase(tradingHouse, slotIndex)
+    end)
+
+    tradingHouseWrapper:Wrap("OnPurchaseSuccess", function(originalOnPurchaseSuccess, tradingHouse)
+        if(pendingPurchaseIndex > 0) then
+            assert(pendingPurchaseIndex <= self.numItemsOnPage)
+            local entry = masterList[pendingPurchaseIndex]
+            if(saveData.purchaseNotification) then
+                self:PrintPurchaseMessageForEntry(entry)
+            end
+            entry.purchased = true
+            pendingPurchaseIndex = 0
         end
-        originalOnPurchaseSuccess(self)
+
+        -- block ZO_ScrollList_ResetToTop
+        list.scrollbar.SetValue = dummyScrollbarSetValue
+        originalOnPurchaseSuccess(tradingHouse)
+        list.scrollbar.SetValue = originalScrollbarSetValue
     end)
+
+    tradingHouseWrapper:Wrap("RebuildSearchResultsPage", function(originalRebuildSearchResultsPage, tradingHouse)
+        self.returnPurchasedEntries = true
+        originalRebuildSearchResultsPage(tradingHouse)
+        self.returnPurchasedEntries = false
+    end)
+
+    tradingHouseWrapper:Wrap("VerifyBuyItemAndShowErrors", function(originalVerifyBuyItemAndShowErrors, tradingHouse, inventorySlot)
+        local tradingHouseIndex = ZO_Inventory_GetSlotIndex(inventorySlot)
+        if(self:IsTradingHouseSearchResultPurchased(tradingHouseIndex)) then
+            ZO_AlertNoSuppression(UI_ALERT_CATEGORY_ALERT, SOUNDS.PLAYER_ACTION_INSUFFICIENT_GOLD, gettext("Item is already in your possession."))
+            return false
+        end
+
+        return originalVerifyBuyItemAndShowErrors(tradingHouse, inventorySlot)
+    end)
+
+    tradingHouseWrapper:Wrap("CanBuyItem", function(originalCanBuyItem, tradingHouse, inventorySlot)
+        if(not originalCanBuyItem(tradingHouse, inventorySlot)) then
+            return false
+        end
+
+        local tradingHouseIndex = ZO_Inventory_GetSlotIndex(inventorySlot)
+        if(self:IsTradingHouseSearchResultPurchased(tradingHouseIndex)) then
+            return false
+        end
+
+        return true
+    end)
+
+    local dataType = tradingHouse.m_searchResultsList.dataTypes[SEARCH_RESULTS_DATA_TYPE]
+    local originalSetupCallback = dataType.setupCallback
+    dataType.setupCallback = function(rowControl, result)
+        originalSetupCallback(rowControl, result)
+
+        local background = rowControl:GetNamedChild("Bg")
+        local timeRemaining = rowControl:GetNamedChild("TimeRemaining")
+        if(self:IsTradingHouseSearchResultPurchased(result.slotIndex)) then
+            background:SetTexture(PURCHASED_BG_TEXTURE)
+            background:SetTextureCoords(unpack(PURCHASED_VERTEX_COORDS))
+            background:SetColor(ZO_ColorDef:New("aa00ff00"):UnpackRGBA())
+            timeRemaining:SetText("|c00ff00" .. zo_iconFormatInheritColor(PURCHASED_TEXTURE, 40, 40))
+        else
+            background:SetColor(1,1,1,1)
+            background:SetTexture(DEFAULT_BG_TEXTURE)
+            background:SetTextureCoords(unpack(DEFAULT_VERTEX_COORDS))
+        end
+    end
+
+    self.originalGetTradingHouseSearchResultItemInfo = GetTradingHouseSearchResultItemInfo
+    GetTradingHouseSearchResultItemInfo = function(slotIndex)
+        if(type(slotIndex) ~= "number" or slotIndex < 1 or slotIndex > self.numItemsOnPage or not masterList[slotIndex]
+            or (not self.returnPurchasedEntries and self:IsTradingHouseSearchResultPurchased(slotIndex))) then
+            return MISSING_ICON, "", 0, 0, "", 0, 0, 0
+        end
+        local entry = masterList[slotIndex]
+        return entry.icon, entry.itemName, entry.quality, entry.stackCount, entry.sellerName, entry.timeRemaining, entry.price, entry.currencyType
+    end
+
+    self.originalGetTradingHouseSearchResultItemLink = GetTradingHouseSearchResultItemLink
+    GetTradingHouseSearchResultItemLink = function(slotIndex, linkStyle)
+        if(type(slotIndex) ~= "number" or slotIndex < 1 or slotIndex > self.numItemsOnPage or not masterList[slotIndex]
+            or (not self.returnPurchasedEntries and self:IsTradingHouseSearchResultPurchased(slotIndex))) then
+            return ""
+        end
+        return masterList[slotIndex].itemLink
+    end
 end
 
 function SearchTabWrapper:InitializeKeybinds(tradingHouseWrapper)
