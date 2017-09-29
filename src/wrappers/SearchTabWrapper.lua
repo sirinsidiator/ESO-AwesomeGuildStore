@@ -205,7 +205,7 @@ function SearchTabWrapper:InitializePageFiltering(tradingHouseWrapper)
         end
     end
 
-    local OriginalGetTradingHouseSearchResultItemInfo = GetTradingHouseSearchResultItemInfo
+    local OriginalGetTradingHouseSearchResultItemInfo
     local FakeGetTradingHouseSearchResultItemInfo = function(index)
         local icon, name, quality, stackCount, sellerName, timeRemaining, purchasePrice = OriginalGetTradingHouseSearchResultItemInfo(index)
 
@@ -229,6 +229,7 @@ function SearchTabWrapper:InitializePageFiltering(tradingHouseWrapper)
         local isFiltering = BeforeRebuildSearchResultsPage(tradingHouseWrapper)
         if(isFiltering and not searchTabWrapper.suppressLocalFilters) then
             itemCount, filteredItemCount = 0, 0
+            OriginalGetTradingHouseSearchResultItemInfo = GetTradingHouseSearchResultItemInfo
             GetTradingHouseSearchResultItemInfo = FakeGetTradingHouseSearchResultItemInfo
         end
 
