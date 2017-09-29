@@ -153,7 +153,8 @@ function QualityFilter:GetTooltipText(state)
     if(minQuality and maxQuality and not (minQuality == 1 and maxQuality == 5)) then
         local text = ""
         for i = minQuality, maxQuality do
-            text = text .. QUALITY_LABEL[i] .. ", "
+            local color = GetItemQualityColor(i)
+            text = text .. color:Colorize(QUALITY_LABEL[i]) .. ", "
         end
         return {{label = gettext("Quality Range:"):sub(0, -2), text = text:sub(0, -3)}}
     end
