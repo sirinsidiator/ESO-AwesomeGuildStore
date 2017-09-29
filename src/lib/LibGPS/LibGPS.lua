@@ -3,7 +3,7 @@
 ------------------------------------------------------------------
 
 local LIB_NAME = "LibGPS2"
-local lib = LibStub:NewLibrary(LIB_NAME, 11)
+local lib = LibStub:NewLibrary(LIB_NAME, 12)
 
 if not lib then
     return
@@ -27,7 +27,9 @@ local POSITION_MIN = 0.085
 local POSITION_MAX = 0.915
 
 local TAMRIEL_MAP_INDEX = 1
-local COLDHARBOUR_MAP_INDEX = 23
+
+local rootMaps = lib.rootMaps or {}
+lib.rootMaps = rootMaps
 
 --lib.debugMode = 1 -- TODO
 lib.mapMeasurements = lib.mapMeasurements or {}
@@ -123,7 +125,7 @@ end
 local function StoreTamrielMapMeasurements()
     -- no need to actually measure the world map
     if (orgSetMapToMapListIndex(TAMRIEL_MAP_INDEX) ~= SET_MAP_RESULT_FAILED) then
-        mapMeasurements[GetMapTileTexture()] = {
+        local measurement = {
             scaleX = 1,
             scaleY = 1,
             offsetX = 0,
@@ -131,6 +133,8 @@ local function StoreTamrielMapMeasurements()
             mapIndex = TAMRIEL_MAP_INDEX,
             zoneIndex = GetCurrentMapZoneIndex()
         }
+        mapMeasurements[GetMapTileTexture()] = measurement
+        rootMaps[TAMRIEL_MAP_INDEX] = measurement
         return true
     end
 
@@ -209,22 +213,24 @@ local function ClearCurrentWaypoint()
     currentWaypointX, currentWaypointY = 0, 0, nil
 end
 
-local function GetColdharbourMeasurement()
-    -- switch to the Coldharbour map
-    orgSetMapToMapListIndex(COLDHARBOUR_MAP_INDEX)
-    local coldharbourId = GetMapTileTexture()
-    if(not IsMapMeasured(coldharbourId)) then
-        -- calculate the measurements of Coldharbour without worrying about the waypoint
-        local mapIndex = CalculateMeasurements(coldharbourId, GetPlayerPosition())
-        if (mapIndex ~= COLDHARBOUR_MAP_INDEX) then
-            LogMessage(LOG_WARNING, "CalculateMeasurements returned different index while measuring Coldharbour map. expected:", COLDHARBOUR_MAP_INDEX, "actual:", mapIndex)
-            if(not IsMapMeasured(coldharbourId)) then
-                LogMessage(LOG_WARNING, "Failed to measure Coldharbour map.")
+local function GetExtraMapMeasurement(extraMapIndex)
+    -- switch to the map
+    orgSetMapToMapListIndex(extraMapIndex)
+    local extraMapId = GetMapTileTexture()
+    if(not IsMapMeasured(extraMapId)) then
+        -- calculate the measurements of map without worrying about the waypoint
+        local mapIndex = CalculateMeasurements(extraMapId, GetPlayerPosition())
+        if (mapIndex ~= extraMapIndex) then
+            local name = GetMapInfo(extraMapIndex)
+            name = zo_strformat("<<C:1>>", name)
+            LogMessage(LOG_WARNING, "CalculateMeasurements returned different index while measuring ", name, " map. expected:", extraMapIndex, "actual:", mapIndex)
+            if (not IsMapMeasured(extraMapId)) then
+                LogMessage(LOG_WARNING, "Failed to measure ", name, " map.")
                 return
             end
         end
     end
-    return mapMeasurements[coldharbourId]
+    return mapMeasurements[extraMapId]
 end
 
 local function RestoreCurrentWaypoint()
@@ -240,33 +246,27 @@ local function RestoreCurrentWaypoint()
         local x = currentWaypointX * measurements.scaleX + measurements.offsetX
         local y = currentWaypointY * measurements.scaleY + measurements.offsetY
 
-        if (x > 0 and x < 1 and y > 0 and y < 1) then
-            -- if it is inside the Tamriel map we set it there
-            if(orgSetMapToMapListIndex(TAMRIEL_MAP_INDEX) ~= SET_MAP_RESULT_FAILED) then
-                SetPlayerWaypoint(x, y)
-                wasSet = true
-            else
-                LogMessage(LOG_DEBUG, "Cannot reset waypoint because switching to the world map failed")
+        for rootMapIndex, measurements in pairs(rootMaps) do
+            if not measurements then
+                measurements = GetExtraMapMeasurement(rootMapIndex)
+                rootMaps[rootMapIndex] = measurements
             end
-        else -- when the waypoint is outside of the Tamriel map check if it is in Coldharbour
-            measurements = GetColdharbourMeasurement()
             if(measurements) then
-                -- calculate waypoint coodinates within coldharbour
-                x = (x - measurements.offsetX) / measurements.scaleX
-                y = (y - measurements.offsetY) / measurements.scaleY
-                if not(x < 0 or x > 1 or y < 0 or y > 1) then
-                    if(orgSetMapToMapListIndex(COLDHARBOUR_MAP_INDEX) ~= SET_MAP_RESULT_FAILED) then
+                if(x > measurements.offsetX and x < (measurements.offsetX + measurements.scaleX) and
+                    y > measurements.offsetY and y < (measurements.offsetY + measurements.scaleY)) then
+                    if(orgSetMapToMapListIndex(rootMapIndex) ~= SET_MAP_RESULT_FAILED) then
+                        -- calculate waypoint coodinates within root map
+                        x = (x - measurements.offsetX) / measurements.scaleX
+                        y = (y - measurements.offsetY) / measurements.scaleY
                         SetPlayerWaypoint(x, y)
                         wasSet = true
-                    else
-                        LogMessage(LOG_DEBUG, "Cannot reset waypoint because switching to the Coldharbour map failed")
+                        break
                     end
-                else
-                    LogMessage(LOG_DEBUG, "Cannot reset waypoint because it was outside of our reach")
                 end
-            else
-                LogMessage(LOG_DEBUG, "Cannot reset waypoint because Coldharbour measurements are unavailable")
             end
+        end
+        if (not wasSet) then
+            LogMessage(LOG_DEBUG, "Cannot reset waypoint because it was outside of our reach")
         end
     end
 
@@ -422,6 +422,8 @@ local function Initialize() -- wait until we have defined all functions
 
         LMP:UnregisterCallback("AfterPingAdded", HandlePingEvent)
         LMP:UnregisterCallback("AfterPingRemoved", HandlePingEvent)
+
+        rootMaps, mapMeasurements, mapStack = nil, nil, nil
     end
 
     InterceptMapPinManager()
@@ -437,6 +439,15 @@ local function Initialize() -- wait until we have defined all functions
     HookSetMapFloor()
 
     StoreTamrielMapMeasurements()
+
+    local function addRootMap(zoneId)
+        local mapIndex = GetMapIndexByZoneId(zoneId)
+        if mapIndex then rootMaps[mapIndex] = false end
+    end
+    addRootMap(347) -- Coldhabour
+    addRootMap(980) -- Clockwork City
+    -- Any future extra dimension map here
+
     SetMapToPlayerLocation() -- initial measurement so we can get back to where we are currently
 
     LMP:RegisterCallback("AfterPingAdded", HandlePingEvent)
