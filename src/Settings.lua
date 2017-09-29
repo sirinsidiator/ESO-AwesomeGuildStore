@@ -41,7 +41,7 @@ local function LoadSettings()
         guildTraderListEnabled = false,
         resetFiltersOnExit = false,
         keepPurchasedResultsInList = true,
-        minimizeChatOnOpen = false,
+        minimizeChatOnOpen = true,
     }
 
     local function CreateSettingsDialog(saveData)
