@@ -63,6 +63,10 @@ function TradingHouseWrapper:Initialize(saveData)
             tab:RunInitialSetup(self)
         end
 
+        if(not saveData.minimizeChatOnOpen) then
+            TRADING_HOUSE_SCENE:RemoveFragment(MINIMIZE_CHAT_FRAGMENT)
+        end
+
         self:InitializeGuildSelector()
         self:InitializeKeybindStripWrapper()
         self:InitializeSearchCooldown()

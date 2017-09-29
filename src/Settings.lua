@@ -41,6 +41,7 @@ local function LoadSettings()
         guildTraderListEnabled = false,
         resetFiltersOnExit = false,
         keepPurchasedResultsInList = true,
+        minimizeChatOnOpen = false,
     }
 
     local function CreateSettingsDialog(saveData)
@@ -75,6 +76,23 @@ local function LoadSettings()
             getFunc = function() return saveData.keepPurchasedResultsInList end,
             setFunc = function(value) saveData.keepPurchasedResultsInList = value end,
             default = defaultData.keepPurchasedResultsInList,
+        }
+        optionsData[#optionsData + 1] = {
+            type = "checkbox",
+            -- TRANSLATORS: label for an entry in the addon settings
+            name = gettext("Minimize chat on open"),
+            -- TRANSLATORS: tooltip text for an entry in the addon settings
+            tooltip = gettext("When activated, the chat window will get minimized when visiting a trading house. This defaults to true since it is the new default behavior added by ZOS."),
+            getFunc = function() return saveData.minimizeChatOnOpen end,
+            setFunc = function(value) 
+                saveData.minimizeChatOnOpen = value
+                if(value) then
+                    TRADING_HOUSE_SCENE:AddFragment(MINIMIZE_CHAT_FRAGMENT)
+                else
+                    TRADING_HOUSE_SCENE:RemoveFragment(MINIMIZE_CHAT_FRAGMENT)
+                end
+            end,
+            default = defaultData.minimizeChatOnOpen,
         }
         optionsData[#optionsData + 1] = {
             type = "checkbox",
