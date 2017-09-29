@@ -276,12 +276,28 @@ function SellTabWrapper:InitializeListingInput(tradingHouseWrapper)
     highlight:ClearAnchors()
     highlight:SetAnchor(TOPRIGHT, bg, TOPRIGHT, 10, -18)
 
+    local invoice = tradingHouse.m_invoice
+    local profitLabel = invoice:GetNamedChild("ProfitLabel")
+    local profitWarning = CreateControlFromVirtual("$(parent)ProfitWarning", invoice, "ZO_HelpIcon")
+    profitWarning:SetAnchor(RIGHT, profitLabel, LEFT, -3, 0)
+    profitWarning:SetTexture("EsoUI/Art/Miscellaneous/ESO_Icon_Warning.dds")
+    profitWarning:SetHidden(true)
+    -- TRANSLATORS: tooltip text for the profit warning icon on the sell tab
+    ZO_HelpIcon_Initialize(profitWarning, gettext("Profit is below vendor price. You'll get more out of selling this item to a merchant."), RIGHT)
+    self.profitWarning = profitWarning
+
     tradingHouseWrapper:PreHook("SetPendingPostPrice", function(tradingHouse, gold, skipPricePerPieceUpdate)
         self.currentSellPrice = gold
         if(not skipPricePerPieceUpdate and self.pendingStackCount > 0) then
             self:SetUnitPrice(gold / (self.currentStackCount + 1e-9))
         end
     end)
+end
+
+function SellTabWrapper:IsAboveVendorPrice()
+    local _, _, currentProfit = GetTradingHousePostPriceInfo(self.currentSellPrice)
+    local vendorProfit = self.pendingSellPrice * self.currentStackCount
+    return currentProfit >= vendorProfit
 end
 
 function SellTabWrapper:InitializeCategoryFilter(tradingHouseWrapper)
@@ -514,6 +530,7 @@ function SellTabWrapper:UpdateListing()
     local price = math.ceil(self.currentStackCount * self.currentPricePerUnit)
     ZO_ItemSlot_SetupSlot(tradingHouse.m_pendingItem, self.currentStackCount, self.pendingIcon)
     tradingHouse:SetPendingPostPrice(price, SUPPRESS_PRICE_PER_PIECE_UPDATE)
+    self.profitWarning:SetHidden(self:IsAboveVendorPrice())
 end
 
 function SellTabWrapper:SetQuantity(value, skipUpdateSlider)
