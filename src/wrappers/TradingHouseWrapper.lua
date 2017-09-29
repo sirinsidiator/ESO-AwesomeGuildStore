@@ -100,6 +100,9 @@ function TradingHouseWrapper:Initialize(saveData)
             currentTab:OnClose(self)
         end
         tradingHouse:ClearPendingPost()
+        if(saveData.resetFiltersOnExit) then
+            tradingHouse:ResetAllSearchData()
+        end
     end)
 
     local KIOSK_OPTION_INDEX = 1

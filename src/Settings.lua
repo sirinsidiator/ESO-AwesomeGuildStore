@@ -1,7 +1,7 @@
 local function LoadSettings()
     local gettext = LibStub("LibGetText")("AwesomeGuildStore").gettext
     local defaultData = {
-        version = 21,
+        version = 22,
         lastGuildName = "",
         keepFiltersOnClose = true,
         oldQualitySelectorBehavior = false,
@@ -39,6 +39,7 @@ local function LoadSettings()
         },
         hasTouchedAction = {},
         guildTraderListEnabled = false,
+        resetFiltersOnExit = false,
     }
 
     local function CreateSettingsDialog(saveData)
@@ -54,6 +55,16 @@ local function LoadSettings()
         }
         local panel = LAM:RegisterAddonPanel("AwesomeGuildStoreOptions", panelData)
         local optionsData = {}
+        optionsData[#optionsData + 1] = {
+            type = "checkbox",
+            -- TRANSLATORS: label for an entry in the addon settings
+            name = gettext("Reset search filters on exit"),
+            -- TRANSLATORS: tooltip text for an entry in the addon settings
+            tooltip = gettext("When activated, all filters will reset when closing the trading house window. This mimics the old behavior of the store before ZOS changed it."),
+            getFunc = function() return saveData.resetFiltersOnExit end,
+            setFunc = function(value) saveData.resetFiltersOnExit = value end,
+            default = defaultData.resetFiltersOnExit,
+        }
         optionsData[#optionsData + 1] = {
             type = "checkbox",
             -- TRANSLATORS: label for an entry in the addon settings
@@ -387,6 +398,10 @@ local function LoadSettings()
         if(saveData.version == 20) then
             saveData.guildTraderListEnabled = defaultData.guildTraderListEnabled
             saveData.version = 21
+        end
+        if(saveData.version == 21) then
+            saveData.resetFiltersOnExit = defaultData.resetFiltersOnExit
+            saveData.version = 22
         end
     end
 
