@@ -40,6 +40,7 @@ local function LoadSettings()
         hasTouchedAction = {},
         guildTraderListEnabled = false,
         resetFiltersOnExit = false,
+        keepPurchasedResultsInList = true,
     }
 
     local function CreateSettingsDialog(saveData)
@@ -64,6 +65,16 @@ local function LoadSettings()
             getFunc = function() return saveData.resetFiltersOnExit end,
             setFunc = function(value) saveData.resetFiltersOnExit = value end,
             default = defaultData.resetFiltersOnExit,
+        }
+        optionsData[#optionsData + 1] = {
+            type = "checkbox",
+            -- TRANSLATORS: label for an entry in the addon settings
+            name = gettext("Keep purchased items in result list"),
+            -- TRANSLATORS: tooltip text for an entry in the addon settings
+            tooltip = gettext("When activated, purchased items will stay in the list and get marked as purchased instead, until you leave the page they are on or start a new search."),
+            getFunc = function() return saveData.keepPurchasedResultsInList end,
+            setFunc = function(value) saveData.keepPurchasedResultsInList = value end,
+            default = defaultData.keepPurchasedResultsInList,
         }
         optionsData[#optionsData + 1] = {
             type = "checkbox",
@@ -401,6 +412,8 @@ local function LoadSettings()
         end
         if(saveData.version == 21) then
             saveData.resetFiltersOnExit = defaultData.resetFiltersOnExit
+            saveData.keepPurchasedResultsInList = defaultData.keepPurchasedResultsInList
+            saveData.minimizeChatOnOpen = defaultData.minimizeChatOnOpen
             saveData.version = 22
         end
     end

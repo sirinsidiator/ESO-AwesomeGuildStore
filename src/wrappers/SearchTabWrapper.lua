@@ -735,7 +735,7 @@ function SearchTabWrapper:InitializeSearchResultMasterList(tradingHouseWrapper)
     end)
 
     tradingHouseWrapper:Wrap("RebuildSearchResultsPage", function(originalRebuildSearchResultsPage, tradingHouse)
-        self.returnPurchasedEntries = true
+        self.returnPurchasedEntries = saveData.keepPurchasedResultsInList
         originalRebuildSearchResultsPage(tradingHouse)
         self.returnPurchasedEntries = false
     end)
