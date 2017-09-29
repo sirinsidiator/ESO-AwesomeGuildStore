@@ -2,3 +2,4 @@ build.number
 /target
 /temp
 /.gradle
+/unused
