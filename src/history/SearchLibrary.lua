@@ -49,6 +49,9 @@ function SearchLibrary:Initialize(saveData)
 	self.currentState = {}
 
 	self.control = AwesomeGuildStoreSearchLibrary
+	self.fragment = ZO_SimpleSceneFragment:New(self.control)
+	TRADING_HOUSE_SCENE:AddFragment(self.fragment)
+
 	local control = self.control
 	control:SetMovable(not saveData.locked)
 	control:SetResizeHandleSize(not saveData.locked and 5 or 0)
