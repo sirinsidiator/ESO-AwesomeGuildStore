@@ -1,7 +1,7 @@
 --[[
 Author: Ayantir
 Filename: LibAnnyoingUpdateNotificationInGame.lua
-Version: 3
+Version: 5
 ]]--
 
 --[[
@@ -30,12 +30,12 @@ http://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
 ]]--
 
 local libLoaded
-local LIB_NAME, VERSION = "Launig", 4
+local LIB_NAME, VERSION = "Launig", 5
 local Launig, oldminor = LibStub:NewLibrary(LIB_NAME, VERSION)
 if not Launig then return end
 
-local GRACE_PERIOD = 86400 * 10
-local REPEAT_EVERY = 86400 * 30
+local GRACE_PERIOD = 86400 * 15
+local REPEAT_EVERY = 86400 * 40
 
 local UPDATE_WEBSITE = "http://www.esoui.com"
 
