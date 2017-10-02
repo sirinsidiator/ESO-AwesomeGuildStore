@@ -8,7 +8,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2017-07-06 01:49-0400\n"
+"PO-Revision-Date: 2017-10-02 04:13-0400\n"
 "Last-Translator: Kirill <hell-spam@mail.ru>\n"
 "Language-Team: Russian\n"
 "Language: ru\n"
@@ -19,7 +19,7 @@ msgstr ""
 #. TRANSLATORS: label for an entry in the addon settings
 #: d:\projects\esoaddons\awesomeguildstore\src\settings.lua:63
 msgid "Reset search filters on exit"
-msgstr ""
+msgstr "Сбрасывать фильтры поиска при выходе"
 
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: d:\projects\esoaddons\awesomeguildstore\src\settings.lua:65
@@ -27,11 +27,14 @@ msgid ""
 "When activated, all filters will reset when closing the trading house window."
 " This mimics the old behavior of the store before ZOS changed it."
 msgstr ""
+"Когда включено, все фильтры будут сброшены при закрытии окна гильдейского "
+"торговца. Это симулирует старый характер поведения окна магазина, до его "
+"изменения разработчиками."
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: d:\projects\esoaddons\awesomeguildstore\src\settings.lua:73
 msgid "Keep purchased items in result list"
-msgstr ""
+msgstr "Сохранять купленные предметы в списке результатов"
 
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: d:\projects\esoaddons\awesomeguildstore\src\settings.lua:75
@@ -40,11 +43,14 @@ msgid ""
 "purchased instead, until you leave the page they are on or start a new "
 "search."
 msgstr ""
+"Когда включено, купленные предметы будут оставаться в списке и будут "
+"помечены как купленные, пока вы не уйдёте со страницы или не запустите новый "
+"поиск."
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: d:\projects\esoaddons\awesomeguildstore\src\settings.lua:83
 msgid "Minimize chat on open"
-msgstr ""
+msgstr "Сворачивать чат при открытии"
 
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: d:\projects\esoaddons\awesomeguildstore\src\settings.lua:85
@@ -53,6 +59,8 @@ msgid ""
 "house. This defaults to true since it is the new default behavior added by "
 "ZOS."
 msgstr ""
+"Когда включено, окно чата будет свёрнуто при посещении гильдейского торговца."
+" Активно по умолчанию в новом характере поведения от ZOS."
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: d:\projects\esoaddons\awesomeguildstore\src\settings.lua:100
@@ -65,7 +73,7 @@ msgid ""
 "When enabled left and right click set lower and upper quality and double or "
 "shift click sets both to the same value"
 msgstr ""
-"Ecли включeнo, лeвый и пpaвый клик пoвышaют и пoнижaют кaчecтвo, a двoйнoй "
+"Когда включeнo, лeвый и пpaвый клик пoвышaют и пoнижaют кaчecтвo, a двoйнoй "
 "клик или клик c шифтoм пoзвoляeт выбpaть нecкoлькo знaчeний"
 
 #. TRANSLATORS: label for an entry in the addon settings
@@ -794,36 +802,36 @@ msgstr "Этот фильтр предоставлен пользователе�
 
 #: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\itemstylefilter.lua:86
 msgid "Racial"
-msgstr ""
+msgstr "Расовый"
 
 #: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\itemstylefilter.lua:90
 msgid "Uncommon"
-msgstr ""
+msgstr "Необычный"
 
 #: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\itemstylefilter.lua:94
 msgid "Organizations"
-msgstr ""
+msgstr "Организации"
 
 #: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\itemstylefilter.lua:98
 msgid "Events"
-msgstr ""
+msgstr "События"
 
 #: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\itemstylefilter.lua:102
 msgid "Morrowind"
-msgstr ""
+msgstr "Морровинд"
 
 #: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\itemstylefilter.lua:106
 msgid "New"
-msgstr ""
+msgstr "Новый"
 
 #: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\itemstylefilter.lua:153
 msgid "Select Styles"
-msgstr ""
+msgstr "Выбрать стили"
 
 #. TRANSLATORS: tooltip text for entries in the selected style list of the item style filter on the search tab
 #: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\itemstylefilter.lua:178
 msgid "Click to remove style"
-msgstr ""
+msgstr "Щелкните, чтобы убрать стиль"
 
 #. TRANSLATORS: tooltip format for search library entries with a range filter where min and max value have been set
 #: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\pricefilter.lua:170
@@ -943,7 +951,7 @@ msgstr "Вы купили <<t:2>> x<<1>> у <<3>> зa <<4>> в <<5>>"
 
 #: d:\projects\esoaddons\awesomeguildstore\src\wrappers\searchtabwrapper.lua:746
 msgid "Item is already in your possession."
-msgstr ""
+msgstr "Предмет уже куплен вами."
 
 #. TRANSLATORS: tooltip text for the quantity selection buttons on the sell tab
 #: d:\projects\esoaddons\awesomeguildstore\src\wrappers\selltabwrapper.lua:191
@@ -981,6 +989,8 @@ msgid ""
 "Profit is below vendor price. You'll get more out of selling this item to a "
 "merchant."
 msgstr ""
+"Прибыль ниже, чем от продажи торговцу. Вы получите больше, продав этот "
+"предмет обычному торговцу."
 
 #. TRANSLATORS: error message when splitting a stack fails while trying to list an item on a store
 #: d:\projects\esoaddons\awesomeguildstore\src\wrappers\selltabwrapper.lua:401
