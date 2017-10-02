@@ -638,8 +638,21 @@ function SearchTabWrapper:InitializeUnitPriceDisplay(tradingHouseWrapper)
 end
 
 function SearchTabWrapper:CreateResultEntry(slotIndex, guildId, currentPage)
-    local icon, itemName, quality, stackCount, sellerName, timeRemaining, price, currencyType = self.originalGetTradingHouseSearchResultItemInfo(slotIndex)
     local entry = {}
+    entry.slotIndex = slotIndex
+    entry.guildId = guildId
+    entry.page = currentPage
+    entry.purchased = false
+    return entry
+end
+
+function SearchTabWrapper:AddResultLinkToEntry(entry)
+    entry.itemLinkBrackets = self.originalGetTradingHouseSearchResultItemLink(entry.slotIndex, LINK_STYLE_BRACKETS)
+    entry.itemLinkDefault = self.originalGetTradingHouseSearchResultItemLink(entry.slotIndex, LINK_STYLE_DEFAULT)
+end
+
+function SearchTabWrapper:AddResultInfoToEntry(entry)
+    local icon, itemName, quality, stackCount, sellerName, timeRemaining, price, currencyType = self.originalGetTradingHouseSearchResultItemInfo(entry.slotIndex)
     entry.icon = icon
     entry.itemName = itemName
     entry.quality = quality
@@ -648,27 +661,25 @@ function SearchTabWrapper:CreateResultEntry(slotIndex, guildId, currentPage)
     entry.timeRemaining = timeRemaining
     entry.price = price
     entry.currencyType = currencyType
-    entry.itemLink = self.originalGetTradingHouseSearchResultItemLink(slotIndex)
-    entry.guildId = guildId
-    entry.page = currentPage
-    entry.purchased = false
-    return entry
 end
 
 function SearchTabWrapper:RebuildSearchResultsMasterList(guildId, numItemsOnPage, currentPage, hasMorePages)
+    self.numItemsOnPage = numItemsOnPage -- need to set this first because of how MM's deal display works
+    self.hasMorePages = hasMorePages
     local masterList = self.masterList
+    ZO_ClearTable(masterList)
     for i = 1, numItemsOnPage do
         masterList[i] = self:CreateResultEntry(i, guildId)
+        self:AddResultLinkToEntry(masterList[i]) -- need to add the link first because of how MM's deal display works
+        self:AddResultInfoToEntry(masterList[i])
     end
-    self.numItemsOnPage = numItemsOnPage
-    self.hasMorePages = hasMorePages
 end
 
 function SearchTabWrapper:PrintPurchaseMessageForEntry(entry)
     local count = entry.stackCount
     local seller = ZO_LinkHandler_CreateDisplayNameLink(entry.sellerName:gsub("|c.-$", "")) -- have to strip the stuff that MM is adding to the end
     local price = zo_strformat("<<1>> <<2>>", ZO_CurrencyControl_FormatCurrency(entry.price), iconMarkup)
-    local itemLink = entry.itemLink
+    local itemLink = entry.itemLinkBrackets
     local guildName = GetGuildName(entry.guildId)
     -- TRANSLATORS: chat message when an item is bought from the store. <<1>> is replaced with the item count, <<t:2>> with the item link, <<3>> with the seller name, <<4>> with price and <<5>> with the guild store name. e.g. You have bought 1x [Rosin] from sirinsidiator for 5000g in Imperial Trading Company
     local message = gettext("You have bought <<1>>x <<t:2>> from <<3>> for <<4>> in <<5>>", count, itemLink, seller, price, guildName)
@@ -782,10 +793,14 @@ function SearchTabWrapper:InitializeSearchResultMasterList(tradingHouseWrapper)
         end
     end
 
+    local function IsValidSlotIndex(slotIndex)
+        return not (type(slotIndex) ~= "number" or slotIndex < 1 or slotIndex > self.numItemsOnPage or not masterList[slotIndex]
+            or (not self.returnPurchasedEntries and self:IsTradingHouseSearchResultPurchased(slotIndex)))
+    end
+
     self.originalGetTradingHouseSearchResultItemInfo = GetTradingHouseSearchResultItemInfo
     GetTradingHouseSearchResultItemInfo = function(slotIndex)
-        if(type(slotIndex) ~= "number" or slotIndex < 1 or slotIndex > self.numItemsOnPage or not masterList[slotIndex]
-            or (not self.returnPurchasedEntries and self:IsTradingHouseSearchResultPurchased(slotIndex))) then
+        if(not IsValidSlotIndex(slotIndex)) then
             return MISSING_ICON, "", 0, 0, "", 0, 0, 0
         end
         local entry = masterList[slotIndex]
@@ -794,11 +809,11 @@ function SearchTabWrapper:InitializeSearchResultMasterList(tradingHouseWrapper)
 
     self.originalGetTradingHouseSearchResultItemLink = GetTradingHouseSearchResultItemLink
     GetTradingHouseSearchResultItemLink = function(slotIndex, linkStyle)
-        if(type(slotIndex) ~= "number" or slotIndex < 1 or slotIndex > self.numItemsOnPage or not masterList[slotIndex]
-            or (not self.returnPurchasedEntries and self:IsTradingHouseSearchResultPurchased(slotIndex))) then
+        if(not IsValidSlotIndex(slotIndex)) then
             return ""
         end
-        return masterList[slotIndex].itemLink
+        local entry = masterList[slotIndex]
+        return linkStyle == LINK_STYLE_BRACKETS and entry.itemLinkBrackets or entry.itemLinkDefault
     end
 end
 
