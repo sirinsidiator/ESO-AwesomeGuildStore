@@ -44,6 +44,19 @@ local function LoadSettings()
         minimizeChatOnOpen = true,
     }
 
+    local function RepairSaveData(saveData)
+        for key, value in pairs(defaultData) do
+            if(saveData[key] == nil) then
+                saveData[key] = value
+            end
+        end
+        for key, value in pairs(defaultData.searchLibrary) do
+            if(saveData.searchLibrary[key] == nil) then
+                saveData.searchLibrary[key] = value
+            end
+        end
+    end
+
     local function CreateSettingsDialog(saveData)
         local LAM = LibStub("LibAddonMenu-2.0")
         local panelData = {
@@ -442,6 +455,7 @@ local function LoadSettings()
     AwesomeGuildStore.defaultData = defaultData
 
     UpgradeSettings(saveData)
+    RepairSaveData(saveData)
 
     CreateSettingsDialog(saveData)
 
