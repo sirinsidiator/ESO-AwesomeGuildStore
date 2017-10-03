@@ -69,9 +69,9 @@ function ListingTabWrapper:InitializeListingSortHeaders(tradingHouseWrapper)
     sortHeaders:AddHeadersFromContainer()
     self.currentSortKey = self.saveData.listingSortField
     self.currentSortOrder = self.saveData.listingSortOrder
-    sortHeaders:SelectHeaderByKey(self.currentSortKey, ZO_SortHeaderGroup.SUPPRESS_CALLBACKS)
+    sortHeaders:SelectHeaderByKey(self.currentSortKey or TRADING_HOUSE_SORT_LISTING_TIME, ZO_SortHeaderGroup.SUPPRESS_CALLBACKS)
     if(not self.currentSortOrder) then -- call it a second time to invert the sort order
-        sortHeaders:SelectHeaderByKey(self.currentSortKey, ZO_SortHeaderGroup.SUPPRESS_CALLBACKS)
+        sortHeaders:SelectHeaderByKey(self.currentSortKey or TRADING_HOUSE_SORT_LISTING_TIME, ZO_SortHeaderGroup.SUPPRESS_CALLBACKS)
     end
 
     local originalScrollListCommit = ZO_ScrollList_Commit
@@ -304,7 +304,7 @@ function ListingTabWrapper:UpdateResultList()
     local list = TRADING_HOUSE.m_postedItemsList
     local scrollData = ZO_ScrollList_GetDataList(list)
     local sortFunctions = self.currentSortOrder and ascSortFunctions or descSortFunctions
-    table.sort(scrollData, sortFunctions[self.currentSortKey])
+    table.sort(scrollData, sortFunctions[self.currentSortKey or TRADING_HOUSE_SORT_LISTING_TIME])
     ZO_ScrollList_Commit(list)
 end
 
