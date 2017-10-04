@@ -64,15 +64,15 @@ function SearchLibrary:Initialize(saveData)
 	control:SetHandler("OnUpdate", function() if(resizing) then self:HandleResize() end end)
 	control:SetHandler("OnResizeStop", function() self:HandleResize() self:SavePosition() resizing = false end)
 
-	RegisterForEvent(EVENT_OPEN_TRADING_HOUSE, function()
-		if(saveData.isActive and TRADING_HOUSE:IsInSearchMode()) then
-			self:Show()
-		end
-	end)
-
-	RegisterForEvent(EVENT_CLOSE_TRADING_HOUSE, function()
-		self:Hide()
-	end)
+    self.fragment:RegisterCallback("StateChange", function(oldState, newState)
+        if(newState == SCENE_FRAGMENT_SHOWN) then
+            if(saveData.isActive and TRADING_HOUSE:IsInSearchMode()) then
+                self:Show()
+            else
+                self:Hide()
+            end
+        end
+    end)
 
 	ZO_PreHook(TRADING_HOUSE, "HandleTabSwitch", function(_, tabData)
 		local mode = tabData.descriptor
