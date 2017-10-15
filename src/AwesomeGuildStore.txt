@@ -93,8 +93,12 @@ guildstorelist/KioskList.lua
 guildstorelist/StoreList.lua
 guildstorelist/OwnerList.lua
 guildstorelist/GuildStoreList.xml
+guildstorelist/GuildList.xml
 guildstorelist/TraderListControl.lua
+guildstorelist/GuildListControl.lua
 guildstorelist/OwnerHistoryControl.lua
+guildstorelist/KioskHistoryControl.lua
+guildstorelist/GuildList.lua
 guildstorelist/GuildStoreList.lua
 SalesCategorySelector.lua
 AwesomeGuildStore.xml

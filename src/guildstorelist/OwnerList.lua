@@ -11,11 +11,41 @@ function OwnerList:New(...)
     return object
 end
 
+function OwnerList:AddTraderInfoToGuild(guildName, kiosk, week, isActive)
+    local data = self.guildList[guildName] or {
+        name = guildName,
+        kiosks = {},
+        history = {},
+        lastKiosk = nil,
+        lastVisitedWeek = 0,
+        numKiosks = 0,
+        hasActiveTrader = false
+    }
+    data.kiosks[kiosk] = true
+    data.history[week] = kiosk
+    data.numKiosks = data.numKiosks + 1
+    if(isActive) then
+        data.hasActiveTrader = true
+    end
+    if(data.lastVisitedWeek < week) then
+        data.lastKiosk = kiosk
+        data.lastVisitedWeek = week
+    end
+    self.guildList[guildName] = data
+end
+
 function OwnerList:Initialize(saveData)
     self.saveData = saveData
     local weekOrder = {}
-    for week in pairs(saveData) do
+    self.guildList = {}
+    local currentWeek = self:GetCurrentWeek()
+    for week, traders in pairs(saveData) do
         weekOrder[#weekOrder + 1] = week
+        for kiosk, guildName in pairs(traders) do
+            if(guildName ~= false) then
+                self:AddTraderInfoToGuild(guildName, kiosk, week, currentWeek == week)
+            end
+        end
     end
     table.sort(weekOrder, SortDesc)
     self.weekOrder = weekOrder
@@ -59,6 +89,7 @@ function OwnerList:SetCurrentOwner(kioskName, guildName)
         weekData[kioskName] = false
     elseif(guildName) then
         weekData[kioskName] = guildName
+        self:AddTraderInfoToGuild(guildName, kioskName, week, true)
     end
     self.saveData[week] = weekData
 end
@@ -87,4 +118,12 @@ function OwnerList:GetOwnerHistory(kioskName)
         end
     end
     return history
+end
+
+function OwnerList:GetAllGuilds()
+    return self.guildList
+end
+
+function OwnerList:GetGuildData(guildName)
+    return self.guildList[guildName]
 end

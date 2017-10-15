@@ -97,13 +97,16 @@ local function UpdateSaveData(saveData)
         saveData.kiosks = AwesomeGuildStore.KioskList.UpdateStoreIds(saveData.kiosks)
         saveData.version = 2
     end
-    if(saveData.version == 2) then
+    if(saveData.version <= 3) then
         local oldName, newName = "Vivec Outlaws Refuge", "Vivec City Outlaws Refuge"
         if(saveData.stores[oldName] and not saveData.stores[newName]) then
             saveData.stores[newName] = saveData.stores[oldName]:gsub(oldName, newName)
         end
         saveData.stores[oldName] = nil
-        saveData.version = 3
+        for traderName in pairs(saveData.kiosks) do
+            saveData.kiosks[traderName] = saveData.kiosks[traderName]:gsub(oldName, newName)
+        end
+        saveData.version = 4
     end
 end
 
@@ -323,6 +326,16 @@ local function InitializeStoreListWindow(saveData, kioskList, storeList, ownerLi
     end
     guildTradersScene.RefreshTraderList = RefreshTraderList
 
+    local function OpenListOnKiosk(kioskName)
+        traderList:RefreshData()
+        local data = traderList:GetKioskEntryInList(kioskName)
+        if(data) then
+            SetSelectedDetails(data)
+        end
+        MAIN_MENU_KEYBOARD:ShowScene(sceneName)
+    end
+    AwesomeGuildStore.OpenTraderListOnKiosk = OpenListOnKiosk
+
     local function RegisterListUpdate()
         EVENT_MANAGER:RegisterForUpdate(REFRESH_HANDLE, REFRESH_INTERVAL, RefreshTraderList)
     end
@@ -415,7 +428,8 @@ local function InitializeStoreListWindow(saveData, kioskList, storeList, ownerLi
 
     local function OnHistoryMouseUp(control, button, upInside)
         if(upInside) then
-        -- TODO select guild and show guild information scene
+            local data = ZO_ScrollList_GetData(control)
+            AwesomeGuildStore.OpenGuildListOnGuild(data.owner)
         end
     end
 
@@ -554,10 +568,12 @@ local function InitializeGuildStoreList(globalSaveData)
     local storeList = AwesomeGuildStore.StoreList:New(saveData.stores)
     local kioskList = AwesomeGuildStore.KioskList:New(saveData.kiosks)
     local guildTradersScene = InitializeStoreListWindow(saveData, kioskList, storeList, ownerList)
+    local guildList = AwesomeGuildStore.InitializeGuildList(saveData, kioskList, storeList, ownerList)
     AwesomeGuildStore.gsl = {
         ownerList = ownerList,
         storeList = storeList,
         kioskList = kioskList,
+        guildList = guildList
     }
 
     local function CollectStoresOnMap(mapName, mapIndex, zoneIndex, x, y)
