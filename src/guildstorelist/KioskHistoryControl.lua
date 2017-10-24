@@ -102,7 +102,13 @@ function KioskHistoryControl:BuildMasterList()
     local GetPoiLabel = AwesomeGuildStore.GetPoiLabel
 
     local guild = ownerList:GetGuildData(guildName)
+    local minWeek, maxWeek = 300099, 0
+    local weekWithKiosk = {}
     for yearAndWeek, kioskName in pairs(guild.history) do
+        minWeek = math.min(minWeek, yearAndWeek)
+        maxWeek = math.max(maxWeek, yearAndWeek)
+        weekWithKiosk[yearAndWeek] = true
+
         local startTime, endTime = ownerList:GetStartAndEndForWeek(yearAndWeek)
         local isoYear, isoWeek = LDT:SeparateIsoWeekAndYear(yearAndWeek)
         local startTimeString = startTime:Format("%Y-%m-%d %H:%M")
@@ -121,6 +127,37 @@ function KioskHistoryControl:BuildMasterList()
             kioskName = kioskName,
             locationLabel = string.format("%s - %s", zoneName, poi),
         }
+    end
+
+    local startWeek, endWeek, _
+    for yearAndWeek = minWeek, maxWeek do -- TODO: handle year changes *secondsInWeek?
+        if(not weekWithKiosk[yearAndWeek]) then
+            if(not startWeek) then
+                startWeek = yearAndWeek
+            end
+            endWeek = yearAndWeek
+        else
+            if(startWeek) then
+                local startTime, endTime = ownerList:GetStartAndEndForWeek(startWeek)
+                if(startWeek ~= endWeek) then
+                    _, endTime = ownerList:GetStartAndEndForWeek(endWeek)
+                end
+                local isoYear, isoWeek = LDT:SeparateIsoWeekAndYear(startWeek)
+                local startTimeString = startTime:Format("%Y-%m-%d %H:%M")
+                local endTimeString = endTime:Format("%Y-%m-%d %H:%M")
+                self.masterList[#self.masterList + 1] = {
+                    type = HISTORY_DATA,
+                    startTime = startTime,
+                    endTime = endTime,
+                    week = string.format("%dW%02d%s", isoYear, isoWeek, (startWeek ~= endWeek and "+" or "")),
+                    durationAndTime = string.format("%s - %s", startTimeString, endTimeString),
+                    kioskName = "-",
+                    locationLabel = "-",
+                }
+                startWeek = nil
+                endWeek = nil
+            end
+        end
     end
 end
 
