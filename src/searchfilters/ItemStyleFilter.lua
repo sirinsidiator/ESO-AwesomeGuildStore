@@ -78,7 +78,9 @@ local r, g, b = ZO_TOOLTIP_DEFAULT_COLOR:UnpackRGB()
 local newStyles = {37, 38}
 -- automatically fill in new styles if there are any
 for styleId = NEXT_UNASSIGNED_STYLE_ID, GetHighestItemStyleId() do
-    newStyles[#newStyles + 1] = styleId
+    if(GetItemStyleName(styleId) ~= "") then
+        newStyles[#newStyles + 1] = styleId
+    end
 end
 
 local STYLE_CATEGORIES = {
