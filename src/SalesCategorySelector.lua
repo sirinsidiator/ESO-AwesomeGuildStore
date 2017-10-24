@@ -221,6 +221,8 @@ local BACKPACK_TRADING_HOUSE_LAYOUT_FRAGMENT_BASIC = ZO_BackpackLayoutFragment:N
         sortByHeaderWidth = 600,
         sortByNameWidth = 341,
         additionalFilter = SalesCategoryFilter,
+        useSearchBar = true,
+        hideTabBar = true
     })
 
 local BACKPACK_TRADING_HOUSE_LAYOUT_FRAGMENT_ADVANCED = ZO_BackpackLayoutFragment:New(
@@ -232,6 +234,8 @@ local BACKPACK_TRADING_HOUSE_LAYOUT_FRAGMENT_ADVANCED = ZO_BackpackLayoutFragmen
         sortByHeaderWidth = 600,
         sortByNameWidth = 341,
         additionalFilter = SalesCategoryFilter,
+        useSearchBar = true,
+        hideTabBar = true
     })
 
 local function InitializeLibFilterHooks()
