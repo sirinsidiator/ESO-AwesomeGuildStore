@@ -1,4 +1,4 @@
-local myNAME, myVERSION = "libCommonInventoryFilters", 1.7
+local myNAME, myVERSION = "libCommonInventoryFilters", 1.8
 local libCIF = LibStub:NewLibrary(myNAME, myVERSION)
 if not libCIF then return end
 
@@ -70,6 +70,8 @@ end
 
 local function showSearchBoxes()
     -- new in 3.2: player inventory fragments set the search bar visible when the layout is applied
+    BACKPACK_DEFAULT_LAYOUT_FRAGMENT.layoutData.useSearchBar = true
+    BACKPACK_MENU_BAR_LAYOUT_FRAGMENT.layoutData.useSearchBar = true
     BACKPACK_MAIL_LAYOUT_FRAGMENT.layoutData.useSearchBar = true
     BACKPACK_PLAYER_TRADE_LAYOUT_FRAGMENT.layoutData.useSearchBar = true
     BACKPACK_STORE_LAYOUT_FRAGMENT.layoutData.useSearchBar = true
