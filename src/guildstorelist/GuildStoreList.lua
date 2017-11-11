@@ -92,22 +92,37 @@ local function GetUnitStoreIndex(unitTag)
     return BuildStoreIndex(mapName, locationIndex)
 end
 
+local IRREGULAR_TOOLTIP_HEADER = { -- TODO exceptions in other languages
+    -- English
+    ["Orsinium Outlaw Refuge"] = "Orsinium Outlaws Refuge",
+    -- French
+    ["refuge des hors-la-loi d'Orsinium"] = "refuge de hors-la-loi d'Orsinium",
+    -- already fixed, but we keep them to correct the save data
+    ["Vivec Outlaws Refuge"] = "Vivec City Outlaws Refuge",
+}
+
+local function UpdateStoreNames(saveData, oldName, newName)
+    if(saveData.stores[oldName] and not saveData.stores[newName]) then
+        saveData.stores[newName] = saveData.stores[oldName]:gsub(oldName, newName)
+    end
+    saveData.stores[oldName] = nil
+
+    for traderName in pairs(saveData.kiosks) do
+        saveData.kiosks[traderName] = saveData.kiosks[traderName]:gsub(oldName, newName)
+    end
+end
+
 local function UpdateSaveData(saveData)
     if(saveData.version == 1) then
         saveData.stores = AwesomeGuildStore.StoreList.UpdateStoreIds(saveData.stores)
         saveData.kiosks = AwesomeGuildStore.KioskList.UpdateStoreIds(saveData.kiosks)
         saveData.version = 2
     end
-    if(saveData.version <= 3) then
-        local oldName, newName = "Vivec Outlaws Refuge", "Vivec City Outlaws Refuge"
-        if(saveData.stores[oldName] and not saveData.stores[newName]) then
-            saveData.stores[newName] = saveData.stores[oldName]:gsub(oldName, newName)
+    if(saveData.version < 5) then
+        for oldName, newName in pairs(IRREGULAR_TOOLTIP_HEADER) do
+            UpdateStoreNames(saveData, oldName, newName)
         end
-        saveData.stores[oldName] = nil
-        for traderName in pairs(saveData.kiosks) do
-            saveData.kiosks[traderName] = saveData.kiosks[traderName]:gsub(oldName, newName)
-        end
-        saveData.version = 4
+        saveData.version = 5
     end
 end
 
@@ -518,10 +533,6 @@ end
 local function IsUndergroundKiosk()
     return GetMapContentType() == MAP_CONTENT_DUNGEON
 end
-
-local IRREGULAR_TOOLTIP_HEADER = { -- TODO exceptions in other languages
-    ["Orsinium Outlaw Refuge"] = "Orsinium Outlaws Refuge",
-}
 
 local function GetMapLocationName(locationIndex)
     local name = GetMapLocationTooltipHeader(locationIndex)
