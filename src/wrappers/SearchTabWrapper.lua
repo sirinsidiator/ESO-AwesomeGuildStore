@@ -206,14 +206,18 @@ function SearchTabWrapper:InitializePageFiltering(tradingHouseWrapper)
         end
     end
 
+    local wasAlreadyCounted = {}
     local OriginalGetTradingHouseSearchResultItemInfo
     local FakeGetTradingHouseSearchResultItemInfo = function(index)
         local icon, name, quality, stackCount, sellerName, timeRemaining, purchasePrice = OriginalGetTradingHouseSearchResultItemInfo(index)
 
         if(name ~= "" and stackCount > 0) then
-            itemCount = itemCount + 1
+            local shouldCount = not wasAlreadyCounted[index]
+            wasAlreadyCounted[index] = true
+
+            if(shouldCount) then itemCount = itemCount + 1 end
             if(FilterPageResult(index, icon, name, quality, stackCount, sellerName, timeRemaining, purchasePrice)) then
-                filteredItemCount = filteredItemCount + 1
+                if(shouldCount) then filteredItemCount = filteredItemCount + 1 end
                 return icon, name, quality, stackCount, sellerName, timeRemaining, purchasePrice
             end
         end
@@ -230,6 +234,9 @@ function SearchTabWrapper:InitializePageFiltering(tradingHouseWrapper)
         local isFiltering = BeforeRebuildSearchResultsPage(tradingHouseWrapper)
         if(isFiltering and not searchTabWrapper.suppressLocalFilters) then
             itemCount, filteredItemCount = 0, 0
+            for i = 1, self.m_numItemsOnPage do
+                wasAlreadyCounted[i] = false
+            end
             OriginalGetTradingHouseSearchResultItemInfo = GetTradingHouseSearchResultItemInfo
             GetTradingHouseSearchResultItemInfo = FakeGetTradingHouseSearchResultItemInfo
         end
@@ -239,7 +246,7 @@ function SearchTabWrapper:InitializePageFiltering(tradingHouseWrapper)
         AfterRebuildSearchResultsPage(tradingHouseWrapper)
         if(isFiltering and not searchTabWrapper.suppressLocalFilters) then
             GetTradingHouseSearchResultItemInfo = OriginalGetTradingHouseSearchResultItemInfo
-            self.m_resultCount:SetText(zo_strformat(GetString(SI_TRADING_HOUSE_RESULT_COUNT) .. " (<<2>>)", itemCount, filteredItemCount))
+            searchTabWrapper:UpdateItemsLabels(self, itemCount, filteredItemCount)
 
             local shouldHide = (filteredItemCount ~= 0 or self.m_search:HasPreviousPage() or self.m_search:HasNextPage())
             self.m_noItemsLabel:SetHidden(shouldHide)
@@ -250,6 +257,10 @@ function SearchTabWrapper:InitializePageFiltering(tradingHouseWrapper)
             end
         end
     end)
+end
+
+function SearchTabWrapper:UpdateItemsLabels(tradingHouse, itemCount, filteredItemCount)
+    tradingHouse.m_resultCount:SetText(zo_strformat(GetString(SI_TRADING_HOUSE_RESULT_COUNT) .. " (<<2>>)", itemCount, filteredItemCount))
 end
 
 function SearchTabWrapper:InitializeFilters(tradingHouseWrapper)
