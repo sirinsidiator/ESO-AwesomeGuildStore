@@ -1,5 +1,5 @@
 local LIB_IDENTIFIER = "LibMapPing"
-local lib = LibStub:NewLibrary(LIB_IDENTIFIER, 5)
+local lib = LibStub:NewLibrary(LIB_IDENTIFIER, 6)
 
 if not lib then
     return -- already loaded and no upgrade necessary
@@ -54,7 +54,10 @@ end
 -- TODO keep an eye on worldmap.lua for changes
 local function HandleMapPing(eventCode, pingEventType, pingType, pingTag, x, y, isPingOwner)
     local key = GetKey(pingType, pingTag)
-    lib.pendingPing[key] = nil
+    local data = lib.pendingPing[key]
+    if data and data[1] == pingEventType then
+        lib.pendingPing[key] = nil
+    end
     if(pingEventType == PING_EVENT_ADDED) then
         lib.cm:FireCallbacks("BeforePingAdded", pingType, pingTag, x, y, isPingOwner)
         lib.pingState[key] = lib.MAP_PING_SET
@@ -80,8 +83,13 @@ end
 local function HandleMapPingEventNotFired()
     EVENT_MANAGER:UnregisterForUpdate(LIB_IDENTIFIER)
     for key, data in pairs(lib.pendingPing) do
-        local pingEventType, pingType, x, y = unpack(data)
+        local pingEventType, pingType, x, y, zoneIndex = unpack(data)
         local pingTag = GetPingTagFromType(pingType)
+        -- The event is delayed and thus may not match the current map anymore.
+        if GetCurrentMapZoneIndex() ~= zoneIndex then
+            -- The coords do not match the current map. Do not draw a pin.
+            lib:SuppressPing(pingType, pingTag) -- Will be set to zero afterwards, see below.
+        end
         HandleMapPing(0, pingEventType, pingType, pingTag, x, y, true)
         lib.pendingPing[key] = nil
         lib.mutePing[key] = 0
@@ -99,8 +107,8 @@ local function CustomPingMap(pingType, mapType, x, y)
     if(pingType == MAP_PIN_TYPE_PING and not IsUnitGrouped("player")) then return end
     local key = GetKey(pingType)
     lib.pingState[key] = lib.MAP_PING_SET_PENDING
-    ResetEventWatchdog(key, PING_EVENT_ADDED, pingType, x, y)
-    originalPingMap(pingType, mapType, x, y)
+    ResetEventWatchdog(key, PING_EVENT_ADDED, pingType, x, y, GetCurrentMapZoneIndex())
+    return originalPingMap(pingType, mapType, x, y)
 end
 
 local function CustomGetMapPlayerWaypoint()
@@ -127,8 +135,8 @@ end
 local function CustomRemovePlayerWaypoint()
     local key = GetKey(MAP_PIN_TYPE_PLAYER_WAYPOINT, MAP_PIN_TAG_PLAYER_WAYPOINT)
     lib.pingState[key] = lib.MAP_PING_NOT_SET_PENDING
-    ResetEventWatchdog(key, PING_EVENT_REMOVED, MAP_PIN_TYPE_PLAYER_WAYPOINT, 0, 0)
-    originalRemovePlayerWaypoint()
+    ResetEventWatchdog(key, PING_EVENT_REMOVED, MAP_PIN_TYPE_PLAYER_WAYPOINT, 0, 0, GetCurrentMapZoneIndex())
+    return originalRemovePlayerWaypoint()
 end
 
 local function CustomRemoveMapPing()
