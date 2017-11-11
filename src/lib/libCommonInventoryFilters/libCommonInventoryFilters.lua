@@ -1,4 +1,4 @@
-local myNAME, myVERSION = "libCommonInventoryFilters", 1.8
+local myNAME, myVERSION = "libCommonInventoryFilters", 1.9
 local libCIF = LibStub:NewLibrary(myNAME, myVERSION)
 if not libCIF then return end
 
@@ -156,7 +156,7 @@ local function onPlayerActivated(eventCode)
                 if(not savedPlayerInventorySearchBoxAnchor[1]) then
                     savedPlayerInventorySearchBoxAnchor = {ZO_PlayerInventorySearchBox:GetAnchor(0)}
                     ZO_PlayerInventorySearchBox:ClearAnchors()
-                    ZO_PlayerInventorySearchBox:SetAnchor(BOTTOMLEFT, nil, TOPLEFT, 36, -8)
+                    ZO_PlayerInventorySearchBox:SetAnchor(TOPLEFT, ZO_SharedRightPanelBackground, TOPLEFT, 16, 11)
                 end
                 if(not savedCraftBagSearchBoxAnchor[1]) then
                     savedCraftBagSearchBoxAnchor = {ZO_CraftBagSearchBox:GetAnchor(0)}
