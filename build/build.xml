@@ -2,7 +2,7 @@
 <project name="AwesomeGuildStore" default="copyToAddonFolder" basedir=".">
 	<property name="version" value="0" />
 
-	<property name="addonhome" location="${user.home}/Documents/Elder Scrolls Online/liveeu/AddOns" />
+	<property name="addonhome" location="${user.home}/Documents/Elder Scrolls Online/live/AddOns" />
 	<property name="addondir" location="${addonhome}/${ant.project.name}" />
 	<property name="srcdir" location="${basedir}/../src" />
 	<property name="tempdir" location="${basedir}/../temp" />
