@@ -1,6 +1,7 @@
 local gettext = LibStub("LibGetText")("AwesomeGuildStore").gettext
 local RegisterForEvent = AwesomeGuildStore.RegisterForEvent
 local UnregisterForEvent = AwesomeGuildStore.UnregisterForEvent
+local Print = AwesomeGuildStore.Print
 local ToggleButton = AwesomeGuildStore.ToggleButton
 local ClearCallLater = AwesomeGuildStore.ClearCallLater
 local GetItemLinkWritCount = AwesomeGuildStore.GetItemLinkWritCount
@@ -490,7 +491,7 @@ function SellTabWrapper:InitializeCraftingBag(tradingHouseWrapper)
                     ZO_Alert(UI_ALERT_CATEGORY_ERROR, SOUNDS.NEGATIVE_CLICK, message)
                 else
                     PlaySound(SOUNDS.NEGATIVE_CLICK)
-                    d("[AwesomeGuildStore] Could not create temporary stack", error)
+                    Print("Could not create temporary stack", error)
                 end
             end)
         else
@@ -657,7 +658,7 @@ function SellTabWrapper:InitializeListedNotification(tradingHouseWrapper)
         if(responseType == TRADING_HOUSE_RESULT_POST_PENDING and result == TRADING_HOUSE_RESULT_SUCCESS) then
             self.tradingHouse:ClearPendingPost()
             if(saveData.listedNotification and listedMessage ~= "") then
-                df("[AwesomeGuildStore] %s", listedMessage)
+                Print(listedMessage)
                 listedMessage = ""
             end
         end

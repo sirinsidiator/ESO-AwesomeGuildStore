@@ -4,6 +4,7 @@ local IsLocationVisible = AwesomeGuildStore.IsLocationVisible
 local IsCurrentMapZoneMap = AwesomeGuildStore.IsCurrentMapZoneMap
 local GetKioskName = AwesomeGuildStore.GetKioskName
 local RegisterForEvent = AwesomeGuildStore.RegisterForEvent
+local Print = AwesomeGuildStore.Print
 local gettext = LibStub("LibGetText")("AwesomeGuildStore").gettext
 
 local KIOSK_ICON = "/esoui/art/icons/servicemappins/servicepin_guildkiosk.dds"
@@ -560,7 +561,7 @@ local function InitializeGuildStoreList(globalSaveData)
         saveData.language = lang
     end
     if(lang ~= saveData.language) then
-        d("[AwesomeGuildStore] Cannot initialize guild trader list. Either clear all data in the settings or switch back to your original language.")
+        Print("Cannot initialize guild trader list. Either clear all data in the settings or switch back to your original language.")
         return
     end
 

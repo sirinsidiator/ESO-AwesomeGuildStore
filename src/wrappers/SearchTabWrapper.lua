@@ -3,6 +3,7 @@ local ToggleButton = AwesomeGuildStore.ToggleButton
 local ExecuteSearchOperation = AwesomeGuildStore.ExecuteSearchOperation
 local ClearCallLater = AwesomeGuildStore.ClearCallLater
 local GetItemLinkWritCount = AwesomeGuildStore.GetItemLinkWritCount
+local Print = AwesomeGuildStore.Print
 
 local SearchTabWrapper = ZO_Object:Subclass()
 AwesomeGuildStore.SearchTabWrapper = SearchTabWrapper
@@ -263,7 +264,7 @@ function SearchTabWrapper:InitializeFilters(tradingHouseWrapper)
     SLASH_COMMANDS["/ags"] = function(command) -- TODO: make proper command handler once we have more
         if(command == "reset") then
             searchLibrary:ResetPosition()
-            d("[AwesomeGuildStore] Default search library position restored")
+            Print("Default search library position restored")
     end
     end
 
@@ -688,7 +689,7 @@ function SearchTabWrapper:PrintPurchaseMessageForEntry(entry)
     local guildName = entry.guildName
     -- TRANSLATORS: chat message when an item is bought from the store. <<1>> is replaced with the item count, <<t:2>> with the item link, <<3>> with the seller name, <<4>> with price and <<5>> with the guild store name. e.g. You have bought 1x [Rosin] from sirinsidiator for 5000g in Imperial Trading Company
     local message = gettext("You have bought <<1>>x <<t:2>> from <<3>> for <<4>> in <<5>>", count, itemLink, seller, price, guildName)
-    df("[AwesomeGuildStore] %s", message)
+    Print(message)
 end
 
 function SearchTabWrapper:IsTradingHouseSearchResultPurchased(slotIndex)

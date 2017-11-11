@@ -1,5 +1,6 @@
 local gettext = LibStub("LibGetText")("AwesomeGuildStore").gettext
 local RegisterForEvent = AwesomeGuildStore.RegisterForEvent
+local Print = AwesomeGuildStore.Print
 
 local TRADING_HOUSE_SORT_LISTING_NAME = 1
 local TRADING_HOUSE_SORT_LISTING_PRICE = 2
@@ -259,7 +260,7 @@ function ListingTabWrapper:InitializeCancelNotification(tradingHouseWrapper)
     RegisterForEvent(EVENT_TRADING_HOUSE_RESPONSE_RECEIVED, function(_, responseType, result)
         if(responseType == TRADING_HOUSE_RESULT_CANCEL_SALE_PENDING and result == TRADING_HOUSE_RESULT_SUCCESS) then
             if(saveData.cancelNotification and cancelMessage ~= "") then
-                df("[AwesomeGuildStore] %s", cancelMessage)
+                Print(cancelMessage)
                 cancelMessage = ""
             end
         end

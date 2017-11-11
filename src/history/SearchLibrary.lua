@@ -1,5 +1,6 @@
 local gettext = LibStub("LibGetText")("AwesomeGuildStore").gettext
 local RegisterForEvent = AwesomeGuildStore.RegisterForEvent
+local Print = AwesomeGuildStore.Print
 local ToggleButton = AwesomeGuildStore.ToggleButton
 local FILTER_PRESETS = AwesomeGuildStore.FILTER_PRESETS
 local SUBFILTER_PRESETS = AwesomeGuildStore.SUBFILTER_PRESETS
@@ -288,8 +289,8 @@ function SearchLibrary:SaveEditBoxChanges()
 end
 
 function SearchLibrary:RegisterFilter(filter)
-	if(not filter or not filter.type) then d("[AwesomeGuildStore] Warning: Invalid filter type") return end
-	if(self.filterByType[filter.type]) then d("[AwesomeGuildStore] Warning: Filter type already registered") return end
+	if(not filter or not filter.type) then Print("Warning: Invalid filter type") return end
+	if(self.filterByType[filter.type]) then Print("Warning: Filter type already registered") return end
 
 	self.filters[#self.filters + 1] = filter
 	self.filterByType[filter.type] = filter

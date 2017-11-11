@@ -1,7 +1,7 @@
 local function LoadSettings()
     local gettext = LibStub("LibGetText")("AwesomeGuildStore").gettext
     local defaultData = {
-        version = 22,
+        version = 23,
         lastGuildName = "",
         keepFiltersOnClose = true,
         oldQualitySelectorBehavior = false,
@@ -42,6 +42,7 @@ local function LoadSettings()
         resetFiltersOnExit = false,
         keepPurchasedResultsInList = true,
         minimizeChatOnOpen = true,
+        shortMessagePrefix = false
     }
 
     local function RepairSaveData(saveData)
@@ -70,6 +71,19 @@ local function LoadSettings()
         }
         local panel = LAM:RegisterAddonPanel("AwesomeGuildStoreOptions", panelData)
         local optionsData = {}
+        optionsData[#optionsData + 1] = {
+            type = "checkbox",
+            -- TRANSLATORS: label for an entry in the addon settings
+            name = gettext("Short prefix for chat messages"),
+            -- TRANSLATORS: tooltip text for an entry in the addon settings
+            tooltip = gettext("When activated, all chat messages will be prefixed with [AGS] instead of [AwesomeGuildStore]."),
+            getFunc = function() return saveData.shortMessagePrefix end,
+            setFunc = function(value)
+                saveData.shortMessagePrefix = value
+                AwesomeGuildStore.SetMessagePrefix(value)
+            end,
+            default = defaultData.shortMessagePrefix,
+        }
         optionsData[#optionsData + 1] = {
             type = "checkbox",
             -- TRANSLATORS: label for an entry in the addon settings
@@ -446,6 +460,10 @@ local function LoadSettings()
             saveData.keepPurchasedResultsInList = defaultData.keepPurchasedResultsInList
             saveData.minimizeChatOnOpen = defaultData.minimizeChatOnOpen
             saveData.version = 22
+        end
+        if(saveData.version == 22) then
+            saveData.shortMessagePrefix = defaultData.shortMessagePrefix
+            saveData.version = 23
         end
     end
 

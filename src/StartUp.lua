@@ -91,6 +91,26 @@ AwesomeGuildStore:RegisterOnOpenSearchTabCallback(function(...) CALLBACK_MANAGER
 AwesomeGuildStore:RegisterOnCloseSearchTabCallback(function(...) CALLBACK_MANAGER:FireCallbacks(AwesomeGuildStore.OnCloseSearchTabCallbackName, ...) end)
 AwesomeGuildStore:RegisterOnInitializeFiltersCallback(function(...) CALLBACK_MANAGER:FireCallbacks(AwesomeGuildStore.OnInitializeFiltersCallbackName, ...) end)
 
+do
+    local LONG_PREFIX = "AwesomeGuildStore"
+    local SHORT_PREFIX = "AGS"
+
+    local prefix = LONG_PREFIX 
+    local function SetMessagePrefix(isShort)
+        prefix = isShort and SHORT_PREFIX or LONG_PREFIX 
+    end
+
+    local function Print(message, ...)
+        if(select("#", ...) > 0) then
+            message = message:format(...)
+        end
+        df("[%s] %s", prefix, message)
+    end
+
+    AwesomeGuildStore.Print = Print
+    AwesomeGuildStore.SetMessagePrefix = SetMessagePrefix
+end
+
 local function IsSameAction(actionName, layerIndex, categoryIndex, actionIndex)
     local targetTayerIndex, targetCategoryIndex, targetActionIndex = GetActionIndicesFromName(actionName)
     return not (layerIndex ~= targetTayerIndex or categoryIndex ~= targetCategoryIndex or actionIndex ~= targetActionIndex)
@@ -98,6 +118,7 @@ end
 
 OnAddonLoaded(function()
     local saveData = AwesomeGuildStore.LoadSettings()
+    AwesomeGuildStore.SetMessagePrefix(saveData.shortMessagePrefix)
     if(saveData.guildTraderListEnabled) then
         AwesomeGuildStore.InitializeGuildStoreList(saveData)
     end
