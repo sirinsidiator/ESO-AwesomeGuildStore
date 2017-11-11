@@ -33,20 +33,14 @@ function KnownMotifFilter:BeforeRebuildSearchResultsPage(tradingHouseWrapper)
 	return (self.showUnknown ~= self.showKnown)
 end
 
--- TODO: this is just a workaround until ZOS fixes these exotic motif books; remove once it works
+-- this is just a workaround until ZOS fixes these motif books; can be removed once it works
 local EXOTIC_BOOK_DATA = {
-	{ -- mercenary motif
-		achievementId = 1348,
-		bookId = 64715,
-		chapterStartId = 64716,
-		chapterEndId = 64729,
-	},
-	{ -- ancient orc
-		achievementId = 1341,
-		bookId = 69527,
-		chapterStartId = 69528,
-		chapterEndId = 69541,
-	}
+    { -- ebonshadow
+        achievementId = 2045,
+        bookId = 132581,
+        chapterStartId = 132582,
+        chapterEndId = 132595,
+    }
 }
 
 local function TestMotif(motifData, link)
@@ -68,6 +62,7 @@ local function IsExoticMotifKnown(link)
 	end
 	return false
 end
+AwesomeGuildStore.IsExoticMotifKnown = IsExoticMotifKnown
 
 function KnownMotifFilter:FilterPageResult(index, icon, name, quality, stackCount, sellerName, timeRemaining, purchasePrice)
 	local itemLink = GetTradingHouseSearchResultItemLink(index, LINK_STYLE_BRACKETS)
