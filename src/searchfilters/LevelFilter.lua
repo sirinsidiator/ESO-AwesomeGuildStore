@@ -53,7 +53,7 @@ function LevelFilter:InitializeControls(name, tradingHouseWrapper)
     local maxLevel = common:GetNamedChild("MaxLevel")
     maxLevel:SetParent(container)
 
-    -- TRANSLATORS: tooltip text for the quantity selection buttons on the sell tab
+    -- TRANSLATORS: tooltip text for the set to level filter's "set to level" button on the sell tab
     local charLevelButtonLabel = gettext("Set To Character Level")
     local charLevelButtonLabel = ToggleButton:New(container, "$(parent)CharLevelButton", SET_LEVEL_TEXTURE, 0, 0, BUTTON_SIZE, BUTTON_SIZE, charLevelButtonLabel)
     charLevelButtonLabel.control:ClearAnchors()
@@ -61,10 +61,10 @@ function LevelFilter:InitializeControls(name, tradingHouseWrapper)
     charLevelButtonLabel.HandlePress = function(button)
         self:Reset(SKIP_REFRESH)
         local level = GetUnitLevel("player")
-        if(level < GetMaxLevel()) then
+        if(level < MAX_LEVEL) then
             self:SetValues(level, level)
         else
-            local cp = math.min(GetChampionPointsPlayerProgressionCap(), GetUnitChampionPoints("player"))
+            local cp = math.min(MAX_POINTS, GetUnitChampionPoints("player"))
             tradingHouse:ToggleLevelRangeMode(SKIP_REFRESH)
             self:SetValues(cp, cp)
         end
