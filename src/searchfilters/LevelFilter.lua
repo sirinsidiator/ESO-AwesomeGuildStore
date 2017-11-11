@@ -1,6 +1,7 @@
 local gettext = LibStub("LibGetText")("AwesomeGuildStore").gettext
 local MinMaxRangeSlider = AwesomeGuildStore.MinMaxRangeSlider
 local FilterBase = AwesomeGuildStore.FilterBase
+local ToggleButton = AwesomeGuildStore.ToggleButton
 
 local LevelFilter = FilterBase:Subclass()
 AwesomeGuildStore.LevelFilter = LevelFilter
@@ -11,6 +12,9 @@ local MIN_POINTS = 10
 local MAX_POINTS = GetChampionPointsPlayerProgressionCap()
 local LINE_SPACING = 4
 local LEVEL_FILTER_TYPE_ID = 3
+local SET_LEVEL_TEXTURE = "EsoUI/Art/Inventory/inventory_currencyTab_onCharacter_%s.dds"
+local BUTTON_SIZE = 32
+local SKIP_REFRESH = true
 
 function LevelFilter:New(name, tradingHouseWrapper, ...)
     return FilterBase.New(self, LEVEL_FILTER_TYPE_ID, name, tradingHouseWrapper, ...)
@@ -48,6 +52,24 @@ function LevelFilter:InitializeControls(name, tradingHouseWrapper)
 
     local maxLevel = common:GetNamedChild("MaxLevel")
     maxLevel:SetParent(container)
+
+    -- TRANSLATORS: tooltip text for the quantity selection buttons on the sell tab
+    local charLevelButtonLabel = gettext("Set To Character Level")
+    local charLevelButtonLabel = ToggleButton:New(container, "$(parent)CharLevelButton", SET_LEVEL_TEXTURE, 0, 0, BUTTON_SIZE, BUTTON_SIZE, charLevelButtonLabel)
+    charLevelButtonLabel.control:ClearAnchors()
+    charLevelButtonLabel.control:SetAnchor(LEFT, maxLevel, RIGHT, 5, 0)
+    charLevelButtonLabel.HandlePress = function(button)
+        self:Reset(SKIP_REFRESH)
+        local level = GetUnitLevel("player")
+        if(level < GetMaxLevel()) then
+            self:SetValues(level, level)
+        else
+            local cp = math.min(GetChampionPointsPlayerProgressionCap(), GetUnitChampionPoints("player"))
+            tradingHouse:ToggleLevelRangeMode(SKIP_REFRESH)
+            self:SetValues(cp, cp)
+        end
+        self:RefreshDisplay()
+    end
 
     self.minLevelBox =  common:GetNamedChild("MinLevelBox")
     self.maxLevelBox = common:GetNamedChild("MaxLevelBox")
@@ -125,10 +147,23 @@ function LevelFilter:InitializeHandlers(tradingHouseWrapper)
     minLevelBox:SetHandler("OnFocusLost", UpdateSliderFromTextBox)
     maxLevelBox:SetHandler("OnFocusLost", UpdateSliderFromTextBox)
 
-    tradingHouseWrapper:Wrap("ToggleLevelRangeMode", function(originalToggleLevelRangeMode, ...)
-        originalToggleLevelRangeMode(...)
-        self.currentRange = self.range[tradingHouse.m_levelRangeFilterType]
-        self:RefreshDisplay()
+    tradingHouseWrapper:Wrap("ToggleLevelRangeMode", function(originalToggleLevelRangeMode, tradingHouse, skipRefresh)
+        originalToggleLevelRangeMode(tradingHouse)
+        if(not skipRefresh) then
+            self:RefreshDisplay()
+        end
+    end)
+
+    local stateMap = {
+        [BSTATE_NORMAL] = TRADING_HOUSE_FILTER_TYPE_LEVEL,
+        [BSTATE_PRESSED] = TRADING_HOUSE_FILTER_TYPE_CHAMPION_POINTS,
+    }
+
+    ZO_PreHook(tradingHouse.m_levelRangeToggle, "SetState", function(_, state)
+        local type = stateMap[state]
+        if(type) then
+            self.currentRange = self.range[type]
+        end
     end)
 
     ZO_PreHook(tradingHouse.m_search, "InternalExecuteSearch", function(search)
@@ -194,7 +229,7 @@ function LevelFilter:SetWidth(width)
     self.slider:UpdateVisuals()
 end
 
-function LevelFilter:Reset()
+function LevelFilter:Reset(skipRefresh)
     self.tradingHouse.m_levelRangeFilterType = TRADING_HOUSE_FILTER_TYPE_LEVEL
     self.tradingHouse.m_levelRangeToggle:SetState(BSTATE_NORMAL, false)
     self.tradingHouse.m_levelRangeLabel:SetText(GetString(SI_TRADING_HOUSE_BROWSE_LEVEL_RANGE_LABEL))
@@ -205,7 +240,9 @@ function LevelFilter:Reset()
     self.range[TRADING_HOUSE_FILTER_TYPE_CHAMPION_POINTS].currentMin = nil
     self.range[TRADING_HOUSE_FILTER_TYPE_CHAMPION_POINTS].currentMax = nil
 
-    self:RefreshDisplay()
+    if(not skipRefresh) then
+        self:RefreshDisplay()
+    end
 end
 
 function LevelFilter:IsDefault()
