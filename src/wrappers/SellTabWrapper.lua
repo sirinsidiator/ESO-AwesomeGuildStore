@@ -376,7 +376,7 @@ function SellTabWrapper:InitializeCraftingBag(tradingHouseWrapper)
             end
             actionType = "primary"
         end
-        oAddSlotAction(slotActions, actionStringId, actionCallback, actionType, visibilityFunction, options)
+        return oAddSlotAction(slotActions, actionStringId, actionCallback, actionType, visibilityFunction, options)
     end
 
     RegisterForEvent(EVENT_TRADING_HOUSE_PENDING_ITEM_UPDATE, function(_, slotId, isPending)
