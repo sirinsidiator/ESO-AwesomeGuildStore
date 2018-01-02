@@ -40,6 +40,12 @@ local EXOTIC_BOOK_DATA = {
         bookId = 132581,
         chapterStartId = 132582,
         chapterEndId = 132595,
+    },
+    { -- apostle
+        achievementId = 2044,
+        bookId = 132549,
+        chapterStartId = 132550,
+        chapterEndId = 132563,
     }
 }
 
