@@ -43,8 +43,9 @@
 		<copy todir="${addondir}">
 			<fileset dir="${srcdir}" />
 		</copy>
-		<replace file="${addondir}/${ant.project.name}.txt" token="VERSION_NUMBER" value="development" />
-		<replace file="${addondir}/Settings.lua" token="VERSION_NUMBER" value="development" />
+		<replace file="${addondir}/${ant.project.name}.txt" token="@VERSION_NUMBER@" value="development" />
+		<replace file="${addondir}/${ant.project.name}.txt" token="@API_VERSION@" value="${eso.api}" />
+		<replace file="${addondir}/Settings.lua" token="@VERSION_NUMBER@" value="development" />
 	</target>
 
 	<target name="createArchive" depends="getIsCustomVersion,getCustomVersion,getVersion">
@@ -54,8 +55,9 @@
 			<fileset dir="${srcdir}" />
 		</copy>
 
-		<replace file="${tempdir}/${ant.project.name}/${ant.project.name}.txt" token="VERSION_NUMBER" value="${finalVersion}" />
-		<replace file="${tempdir}/${ant.project.name}/Settings.lua" token="VERSION_NUMBER" value="${finalVersion}" />
+		<replace file="${tempdir}/${ant.project.name}/${ant.project.name}.txt" token="@VERSION_NUMBER@" value="${finalVersion}" />
+		<replace file="${tempdir}/${ant.project.name}/${ant.project.name}.txt" token="@API_VERSION@" value="${eso.api}" />
+		<replace file="${tempdir}/${ant.project.name}/Settings.lua" token="@VERSION_NUMBER@" value="${finalVersion}" />
 
 		<zip destfile="${targetdir}/${ant.project.name}v${fileVersion}.zip">
 			<fileset dir="${tempdir}" />
