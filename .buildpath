@@ -2,6 +2,5 @@
 <buildpath>
 	<buildpathentry kind="src" path="src"/>
 	<buildpathentry kind="src" path="test"/>
-	<buildpathentry combineaccessrules="false" kind="prj" path="/luaunit"/>
-	<buildpathentry kind="con" path="org.eclipse.ldt.ExecutionEnvironmentContainer/esolua/100019"/>
+	<buildpathentry kind="con" path="org.eclipse.ldt.ExecutionEnvironmentContainer/esolua/100021"/>
 </buildpath>
