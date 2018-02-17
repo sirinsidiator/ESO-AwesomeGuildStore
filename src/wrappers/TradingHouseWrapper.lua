@@ -45,11 +45,6 @@ function TradingHouseWrapper:Initialize(saveData)
     RegisterForEvent(EVENT_OPEN_TRADING_HOUSE, function()
         self:SetInterceptInventoryItemClicks(false)
         self:ResetSalesCategoryFilter()
-        if(saveData.autoSearch) then
-            zo_callLater(function() -- TODO: put this in the right spot so that we don't need a callLater
-                searchTab:Search()
-            end, 500)
-        end
         if(CollectGuildKiosk) then
             CollectGuildKiosk()
         end
@@ -65,6 +60,16 @@ function TradingHouseWrapper:Initialize(saveData)
         for mode, tab in next, self.modeToTab do
             tab:RunInitialSetup(self)
         end
+
+        RegisterForEvent(EVENT_TRADING_HOUSE_STATUS_RECEIVED, function()
+            if(saveData.autoSearch) then
+                -- we can't call it inside the event handler as it would trigger an alert
+                -- instead we call it in the next frame via zo_callLater
+                zo_callLater(function()
+                    searchTab:Search()
+                end, 0)
+            end
+        end)
 
         if(not saveData.minimizeChatOnOpen) then
             TRADING_HOUSE_SCENE:RemoveFragment(MINIMIZE_CHAT_FRAGMENT)
