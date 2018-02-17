@@ -97,6 +97,9 @@ local IRREGULAR_TOOLTIP_HEADER = { -- TODO exceptions in other languages
     ["Orsinium Outlaw Refuge"] = "Orsinium Outlaws Refuge",
     -- French
     ["refuge des hors-la-loi d'Orsinium"] = "refuge de hors-la-loi d'Orsinium",
+    -- German
+    ["Knurr'Kha-Unterschlupf"] = "Knurr'kha-Unterschlupf",
+    ["Sturmfeste-Unterschlupf"] = "Sturmfeste-Unterschlupft",
     -- already fixed, but we keep them to correct the save data
     ["Vivec Outlaws Refuge"] = "Vivec City Outlaws Refuge",
 }
