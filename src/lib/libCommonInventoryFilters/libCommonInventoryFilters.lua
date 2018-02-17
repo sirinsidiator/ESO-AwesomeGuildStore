@@ -1,4 +1,4 @@
-local myNAME, myVERSION = "libCommonInventoryFilters", 1.9
+local myNAME, myVERSION = "libCommonInventoryFilters", 1.10
 local libCIF = LibStub:NewLibrary(myNAME, myVERSION)
 if not libCIF then return end
 
@@ -14,9 +14,14 @@ local function enableGuildStoreSellFilters()
     tradingHouseLayout.backpackOffsetY = 96
 
     local originalFilter = tradingHouseLayout.additionalFilter
-
-    function tradingHouseLayout.additionalFilter(slot)
-        return originalFilter(slot) and not IsItemBound(slot.bagId, slot.slotIndex)
+    if originalFilter then
+        function tradingHouseLayout.additionalFilter(slot)
+            return originalFilter(slot) and not IsItemBound(slot.bagId, slot.slotIndex)
+        end
+    else
+        function tradingHouseLayout.additionalFilter(slot)
+            return not IsItemBound(slot.bagId, slot.slotIndex)
+        end
     end
 
     local tradingHouseHiddenColumns = { statValue = true, age = true }
