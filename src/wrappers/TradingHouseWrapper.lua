@@ -38,9 +38,11 @@ function TradingHouseWrapper:Initialize(saveData)
             [ZO_TRADING_HOUSE_MODE_LISTINGS] = listingTab,
         }
 
+    -- we cannot wrap TRADING_HOUSE.OpenTradingHouse or RunInitialSetup as it would taint the call stack down the line
+    -- e.g. when using inventory items or withdrawing from the bank
+    -- instead we use the EVENT_OPEN_TRADING_HOUSE and hook into the first method after RunInitialSetup is called
     local CollectGuildKiosk = AwesomeGuildStore.CollectGuildKiosk
-    self:Wrap("OpenTradingHouse", function(originalOpenTradingHouse, ...)
-        originalOpenTradingHouse(...)
+    RegisterForEvent(EVENT_OPEN_TRADING_HOUSE, function()
         self:SetInterceptInventoryItemClicks(false)
         self:ResetSalesCategoryFilter()
         if(saveData.autoSearch) then
@@ -54,8 +56,9 @@ function TradingHouseWrapper:Initialize(saveData)
     end)
 
     local ranInitialSetup = false
-    self:Wrap("RunInitialSetup", function(originalRunInitialSetup, ...)
-        local tradingHouseManager = originalRunInitialSetup(...)
+    -- SetCurrentMode is the first method called after RunInitialSetup
+    self:PreHook("SetCurrentMode", function()
+        if(ranInitialSetup) then return end
         tradingHouse.m_numItemsOnPage = 0
 
         AwesomeGuildStore:FireBeforeInitialSetupCallbacks(self)
@@ -71,8 +74,8 @@ function TradingHouseWrapper:Initialize(saveData)
         self:InitializeKeybindStripWrapper()
         self:InitializeSearchCooldown()
         AwesomeGuildStore:FireAfterInitialSetupCallbacks(self)
+
         ranInitialSetup = true
-        return tradingHouseManager
     end)
 
     self:PreHook("ClearSearchResults", function(self) self.m_numItemsOnPage = 0 end)
