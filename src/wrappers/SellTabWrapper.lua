@@ -134,6 +134,7 @@ end
 
 function SellTabWrapper:Initialize(saveData)
     self.saveData = saveData
+    self.isOpen = false
     self:ClearPendingItem()
 
     self.lastSoldStackCount = saveData.lastSoldStackCount or {}
@@ -159,10 +160,8 @@ function SellTabWrapper:RunInitialSetup(tradingHouseWrapper)
 end
 
 function SellTabWrapper:InitializeQuickListing(tradingHouseWrapper)
-    self.interceptInventoryItemClicks = false
-
     ZO_PreHook("ZO_InventorySlot_OnSlotClicked", function(inventorySlot, button)
-        if(self.interceptInventoryItemClicks and self.saveData.listWithSingleClick and button == 1) then
+        if(self.isOpen and self.saveData.listWithSingleClick and button == MOUSE_BUTTON_INDEX_LEFT) then
             ZO_InventorySlot_DoPrimaryAction(inventorySlot)
             return true
         end
@@ -665,10 +664,6 @@ function SellTabWrapper:InitializeListedNotification(tradingHouseWrapper)
     end)
 end
 
-function SellTabWrapper:SetInterceptInventoryItemClicks(enabled)
-    self.interceptInventoryItemClicks = enabled
-end
-
 function SellTabWrapper:ResetSalesCategoryFilter()
     if(self.salesCategoryFilter) then
         self.salesCategoryFilter:Reset()
@@ -703,18 +698,18 @@ function SellTabWrapper:OnOpen(tradingHouseWrapper)
     if(self.salesCategoryFilter) then
         self.salesCategoryFilter:RefreshLayout()
     end
-    self.interceptInventoryItemClicks = true
     if(self.currentInventoryFragment == CRAFT_BAG_FRAGMENT) then
         ZO_PlayerInventoryInfoBar:SetParent(ZO_CraftBag)
         SCENE_MANAGER:RemoveFragment(INVENTORY_FRAGMENT)
         SCENE_MANAGER:AddFragment(CRAFT_BAG_FRAGMENT)
     end
+    self.isOpen = true
 end
 
 function SellTabWrapper:OnClose(tradingHouseWrapper)
-    self.interceptInventoryItemClicks = false
     if(self.currentInventoryFragment == CRAFT_BAG_FRAGMENT) then
         ZO_PlayerInventoryInfoBar:SetParent(ZO_PlayerInventory)
         SCENE_MANAGER:RemoveFragment(CRAFT_BAG_FRAGMENT)
     end
+    self.isOpen = false
 end

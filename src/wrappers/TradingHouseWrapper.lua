@@ -43,7 +43,6 @@ function TradingHouseWrapper:Initialize(saveData)
     -- instead we use the EVENT_OPEN_TRADING_HOUSE and hook into the first method after RunInitialSetup is called
     local CollectGuildKiosk = AwesomeGuildStore.CollectGuildKiosk
     RegisterForEvent(EVENT_OPEN_TRADING_HOUSE, function()
-        self:SetInterceptInventoryItemClicks(false)
         self:ResetSalesCategoryFilter()
         if(CollectGuildKiosk) then
             CollectGuildKiosk()
@@ -152,10 +151,6 @@ function TradingHouseWrapper:InitializeSearchCooldown()
             self:ShowGuildSelector()
         end
     end)
-end
-
-function TradingHouseWrapper:SetInterceptInventoryItemClicks(enabled)
-    self.sellTab:SetInterceptInventoryItemClicks(enabled)
 end
 
 function TradingHouseWrapper:ResetSalesCategoryFilter()
