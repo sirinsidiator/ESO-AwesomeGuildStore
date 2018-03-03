@@ -355,28 +355,26 @@ function SellTabWrapper:InitializeCraftingBag(tradingHouseWrapper)
         end
     end
 
-    local oAddSlotAction = ZO_InventorySlotActions.AddSlotAction
-
-    local currentInventorySlot
-    ZO_PreHook("ZO_InventorySlot_DiscoverSlotActionsFromActionList", function(inventorySlot, slotActions) currentInventorySlot = inventorySlot end)
-
-    -- prepare AddSlotAction in order to redirect the action
-    ZO_InventorySlotActions.AddSlotAction = function(slotActions, actionStringId, actionCallback, actionType, visibilityFunction, options)
-        if(actionStringId == SI_ITEM_ACTION_REMOVE_ITEMS_FROM_CRAFT_BAG and TRADING_HOUSE:IsAtTradingHouse()) then
-            if(self:IsItemAlreadyBeingPosted(currentInventorySlot)) then
-                actionStringId = SI_TRADING_HOUSE_REMOVE_PENDING_POST
-                actionCallback = function()
+    -- replace the primary action on the craft bag context menu
+    local function UpdateSlotActions(inventorySlot, slotActions)
+        if(self.isOpen and self:IsCraftBagActive()) then
+            if(self:IsItemAlreadyBeingPosted(inventorySlot)) then
+                slotActions:AddCustomSlotAction(SI_TRADING_HOUSE_REMOVE_PENDING_POST, function()
                     self.tradingHouse:ClearPendingPost()
-                    ZO_InventorySlot_OnMouseEnter(currentInventorySlot)
-                end
+                    ZO_InventorySlot_OnMouseEnter(inventorySlot)
+                end, "primary")
             else
-                actionStringId = SI_TRADING_HOUSE_ADD_ITEM_TO_LISTING
-                actionCallback = function() TryInitiatingItemPost(currentInventorySlot) end
+                slotActions:AddCustomSlotAction(SI_TRADING_HOUSE_ADD_ITEM_TO_LISTING, function()
+                    TryInitiatingItemPost(inventorySlot)
+                end, "primary")
             end
-            actionType = "primary"
         end
-        return oAddSlotAction(slotActions, actionStringId, actionCallback, actionType, visibilityFunction, options)
+        return false
     end
+
+    local LCM = LibStub("LibCustomMenu")
+    LCM:RegisterContextMenu(UpdateSlotActions, LCM.CATEGORY_EARLY)
+    LCM:RegisterKeyStripEnter(UpdateSlotActions, LCM.CATEGORY_EARLY)
 
     RegisterForEvent(EVENT_TRADING_HOUSE_PENDING_ITEM_UPDATE, function(_, slotId, isPending)
         if(isPending) then
@@ -689,6 +687,10 @@ function SellTabWrapper:SetCurrentInventory(bagId)
         end
     end
     SCENE_MANAGER:AddFragment(self.currentInventoryFragment)
+end
+
+function SellTabWrapper:IsCraftBagActive()
+    return self.currentInventoryFragment == CRAFT_BAG_FRAGMENT
 end
 
 function SellTabWrapper:OnOpen(tradingHouseWrapper)
