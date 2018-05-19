@@ -1035,6 +1035,41 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
                 texture = "EsoUI/Art/Tradinghouse/tradinghouse_sell_tabIcon_%s.dds",
                 value = ITEM_TRAIT_TYPE_JEWELRY_ORNATE,
             },
+            {
+                label = GetString("SI_ITEMTRAITTYPE", ITEM_TRAIT_TYPE_JEWELRY_INTRICATE),
+                texture = "EsoUI/Art/Progression/progression_indexIcon_guilds_%s.dds",
+                value = ITEM_TRAIT_TYPE_JEWELRY_INTRICATE,
+            },
+            {
+                label = GetString("SI_ITEMTRAITTYPE", ITEM_TRAIT_TYPE_JEWELRY_SWIFT),
+                texture = "EsoUI/Art/Emotes/emotes_indexIcon_physical_%s.dds",
+                value = ITEM_TRAIT_TYPE_JEWELRY_SWIFT,
+            },
+            {
+                label = GetString("SI_ITEMTRAITTYPE", ITEM_TRAIT_TYPE_JEWELRY_HARMONY),
+                texture = "EsoUI/Art/Emotes/emotes_indexIcon_perpetual_%s.dds",
+                value = ITEM_TRAIT_TYPE_JEWELRY_HARMONY,
+            },
+            {
+                label = GetString("SI_ITEMTRAITTYPE", ITEM_TRAIT_TYPE_JEWELRY_TRIUNE),
+                texture = "EsoUI/Art/Crafting/smithing_tabIcon_research_%s.dds",
+                value = ITEM_TRAIT_TYPE_JEWELRY_TRIUNE,
+            },
+            {
+                label = GetString("SI_ITEMTRAITTYPE", ITEM_TRAIT_TYPE_JEWELRY_BLOODTHIRSTY),
+                texture = "EsoUI/Art/TreeIcons/achievements_indexIcon_justice_%s.dds",
+                value = ITEM_TRAIT_TYPE_JEWELRY_BLOODTHIRSTY,
+            },
+            {
+                label = GetString("SI_ITEMTRAITTYPE", ITEM_TRAIT_TYPE_JEWELRY_PROTECTIVE),
+                texture = "EsoUI/Art/Crafting/smithing_tabIcon_armorset_%s.dds",
+                value = ITEM_TRAIT_TYPE_JEWELRY_PROTECTIVE,
+            },
+            {
+                label = GetString("SI_ITEMTRAITTYPE", ITEM_TRAIT_TYPE_JEWELRY_INFUSED),
+                texture = "EsoUI/Art/Progression/progression_tabIcon_combatSkills_%s.dds",
+                value = ITEM_TRAIT_TYPE_JEWELRY_INFUSED,
+            },
         },
     },
     [SUBFILTER_JEWELRY_ENCHANTMENTS] = {
