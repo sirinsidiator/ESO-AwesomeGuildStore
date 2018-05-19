@@ -15,7 +15,7 @@
 25 - ArmorSlotSubfilter
 26 - ArmorTraitSubfilter
 27 - ArmorEnchantmentSubfilter
-28 - JewelryTypeSubfilter
+28 - JewelryTypeSubfilter (removed)
 29 - JewelryTraitSubfilter
 30 - JewelryEnchantmentSubfilter
 31 - BlacksmithingMaterialTypeSubfilter

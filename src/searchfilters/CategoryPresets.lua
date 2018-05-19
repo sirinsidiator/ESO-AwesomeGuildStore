@@ -3,7 +3,7 @@ local gettext = LibStub("LibGetText")("AwesomeGuildStore").gettext
 local SUBFILTER_WEAPON_TRAITS, SUBFILTER_WEAPON_ENCHANTMENTS, SUBFILTER_WEAPON_ONEHANDED, SUBFILTER_WEAPON_TWOHANDED, SUBFILTER_WEAPON_STAFF = 1, 2, 3, 4, 5
 local SUBFILTER_ARMOR_SLOTS, SUBFILTER_ARMOR_TRAITS, SUBFILTER_ARMOR_ENCHANTMENTS, SUBFILTER_JEWELRY_TRAITS, SUBFILTER_JEWELRY_ENCHANTMENTS = 6, 7, 8, 9, 10
 local SUBFILTER_BLACKSMITHING_MATERIALS, SUBFILTER_CLOTHING_MATERIALS, SUBFILTER_WOODWORKING_MATERIALS, SUBFILTER_ALCHEMY_MATERIALS = 11, 12, 13, 14
-local SUBFILTER_ENCHANTING_MATERIALS, SUBFILTER_GLYPHS, SUBFILTER_JEWELRY_TYPE, SUBFILTER_STYLE_MATERIALS = 15, 16, 17, 18
+local SUBFILTER_ENCHANTING_MATERIALS, SUBFILTER_GLYPHS, SUBFILTER_STYLE_MATERIALS = 15, 16, 18
 local SUBFILTER_RECIPE_KNOWLEDGE, SUBFILTER_MOTIF_KNOWLEDGE, SUBFILTER_TRAIT_KNOWLEDGE, SUBFILTER_RUNE_KNOWLEDGE, SUBFILTER_ITEM_STYLE = 19, 20, 21, 22, 23
 local SUBFILTER_ITEM_SET, SUBFILTER_CRAFTING, SUBFILTER_RECIPE_IMPROVEMENT, SUBFILTER_RECIPE_TYPE = 24, 25, 26, 27
 local SUBFILTER_DRINK_TYPE, SUBFILTER_FOOD_TYPE, SUBFILTER_INGREDIENT_TYPE, SUBFILTER_SIEGE_TYPE = 28, 29, 30, 31
@@ -136,6 +136,7 @@ AwesomeGuildStore.FILTER_PRESETS = {
             {
                 label = GetString("SI_ITEMFILTERTYPE", ITEMFILTERTYPE_ALL),
                 texture = "EsoUI/Art/Inventory/inventory_tabIcon_all_%s.dds",
+                index = 1,
                 isDefault = true,
                 filters = {
                     [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_ARMOR, ITEMTYPE_COSTUME, ITEMTYPE_DISGUISE, ITEMTYPE_TABARD },
@@ -153,6 +154,7 @@ AwesomeGuildStore.FILTER_PRESETS = {
             {
                 label = GetString(SI_TRADING_HOUSE_BROWSE_ARMOR_TYPE_HEAVY),
                 texture = "EsoUI/Art/Inventory/inventory_tabIcon_armor_%s.dds",
+                index = 2,
                 filters = {
                     [TRADING_HOUSE_FILTER_TYPE_EQUIP] = { EQUIP_TYPE_HEAD, EQUIP_TYPE_CHEST, EQUIP_TYPE_SHOULDERS, EQUIP_TYPE_WAIST, EQUIP_TYPE_LEGS, EQUIP_TYPE_FEET, EQUIP_TYPE_HAND },
                     [TRADING_HOUSE_FILTER_TYPE_ARMOR] = { ARMORTYPE_HEAVY }
@@ -170,6 +172,7 @@ AwesomeGuildStore.FILTER_PRESETS = {
             {
                 label = GetString(SI_TRADING_HOUSE_BROWSE_ARMOR_TYPE_MEDIUM),
                 texture = "AwesomeGuildStore/images/armor/medium_%s.dds",
+                index = 3,
                 filters = {
                     [TRADING_HOUSE_FILTER_TYPE_EQUIP] = { EQUIP_TYPE_HEAD, EQUIP_TYPE_CHEST, EQUIP_TYPE_SHOULDERS, EQUIP_TYPE_WAIST, EQUIP_TYPE_LEGS, EQUIP_TYPE_FEET, EQUIP_TYPE_HAND },
                     [TRADING_HOUSE_FILTER_TYPE_ARMOR] = { ARMORTYPE_MEDIUM }
@@ -187,6 +190,7 @@ AwesomeGuildStore.FILTER_PRESETS = {
             {
                 label = GetString(SI_TRADING_HOUSE_BROWSE_ARMOR_TYPE_LIGHT),
                 texture = "AwesomeGuildStore/images/armor/light_%s.dds",
+                index = 4,
                 filters = {
                     [TRADING_HOUSE_FILTER_TYPE_EQUIP] = { EQUIP_TYPE_HEAD, EQUIP_TYPE_CHEST, EQUIP_TYPE_SHOULDERS, EQUIP_TYPE_WAIST, EQUIP_TYPE_LEGS, EQUIP_TYPE_FEET, EQUIP_TYPE_HAND },
                     [TRADING_HOUSE_FILTER_TYPE_ARMOR] = { ARMORTYPE_LIGHT }
@@ -204,6 +208,7 @@ AwesomeGuildStore.FILTER_PRESETS = {
             {
                 label = GetString(SI_TRADING_HOUSE_BROWSE_ARMOR_TYPE_SHIELD),
                 texture = "AwesomeGuildStore/images/armor/shield_%s.dds",
+                index = 5,
                 filters = {
                     [TRADING_HOUSE_FILTER_TYPE_EQUIP] = { EQUIP_TYPE_OFF_HAND },
                     [TRADING_HOUSE_FILTER_TYPE_WEAPON] = { WEAPONTYPE_SHIELD }
@@ -218,21 +223,13 @@ AwesomeGuildStore.FILTER_PRESETS = {
                 },
             },
             {
-                label = GetString(SI_GAMEPADITEMCATEGORY38),
-                texture = "AwesomeGuildStore/images/armor/neck_%s.dds",
-                filters = {
-                    [TRADING_HOUSE_FILTER_TYPE_EQUIP] = { EQUIP_TYPE_RING, EQUIP_TYPE_NECK },
-                },
-                subfilters = {
-                    SUBFILTER_JEWELRY_TYPE,
-                    SUBFILTER_JEWELRY_TRAITS,
-                    SUBFILTER_JEWELRY_ENCHANTMENTS,
-                    SUBFILTER_ITEM_SET
-                },
+                -- this is the old entry for jewelry. we have to keep it around for now due to way the state is saved
+                hidden = true,
             },
             {
                 label = GetString("SI_EQUIPTYPE", EQUIP_TYPE_COSTUME),
                 texture = "AwesomeGuildStore/images/armor/costume_%s.dds",
+                index = 6,
                 filters = {
                     [TRADING_HOUSE_FILTER_TYPE_EQUIP] = { EQUIP_TYPE_COSTUME },
                 },
@@ -240,11 +237,57 @@ AwesomeGuildStore.FILTER_PRESETS = {
             }
         }
     },
+    [ITEMFILTERTYPE_JEWELRY] = {
+        name = "Jewelry",
+        label = GetString("SI_ITEMFILTERTYPE", ITEMFILTERTYPE_JEWELRY),
+        texture = "AwesomeGuildStore/images/jewelry_%s.dds",
+        index = 3,
+        hasLevelFilter = true,
+        subcategories = {
+            {
+                label = GetString("SI_ITEMFILTERTYPE", ITEMFILTERTYPE_ALL),
+                texture = "EsoUI/Art/Inventory/inventory_tabIcon_all_%s.dds",
+                isDefault = true,
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_EQUIP] = { EQUIP_TYPE_RING, EQUIP_TYPE_NECK },
+                },
+                subfilters = {
+                    SUBFILTER_JEWELRY_TRAITS,
+                    SUBFILTER_JEWELRY_ENCHANTMENTS,
+                    SUBFILTER_ITEM_SET
+                },
+            },
+            {
+                label = GetString("SI_EQUIPTYPE", EQUIP_TYPE_RING),
+                texture = "AwesomeGuildStore/images/armor/ring_%s.dds",
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_EQUIP] = { EQUIP_TYPE_RING },
+                },
+                subfilters = {
+                    SUBFILTER_JEWELRY_TRAITS,
+                    SUBFILTER_JEWELRY_ENCHANTMENTS,
+                    SUBFILTER_ITEM_SET
+                },
+            },
+            {
+                label = GetString("SI_EQUIPTYPE", EQUIP_TYPE_NECK),
+                texture = "AwesomeGuildStore/images/armor/neck_%s.dds",
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_EQUIP] = { EQUIP_TYPE_NECK },
+                },
+                subfilters = {
+                    SUBFILTER_JEWELRY_TRAITS,
+                    SUBFILTER_JEWELRY_ENCHANTMENTS,
+                    SUBFILTER_ITEM_SET
+                },
+            },
+        }
+    },
     [ITEMFILTERTYPE_CONSUMABLE] = {
         name = "Consumable",
         label = GetString("SI_ITEMFILTERTYPE", ITEMFILTERTYPE_CONSUMABLE),
         texture = "EsoUI/Art/Inventory/inventory_tabIcon_consumables_%s.dds",
-        index = 3,
+        index = 4,
         subcategories = {
             {
                 label = GetString("SI_ITEMFILTERTYPE", ITEMFILTERTYPE_ALL),
@@ -360,7 +403,7 @@ AwesomeGuildStore.FILTER_PRESETS = {
         name = "Crafting",
         label = GetString("SI_ITEMFILTERTYPE", ITEMFILTERTYPE_CRAFTING),
         texture = "EsoUI/Art/Inventory/inventory_tabIcon_crafting_%s.dds",
-        index = 4,
+        index = 5,
         subcategories = {
             {
                 label = zo_strformat(SI_TOOLTIP_ITEM_NAME, ZO_GetCraftingSkillName(CRAFTING_TYPE_BLACKSMITHING)),
@@ -493,7 +536,7 @@ AwesomeGuildStore.FILTER_PRESETS = {
         name = "Furnishing",
         label = GetString("SI_ITEMFILTERTYPE", ITEMFILTERTYPE_FURNISHING),
         texture = "EsoUI/Art/treeIcons/collection_indexicon_furnishings_%s.dds",
-        index = 5,
+        index = 6,
         subcategories = {
             {
                 label = GetString("SI_ITEMFILTERTYPE", ITEMFILTERTYPE_ALL),
@@ -552,7 +595,7 @@ AwesomeGuildStore.FILTER_PRESETS = {
         name = "Misc",
         label = GetString("SI_ITEMFILTERTYPE", ITEMFILTERTYPE_MISCELLANEOUS),
         texture = "EsoUI/Art/Inventory/inventory_tabIcon_misc_%s.dds",
-        index = 6,
+        index = 7,
         subcategories = {
             {
                 label = GetString("SI_ITEMFILTERTYPE", ITEMFILTERTYPE_ALL),
@@ -963,25 +1006,6 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
                 label = GetString("SI_ENCHANTMENTSEARCHCATEGORYTYPE", ENCHANTMENT_SEARCH_CATEGORY_OTHER),
                 texture = "EsoUI/Art/Inventory/inventory_tabIcon_misc_%s.dds",
                 value = ENCHANTMENT_SEARCH_CATEGORY_OTHER, -- ability changing enchantments
-            },
-        },
-    },
-    [SUBFILTER_JEWELRY_TYPE] = {
-        type = 28,
-        -- TRANSLATORS: title of the jewelry type filter in the left panel on the search tab
-        label = gettext("Jewelry Type"),
-        filter = TRADING_HOUSE_FILTER_TYPE_EQUIP,
-        singleButtonMode = true,
-        buttons = {
-            {
-                label = GetString("SI_EQUIPTYPE", EQUIP_TYPE_RING),
-                texture = "AwesomeGuildStore/images/armor/ring_%s.dds",
-                value = EQUIP_TYPE_RING,
-            },
-            {
-                label = GetString("SI_EQUIPTYPE", EQUIP_TYPE_NECK),
-                texture = "AwesomeGuildStore/images/armor/neck_%s.dds",
-                value = EQUIP_TYPE_NECK,
             },
         },
     },
