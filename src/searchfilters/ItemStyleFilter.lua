@@ -250,7 +250,8 @@ function ItemStyleFilter:DeserializeOld(state)
 end
 
 function ItemStyleFilter:Deserialize(state)
-    if(not tonumber(state)) then -- new save data
+    local value = tonumber(state)
+    if(not value or value <= GetHighestItemStyleId()) then -- assume new save data
         local selection = {zo_strsplit(ARRAY_SEPARATOR, state)}
         for i = 1, #selection do
             self:AddStyleSelection(tonumber(selection[i]), SUPPRESS_UPDATE)
@@ -356,7 +357,8 @@ end
 function ItemStyleFilter:GetTooltipText(state)
     local lines = {}
     local styleNames = {}
-    if(not tonumber(state)) then -- new save data
+    local value = tonumber(state)
+    if(not value or value <= GetHighestItemStyleId()) then -- assume new save data
         local selection = {zo_strsplit(ARRAY_SEPARATOR, state)}
         for i = 1, #selection do
             styleNames[#styleNames + 1] = GetFormattedItemStyleName(tonumber(selection[i]))
