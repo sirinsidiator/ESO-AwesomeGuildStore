@@ -13,28 +13,21 @@ local ToggleButton = AwesomeGuildStore.ToggleButton
 local SalesCategorySelector = ZO_Object:Subclass()
 AwesomeGuildStore.SalesCategorySelector = SalesCategorySelector
 
-local ALL_CRAFTING_PRESET = {
-    label = GetString("SI_ITEMFILTERTYPE", ITEMFILTERTYPE_ALL),
-    texture = "EsoUI/Art/Inventory/inventory_tabIcon_all_%s.dds",
-    isDefault = true,
-    filters = {
-        [TRADING_HOUSE_FILTER_TYPE_ITEM] = {
-            ITEMTYPE_BLACKSMITHING_RAW_MATERIAL, ITEMTYPE_BLACKSMITHING_MATERIAL, ITEMTYPE_BLACKSMITHING_BOOSTER,
-            ITEMTYPE_CLOTHIER_RAW_MATERIAL, ITEMTYPE_CLOTHIER_MATERIAL, ITEMTYPE_CLOTHIER_BOOSTER,
-            ITEMTYPE_WOODWORKING_RAW_MATERIAL, ITEMTYPE_WOODWORKING_MATERIAL, ITEMTYPE_WOODWORKING_BOOSTER,
-            ITEMTYPE_ALCHEMY_BASE, ITEMTYPE_REAGENT, ITEMTYPE_INGREDIENT,
-            ITEMTYPE_ENCHANTING_RUNE_ASPECT, ITEMTYPE_ENCHANTING_RUNE_ESSENCE, ITEMTYPE_ENCHANTING_RUNE_POTENCY,
-            ITEMTYPE_STYLE_MATERIAL, ITEMTYPE_WEAPON_TRAIT, ITEMTYPE_ARMOR_TRAIT, ITEMTYPE_RAW_MATERIAL
-        },
+local ALL_CRAFTING_FILTERS = {
+    [TRADING_HOUSE_FILTER_TYPE_ITEM] = {
+        ITEMTYPE_BLACKSMITHING_RAW_MATERIAL, ITEMTYPE_BLACKSMITHING_MATERIAL, ITEMTYPE_BLACKSMITHING_BOOSTER,
+        ITEMTYPE_CLOTHIER_RAW_MATERIAL, ITEMTYPE_CLOTHIER_MATERIAL, ITEMTYPE_CLOTHIER_BOOSTER,
+        ITEMTYPE_WOODWORKING_RAW_MATERIAL, ITEMTYPE_WOODWORKING_MATERIAL, ITEMTYPE_WOODWORKING_BOOSTER,
+        ITEMTYPE_POTION_BASE, ITEMTYPE_POISON_BASE, ITEMTYPE_REAGENT,
+        ITEMTYPE_ENCHANTING_RUNE_ASPECT, ITEMTYPE_ENCHANTING_RUNE_ESSENCE, ITEMTYPE_ENCHANTING_RUNE_POTENCY,
+        ITEMTYPE_INGREDIENT,
+        ITEMTYPE_STYLE_MATERIAL, ITEMTYPE_RAW_MATERIAL,
+        ITEMTYPE_WEAPON_TRAIT,
+        ITEMTYPE_ARMOR_TRAIT,
+        ITEMTYPE_FURNISHING_MATERIAL,
+        ITEMTYPE_JEWELRY_TRAIT, ITEMTYPE_JEWELRY_RAW_TRAIT,
+        ITEMTYPE_JEWELRYCRAFTING_RAW_MATERIAL, ITEMTYPE_JEWELRYCRAFTING_MATERIAL, ITEMTYPE_JEWELRYCRAFTING_RAW_BOOSTER, ITEMTYPE_JEWELRYCRAFTING_BOOSTER
     },
-    subfilters = {},
-}
-
-local ALL_ARMOR_FILTERS = {
-    [TRADING_HOUSE_FILTER_TYPE_EQUIP] = {
-        EQUIP_TYPE_HEAD, EQUIP_TYPE_CHEST, EQUIP_TYPE_SHOULDERS, EQUIP_TYPE_WAIST, EQUIP_TYPE_LEGS, EQUIP_TYPE_FEET, EQUIP_TYPE_HAND,
-        EQUIP_TYPE_OFF_HAND, EQUIP_TYPE_RING, EQUIP_TYPE_NECK, EQUIP_TYPE_COSTUME
-    }
 }
 
 function SalesCategorySelector:New(parent, name)
@@ -92,7 +85,9 @@ function SalesCategorySelector:CreateSubcategory(name, category, categoryPreset)
     if(#categoryPreset.subcategories == 0) then return end
     local group = self:CreateSubcategoryGroup(name .. categoryPreset.name .. "Group", category)
     for subcategory, preset in pairs(categoryPreset.subcategories) do
-        self:CreateSubcategoryButton(group, subcategory, preset)
+        if(not preset.hidden) then
+            self:CreateSubcategoryButton(group, subcategory, preset)
+        end
     end
 end
 
@@ -253,10 +248,8 @@ function SalesCategorySelector:HandleChange()
     currentLayout = BACKPACK_TRADING_HOUSE_LAYOUT_FRAGMENT_BASIC.layoutData
 
     if(subcategory) then
-        if(self.category == ITEMFILTERTYPE_CRAFTING and subcategory == 0) then -- ugly special cases
-            filters = ALL_CRAFTING_PRESET.filters
-        elseif(self.category == ITEMFILTERTYPE_ARMOR and subcategory == 1) then
-            filters = ALL_ARMOR_FILTERS
+        if(self.category == ITEMFILTERTYPE_CRAFTING and subcategory == 11) then -- ugly special cases
+            filters = ALL_CRAFTING_FILTERS
         else
             filters = filters[subcategory].filters
         end
