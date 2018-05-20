@@ -40,9 +40,12 @@
 50 - SiegeTypeSubfilter
 51 - TrophyTypeSubfilter
 52 - FurnishingMaterialSubfilter
+53 - TraitMaterialTypeSubfilter
+54 - JewelryMaterialTypeSubfilter
 
-53 .. 99 - reserved
+55 .. 99 - reserved
 
 100 - MasterMerchant DealSelector
 101 - MasterMerchant DealFilter
 102 - CookeryWiz Recipe Filter
+103 - WritWorthy Writcost Filter

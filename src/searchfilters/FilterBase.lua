@@ -15,6 +15,7 @@ local EXTERNAL_FILTER_PROVIDER = {
     [100] = "Master Merchant",
     [101] = "Master Merchant",
     [102] = "CookeryWiz",
+    [103] = "WritWorthy",
 }
 
 function FilterBase:New(type, name, tradingHouseWrapper, ...)
