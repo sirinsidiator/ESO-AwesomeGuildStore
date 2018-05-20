@@ -65,7 +65,7 @@ local OLD_FILTER_VALUE_CONVERSION = {
     }
 }
 
-local NEXT_UNASSIGNED_STYLE_ID = 60
+local NEXT_UNASSIGNED_STYLE_ID = 71
 local STYLE_ENTRY = 1
 local FILTER_ARGS_LIMIT = 24
 local BASE_HEIGHT = 50
@@ -75,7 +75,7 @@ local SUPPRESS_UPDATE = true
 local ARRAY_SEPARATOR = ":"
 local r, g, b = ZO_TOOLTIP_DEFAULT_COLOR:UnpackRGB()
 
-local newStyles = {37, 38}
+local newStyles = {37, 38, 60, 67 }
 -- automatically fill in new styles if there are any
 for styleId = NEXT_UNASSIGNED_STYLE_ID, GetHighestItemStyleId() do
     if(GetItemStyleName(styleId) ~= "") then
@@ -90,19 +90,19 @@ local STYLE_CATEGORIES = {
     },
     {
         label = gettext("Uncommon"),
-        styles = {10, 13, 16, 18, 21, 27, 28, 31, 32, 33, 35, 36, 39, 40, 44, 45, 56, 57},
+        styles = {10, 13, 16, 18, 21, 27, 28, 31, 32, 35, 36, 39, 40, 44, 45, 56, 57},
     },
     {
         label = gettext("Organizations"),
-        styles = {11, 12, 23, 24, 25, 26, 41, 46, 47, 49, 55},
+        styles = {11, 12, 23, 24, 25, 26, 41, 46, 47},
     },
     {
         label = gettext("Events"),
-        styles = {42, 53, 58, 59},
+        styles = {42, 53, 58, 59, 55},
     },
     {
         label = gettext("Morrowind"),
-        styles = {43, 48, 49, 50, 51, 52, 54},
+        styles = {43, 54, 48, 49, 51, 50, 52, 61, 62, 65, 66, 69, 70},
     },
     {
         label = gettext("New"),
