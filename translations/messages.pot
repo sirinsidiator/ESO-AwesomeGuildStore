@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: AwesomeGuildStore\n"
 "Report-Msgid-Bugs-To: insidiator@cmos.at\n"
-"POT-Creation-Date: 2018-03-03 19:05+0100\n"
+"POT-Creation-Date: 2018-05-20 17:57+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -539,201 +539,205 @@ msgid "Searches"
 msgstr ""
 
 #. TRANSLATORS: title text for the weapon enchantment filter in the left panel on the search tab
-#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:687
+#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:766
 msgid "Weapon Enchantment"
 msgstr ""
 
 #. TRANSLATORS: title for the weapon type filter in the left panel on the search tab
-#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:766
-#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:793
-#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:815
+#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:845
+#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:872
+#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:894
 msgid "Weapon Type"
 msgstr ""
 
 #. TRANSLATORS: title of the armor type filter in the left panel on the search tab
-#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:838
+#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:917
 msgid "Armor Type"
 msgstr ""
 
 #. TRANSLATORS: title of the armor enchantment filter in the left panel on the search tab
-#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:943
+#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1022
 msgid "Armor Enchantment"
 msgstr ""
 
 #. TRANSLATORS: title of the jewelry type filter in the left panel on the search tab
-#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:972
+#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1051
 msgid "Jewelry Type"
 msgstr ""
 
 #. TRANSLATORS: title of the jewelry trait filter in the left panel on the search tab
-#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:991
+#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1070
 msgid "Jewelry Trait"
 msgstr ""
 
 #. TRANSLATORS: title of the jewelry enchantment filter in the left panel on the search tab
-#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1019
+#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1133
 msgid "Jewelry Enchantment"
 msgstr ""
 
 #. TRANSLATORS: title of the crafting material filter in the left panel on the search tab
 #. TRANSLATORS: title of the furnishing material type filter in the left panel on the search tab
-#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1123
-#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1145
-#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1167
-#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1189
-#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1698
+#. TRANSLATORS: title of the trait material type filter in the left panel on the search tab
+#. TRANSLATORS: title of the furnishing material type filter in the left panel on the search tab
+#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1237
+#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1259
+#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1281
+#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1303
+#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1812
+#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1850
+#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1878
 msgid "Material Type"
 msgstr ""
 
 #. TRANSLATORS: title of the alchemy and provisioning material filter in the left panel on the search tab
-#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1207
-#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1574
+#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1321
+#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1688
 msgid "Ingredient Type"
 msgstr ""
 
 #. TRANSLATORS: title of the enchanting material filter in the left panel on the search tab
-#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1240
+#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1354
 msgid "Rune Type"
 msgstr ""
 
 #. TRANSLATORS: title of the glyph type filter in the left panel on the search tab
-#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1263
+#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1377
 msgid "Glyph Type"
 msgstr ""
 
 #. TRANSLATORS: title of the recipe knowledge filter in the left panel on the search tab
-#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1286
+#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1400
 msgid "Recipe Knowledge"
 msgstr ""
 
 #. TRANSLATORS: tooltip text for the recipe knowledge filter
-#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1293
+#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1407
 msgid "Unknown Recipes"
 msgstr ""
 
 #. TRANSLATORS: tooltip text for the recipe knowledge filter
-#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1299
+#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1413
 msgid "Known Recipes"
 msgstr ""
 
 #. TRANSLATORS: title of the motif knowledge filter in the left panel on the search tab
-#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1308
+#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1422
 msgid "Motif Knowledge"
 msgstr ""
 
 #. TRANSLATORS: tooltip text for the motif knowledge filter
-#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1315
+#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1429
 msgid "Unknown Motifs"
 msgstr ""
 
 #. TRANSLATORS: tooltip text for the motif knowledge filter
-#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1321
+#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1435
 msgid "Known Motifs"
 msgstr ""
 
 #. TRANSLATORS: title of the trait knowledge filter in the left panel on the search tab
-#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1330
+#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1444
 msgid "Trait Knowledge"
 msgstr ""
 
 #. TRANSLATORS: tooltip text for the trait knowledge filter
-#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1337
+#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1451
 msgid "Unknown Trait"
 msgstr ""
 
 #. TRANSLATORS: tooltip text for the trait knowledge filter
-#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1343
+#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1457
 msgid "Known Trait"
 msgstr ""
 
 #. TRANSLATORS: title of the rune knowledge filter in the left panel on the search tab
-#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1352
+#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1466
 msgid "Rune Knowledge"
 msgstr ""
 
 #. TRANSLATORS: tooltip text for the rune knowledge filter
-#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1359
+#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1473
 msgid "Unknown Rune"
 msgstr ""
 
 #. TRANSLATORS: tooltip text for the rune knowledge filter
-#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1365
+#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1479
 msgid "Known Rune"
 msgstr ""
 
 #. TRANSLATORS: title of the set item filter in the left panel on the search tab
-#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1380
+#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1494
 msgid "Itemset"
 msgstr ""
 
 #. TRANSLATORS: tooltip text for the set item filter
-#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1387
+#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1501
 msgid "Individual item"
 msgstr ""
 
 #. TRANSLATORS: tooltip text for the set item filter
-#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1393
+#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1507
 msgid "Set item"
 msgstr ""
 
 #. TRANSLATORS: title of the crafted item filter in the left panel on the search tab
-#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1402
+#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1516
 msgid "Crafting"
 msgstr ""
 
 #. TRANSLATORS: tooltip text for the crafted item filter
-#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1409
+#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1523
 msgid "Crafted item"
 msgstr ""
 
 #. TRANSLATORS: tooltip text for the crafted item filter
-#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1415
+#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1529
 msgid "Looted item"
 msgstr ""
 
 #. TRANSLATORS: title of the recipe improvement filter in the left panel on the search tab
-#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1424
+#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1538
 msgid "Recipe Improvement"
 msgstr ""
 
 #. TRANSLATORS: title of the recipe type filter in the left panel on the search tab
-#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1431
+#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1545
 msgid "Recipe Type"
 msgstr ""
 
 #. TRANSLATORS: title of the drink type filter in the left panel on the search tab
-#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1479
+#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1593
 msgid "Drink Type"
 msgstr ""
 
 #. TRANSLATORS: title of the food type filter in the left panel on the search tab
-#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1527
+#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1641
 msgid "Food Type"
 msgstr ""
 
 #. TRANSLATORS: title of the siege type filter in the left panel on the search tab
-#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1627
+#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1741
 msgid "Siege Type"
 msgstr ""
 
 #. TRANSLATORS: title of the trophy type filter in the left panel on the search tab
-#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1665
+#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorypresets.lua:1779
 msgid "Trophy Type"
 msgstr ""
 
 #. TRANSLATORS: label for the selected category in the search library entry tooltip
-#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categoryselector.lua:311
+#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categoryselector.lua:340
 msgid "Category"
 msgstr ""
 
 #. TRANSLATORS: label for the selected subcategory in the search library entry tooltip
-#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categoryselector.lua:313
+#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categoryselector.lua:342
 msgid "Subcategory"
 msgstr ""
 
 #. TRANSLATORS: alert text when more than the maximum possible amount of filter categories is selected
 #: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\categorysubfilter.lua:43
-#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\itemstylefilter.lua:317
+#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\itemstylefilter.lua:318
 #, lua-format
 msgid "Cannot filter for more than %d at a time"
 msgstr ""
@@ -751,12 +755,12 @@ msgid "Reset <<1>> Filter"
 msgstr ""
 
 #. TRANSLATORS: tooltip text explaining the type of a filter in the left panel on the search tab
-#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\filterbase.lua:75
+#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\filterbase.lua:76
 msgid "This filter is local and only applies to the currently visible page"
 msgstr ""
 
 #. TRANSLATORS: tooltip text explaining the type of a filter in the left panel on the search tab. <<1>> is replaced with an addon name
-#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\filterbase.lua:78
+#: d:\projects\esoaddons\awesomeguildstore\src\searchfilters\filterbase.lua:79
 msgid "This filter is provided by <<1>>"
 msgstr ""
 
