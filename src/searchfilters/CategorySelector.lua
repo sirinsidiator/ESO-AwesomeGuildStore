@@ -28,7 +28,7 @@ function CategorySelector:New(parent, name, searchTabWrapper, tradingHouseWrappe
 	local container = parent:CreateControl(name .. "Container", CT_CONTROL)
 	container:SetAnchor(TOPLEFT, parent:GetNamedChild("Header"), TOPRIGHT, 70, -10)
 	container:SetResizeToFitDescendents(true)
-	ZO_TradingHouseItemPane:SetAnchor(TOPLEFT, container, BOTTOMLEFT, 0, 20)
+	ZO_TradingHouseItemPane:SetAnchor(TOPLEFT, container, BOTTOMLEFT, -50, 20)
 
 	selector.control = container
 	selector.group = {}
