@@ -7,7 +7,7 @@ local SUBFILTER_ENCHANTING_MATERIALS, SUBFILTER_GLYPHS, SUBFILTER_JEWELRY_TYPE, 
 local SUBFILTER_RECIPE_KNOWLEDGE, SUBFILTER_MOTIF_KNOWLEDGE, SUBFILTER_TRAIT_KNOWLEDGE, SUBFILTER_RUNE_KNOWLEDGE, SUBFILTER_ITEM_STYLE = 19, 20, 21, 22, 23
 local SUBFILTER_ITEM_SET, SUBFILTER_CRAFTING, SUBFILTER_RECIPE_IMPROVEMENT, SUBFILTER_RECIPE_TYPE = 24, 25, 26, 27
 local SUBFILTER_DRINK_TYPE, SUBFILTER_FOOD_TYPE, SUBFILTER_INGREDIENT_TYPE, SUBFILTER_SIEGE_TYPE = 28, 29, 30, 31
-local SUBFILTER_TROPHY_TYPE, SUBFILTER_FURNISHING_MATERIAL_TYPE = 32, 33
+local SUBFILTER_TROPHY_TYPE, SUBFILTER_FURNISHING_MATERIAL_TYPE, SUBFILTER_TRAIT_MATERIAL_TYPE, SUBFILTER_JEWELRY_MATERIAL_TYPE = 32, 33, 34, 35
 
 AwesomeGuildStore.FILTER_PRESETS = {
     [ITEMFILTERTYPE_ALL] = {
@@ -139,7 +139,7 @@ AwesomeGuildStore.FILTER_PRESETS = {
                 index = 1,
                 isDefault = true,
                 filters = {
-                    [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_ARMOR, ITEMTYPE_COSTUME, ITEMTYPE_DISGUISE, ITEMTYPE_TABARD },
+                    [TRADING_HOUSE_FILTER_TYPE_EQUIP] = { EQUIP_TYPE_HEAD, EQUIP_TYPE_CHEST, EQUIP_TYPE_SHOULDERS, EQUIP_TYPE_WAIST, EQUIP_TYPE_LEGS, EQUIP_TYPE_FEET, EQUIP_TYPE_HAND, EQUIP_TYPE_OFF_HAND, EQUIP_TYPE_COSTUME },
                 },
                 subfilters = {
                     SUBFILTER_ARMOR_SLOTS,
@@ -452,7 +452,7 @@ AwesomeGuildStore.FILTER_PRESETS = {
             {
                 label = zo_strformat(SI_TOOLTIP_ITEM_NAME, ZO_GetCraftingSkillName(CRAFTING_TYPE_ALCHEMY)),
                 texture = "EsoUI/Art/Inventory/inventory_tabIcon_craftbag_alchemy_%s.dds",
-                index = 5,
+                index = 6,
                 filters = {
                     [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_POTION_BASE, ITEMTYPE_POISON_BASE, ITEMTYPE_REAGENT },
                 },
@@ -463,7 +463,7 @@ AwesomeGuildStore.FILTER_PRESETS = {
             {
                 label = zo_strformat(SI_TOOLTIP_ITEM_NAME, ZO_GetCraftingSkillName(CRAFTING_TYPE_ENCHANTING)),
                 texture = "EsoUI/Art/Inventory/inventory_tabIcon_craftbag_enchanting_%s.dds",
-                index = 6,
+                index = 7,
                 filters = {
                     [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_ENCHANTING_RUNE_ASPECT, ITEMTYPE_ENCHANTING_RUNE_ESSENCE, ITEMTYPE_ENCHANTING_RUNE_POTENCY },
                 },
@@ -475,7 +475,7 @@ AwesomeGuildStore.FILTER_PRESETS = {
             {
                 label = zo_strformat(SI_TOOLTIP_ITEM_NAME, ZO_GetCraftingSkillName(CRAFTING_TYPE_PROVISIONING)),
                 texture = "EsoUI/Art/Inventory/inventory_tabIcon_craftbag_provisioning_%s.dds",
-                index = 7,
+                index = 8,
                 filters = {
                     [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_INGREDIENT },
                 },
@@ -486,7 +486,7 @@ AwesomeGuildStore.FILTER_PRESETS = {
             {
                 label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_ITEMTYPE", ITEMTYPE_STYLE_MATERIAL)),
                 texture = "EsoUI/Art/Inventory/inventory_tabIcon_craftbag_stylematerial_%s.dds",
-                index = 8,
+                index = 9,
                 filters = {
                     [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_STYLE_MATERIAL, ITEMTYPE_RAW_MATERIAL },
                 },
@@ -495,17 +495,18 @@ AwesomeGuildStore.FILTER_PRESETS = {
                 },
             },
             {
+                -- these are the old entries for traits. we have to keep them around for now, due to way the state is saved and how tooltips work
+                hidden = true,
                 label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_ITEMTYPE", ITEMTYPE_WEAPON_TRAIT)),
                 texture = "EsoUI/Art/Crafting/smithing_tabIcon_weaponSet_%s.dds",
-                index = 9,
                 filters = {
                     [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_WEAPON_TRAIT },
                 }
             },
             {
+                hidden = true,
                 label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_ITEMTYPE", ITEMTYPE_ARMOR_TRAIT)),
                 texture = "EsoUI/Art/Crafting/smithing_tabIcon_armorSet_%s.dds",
-                index = 10,
                 filters = {
                     [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_ARMOR_TRAIT },
                 }
@@ -535,10 +536,34 @@ AwesomeGuildStore.FILTER_PRESETS = {
                         ITEMTYPE_ENCHANTING_RUNE_ASPECT, ITEMTYPE_ENCHANTING_RUNE_ESSENCE, ITEMTYPE_ENCHANTING_RUNE_POTENCY,
                         ITEMTYPE_INGREDIENT,
                         ITEMTYPE_STYLE_MATERIAL, ITEMTYPE_RAW_MATERIAL,
-                        ITEMTYPE_WEAPON_TRAIT,
-                        ITEMTYPE_ARMOR_TRAIT,
-                        ITEMTYPE_FURNISHING_MATERIAL
+                       -- ITEMTYPE_WEAPON_TRAIT,
+                       -- ITEMTYPE_ARMOR_TRAIT,
+                        ITEMTYPE_FURNISHING_MATERIAL,
+                       -- ITEMTYPE_JEWELRY_TRAIT, ITEMTYPE_JEWELRY_RAW_TRAIT,
+                        ITEMTYPE_JEWELRYCRAFTING_RAW_MATERIAL, ITEMTYPE_JEWELRYCRAFTING_MATERIAL, ITEMTYPE_JEWELRYCRAFTING_RAW_BOOSTER, ITEMTYPE_JEWELRYCRAFTING_BOOSTER
                     },
+                },
+            },
+            {
+                label = GetString("SI_ITEMFILTERTYPE", ITEMFILTERTYPE_JEWELRY),
+                texture = "EsoUI/Art/Inventory/inventory_tabIcon_craftBag_jewelryCrafting_%s.dds",
+                index = 5,
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_JEWELRYCRAFTING_RAW_MATERIAL, ITEMTYPE_JEWELRYCRAFTING_MATERIAL, ITEMTYPE_JEWELRYCRAFTING_RAW_BOOSTER, ITEMTYPE_JEWELRYCRAFTING_BOOSTER },
+                },
+                subfilters = {
+                    SUBFILTER_JEWELRY_MATERIAL_TYPE
+                },
+            },
+            {
+                label = GetString("SI_ITEMFILTERTYPE", ITEMFILTERTYPE_TRAIT_ITEMS),
+                texture = "EsoUI/Art/Inventory/inventory_tabIcon_craftBag_itemTrait_%s.dds",
+                index = 10,
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_WEAPON_TRAIT, ITEMTYPE_ARMOR_TRAIT, ITEMTYPE_JEWELRY_TRAIT, ITEMTYPE_JEWELRY_RAW_TRAIT },
+                },
+                subfilters = {
+                    SUBFILTER_TRAIT_MATERIAL_TYPE
                 },
             },
         }
@@ -1816,6 +1841,62 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
                 label = zo_strformat(SI_TOOLTIP_ITEM_NAME, ZO_GetCraftingSkillName(CRAFTING_TYPE_PROVISIONING)),
                 texture = "EsoUI/Art/Inventory/inventory_tabIcon_craftbag_provisioning_%s.dds",
                 value = SPECIALIZED_ITEMTYPE_FURNISHING_MATERIAL_PROVISIONING,
+            },
+        },
+    },
+    [SUBFILTER_TRAIT_MATERIAL_TYPE] = {
+        type = 53,
+        -- TRANSLATORS: title of the trait material type filter in the left panel on the search tab
+        label = gettext("Material Type"),
+        filter = TRADING_HOUSE_FILTER_TYPE_ITEM,
+        buttons = {
+            {
+                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_ITEMTYPE", ITEMTYPE_WEAPON_TRAIT)),
+                texture = "EsoUI/Art/Inventory/inventory_tabIcon_weapons_%s.dds",
+                value = ITEMTYPE_WEAPON_TRAIT,
+            },
+            {
+                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_ITEMTYPE", ITEMTYPE_ARMOR_TRAIT)),
+                texture = "EsoUI/Art/Inventory/inventory_tabIcon_armor_%s.dds",
+                value = ITEMTYPE_ARMOR_TRAIT,
+            },
+            {
+                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_ITEMTYPE", ITEMTYPE_JEWELRY_RAW_TRAIT)),
+                texture = "EsoUI/Art/Crafting/smithing_tabIcon_refine_%s.dds",
+                value = ITEMTYPE_JEWELRY_RAW_TRAIT,
+            },
+            {
+                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_ITEMTYPE", ITEMTYPE_JEWELRY_TRAIT)),
+                texture = "AwesomeGuildStore/images/jewelry_%s.dds",
+                value = ITEMTYPE_JEWELRY_TRAIT,
+            },
+        },
+    },
+    [SUBFILTER_JEWELRY_MATERIAL_TYPE] = {
+        type = 54,
+        -- TRANSLATORS: title of the furnishing material type filter in the left panel on the search tab
+        label = gettext("Material Type"),
+        filter = TRADING_HOUSE_FILTER_TYPE_ITEM,
+        buttons = {
+            {
+                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_ITEMTYPE", ITEMTYPE_JEWELRYCRAFTING_RAW_MATERIAL)),
+                texture = "AwesomeGuildStore/images/crafting/rawmaterial_%s.dds",
+                value = ITEMTYPE_JEWELRYCRAFTING_RAW_MATERIAL,
+            },
+            {
+                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_ITEMTYPE", ITEMTYPE_JEWELRYCRAFTING_MATERIAL)),
+                texture = "AwesomeGuildStore/images/crafting/material_%s.dds",
+                value = ITEMTYPE_JEWELRYCRAFTING_MATERIAL,
+            },
+            {
+                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_ITEMTYPE", ITEMTYPE_JEWELRYCRAFTING_RAW_BOOSTER)),
+                texture = "EsoUI/Art/Crafting/smithing_tabIcon_refine_%s.dds",
+                value = ITEMTYPE_JEWELRYCRAFTING_RAW_BOOSTER,
+            },
+            {
+                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_ITEMTYPE", ITEMTYPE_JEWELRYCRAFTING_BOOSTER)),
+                texture = "EsoUI/Art/WorldMap/map_ava_tabIcon_resourceProduction_%s.dds",
+                value = ITEMTYPE_JEWELRYCRAFTING_BOOSTER,
             },
         },
     }

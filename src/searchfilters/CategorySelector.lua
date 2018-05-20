@@ -294,9 +294,14 @@ end
 function CategorySelector:Deserialize(state)
 	local values = {zo_strsplit(";", state)}
 
-    if(tonumber(values[1]) == ITEMFILTERTYPE_ARMOR and values[2] == "6") then
+    local category = tonumber(values[1])
+    if(category == ITEMFILTERTYPE_ARMOR and values[2] == "6") then
         -- it's from the old jewelry subcategory
         ConvertJewelryFilterState(values)
+    elseif(category == ITEMFILTERTYPE_CRAFTING and (values[2] == "8" or values[2] == "9")) then
+        -- it's from one of the old trait material subcategories
+        values[3] = (values[2] == "8") and "34,2" or "34,4"
+        values[2] = 13
     end
 
 	for index, value in ipairs(values) do
