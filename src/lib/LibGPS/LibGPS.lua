@@ -3,7 +3,7 @@
 ------------------------------------------------------------------
 
 local LIB_NAME = "LibGPS2"
-local lib = LibStub:NewLibrary(LIB_NAME, 14)
+local lib = LibStub:NewLibrary(LIB_NAME, 15)
 
 if not lib then
     return
@@ -433,6 +433,9 @@ local function Initialize() -- wait until we have defined all functions
     end
     addRootMap(347) -- Coldhabour
     addRootMap(980) -- Clockwork City
+    if GetAPIVersion() >= 100023 then
+        addRootMap(1027) -- Artaeum
+    end
     -- Any future extra dimension map here
 
     SetMapToPlayerLocation() -- initial measurement so we can get back to where we are currently
