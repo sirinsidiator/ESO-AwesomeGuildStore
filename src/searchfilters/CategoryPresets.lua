@@ -1585,6 +1585,11 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
                 texture = "EsoUI/Art/Crafting/designs_tabicon_%s.dds",
                 value = SPECIALIZED_ITEMTYPE_RECIPE_PROVISIONING_DESIGN_FURNISHING,
             },
+            {
+                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_RECIPE_JEWELRYCRAFTING_SKETCH_FURNISHING)),
+                texture = "EsoUI/Art/Crafting/sketches_tabicon_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_RECIPE_JEWELRYCRAFTING_SKETCH_FURNISHING,
+            },
         },
     },
     [SUBFILTER_DRINK_TYPE] = {
