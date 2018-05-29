@@ -1847,6 +1847,11 @@ AwesomeGuildStore.SUBFILTER_PRESETS = {
                 texture = "EsoUI/Art/Inventory/inventory_tabIcon_craftbag_provisioning_%s.dds",
                 value = SPECIALIZED_ITEMTYPE_FURNISHING_MATERIAL_PROVISIONING,
             },
+            {
+                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, ZO_GetCraftingSkillName(CRAFTING_TYPE_JEWELRYCRAFTING)),
+                texture = "EsoUI/Art/Inventory/inventory_tabIcon_craftbag_jewelrycrafting_%s.dds",
+                value = SPECIALIZED_ITEMTYPE_FURNISHING_MATERIAL_JEWELRYCRAFTING,
+            },
         },
     },
     [SUBFILTER_TRAIT_MATERIAL_TYPE] = {
