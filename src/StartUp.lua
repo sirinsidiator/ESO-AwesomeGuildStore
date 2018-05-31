@@ -95,9 +95,9 @@ do
     local LONG_PREFIX = "AwesomeGuildStore"
     local SHORT_PREFIX = "AGS"
 
-    local prefix = LONG_PREFIX 
+    local prefix = LONG_PREFIX
     local function SetMessagePrefix(isShort)
-        prefix = isShort and SHORT_PREFIX or LONG_PREFIX 
+        prefix = isShort and SHORT_PREFIX or LONG_PREFIX
     end
 
     local function Print(message, ...)
@@ -198,6 +198,31 @@ local function IntegrityCheck()
     assert(AwesomeGuildStore.InitializeGuildList)
     assert(AwesomeGuildStore.InitializeGuildStoreList)
     assert(AwesomeGuildStore.SalesCategorySelector)
+end
+
+do
+    -- workaround for insecure code errors due to the ZO_ItemSlotActionsController being lazily instantiated
+    HUD_SCENE:AddFragment(INVENTORY_FRAGMENT)
+    HUD_UI_SCENE:AddFragment(INVENTORY_FRAGMENT)
+
+    local original = ZO_CharacterWindowStats_HideComparisonValues
+    ZO_CharacterWindowStats_HideComparisonValues = ZO_InventorySlot_RemoveMouseOverKeybinds -- force the controller to be instantiated
+    ZO_PreHook("ZO_CharacterWindowStats_HideComparisonValues", function()
+        ZO_CharacterWindowStats_HideComparisonValues = original
+    end)
+
+    -- and clean up afterwards
+    local function OnStateChange(oldState, newState)
+        if newState == SCENE_SHOWN then
+            INVENTORY_FRAGMENT.control:SetHidden(true) -- make sure it doesn't show up
+            HUD_UI_SCENE:RemoveFragment(INVENTORY_FRAGMENT)
+            HUD_SCENE:RemoveFragment(INVENTORY_FRAGMENT)
+            HUD_UI_SCENE:UnregisterCallback("StateChange", OnStateChange)
+            HUD_SCENE:UnregisterCallback("StateChange", OnStateChange)
+        end
+    end
+    HUD_UI_SCENE:RegisterCallback("StateChange", OnStateChange)
+    HUD_SCENE:RegisterCallback("StateChange", OnStateChange)
 end
 
 OnAddonLoaded(function()
