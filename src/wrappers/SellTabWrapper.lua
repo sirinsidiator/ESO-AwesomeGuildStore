@@ -363,7 +363,7 @@ function SellTabWrapper:InitializeCraftingBag(tradingHouseWrapper)
                     self.tradingHouse:ClearPendingPost()
                     ZO_InventorySlot_OnMouseEnter(inventorySlot)
                 end, "primary")
-            else
+            elseif(inventorySlot.slotType ~= SLOT_TYPE_TRADING_HOUSE_POST_ITEM) then
                 slotActions:AddCustomSlotAction(SI_TRADING_HOUSE_ADD_ITEM_TO_LISTING, function()
                     TryInitiatingItemPost(inventorySlot)
                 end, "primary")
