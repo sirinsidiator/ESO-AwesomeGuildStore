@@ -13,6 +13,7 @@ local iconMarkup = string.format("|t%u:%u:%s|t", 16, 16, "EsoUI/Art/currency/cur
 local POST_ITEM_PENDING_UPDATE_NAMESPACE = "AwesomeGuildStorePostPendingItemPendingUpdate"
 local SUPPRESS_PRICE_PER_PIECE_UPDATE = true
 local SKIP_UPDATE_SLIDER = true
+local SKIP_MOUSE_ENTER = true
 local SLIDER_HEIGHT = 54
 local LISTING_INPUT_BUTTON_SIZE = 24
 local INVENTORY_BUTTON_SIZE = 64
@@ -161,10 +162,13 @@ end
 
 function SellTabWrapper:InitializeQuickListing(tradingHouseWrapper)
     ZO_PreHook("ZO_InventorySlot_OnSlotClicked", function(inventorySlot, button)
-        if(self.isOpen and self.saveData.listWithSingleClick and button == MOUSE_BUTTON_INDEX_LEFT) then
+        if(self.isOpen and self.saveData.listWithSingleClick and button == MOUSE_BUTTON_INDEX_LEFT and not self.suppressNextClick) then
             ZO_InventorySlot_DoPrimaryAction(inventorySlot)
             return true
         end
+    end)
+    RegisterForEvent(EVENT_GLOBAL_MOUSE_UP, function()
+        self.suppressNextClick = false
     end)
 end
 
@@ -331,7 +335,7 @@ function SellTabWrapper:InitializeCraftingBag(tradingHouseWrapper)
     end
     craftbagButton.HandleRelease = function(button, doRelease) return doRelease end
 
-    local function TryInitiatingItemPost(inventorySlot)
+    local function TryInitiatingItemPost(inventorySlot, skipMouseEnter)
         local bag, slot = ZO_Inventory_GetBagAndIndex(inventorySlot)
         self:SetPendingItemLockColor(ZO_ScrollList_GetData(inventorySlot:GetParent()))
         self:SetPendingItem(bag, slot)
@@ -351,7 +355,9 @@ function SellTabWrapper:InitializeCraftingBag(tradingHouseWrapper)
             tradingHouse:SetPendingPostPrice(self.currentSellPrice)
 
             ZO_InventorySlot_HandleInventoryUpdate(pendingItem)
-            ZO_InventorySlot_OnMouseEnter(inventorySlot)
+            if(not skipMouseEnter) then
+                ZO_InventorySlot_OnMouseEnter(inventorySlot)
+            end
         end
     end
 
@@ -408,7 +414,7 @@ function SellTabWrapper:InitializeCraftingBag(tradingHouseWrapper)
 
     local function CreateTempStack()
         local promise = Promise:New()
-        if(self.currentSellPrice <= 0) then 
+        if(self.currentSellPrice <= 0) then
             promise:Reject(TEMP_STACK_ERROR_INVALID_SELL_PRICE)
         elseif(not self.tempSlot) then
             promise:Reject(TEMP_STACK_ERROR_INVENTORY_FULL)
@@ -480,7 +486,7 @@ function SellTabWrapper:InitializeCraftingBag(tradingHouseWrapper)
         UpdateLastSoldData() -- update regardless of the outcome
         if(self.requiresTempSlot) then
             CreateTempStack():Then(SetTempStackPending):Then(function()
-                 -- now we can post the item for real
+                -- now we can post the item for real
                 tradingHouse:PostPendingItem()
             end, function(error)
                 local message = TEMP_STACK_ERROR_MESSAGE[error]
@@ -505,6 +511,60 @@ function SellTabWrapper:InitializeCraftingBag(tradingHouseWrapper)
         tradingHouse.m_pendingItemSlot = nil
     end)
     self.tradingHouse = tradingHouse
+
+    ZO_PreHook("ZO_InventorySlot_OnDragStart", function(inventorySlot)
+        if(self.isOpen and self:IsCraftBagActive() and GetCursorContentType() == MOUSE_CONTENT_EMPTY) then
+            local inventorySlotButton = ZO_InventorySlot_GetInventorySlotComponents(inventorySlot)
+            if(ZO_InventorySlot_GetStackCount(inventorySlotButton) > 0) then
+                local bag, index = ZO_Inventory_GetBagAndIndex(inventorySlotButton)
+                CallSecureProtected("PickupInventoryItem", bag, index)
+                if(inventorySlotButton.slotType == SLOT_TYPE_TRADING_HOUSE_POST_ITEM and self.pendingInventorySlot) then
+                    self.draggedSlot = ZO_InventorySlot_GetInventorySlotComponents(self.pendingInventorySlot.slotControl)
+                    self.tradingHouse:ClearPendingPost()
+                else
+                    self.draggedSlot = inventorySlotButton
+                end
+                return true
+            end
+        end
+    end)
+
+    ZO_PreHook("ZO_InventorySlot_OnReceiveDrag", function(inventorySlot)
+        if(self.isOpen and GetCursorContentType() ~= MOUSE_CONTENT_EMPTY) then
+            if(inventorySlot.slotType == SLOT_TYPE_TRADING_HOUSE_POST_ITEM) then
+                -- small hack so the quick click handler doesn't clear the item right away
+                self.suppressNextClick = true
+            end
+
+            if(self.draggedSlot and self:IsCraftBagActive()) then
+                if(inventorySlot.slotType == SLOT_TYPE_TRADING_HOUSE_POST_ITEM) then
+                    local bag, index = ZO_Inventory_GetBagAndIndex(self.draggedSlot)
+                    if(index and bag == BAG_VIRTUAL) then
+                        TryInitiatingItemPost(self.draggedSlot, SKIP_MOUSE_ENTER)
+                        ClearCursor()
+                        self.draggedSlot = nil
+                        return true
+                    end
+                else
+                    -- do nothing
+                    ClearCursor()
+                    return true
+                end
+            end
+        end
+    end)
+
+    RegisterForEvent(EVENT_CURSOR_PICKUP, function(_, type, bag, index)
+        if(self.isOpen and self:IsCraftBagActive()) then
+            PLAYER_INVENTORY:OnInventorySlotLocked(bag, index)
+        end
+    end)
+
+    RegisterForEvent(EVENT_CURSOR_DROPPED, function(_, type, bag, index)
+        if(self.isOpen and self:IsCraftBagActive() and not (self.pendingBagId == bag and self.pendingSlotIndex == index)) then
+            PLAYER_INVENTORY:OnInventorySlotUnlocked(bag, index)
+        end
+    end)
 end
 
 function SellTabWrapper:ClearPendingItem()
