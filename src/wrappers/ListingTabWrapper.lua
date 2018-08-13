@@ -178,17 +178,15 @@ function ListingTabWrapper:InitializeCancelSaleOperation(tradingHouseWrapper)
     end)
 
     local ActivityBase = AwesomeGuildStore.ActivityBase
-    local originalZO_TradingHouse_CreateItemData = ZO_TradingHouse_CreateItemData
-    ZO_TradingHouse_CreateItemData = function(index, fn)
-        local result = originalZO_TradingHouse_CreateItemData(index, fn)
+    local originalZO_TradingHouse_CreateListingItemData = ZO_TradingHouse_CreateListingItemData
+    ZO_TradingHouse_CreateListingItemData = function(index)
+        local result = originalZO_TradingHouse_CreateListingItemData(index)
         if(result) then
-            if(fn == GetTradingHouseListingItemInfo) then
-                local guildId = GetSelectedTradingHouseGuildId()
-                local key = string.format("%d_%d", ActivityBase.ACTIVITY_TYPE_CANCEL_SALE, guildId) -- TODO: make it work with multiple cancel operations
-                local operation = activityManager:GetActivity(key)
-                if(operation and operation.listingIndex == result.slotIndex) then
-                    result.cancelPending = true
-                end
+            local guildId = GetSelectedTradingHouseGuildId()
+            local key = string.format("%d_%d", ActivityBase.ACTIVITY_TYPE_CANCEL_SALE, guildId) -- TODO: make it work with multiple cancel operations
+            local operation = activityManager:GetActivity(key)
+            if(operation and operation.listingIndex == result.slotIndex) then
+                result.cancelPending = true
             end
             return result
         end

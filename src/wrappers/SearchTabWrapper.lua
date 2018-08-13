@@ -249,7 +249,7 @@ function SearchTabWrapper:InitializePageFiltering(tradingHouseWrapper)
             searchTabWrapper:UpdateItemsLabels(self, itemCount, filteredItemCount)
 
             local shouldHide = (filteredItemCount ~= 0 or self.m_search:HasPreviousPage() or self.m_search:HasNextPage())
-            self.m_noItemsLabel:SetHidden(shouldHide)
+            self.noSearchItemsContainer:SetHidden(shouldHide)
             self.m_searchAllowed = true -- don't disable search when we have inpage filters active
 
             if(self.isReceivingResults and searchTabWrapper.isOpen and filteredItemCount == 0 and saveData.skipEmptyPages and self.m_search:HasNextPage()) then
