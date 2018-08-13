@@ -695,7 +695,7 @@ end
 function SearchTabWrapper:PrintPurchaseMessageForEntry(entry)
     local count = entry.stackCount
     local seller = ZO_LinkHandler_CreateDisplayNameLink(entry.sellerName:gsub("|c.-$", "")) -- have to strip the stuff that MM is adding to the end
-    local price = zo_strformat("<<1>> <<2>>", ZO_CurrencyControl_FormatCurrency(entry.price), iconMarkup)
+    local price = ZO_Currency_FormatPlatform(CURT_MONEY, entry.price, ZO_CURRENCY_FORMAT_AMOUNT_ICON)
     local itemLink = entry.itemLinkBrackets
     local guildName = entry.guildName
     -- TRANSLATORS: chat message when an item is bought from the store. <<1>> is replaced with the item count, <<t:2>> with the item link, <<3>> with the seller name, <<4>> with price and <<5>> with the guild store name. e.g. You have bought 1x [Rosin] from sirinsidiator for 5000g in Imperial Trading Company

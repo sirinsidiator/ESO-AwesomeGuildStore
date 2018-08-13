@@ -9,7 +9,6 @@ local GetItemLinkWritCount = AwesomeGuildStore.GetItemLinkWritCount
 local SellTabWrapper = ZO_Object:Subclass()
 AwesomeGuildStore.SellTabWrapper = SellTabWrapper
 
-local iconMarkup = string.format("|t%u:%u:%s|t", 16, 16, "EsoUI/Art/currency/currency_gold.dds")
 local POST_ITEM_PENDING_UPDATE_NAMESPACE = "AwesomeGuildStorePostPendingItemPendingUpdate"
 local SUPPRESS_PRICE_PER_PIECE_UPDATE = true
 local SKIP_UPDATE_SLIDER = true
@@ -701,7 +700,7 @@ function SellTabWrapper:InitializeListedNotification(tradingHouseWrapper)
     tradingHouseWrapper:Wrap("PostPendingItem", function(originalPostPendingItem, self)
         if(self.m_pendingItemSlot and self.m_pendingSaleIsValid) then
             local count = ZO_InventorySlot_GetStackCount(self.m_pendingItem)
-            local price = zo_strformat("<<1>> <<2>>", ZO_CurrencyControl_FormatCurrency(self.m_invoiceSellPrice.sellPrice or 0), iconMarkup)
+            local price = ZO_Currency_FormatPlatform(CURT_MONEY, self.m_invoiceSellPrice.sellPrice or 0, ZO_CURRENCY_FORMAT_AMOUNT_ICON)
             local _, guildName = GetCurrentTradingHouseGuildDetails()
             local itemLink = GetItemLink(BAG_BACKPACK, self.m_pendingItemSlot)
 

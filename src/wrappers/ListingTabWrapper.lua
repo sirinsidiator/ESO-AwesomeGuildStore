@@ -9,8 +9,6 @@ AwesomeGuildStore.TRADING_HOUSE_SORT_LISTING_NAME = TRADING_HOUSE_SORT_LISTING_N
 AwesomeGuildStore.TRADING_HOUSE_SORT_LISTING_PRICE = TRADING_HOUSE_SORT_LISTING_PRICE
 AwesomeGuildStore.TRADING_HOUSE_SORT_LISTING_TIME = TRADING_HOUSE_SORT_LISTING_TIME
 
-local iconMarkup = string.format("|t%u:%u:%s|t", 16, 16, "EsoUI/Art/currency/currency_gold.dds")
-
 local ascSortFunctions = {
     [TRADING_HOUSE_SORT_LISTING_NAME] = function(a, b) return a.data.name < b.data.name end,
     [TRADING_HOUSE_SORT_LISTING_PRICE] = function(a, b) return a.data.purchasePrice < b.data.purchasePrice end,
@@ -246,7 +244,7 @@ function ListingTabWrapper:InitializeCancelNotification(tradingHouseWrapper)
     local cancelMessage = ""
     tradingHouseWrapper:Wrap("ShowCancelListingConfirmation", function(originalShowCancelListingConfirmation, self, listingIndex)
         local _, _, _, count, _, _, price = GetTradingHouseListingItemInfo(listingIndex)
-        price = zo_strformat("<<1>> <<2>>", ZO_CurrencyControl_FormatCurrency(price), iconMarkup)
+        price = ZO_Currency_FormatPlatform(CURT_MONEY, price, ZO_CURRENCY_FORMAT_AMOUNT_ICON)
         local itemLink = GetTradingHouseListingItemLink(listingIndex)
         local _, guildName = GetCurrentTradingHouseGuildDetails()
         -- TRANSLATORS: chat message when an item listing is cancelled on the listing tab. <<1>> is replaced with the item count, <<t:2>> with the item link, <<3>> with the price and <<4>> with the guild store name. e.g. You have cancelled your listing of 1x [Rosin] for 5000g in Imperial Trading Company
@@ -287,7 +285,8 @@ function ListingTabWrapper:RefreshListingPriceSumDisplay()
         local _, _, _, _, _, _, price = GetTradingHouseListingItemInfo(i)
         sum = sum + price
     end
-    sum = zo_strformat("|cffffff<<1>>|r <<2>>", ZO_CurrencyControl_FormatCurrency(sum), iconMarkup)
+
+    sum = zo_strformat("|cffffff<<1>>|r", ZO_Currency_FormatPlatform(CURT_MONEY, sum, ZO_CURRENCY_FORMAT_AMOUNT_ICON))
     self.listingPriceSumControl:SetText(gettext("Overall Price: <<1>>", sum))
 end
 

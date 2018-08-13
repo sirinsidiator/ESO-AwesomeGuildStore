@@ -228,7 +228,7 @@ AwesomeGuildStore.InitializeAugmentedMails = function(saveData)
 		if(transactionData) then
 			local buyerLink = neutralColor:Colorize(ZO_LinkHandler_CreateDisplayNameLink(transactionData.buyerName)):gsub("[%[%]]", "")
 			local itemCount = neutralColor:Colorize(transactionData.itemCount .. "x")
-			local sellPrice = neutralColor:Colorize(zo_strformat("<<1>> <<2>>", ZO_CurrencyControl_FormatCurrency(transactionData.sellPrice), iconMarkup))
+			local sellPrice = ZO_Currency_FormatPlatform(CURT_MONEY, transactionData.sellPrice, ZO_CURRENCY_FORMAT_AMOUNT_ICON)
 			-- TRANSLATORS: Mail body for item sold mails from the guild store. <<t:1>> is replaced by the itemlink, <<2>> by the item count, <<3>> by the buyer name and <<4>> by the sell price. e.g. You sold 1 Rosin to sirinsidiator for 5000g.  
 			return gettext("You sold <<2>> <<t:1>> to <<3>> for <<4>>.", transactionData.itemLink, itemCount, buyerLink, sellPrice)
 		else
