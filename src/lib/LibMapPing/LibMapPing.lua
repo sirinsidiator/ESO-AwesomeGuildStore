@@ -1,5 +1,5 @@
 local LIB_IDENTIFIER = "LibMapPing"
-local lib = LibStub:NewLibrary(LIB_IDENTIFIER, 6)
+local lib = LibStub:NewLibrary(LIB_IDENTIFIER, 7)
 
 if not lib then
     return -- already loaded and no upgrade necessary
@@ -8,6 +8,106 @@ end
 local function Log(message, ...)
     df("[%s] %s", LIB_IDENTIFIER, message:format(...))
 end
+
+
+-- emulate how the game calculates when a player should get kicked for sending too many pings and prevent it
+
+local DEFAULT_MODIFIER = 2.15
+local COMBAT_MODIFIER = 39
+local FILL_RATE = 0.512
+local BUCKET_SIZE = 100
+local SAFETY_THRESHOLD = 10
+local TIME_FRAME = 3
+local RESOLUTION = 10
+
+local RollingAverage = ZO_Object:Subclass()
+
+function RollingAverage:New(...)
+    local obj = ZO_Object.New(self)
+    obj:Initialize(...)
+    return obj
+end
+
+function RollingAverage:Initialize(timeframe, resolution)
+    self.timeframe = timeframe
+    self.resolution = resolution
+    self.count = timeframe * resolution
+    self.sumList = {}
+    self.lastIndex = self:GetCurrentIndex()
+
+    for i = 1, self.count do
+        self.sumList[i] = 0
+    end
+end
+
+function RollingAverage:GetCurrentIndex()
+    return math.floor(self.resolution * GetGameTimeMilliseconds() / 1000) % self.count
+end
+
+function RollingAverage:Increment()
+    local index = self:GetCurrentIndex()
+    while self.lastIndex ~= index do
+        self.lastIndex = (self.lastIndex + 1) % self.count
+        self.sumList[self.lastIndex] = 0
+    end
+    self.sumList[index] = self.sumList[index] + 1
+end
+
+function RollingAverage:GetAverage()
+    local index = self:GetCurrentIndex()
+    local average = 0
+    for i = 1, self.count do
+        if(i ~= index) then
+            average = average + self.sumList[i]
+        end
+    end
+    return math.floor(average / (self.count - 1) * self.resolution)
+end
+
+
+local LeakyBucket = ZO_Object:Subclass()
+
+function LeakyBucket:New(...)
+    local obj = ZO_Object.New(self)
+    obj:Initialize(...)
+    return obj
+end
+
+function LeakyBucket:Initialize()
+    self.average = RollingAverage:New(TIME_FRAME, RESOLUTION)
+    self.size = BUCKET_SIZE
+    self.generatedTokens = 1 / FILL_RATE
+    self.safetyThreshold = SAFETY_THRESHOLD
+
+    self.left = self.size
+    self.lastCheck = GetGameTimeMilliseconds()
+end
+
+function LeakyBucket:GetTokensLeft()
+    local now = GetGameTimeMilliseconds()
+    local average = self.average:GetAverage()
+    local modifier = IsUnitInCombat("player") and COMBAT_MODIFIER or DEFAULT_MODIFIER
+    local burstRate = average * modifier
+
+    local delta = (now - self.lastCheck) / 1000
+    self.left = math.min(self.left + delta * self.generatedTokens, self.size);
+    self.lastCheck = now
+    return self.left
+end
+
+function LeakyBucket:HasTokensLeft()
+    return self:GetTokensLeft() > self.safetyThreshold
+end
+
+function LeakyBucket:Take()
+    if(self:HasTokensLeft()) then
+        self.left = self.left - 1
+        self.average:Increment()
+        return true
+    end
+    return false
+end
+
 
 local MAP_PIN_TYPE_PLAYER_WAYPOINT = MAP_PIN_TYPE_PLAYER_WAYPOINT
 local MAP_PIN_TYPE_PING = MAP_PIN_TYPE_PING
@@ -40,6 +140,7 @@ lib.suppressPing = lib.suppressPing or {}
 lib.pingState = lib.pingState or {}
 lib.pendingPing = lib.pendingPing or {}
 lib.cm = lib.cm or ZO_CallbackObject:New()
+lib.bucket = LeakyBucket:New()
 local g_mapPinManager = lib.mapPinManager
 
 local function GetPingTagFromType(pingType)
@@ -52,6 +153,7 @@ local function GetKey(pingType, pingTag)
 end
 
 -- TODO keep an eye on worldmap.lua for changes
+-- TODO test if SetPlayerWaypointByWorldLocation does anything different
 local function HandleMapPing(eventCode, pingEventType, pingType, pingTag, x, y, isPingOwner)
     local key = GetKey(pingType, pingTag)
     local data = lib.pendingPing[key]
@@ -105,10 +207,12 @@ end
 
 local function CustomPingMap(pingType, mapType, x, y)
     if(pingType == MAP_PIN_TYPE_PING and not IsUnitGrouped("player")) then return end
-    local key = GetKey(pingType)
-    lib.pingState[key] = lib.MAP_PING_SET_PENDING
-    ResetEventWatchdog(key, PING_EVENT_ADDED, pingType, x, y, GetCurrentMapZoneIndex())
-    return originalPingMap(pingType, mapType, x, y)
+    if(pingType == MAP_PIN_TYPE_PLAYER_WAYPOINT or lib.bucket:Take()) then
+        local key = GetKey(pingType)
+        lib.pingState[key] = lib.MAP_PING_SET_PENDING
+        ResetEventWatchdog(key, PING_EVENT_ADDED, pingType, x, y, GetCurrentMapZoneIndex())
+        return originalPingMap(pingType, mapType, x, y)
+    end
 end
 
 local function CustomGetMapPlayerWaypoint()
