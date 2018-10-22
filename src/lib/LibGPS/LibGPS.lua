@@ -3,7 +3,7 @@
 ------------------------------------------------------------------
 
 local LIB_NAME = "LibGPS2"
-local lib = LibStub:NewLibrary(LIB_NAME, 15)
+local lib = LibStub:NewLibrary(LIB_NAME, 16)
 
 if not lib then
     return
@@ -433,9 +433,7 @@ local function Initialize() -- wait until we have defined all functions
     end
     addRootMap(347) -- Coldhabour
     addRootMap(980) -- Clockwork City
-    if GetAPIVersion() >= 100023 then
-        addRootMap(1027) -- Artaeum
-    end
+    addRootMap(1027) -- Artaeum
     -- Any future extra dimension map here
 
     SetMapToPlayerLocation() -- initial measurement so we can get back to where we are currently
@@ -665,6 +663,23 @@ function lib:MapZoomInMax(x, y)
     return result
 end
 
+local SetCurrentZoom, GetCurrentZoom -- TODO remove
+if(GetAPIVersion() >= 100025) then
+    function SetCurrentZoom(zoom)
+        return lib.panAndZoom:SetCurrentNormalizedZoom(zoom)
+    end
+    function GetCurrentZoom()
+        return lib.panAndZoom:GetCurrentNormalizedZoom()
+    end
+else
+    function GetCurrentZoom()
+        return lib.panAndZoom:GetCurrentZoom()
+    end
+    function SetCurrentZoom(zoom)
+        return lib.panAndZoom:SetCurrentZoom(zoom)
+    end
+end
+
 --- Stores information about how we can back to this map on a stack.
 -- There is no panAndZoom:GetCurrentOffset(), yet
 local function CalculateContainerAnchorOffsets()
@@ -678,7 +693,7 @@ function lib:PushCurrentMap()
     wasPlayerLocation = DoesCurrentMapMatchMapForPlayerLocation()
     targetMapTileTexture = GetMapTileTexture()
     currentMapFloor, currentMapFloorCount = GetMapFloorInfo()
-    zoom = self.panAndZoom:GetCurrentZoom()
+    zoom = GetCurrentZoom()
     offsetX, offsetY = CalculateContainerAnchorOffsets()
 
     mapStack[#mapStack + 1] = { wasPlayerLocation, targetMapTileTexture, currentMapFloor, currentMapFloorCount, currentMapIndex, zoom, offsetX, offsetY }
@@ -759,7 +774,7 @@ function lib:PopCurrentMap()
                 result = orgSetMapFloor(currentMapFloor)
             end
             if (result ~= SET_MAP_RESULT_FAILED) then
-                lib.panAndZoom:SetCurrentZoom(zoom)
+                SetCurrentZoom(zoom)
                 lib.panAndZoom:SetCurrentOffset(offsetX, offsetY)
             end
         end
