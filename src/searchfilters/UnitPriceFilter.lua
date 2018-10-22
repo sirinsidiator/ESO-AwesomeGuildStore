@@ -11,6 +11,7 @@ local UPPER_LIMIT = 2100000000
 local values = { LOWER_LIMIT, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30, 35, 40, 45, 50, 100, 200, 300, 400, 500, 700, 800, 900, 1000, 2000, 3000, 4000, 5000, 10000, 50000, 100000, UPPER_LIMIT }
 local MIN_VALUE = 0
 local MAX_VALUE = #values
+local MIN_RANGE = 1
 local LINE_SPACING = 4
 local UNIT_PRICE_FILTER_TYPE_ID = 6
 
@@ -26,33 +27,26 @@ end
 function UnitPriceFilter:InitializeControls(name)
     local container = self.container
 
-    local label = container:CreateControl(name .. "Label", CT_LABEL)
-    label:SetFont("ZoFontWinH4")
     -- TRANSLATORS: title of the unit price filter in the left panel on the search tab
-    label:SetText(gettext("Unit Price Filter:"))
-    self:SetLabelControl(label)
+    self:SetLabel(gettext("Unit Price Range"))
 
-    local slider = MinMaxRangeSlider:New(container, name .. "Slider")
+    local slider = MinMaxRangeSlider:New("$(parent)Slider", container)
     slider:SetMinMax(MIN_VALUE, MAX_VALUE)
-    slider:SetMinRange(1)
+    slider:SetMinRange(MIN_RANGE)
     slider:SetRangeValue(MIN_VALUE, MAX_VALUE)
     slider.control:ClearAnchors()
-    slider.control:SetAnchor(TOPLEFT, label, BOTTOMLEFT, 0, LINE_SPACING)
-    slider.control:SetAnchor(RIGHT, container, RIGHT, 0, 0)
+    slider.control:SetAnchor(TOPLEFT, container, TOPLEFT, 0, 0)
+    slider.control:SetAnchor(TOPRIGHT, container, TOPRIGHT, 0, 0)
+    slider:UpdateVisuals()
     self.slider = slider
 
     local inputContainer = CreateControlFromVirtual(name .. "Input", container, "AwesomeGuildStorePriceInputTemplate")
     inputContainer:SetAnchor(TOPLEFT, slider.control, BOTTOMLEFT, 0, LINE_SPACING)
 
-    container:SetHeight(71)
-
     self.minPriceBox = inputContainer:GetNamedChild("MinPriceBox")
     self.minPriceBox:SetTextType(TEXT_TYPE_NUMERIC)
     self.maxPriceBox = inputContainer:GetNamedChild("MaxPriceBox")
     self.maxPriceBox:SetTextType(TEXT_TYPE_NUMERIC)
-
-    local tooltipText = gettext("Reset <<1>> Filter", label:GetText():gsub(":", ""))
-    self.resetButton:SetTooltipText(tooltipText)
 end
 
 local function ToNearestLinear(value)
@@ -194,7 +188,7 @@ function UnitPriceFilter:GetTooltipText(state)
     end
 
     if(priceText ~= "") then
-        return {{label = gettext("Unit Price Filter:"):sub(0, -2), text = priceText}}
+        return {{label = self:GetLabel(), text = priceText}}
     end
     return {}
 end

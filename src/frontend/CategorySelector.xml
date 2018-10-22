@@ -1,0 +1,45 @@
+<GuiXml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sir.insidi.at/or/schema/esoui.xsd">
+    <Controls>
+        <Control name="AwesomeGuildStoreCategorySelectorTemplate" virtual="true" resizeToFitDescendents="true">
+            <Controls>
+                <Control name="$(parent)MainCategories" resizeToFitDescendents="true">
+                    <Anchor point="TOPLEFT" />
+                    <Anchor point="TOPRIGHT" offsetX="-80" />
+                </Control>
+
+                <Label name="$(parent)Label" font="ZoFontWinH3" wrapMode="ELLIPSIS" modifyTextType="UPPERCASE">
+                    <Anchor point="LEFT" constrains="X" />
+                    <Anchor point="LEFT" relativeTo="$(parent)MainCategories" constrains="Y" />
+                </Label>
+
+                <Texture name="$(parent)Divider" textureFile="EsoUI/Art/Miscellaneous/centerscreen_topDivider.dds">
+                    <Dimensions x="600" y="4" />
+                    <Anchor point="TOP" constrains="X" />
+                    <Anchor point="TOP" relativeTo="$(parent)MainCategories" relativePoint="BOTTOM" offsetY="2" constrains="Y" />
+                </Texture>
+
+                <Control name="$(parent)SubCategoryRow" resizeToFitDescendents="true" hidden="true">
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)MainCategories" relativePoint="BOTTOMLEFT" offsetY="4" />
+                    <Anchor point="RIGHT" constrains="X" />
+
+                    <Controls>
+                        <Control name="$(parent)Categories" resizeToFitDescendents="true">
+                            <Anchor point="TOPRIGHT" offsetX="-100" />
+                        </Control>
+
+                        <Label name="$(parent)Label" font="ZoFontWinH5" wrapMode="ELLIPSIS" modifyTextType="UPPERCASE">
+                            <Anchor point="LEFT" constrains="X" />
+                            <Anchor point="LEFT" relativeTo="$(parent)Categories" constrains="Y" />
+                        </Label>
+
+                        <Texture name="$(parent)Divider" textureFile="EsoUI/Art/Miscellaneous/centerscreen_topDivider.dds">
+                            <Dimensions x="500" y="3" />
+                            <Anchor point="TOP" constrains="X" />
+                            <Anchor point="TOP" relativeTo="$(parent)Categories" relativePoint="BOTTOM" offsetY="2" constrains="Y" />
+                        </Texture>
+                    </Controls>
+                </Control>
+            </Controls>
+        </Control>
+    </Controls>
+</GuiXml>

@@ -24,25 +24,23 @@ function CategorySubfilter:Initialize(name, tradingHouseWrapper, subfilterPreset
     local container = self.container
     self.preset = subfilterPreset
 
-    local label = container:CreateControl(name .. "Label", CT_LABEL)
-    label:SetFont("ZoFontWinH4")
-    label:SetText(subfilterPreset.label .. ":")
-    self:SetLabelControl(label)
+    self:SetLabel(subfilterPreset.label)
 
-    local group = ButtonGroup:New(container, name .. "Group", 0, 0)
+    local group = ButtonGroup:New(container, "$(parent)Group", 0, 0)
     group.filterType = subfilterPreset.filter
     self.group = group
 
     local buttons = {}
     self.buttons = buttons
+    local spacing = container:GetWidth() / BUTTONS_PER_ROW
     for index, buttonPreset in ipairs(subfilterPreset.buttons) do
-        local button = ToggleButton:New(group.control, group.control:GetName() .. "Button" .. index, buttonPreset.texture, 0, 0, BUTTON_SIZE, BUTTON_SIZE, buttonPreset.label)
+        local button = ToggleButton:New(group.control, "$(parent)Button" .. index, buttonPreset.texture, 0, 0, BUTTON_SIZE, BUTTON_SIZE, buttonPreset.label)
         button.HandlePress = function()
             if(not subfilterPreset.isLocal and group.pressedButtonCount > FILTER_ARGS_LIMIT) then
                 -- TRANSLATORS: alert text when more than the maximum possible amount of filter categories is selected
                 local message = gettext("Cannot filter for more than %d at a time"):format(FILTER_ARGS_LIMIT)
                 ZO_Alert(UI_ALERT_CATEGORY_ERROR, SOUNDS.GENERAL_ALERT_ERROR, message)
-                self.resetButton:SetHidden(false)
+                self:SetResetHidden(false)
                 return false
             end
             if(subfilterPreset.singleButtonMode) then
@@ -60,14 +58,15 @@ function CategorySubfilter:Initialize(name, tradingHouseWrapper, subfilterPreset
         button.value = buttonPreset.value
         button.index = index
         group:AddButton(button)
+
+        local buttonControl = button.control
+        local x = spacing * (math.mod(#buttons, BUTTONS_PER_ROW))
+        local y = BUTTON_SIZE * math.floor(#buttons / BUTTONS_PER_ROW)
+        buttonControl:ClearAnchors()
+        buttonControl:SetAnchor(TOPLEFT, group.control, TOPLEFT, x, y)
+
         buttons[#buttons + 1] = button
     end
-
-    container:SetHeight(label:GetHeight() + LINE_SPACING + group.control:GetHeight())
-
-    -- TRANSLATORS: tooltip text for the reset filter buttons. will automatically insert the filter title (e.g. "Reset Weapon Type Filter")
-    local tooltipText = gettext("Reset <<1>> Filter", subfilterPreset.label)
-    self.resetButton:SetTooltipText(tooltipText)
 end
 
 function CategorySubfilter:ApplyFilterValues(filterArray)
@@ -91,7 +90,6 @@ end
 function CategorySubfilter:SetWidth(width)
     local subfilterPreset = self.preset
     local container = self.container
-    local label = self.label
     local groupContainer = self.group.control
     local buttons = self.buttons
 
@@ -104,7 +102,7 @@ function CategorySubfilter:SetWidth(width)
     end
 
     container:SetWidth(width)
-    container:SetHeight(label:GetHeight() + LINE_SPACING + BUTTON_OFFSET_Y + BUTTON_SIZE * math.floor((#buttons - 1) / BUTTONS_PER_ROW))
+    container:SetHeight(BUTTON_OFFSET_Y + BUTTON_SIZE * math.floor((#buttons - 1) / BUTTONS_PER_ROW))
 end
 
 function CategorySubfilter:Reset()

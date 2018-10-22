@@ -5,9 +5,6 @@ local ClearCallLater = AwesomeGuildStore.ClearCallLater
 local FilterBase = ZO_Object:Subclass()
 AwesomeGuildStore.FilterBase = FilterBase
 
-local RESET_BUTTON_SIZE = 18
-local RESET_BUTTON_TEXTURE = "EsoUI/Art/Buttons/decline_%s.dds"
-
 local LOCAL_FILTER_COLOR = ZO_ColorDef:New("A5D0FF")
 local EXTERNAL_FILTER_COLOR = ZO_ColorDef:New("FFA5A5")
 
@@ -25,24 +22,29 @@ function FilterBase:New(type, name, tradingHouseWrapper, ...)
     return filter
 end
 
+function FilterBase:GetType()
+    return self.type
+end
+
 function FilterBase:InitializeBase(type, name)
     self.isLocal = true -- set to false if it is not a local filter
     self.type = type
     self.priority = 0
     self.callbackName = name .. "Changed"
+    self.isAttached = false
+    self.isActive = false
 
-    local container = WINDOW_MANAGER:CreateControl(name .. "Container", GuiRoot, CT_CONTROL)
+    self.fragment = AwesomeGuildStore.class.FilterFragment:New(self) -- TODO
+    local container = self.fragment:GetContainer()
     self.container = container
+end
 
-    local resetButton = SimpleIconButton:New(name .. "ResetButton", RESET_BUTTON_TEXTURE, RESET_BUTTON_SIZE)
-    resetButton:SetAnchor(TOPRIGHT, container, TOPRIGHT, 0, 0)
-    resetButton:SetHidden(true)
-    resetButton.OnClick = function(control, mouseButton, ctrl, alt, shift)
-        if(mouseButton == 1) then
-            self:Reset()
-        end
-    end
-    self.resetButton = resetButton
+function FilterBase:SetSearchManager(searchManager)
+    self.searchManager = searchManager
+end
+
+function FilterBase:GetFragment()
+    return self.fragment
 end
 
 function FilterBase:InitializeProvider()
@@ -60,11 +62,22 @@ function FilterBase:InitializeProvider()
     end
 end
 
+function FilterBase:SetLabel(label)
+    self.fragment:SetLabelText(label)
+    self.label = label
+end
+
+function FilterBase:GetLabel()
+    return self.label
+end
+
+function FilterBase:SetResetHidden(hidden)
+    self.fragment:SetResetHidden(hidden)
+end
+
 function FilterBase:SetLabelControl(label)
     self:InitializeProvider()
     label:ClearAnchors()
-    label:SetAnchor(TOPLEFT, self.container, TOPLEFT, 0, 0)
-    label:SetAnchor(TOPRIGHT, self.container, TOPRIGHT, -RESET_BUTTON_SIZE, 0)
     if(self.isLocal) then
         label:SetColor(self.color:UnpackRGBA())
         label:SetMouseEnabled(true)
@@ -92,14 +105,9 @@ function FilterBase:Initialize(name, tradingHouseWrapper)
 end
 
 function FilterBase:HandleChange()
-    if(self.fireChangeCallback) then
-        ClearCallLater(self.fireChangeCallback)
+    if(self.searchManager) then
+        self.searchManager:RequestFilterUpdate()
     end
-    self.fireChangeCallback = zo_callLater(function()
-        self.fireChangeCallback = nil
-        CALLBACK_MANAGER:FireCallbacks(self.callbackName, self)
-    end, 250)
-    self.resetButton:SetHidden(self:IsDefault())
 end
 
 -- these functions are used by the search tab wrapper
@@ -154,10 +162,36 @@ function FilterBase:GetTooltipText(state)
     return {}
 end
 
+function FilterBase:Attach()
+    self:OnAttached()
+    self.isAttached = true
+end
+
+function FilterBase:Detach()
+    self:OnDetached()
+    self.isAttached = false
+end
+
 function FilterBase:OnAttached()
 -- can be used for setup up when the filter is added to the panel
 end
 
 function FilterBase:OnDetached()
 -- can be used for cleaning up when the filter is removed from the panel
+end
+
+function FilterBase:IsAttached()
+    return self.isAttached
+end
+
+function FilterBase:CanAttach()
+    return true -- TODO check which category and subcategory is active
+end
+
+function FilterBase:SetActive(active)
+    self.isActive = active
+end
+
+function FilterBase:IsActive()
+    return self.isActive
 end

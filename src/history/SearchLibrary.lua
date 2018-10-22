@@ -105,14 +105,14 @@ function SearchLibrary:Initialize(saveData)
 	end
 	self.toggleButton = toggleButton
 
-	ZO_PreHook(TRADING_HOUSE.m_search, "InternalExecuteSearch", function()
-		local state = self:Serialize()
-		self:AddHistoryEntry(state)
-		if(self:IsVisible()) then
-			self:Refresh(true)
-			self:HighlightEntry(state)
-		end
-	end)
+--	ZO_PreHook(TRADING_HOUSE.m_search, "InternalExecuteSearch", function()
+--		local state = self:Serialize()
+--		self:AddHistoryEntry(state)
+--		if(self:IsVisible()) then
+--			self:Refresh(true)
+--			self:HighlightEntry(state)
+--		end
+--	end)
 
 	self.searchList = saveData.searches
 

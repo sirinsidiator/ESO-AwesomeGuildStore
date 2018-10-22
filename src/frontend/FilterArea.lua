@@ -1,0 +1,182 @@
+local FILTER_ID = AwesomeGuildStore.data.FILTER_ID
+
+local FilterArea = ZO_Object:Subclass()
+AwesomeGuildStore.FilterArea = FilterArea
+
+function FilterArea:New(...)
+    local object = ZO_Object.New(self)
+    object:Initialize(...)
+    return object
+end
+
+-- TODO: create class for FilterArea
+-- manages the order and displaying of filters
+-- offer buttons to add, remove, (un)pin and reset filters
+-- default frame for filters
+-- use sortfilter list? would make some things easy
+function FilterArea:Initialize(container, buttonArea, searchManager)
+    self.searchManager = searchManager
+    self.availableFragments = {}
+    self.attachedFragments = {}
+    self.scene = TRADING_HOUSE_SCENE
+
+    local filterArea = CreateControlFromVirtual("AwesomeGuildStoreFilterArea", container, "ZO_ScrollContainer")
+    filterArea:ClearAnchors()
+    filterArea:SetAnchor(TOPLEFT, container, TOPLEFT, 0, 0)
+    filterArea:SetAnchor(BOTTOMRIGHT, buttonArea, TOPRIGHT, 16, -10) -- have to account for the 16px of the scroll bar
+    self.filterArea = filterArea
+
+    local filterAreaScrollChild = filterArea:GetNamedChild("ScrollChild")
+    self.filterAreaScrollChild = filterAreaScrollChild
+
+    local addFilterButton = CreateControlFromVirtual("AwesomeGuildStoreAddFilterButton", filterAreaScrollChild, "ZO_DefaultButton")
+    addFilterButton:SetWidth(250)
+    addFilterButton:SetText("Add Filter")
+    addFilterButton:SetHandler("OnMouseUp",function(control, button, isInside)
+        if(control:GetState() == BSTATE_NORMAL and button == MOUSE_BUTTON_INDEX_LEFT and isInside) then
+            self:ShowFilterSelection()
+        end
+    end)
+    addFilterButton.__AGS_NO_REANCHOR = true -- TODO: this is a hack and should be cleaned up
+    self.addFilterButton = addFilterButton
+
+    self.editControlGroup = AwesomeGuildStore.class.EditControlGroup:New()
+end
+
+function FilterArea:OnFiltersInitialized()
+    AwesomeGuildStore:RegisterCallback("FilterValueChanged", function(id)
+        if(id ~= FILTER_ID.CATEGORY_FILTER) then return end
+        self:UpdateDisplayedFilters()
+    end)
+    AwesomeGuildStore:RegisterCallback("FilterActiveChanged", function(filter)
+        self:UpdateDisplayedFilters()
+    end)
+    self:UpdateDisplayedFilters()
+end
+
+function FilterArea:GetEditGroup()
+    return self.editControlGroup
+end
+
+function FilterArea:RegisterFilterFragment(fragment)
+    self.availableFragments[fragment:GetId()] = fragment
+end
+
+function FilterArea:AttachFilterFragment(fragment)
+    self.scene:AddFragment(fragment)
+    fragment.control:SetParent(self.filterAreaScrollChild)
+    self.attachedFragments[#self.attachedFragments + 1] = fragment
+
+    self:UpdateFilterAnchors()
+
+    fragment:Attach(self)
+    self:UpdateAddFilterButton()
+end
+
+function FilterArea:DetachFilterFragment(fragment)
+    self.scene:RemoveFragment(fragment)
+    fragment.control:ClearAnchors()
+
+    local index
+    for i = 1, #self.attachedFragments do
+        if(self.attachedFragments[i] == fragment) then
+            index = i
+            break
+        end
+    end
+
+    table.remove(self.attachedFragments, index)
+
+    self:UpdateFilterAnchors()
+
+    fragment:Detach(self)
+    self:UpdateAddFilterButton()
+end
+
+local function ByFilterId(a, b)
+    return a.filter.id < b.filter.id
+end
+
+function FilterArea:UpdateFilterAnchors()
+    local attachedFragments = self.attachedFragments
+    if(#attachedFragments == 0) then return end
+
+    for i = 1, #attachedFragments do
+        attachedFragments[i].control:ClearAnchors()
+    end
+
+    table.sort(self.attachedFragments, ByFilterId)
+
+    local previous = attachedFragments[1].control
+    previous:SetAnchor(TOPLEFT, self.filterAreaScrollChild, TOPLEFT)
+    for i = 2, #attachedFragments do
+        attachedFragments[i].control:SetAnchor(TOPLEFT, previous, BOTTOMLEFT, 0, 10)
+        previous = attachedFragments[i].control 
+    end
+end
+
+function FilterArea:UpdateAddFilterButton()
+    local button = self.addFilterButton
+    if(self:HasFiltersToAttach()) then
+        button:ClearAnchors()
+        if(#self.attachedFragments > 0) then
+            button:SetAnchor(TOPLEFT, self.attachedFragments[#self.attachedFragments].control, BOTTOMLEFT, 0, 10)
+        else
+            button:SetAnchor(TOPLEFT, self.filterAreaScrollChild, TOPLEFT)
+        end
+        button:SetHidden(false)
+    else
+        button:SetHidden(true)
+    end
+end
+
+function FilterArea:HasFiltersToAttach()
+    for id, fragment in pairs(self.availableFragments) do
+        local filter = self.searchManager:GetFilter(id)
+        if(filter and not fragment:IsAttached() and filter:CanAttach()) then
+            return true
+        end
+    end
+    return false
+end
+
+function FilterArea:GetSortedFilters()
+    -- TODO: create new base class for filters which can also be used for SortOrder and CategorySelector (or maybe just exclude these two since they are special?)
+    local filters = {} -- TODO create GetSortedFilters in searchManager
+    for id, fragment in pairs(self.availableFragments) do
+        local filter = self.searchManager:GetFilter(id)
+        if(filter and not fragment:IsAttached() and filter:CanAttach()) then
+            filters[#filters + 1] = filter
+        end
+    end
+   -- table.sort(filters, SortByFilterPriority) -- TODO move to searchManager and only do once after registerFilter was called
+    return filters
+end
+
+function FilterArea:ShowFilterSelection()
+    ClearMenu()
+    local filters = self:GetSortedFilters()
+    for i = 1, #filters do
+        local filter = filters[i]
+        AddCustomMenuItem(filter:GetLabel(), function()
+            local activeSearch = self.searchManager:GetActiveSearch()
+            activeSearch:SetFilterActive(filter, true)
+        end)
+    end
+    ShowMenu()
+end
+
+function FilterArea:UpdateDisplayedFilters()
+    for id, fragment in pairs(self.availableFragments) do
+        local filter = self.searchManager:GetFilter(id)
+        if(filter) then
+            local filterAttached = filter:IsAttached()
+            local fragementAttached = fragment:IsAttached()
+            if(filterAttached and not fragementAttached) then
+                self:AttachFilterFragment(fragment)
+            elseif(not filterAttached and fragementAttached) then
+                self:DetachFilterFragment(fragment)
+            end
+        end
+    end
+end

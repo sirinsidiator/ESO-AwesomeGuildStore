@@ -73,3 +73,21 @@ local function GetItemLinkWritCount(itemLink)
 end
 
 AwesomeGuildStore.GetItemLinkWritCount = GetItemLinkWritCount
+
+
+local function AdjustLinkStyle(link, linkStyle)
+    link = link:gsub("^|H%d", "|H" .. (linkStyle or LINK_STYLE_DEFAULT))
+    return link
+end
+AwesomeGuildStore.AdjustLinkStyle = AdjustLinkStyle
+
+
+local function ClampValue(value, min, max)
+    if(value < min) then
+        return min
+    elseif(value > max) then
+        return max
+    end
+    return value
+end
+AwesomeGuildStore.internal.ClampValue = ClampValue

@@ -1,0 +1,46 @@
+<GuiXml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sir.insidi.at/or/schema/esoui.xsd">
+    <Controls>
+        <Control name="AwesomeGuildStorePriceInputTemplate" virtual="true" resizeToFitDescendents="true">
+            <Controls>
+                <Control name="$(parent)MinPrice" resizeToFitDescendents="true">
+                    <Dimensions x="115" />
+                    <Anchor point="TOPLEFT" />
+
+                    <Controls>
+                        <Texture name="$(parent)Currency">
+                            <Dimensions x="18" y="18" />
+                            <Anchor point="RIGHT" />
+                        </Texture>
+
+                        <Backdrop name="$(parent)Input" inherits="AwesomeGuildStoreSimpleInputBoxTemplate">
+                            <Anchor point="TOPLEFT" />
+                            <Anchor point="RIGHT" relativeTo="$(parent)Currency" relativePoint="LEFT" offsetX="-2" />
+                        </Backdrop>
+                    </Controls>
+                </Control>
+
+                <Texture name="$(parent)RangeDivider" color="FFFFFF">
+                    <Dimensions x="10" y="2" />
+                    <Anchor point="LEFT" relativeTo="$(parent)MinPrice" relativePoint="RIGHT" offsetX="4" />
+                </Texture>
+
+                <Control name="$(parent)MaxPrice" resizeToFitDescendents="true">
+                    <Dimensions x="115" />
+                    <Anchor point="LEFT" relativeTo="$(parent)RangeDivider" relativePoint="RIGHT" offsetX="4" />
+
+                    <Controls>
+                        <Texture name="$(parent)Currency">
+                            <Dimensions x="18" y="18" />
+                            <Anchor point="RIGHT" />
+                        </Texture>
+
+                        <Backdrop name="$(parent)Input" inherits="AwesomeGuildStoreSimpleInputBoxTemplate">
+                            <Anchor point="TOPLEFT" />
+                            <Anchor point="RIGHT" relativeTo="$(parent)Currency" relativePoint="LEFT" offsetX="-2" />
+                        </Backdrop>
+                    </Controls>
+                </Control>
+            </Controls>
+        </Control>
+    </Controls>
+</GuiXml>

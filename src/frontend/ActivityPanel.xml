@@ -1,0 +1,59 @@
+<GuiXml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sir.insidi.at/or/schema/esoui.xsd">
+    <Controls>
+        <Control name="AwesomeGuildStoreActivityListRowTemplate" virtual="true" mouseEnabled="true">
+            <Dimensions y="24" />
+
+            <Controls>
+                <Texture name="$(parent)BG" inherits="ZO_ThinListBgStrip" />
+                <Texture name="$(parent)Icon">
+                    <Dimensions x="24" y="24" />
+                    <Anchor point="LEFT" />
+                </Texture>
+                <Label name="$(parent)Text" font="ZoFontGame" verticalAlignment="CENTER" wrapMode="ELLIPSIS" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_SELECTED" linkEnabled="true">
+                    <Dimensions y="24" />
+                    <Anchor point="LEFT" relativeTo="$(parent)Icon" relativePoint="RIGHT" offsetX="5" />
+                    <Anchor point="RIGHT" />
+                </Label>
+            </Controls>
+        </Control>
+
+        <Control name="AwesomeGuildStoreActivityListQueuedRowTemplate" inherits="AwesomeGuildStoreActivityListRowTemplate" virtual="true">
+            <Controls>
+                <Button name="$(parent)Cancel" inherits="ZO_DefaultButton" hidden="true">
+                    <Dimensions x="24" y="24" />
+                    <Anchor point="LEFT" />
+                </Button>
+            </Controls>
+        </Control>
+
+        <Control name="AwesomeGuildStoreActivityPanelTemplate" virtual="true">
+            <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" offsetY="40" />
+            <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" />
+            <Controls>
+                <Button name="$(parent)Toggle" inherits="ZO_DefaultButton">
+                    <Dimensions x="32" y="32" />
+                    <Anchor point="LEFT" />
+                </Button>
+                <Texture name="$(parent)Loading" textureFile="EsoUI/Art/Miscellaneous/wait_icon.dds">
+                    <Anchor point="LEFT" relativeTo="$(parent)Toggle" relativePoint="RIGHT" offsetX="5" />
+                    <Dimensions x="32" y="32" />
+                </Texture>
+                <Label name="$(parent)Status" font="ZoFontGameLargeBold" verticalAlignment="CENTER" wrapMode="ELLIPSIS" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_SELECTED">
+                    <Anchor point="LEFT" relativeTo="$(parent)Loading" relativePoint="RIGHT" offsetX="5" />
+                    <Anchor point="RIGHT" />
+                </Label>
+                <Control name="$(parent)ActivityList" hidden="true" tier="MEDIUM">
+                    <Anchor point="TOPLEFT" offsetX="10" offsetY="-250" />
+                    <Anchor point="BOTTOMRIGHT" offsetX="-150" />
+                    <Controls>
+                        <Backdrop name="$(parent)BG" inherits="ZO_DefaultBackdrop" />
+
+                        <Control name="$(parent)List" inherits="ZO_ScrollList">
+                            <AnchorFill />
+                        </Control>
+                    </Controls>
+                </Control>
+            </Controls>
+        </Control>
+    </Controls>
+</GuiXml>

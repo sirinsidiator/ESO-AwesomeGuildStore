@@ -1,3 +1,4 @@
+0 - SortOrder
 1 - CategoryFilter
 2 - PriceFilter
 3 - LevelFilter

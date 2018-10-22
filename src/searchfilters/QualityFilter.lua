@@ -41,17 +41,15 @@ function QualityFilter:InitializeControls(name, tradingHouse, saveData)
     -- hide the original filter
     tradingHouse.m_browseItems:GetNamedChild("Common"):GetNamedChild("Quality"):SetHidden(true)
 
-    local label = container:CreateControl(name .. "Label", CT_LABEL)
-    label:SetFont("ZoFontWinH4")
     -- TRANSLATORS: title of the quality range filter in the left panel on the search tab
-    label:SetText(gettext("Quality Range:"))
-    self:SetLabelControl(label)
+    self:SetLabel(gettext("Quality Range"))
 
-    local slider = MinMaxRangeSlider:New(container, name .. "Slider")
+    local slider = MinMaxRangeSlider:New("$(parent)Slider", container)
     slider:SetMinMax(MIN_QUALITY, MAX_QUALITY)
     slider:SetRangeValue(MIN_QUALITY, MAX_QUALITY)
-    slider.control:SetAnchor(TOPLEFT, label, BOTTOMLEFT, 0, LINE_SPACING)
-    slider.control:SetAnchor(RIGHT, container, RIGHT, 0, 0)
+    slider.control:SetAnchor(TOPLEFT, container, TOPLEFT, 0, 0)
+    slider.control:SetAnchor(TOPRIGHT, container, TOPRIGHT, 0, 0)
+    slider:UpdateVisuals()
     self.slider = slider
 
     local function SafeSetRangeValue(button, value)
@@ -67,8 +65,9 @@ function QualityFilter:InitializeControls(name, tradingHouse, saveData)
         end
     end
 
+    local width = container:GetWidth()
     local function CreateButtonControl(name, textureName, value)
-        local button = SimpleIconButton:New(name, BUTTON_FOLDER .. textureName, BUTTON_SIZE, QUALITY_LABEL[value])
+        local button = SimpleIconButton:New(name, BUTTON_FOLDER .. textureName, BUTTON_SIZE, QUALITY_LABEL[value], container)
         button:SetMouseOverTexture(BUTTON_FOLDER .. "over.dds") -- we reuse the texture as it is the same for all quality buttons
         button.control:SetHandler("OnMouseDoubleClick", function(control, button)
             SafeSetRangeValue(MOUSE_MIDDLE, value)
@@ -83,20 +82,17 @@ function QualityFilter:InitializeControls(name, tradingHouse, saveData)
             end
             return true
         end
+        local spacing = (width + BUTTON_PADDING) / MAX_QUALITY
+        button:SetAnchor(TOPLEFT, slider.control, TOPLEFT, spacing * (value - 1), LINE_SPACING + BUTTON_OFFSET_Y)
         return button
     end
 
     self.buttons = {}
-    self.buttons[1] = CreateButtonControl(name .. "NormalQualityButton", "normal_%s.dds", 1)
-    self.buttons[2] = CreateButtonControl(name .. "MagicQualityButton", "magic_%s.dds", 2)
-    self.buttons[3] = CreateButtonControl(name .. "ArcaneQualityButton", "arcane_%s.dds", 3)
-    self.buttons[4] = CreateButtonControl(name .. "ArtifactQualityButton", "artifact_%s.dds", 4)
-    self.buttons[5] = CreateButtonControl(name .. "LegendaryQualityButton", "legendary_%s.dds", 5)
-
-    container:SetHeight(label:GetHeight() + LINE_SPACING + slider.control:GetHeight() + LINE_SPACING + BUTTON_OFFSET_Y + BUTTON_SIZE)
-
-    local tooltipText = gettext("Reset <<1>> Filter", label:GetText():gsub(":", ""))
-    self.resetButton:SetTooltipText(tooltipText)
+    self.buttons[1] = CreateButtonControl("$(parent)NormalQualityButton", "normal_%s.dds", 1)
+    self.buttons[2] = CreateButtonControl("$(parent)MagicQualityButton", "magic_%s.dds", 2)
+    self.buttons[3] = CreateButtonControl("$(parent)ArcaneQualityButton", "arcane_%s.dds", 3)
+    self.buttons[4] = CreateButtonControl("$(parent)ArtifactQualityButton", "artifact_%s.dds", 4)
+    self.buttons[5] = CreateButtonControl("$(parent)LegendaryQualityButton", "legendary_%s.dds", 5)
 end
 
 function QualityFilter:InitializeHandlers(tradingHouse)
@@ -106,11 +102,31 @@ function QualityFilter:InitializeHandlers(tradingHouse)
         self:HandleChange()
     end
 
-    ZO_PreHook(TRADING_HOUSE.m_search, "InternalExecuteSearch", function(self)
-        local min, max = slider:GetRangeValue()
-        if min == MIN_QUALITY then min = ITEM_QUALITY_TRASH end
-        self.m_filters[TRADING_HOUSE_FILTER_TYPE_QUALITY].values = {min, max}
-    end)
+--    ZO_PreHook(TRADING_HOUSE.m_search, "InternalExecuteSearch", function(self)
+--        local min, max = slider:GetRangeValue()
+--        if min == MIN_QUALITY then min = ITEM_QUALITY_TRASH end
+--        self.m_filters[TRADING_HOUSE_FILTER_TYPE_QUALITY].values = {min, max}
+--    end)
+end
+
+function QualityFilter:BeforeRebuildSearchResultsPage(tradingHouseWrapper)
+    local min, max = self.slider:GetRangeValue()
+
+    if(min == MIN_QUALITY and max == "") then
+        self.min, self.max = nil, nil
+        return false
+    end
+
+    if min == MIN_QUALITY then min = ITEM_QUALITY_TRASH end
+    self.min, self.max = min, max
+
+    return true
+end
+
+function QualityFilter:FilterPageResult(index, icon, name, quality, stackCount, sellerName, timeRemaining, purchasePrice)
+    local itemLink = GetTradingHouseSearchResultItemLink(index)
+    local quality = GetItemLinkQuality(itemLink)
+    return not (quality < self.min or quality > self.max)
 end
 
 function QualityFilter:SetWidth(width)
@@ -155,7 +171,7 @@ function QualityFilter:GetTooltipText(state)
             local color = GetItemQualityColor(i)
             text = text .. color:Colorize(QUALITY_LABEL[i]) .. ", "
         end
-        return {{label = gettext("Quality Range:"):sub(0, -2), text = text:sub(0, -3)}}
+        return {{label = self:GetLabel(), text = text:sub(0, -3)}}
     end
     return {}
 end

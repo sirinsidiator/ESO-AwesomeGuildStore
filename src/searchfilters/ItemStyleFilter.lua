@@ -125,20 +125,14 @@ function ItemStyleFilter:Initialize(name, tradingHouseWrapper, subfilterPreset)
     self.preset = subfilterPreset
     local container = self.container
 
-    local label = container:CreateControl("$(parent)Label", CT_LABEL)
-    label:SetFont("ZoFontWinH4")
-    label:SetText(subfilterPreset.label .. ":")
-    self:SetLabelControl(label)
-
-    local tooltipText = gettext("Reset <<1>> Filter", label:GetText():gsub(":", ""))
-    self.resetButton:SetTooltipText(tooltipText)
+    self:SetLabel(subfilterPreset.label)
 
     self.selectionCount = 0
     self.selectedStyles = {}
 
     local selectionList = CreateControlFromVirtual("$(parent)List", container, "ZO_ScrollList")
-    selectionList:SetAnchor(TOPLEFT, label, BOTTOMLEFT, 0, 0)
-    selectionList:SetAnchor(TOPRIGHT, label, BOTTOMRIGHT, 18, 0)
+    selectionList:SetAnchor(TOPLEFT, container, TOPLEFT, 0, 0)
+    selectionList:SetAnchor(TOPRIGHT, container, TOPRIGHT, 0, 0)
 
     local function InitializeRow(...)
         self:InitializeRow(...)

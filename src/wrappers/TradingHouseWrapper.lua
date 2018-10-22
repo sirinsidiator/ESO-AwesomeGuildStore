@@ -1,4 +1,9 @@
+local AGS = AwesomeGuildStore
+
+local logger = AGS.internal.logger
+
 local RegisterForEvent = AwesomeGuildStore.RegisterForEvent
+local ItemDatabase = AwesomeGuildStore.ItemDatabase
 
 local TradingHouseWrapper = ZO_Object:Subclass()
 AwesomeGuildStore.TradingHouseWrapper = TradingHouseWrapper
@@ -14,14 +19,13 @@ function TradingHouseWrapper:Initialize(saveData)
     local tradingHouse = TRADING_HOUSE
     self.tradingHouse = tradingHouse
 
-    self.titleLabel = tradingHouse.m_control:GetNamedChild("TitleLabel")
-    self.titleLabel:SetModifyTextType(MODIFY_TEXT_TYPE_NONE)
-
     self.loadingOverlay = AwesomeGuildStore.LoadingOverlay:New("AwesomeGuildStoreLoadingOverlay")
     self.loadingIndicator = AwesomeGuildStore.LoadingIcon:New("AwesomeGuildStoreLoadingIndicator")
     self.loadingIndicator:SetParent(tradingHouse.m_control)
     self.loadingIndicator:ClearAnchors()
     self.loadingIndicator:SetAnchor(BOTTOMLEFT, tradingHouse.m_control, BOTTOMLEFT, 15, 20)
+    local itemDatabase = ItemDatabase:New(self)
+    self.itemDatabase = itemDatabase
     local searchTab = AwesomeGuildStore.SearchTabWrapper:New(saveData)
     self.searchTab = searchTab
     local sellTab = AwesomeGuildStore.SellTabWrapper:New(saveData)
@@ -60,31 +64,20 @@ function TradingHouseWrapper:Initialize(saveData)
             tab:RunInitialSetup(self)
         end
 
-        RegisterForEvent(EVENT_TRADING_HOUSE_STATUS_RECEIVED, function()
-            if(saveData.autoSearch) then
-                -- we can't call it inside the event handler as it would trigger an alert
-                -- instead we call it in the next frame via zo_callLater
-                zo_callLater(function()
-                    searchTab:Search()
-                end, 0)
-            end
-        end)
-
         if(not saveData.minimizeChatOnOpen) then
             TRADING_HOUSE_SCENE:RemoveFragment(MINIMIZE_CHAT_FRAGMENT)
         end
 
         self:InitializeGuildSelector()
         self:InitializeKeybindStripWrapper()
-        self:InitializeSearchCooldown()
         AwesomeGuildStore:FireAfterInitialSetupCallbacks(self)
 
         ranInitialSetup = true
     end)
 
-    self:PreHook("ClearSearchResults", function(self) self.m_numItemsOnPage = 0 end)
+    self:PreHook("ClearSearchResults", function(self) self.m_numItemsOnPage = 0 end) -- TODO is this still needed?
 
-    self:Wrap("OnSearchResultsReceived", function(originalOnSearchResultsReceived, self, ...)
+    self:Wrap("OnSearchResultsReceived", function(originalOnSearchResultsReceived, self, ...) -- TODO is this still needed?
         self.isReceivingResults = true -- we use this to automatically advance to the next page if local filters hide every item
         originalOnSearchResultsReceived(self, ...)
         self.isReceivingResults = false
@@ -93,6 +86,7 @@ function TradingHouseWrapper:Initialize(saveData)
     local currentTab = searchTab
     self:Wrap("HandleTabSwitch", function(originalHandleTabSwitch, tradingHouse, tabData)
         if(not ranInitialSetup) then return end
+        local oldTab = currentTab
         if currentTab then
             currentTab:OnClose(self)
         end
@@ -101,6 +95,7 @@ function TradingHouseWrapper:Initialize(saveData)
         if currentTab then
             currentTab:OnOpen(self)
         end
+        AGS:FireCallbacks("StoreTabChanged", oldTab, currentTab)
     end)
 
     RegisterForEvent(EVENT_CLOSE_TRADING_HOUSE, function()
@@ -119,9 +114,13 @@ function TradingHouseWrapper:Initialize(saveData)
     local KIOSK_OPTION_INDEX = 1
     local INTERACT_WINDOW_SHOWN = "Shown"
     INTERACT_WINDOW:RegisterCallback(INTERACT_WINDOW_SHOWN, function()
+        -- TODO: find a way to prevent the long wait time that happens sometimes
+        -- ResetChatter, IsInteractionPending, EndPendingInteraction
+        -- TODO: prevent user from selecting the guild store option again when it is already pending
         if(IsShiftKeyDown() or not saveData.skipGuildKioskDialog) then return end
         local _, optionType = GetChatterOption(KIOSK_OPTION_INDEX)
         if(optionType == CHATTER_START_TRADINGHOUSE) then
+            logger:Debug(string.format("SelectChatterOption"))
             SelectChatterOption(KIOSK_OPTION_INDEX)
         end
     end)
@@ -133,40 +132,16 @@ function TradingHouseWrapper:RegisterTabWrapper(mode, tab)
 end
 
 function TradingHouseWrapper:InitializeGuildSelector()
-    self.guildSelector = AwesomeGuildStore.GuildSelector:New(self.saveData)
+    self.guildSelection = AwesomeGuildStore.class.GuildSelection:New(self)
+    self.guildSelector = AwesomeGuildStore.GuildSelector:New(self)
 end
 
 function TradingHouseWrapper:InitializeKeybindStripWrapper()
-    self.keybindStrip = AwesomeGuildStore.KeybindStripWrapper:New(self.tradingHouse, self.activityManager)
-end
-
-function TradingHouseWrapper:InitializeSearchCooldown()
-    RegisterForEvent(EVENT_TRADING_HOUSE_STATUS_RECEIVED, function()
-        if(not GetSelectedTradingHouseGuildId()) then -- it's a trader when guildId is nil
-            self:ShowTitleLabel()
-            self:HideGuildSelector()
-        else
-            self:HideTitleLabel()
-            self:SetupGuildSelector()
-            self:ShowGuildSelector()
-        end
-    end)
+    self.keybindStrip = AwesomeGuildStore.KeybindStripWrapper:New(self)
 end
 
 function TradingHouseWrapper:ResetSalesCategoryFilter()
     self.sellTab:ResetSalesCategoryFilter()
-end
-
-function TradingHouseWrapper:ShowTitleLabel()
-    self.titleLabel:SetHidden(false)
-    --    local _, guildName, guildAlliance = GetCurrentTradingHouseGuildDetails()
-    --    local iconPath = GetAllianceBannerIcon(guildAlliance)
-    --    local entryText = iconPath and zo_iconTextFormat(iconPath, 36, 36, guildName) or guildName
-    --    self.titleLabel:SetText(entryText)
-end
-
-function TradingHouseWrapper:HideTitleLabel()
-    self.titleLabel:SetHidden(true)
 end
 
 function TradingHouseWrapper:SetLoadingOverlayParent(parent)
@@ -189,20 +164,8 @@ function TradingHouseWrapper:HideLoadingIndicator()
     self.loadingIndicator:Hide()
 end
 
-function TradingHouseWrapper:ShowGuildSelector()
-    self.guildSelector:Show()
-end
-
-function TradingHouseWrapper:HideGuildSelector()
-    self.guildSelector:Hide()
-end
-
-function TradingHouseWrapper:SetupGuildSelector()
-    self.guildSelector:SetupGuildList()
-end
-
 function TradingHouseWrapper:RegisterFilter(filter)
-    self.searchTab.searchLibrary:RegisterFilter(filter)
+    self.searchTab.searchManager:RegisterFilter(filter)
 end
 
 function TradingHouseWrapper:AttachFilter(filter)
@@ -233,4 +196,18 @@ function TradingHouseWrapper:Wrap(methodName, call)
             return call(originalFunction, ...)
         end
     end
+end
+
+function TradingHouseWrapper:GetTradingGuildName(guildId)
+    local guildName
+    if(guildId > 0) then
+        guildName = GetGuildName(guildId)
+    else
+        guildName = select(2, GetCurrentTradingHouseGuildDetails())
+    end
+    return guildName
+end
+
+function TradingHouseWrapper:DoSearch() -- TODO
+    return self.searchTab.searchManager:DoSearch()
 end

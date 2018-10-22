@@ -794,16 +794,28 @@ local function InitializeGuildStoreList(globalSaveData)
     end
     AwesomeGuildStore.CollectGuildKiosk = CollectGuildKiosk
 
-    local targetUnitFrame = ZO_UnitFrames_GetUnitFrame(TARGET_UNIT_TAG)
-    ZO_PreHook(targetUnitFrame.nameLabel, 'SetText', function()
+    local REFRESH_TRESHOLD = 1 -- seconds
+    local lastCheck = {}
+
+    local function RefreshKioskOwner()
         if(DoesUnitExist(TARGET_UNIT_TAG) and IsUnitGuildKiosk(TARGET_UNIT_TAG)) then
             local kioskName = GetUnitName(TARGET_UNIT_TAG)
+            local now = GetGameTimeSeconds()
+            if(lastCheck[kioskName] and (now - lastCheck[kioskName]) < REFRESH_TRESHOLD) then return end
+            lastCheck[kioskName] = now
+
             UpdateKioskAndStore(kioskName, false)
 
             local ownerName = GetUnitGuildKioskOwner(TARGET_UNIT_TAG)
             ownerList:SetCurrentOwner(kioskName, ownerName)
         end
-    end)
+    end
+
+    local targetUnitFrame = ZO_UnitFrames_GetUnitFrame(TARGET_UNIT_TAG)
+    ZO_PreHook(targetUnitFrame.nameLabel, 'SetText', RefreshKioskOwner)
+    RegisterForEvent(EVENT_GUILD_NAME_AVAILABLE, RefreshKioskOwner)
+    local handle = RegisterForEvent(EVENT_GUILD_ID_CHANGED, RefreshKioskOwner)
+    EVENT_MANAGER:AddFilterForEvent(handle, EVENT_GUILD_ID_CHANGED, REGISTER_FILTER_UNIT_TAG, TARGET_UNIT_TAG)
 
     local function UpdateKioskMemberFlag(guildId)
         local kioskName = GetKioskName(guildId)

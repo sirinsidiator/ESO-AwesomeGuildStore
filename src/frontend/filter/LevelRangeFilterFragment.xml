@@ -1,0 +1,51 @@
+<GuiXml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sir.insidi.at/or/schema/esoui.xsd">
+    <Controls>
+        <Control name="AwesomeGuildStoreLevelInputTemplate" virtual="true" resizeToFitDescendents="true">
+            <Controls>
+                <Control name="$(parent)MinLevel" resizeToFitDescendents="true">
+                    <Dimensions x="60" />
+                    <Anchor point="TOPLEFT" />
+
+                    <Controls>
+                        <Button name="$(parent)Type" inherits="ZO_ButtonBehaviorClickSound">
+                            <Dimensions x="18" y="18" />
+                            <Anchor point="RIGHT" />
+                        </Button>
+
+                        <Backdrop name="$(parent)Input" inherits="AwesomeGuildStoreSimpleInputBoxTemplate">
+                            <Anchor point="TOPLEFT" />
+                            <Anchor point="RIGHT" relativeTo="$(parent)Type" relativePoint="LEFT" offsetX="-2" />
+                        </Backdrop>
+                    </Controls>
+                </Control>
+
+                <Texture name="$(parent)RangeDivider" color="FFFFFF">
+                    <Dimensions x="10" y="2" />
+                    <Anchor point="LEFT" relativeTo="$(parent)MinLevel" relativePoint="RIGHT" offsetX="4" />
+                </Texture>
+
+                <Control name="$(parent)MaxLevel" resizeToFitDescendents="true">
+                    <Dimensions x="60" />
+                    <Anchor point="LEFT" relativeTo="$(parent)RangeDivider" relativePoint="RIGHT" offsetX="4" />
+
+                    <Controls>
+                        <Button name="$(parent)Type" inherits="ZO_ButtonBehaviorClickSound">
+                            <Dimensions x="18" y="18" />
+                            <Anchor point="RIGHT" />
+                        </Button>
+
+                        <Backdrop name="$(parent)Input" inherits="AwesomeGuildStoreSimpleInputBoxTemplate">
+                            <Anchor point="TOPLEFT" />
+                            <Anchor point="RIGHT" relativeTo="$(parent)Type" relativePoint="LEFT" offsetX="-2" />
+                        </Backdrop>
+                    </Controls>
+                </Control>
+
+                <Button name="$(parent)CurrentLevelButton">
+                    <Dimensions x="32" y="32" />
+                    <Anchor point="RIGHT" />
+                </Button>
+            </Controls>
+        </Control>
+    </Controls>
+</GuiXml>

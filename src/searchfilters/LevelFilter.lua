@@ -32,8 +32,8 @@ function LevelFilter:InitializeControls(name, tradingHouseWrapper)
     local container = self.container
 
     local levelRangeLabel = common:GetNamedChild("LevelRangeLabel")
-    levelRangeLabel:SetParent(container)
-    self:SetLabelControl(levelRangeLabel)
+    levelRangeLabel:SetHidden(true)
+    self:SetLabel(levelRangeLabel:GetText():sub(0, -2))
 
     local levelRangeToggle = common:GetNamedChild("LevelRangeToggle")
     levelRangeToggle:SetNormalTexture("EsoUI/Art/LFG/LFG_normalDungeon_up.dds")
@@ -74,20 +74,16 @@ function LevelFilter:InitializeControls(name, tradingHouseWrapper)
     self.minLevelBox =  common:GetNamedChild("MinLevelBox")
     self.maxLevelBox = common:GetNamedChild("MaxLevelBox")
 
-    local slider = MinMaxRangeSlider:New(container, name .. "Slider")
+    local slider = MinMaxRangeSlider:New("$(parent)Slider", container)
     slider:SetMinMax(MIN_LEVEL, MAX_LEVEL)
     slider:SetRangeValue(MIN_LEVEL, MAX_LEVEL)
     slider.control:ClearAnchors()
-    slider.control:SetAnchor(TOPLEFT, levelRangeLabel, BOTTOMLEFT, 0, LINE_SPACING)
-    slider.control:SetAnchor(RIGHT, container, RIGHT, 0, 0)
+    slider.control:SetAnchor(TOPLEFT, container, TOPLEFT, 0, 0)
+    slider.control:SetAnchor(TOPRIGHT, container, TOPRIGHT, 0, 0)
+    slider:UpdateVisuals()
     self.slider = slider
 
     levelRangeToggle:SetAnchor(TOPLEFT, slider.control, BOTTOMLEFT, 0, LINE_SPACING)
-
-    container:SetHeight(levelRangeLabel:GetHeight() + LINE_SPACING + slider.control:GetHeight() + LINE_SPACING + minLevel:GetHeight())
-
-    local tooltipText = gettext("Reset <<1>> Filter", levelRangeLabel:GetText():gsub(":", ""))
-    self.resetButton:SetTooltipText(tooltipText)
 end
 
 function LevelFilter:InitializeHandlers(tradingHouseWrapper)
@@ -158,30 +154,35 @@ function LevelFilter:InitializeHandlers(tradingHouseWrapper)
         [BSTATE_NORMAL] = TRADING_HOUSE_FILTER_TYPE_LEVEL,
         [BSTATE_PRESSED] = TRADING_HOUSE_FILTER_TYPE_CHAMPION_POINTS,
     }
+    local labelMap = {
+        [BSTATE_NORMAL] = GetString(SI_TRADING_HOUSE_BROWSE_LEVEL_RANGE_LABEL):sub(0, -2),
+        [BSTATE_PRESSED] = GetString(SI_TRADING_HOUSE_BROWSE_CHAMPION_POINTS_RANGE_LABEL):sub(0, -2),
+    }
 
     ZO_PreHook(tradingHouse.m_levelRangeToggle, "SetState", function(_, state)
         local type = stateMap[state]
         if(type) then
             self.currentRange = self.range[type]
+            self:SetLabel(labelMap[state])
         end
     end)
 
-    ZO_PreHook(tradingHouse.m_search, "InternalExecuteSearch", function(search)
-        local filter = search.m_filters[tradingHouse.m_levelRangeFilterType]
-        local min, max
-        if(self.isAttached) then
-            local currentRange = self.currentRange
-            min = currentRange.currentMin
-            max = currentRange.currentMax
-            if(min == nil and max ~= nil) then
-                min = currentRange.min
-            elseif(min ~= nil and max == nil) then
-                max = currentRange.max
-            end
-        end
-        filter.values[1] = min
-        filter.values[2] = max
-    end)
+--    ZO_PreHook(tradingHouse.m_search, "InternalExecuteSearch", function(search)
+--        local filter = search.m_filters[tradingHouse.m_levelRangeFilterType]
+--        local min, max
+--        if(self.isAttached) then
+--            local currentRange = self.currentRange
+--            min = currentRange.currentMin
+--            max = currentRange.currentMax
+--            if(min == nil and max ~= nil) then
+--                min = currentRange.min
+--            elseif(min ~= nil and max == nil) then
+--                max = currentRange.max
+--            end
+--        end
+--        filter.values[1] = min
+--        filter.values[2] = max
+--    end)
 
     self:RefreshDisplay()
 end
@@ -218,8 +219,36 @@ function LevelFilter:RefreshDisplay(skipRefreshingTextboxes)
     slider:SetMinMax(currentRange.min, currentRange.max)
     slider:SetRangeValue(currentRange.currentMin or currentRange.min, currentRange.currentMax or currentRange.max)
 
-    self.resetButton:SetHidden(self:IsDefault())
+    self:SetResetHidden(self:IsDefault())
     self.isRefreshing = false
+end
+
+function LevelFilter:BeforeRebuildSearchResultsPage(tradingHouseWrapper)
+    local min = self.minLevelBox:GetText()
+    local max = self.maxLevelBox:GetText()
+
+    if(min == "" and max == "") then
+        self.min, self.max = nil, nil
+        return false
+    end
+
+    local currentRange = self.currentRange
+    if(min == "") then min = currentRange.min end
+    if(max == "") then max = currentRange.max end
+    self.min, self.max = tonumber(min), tonumber(max)
+
+    return true
+end
+
+function LevelFilter:FilterPageResult(index, icon, name, quality, stackCount, sellerName, timeRemaining, purchasePrice)
+    local itemLink = GetTradingHouseSearchResultItemLink(index)
+    local level
+    if(self:IsLevelRangeActive()) then
+        level = GetItemLinkRequiredLevel(itemLink)
+    else
+        level = GetItemLinkRequiredChampionPoints(itemLink)
+    end
+    return not (level < self.min or level > self.max) -- TODO: handle crafting mats and other items without a real level requirement differently
 end
 
 function LevelFilter:SetWidth(width)
@@ -230,7 +259,7 @@ end
 function LevelFilter:Reset(skipRefresh)
     self.tradingHouse.m_levelRangeFilterType = TRADING_HOUSE_FILTER_TYPE_LEVEL
     self.tradingHouse.m_levelRangeToggle:SetState(BSTATE_NORMAL, false)
-    self.tradingHouse.m_levelRangeLabel:SetText(GetString(SI_TRADING_HOUSE_BROWSE_LEVEL_RANGE_LABEL))
+    self:SetLabel(GetString(SI_TRADING_HOUSE_BROWSE_LEVEL_RANGE_LABEL):sub(0, -2))
 
     self.currentRange = self.range[TRADING_HOUSE_FILTER_TYPE_LEVEL]
     self.range[TRADING_HOUSE_FILTER_TYPE_LEVEL].currentMin = nil
@@ -288,7 +317,6 @@ end
 function LevelFilter:GetTooltipText(state, version)
     local isNormal, min, max = Deserialize(state, version)
     if(min or max) then
-        local label = isNormal and GetString(SI_TRADING_HOUSE_BROWSE_LEVEL_RANGE_LABEL) or GetString(SI_TRADING_HOUSE_BROWSE_CHAMPION_POINTS_RANGE_LABEL)
         local text
         if(not min) then
             max = max or (isNormal and MAX_LEVEL or MAX_POINTS)
@@ -301,15 +329,7 @@ function LevelFilter:GetTooltipText(state, version)
             max = max or (isNormal and MAX_LEVEL or MAX_POINTS)
             text = ("%d - %d"):format(min, max)
         end
-        return {{label = label:sub(0, -2), text = text}}
+        return {{label = self:GetLabel(), text = text}}
     end
     return {}
-end
-
-function LevelFilter:OnAttached()
-    self.isAttached = true
-end
-
-function LevelFilter:OnDetached()
-    self.isAttached = false
 end

@@ -158,30 +158,36 @@ end
 function ListingTabWrapper:InitializeCancelSaleOperation(tradingHouseWrapper)
     local activityManager = tradingHouseWrapper.activityManager
 
+    local function DoCancelSale(listingIndex)
+        if(activityManager:CancelItem(GetSelectedTradingHouseGuildId(), listingIndex)) then
+            self:SetListedItemPending(listingIndex)
+        end
+    end
+
     tradingHouseWrapper:Wrap("ShowCancelListingConfirmation", function(originalShowCancelListingConfirmation, self, listingIndex)
         if(IsShiftKeyDown()) then
-            activityManager:CancelSale(listingIndex)
+            DoCancelSale(listingIndex)
         else
             originalShowCancelListingConfirmation(self, listingIndex)
         end
     end)
 
-    ZO_PreHook("ZO_Dialogs_RegisterCustomDialog", function(name, info)
+    ZO_PreHook("ZO_Dialogs_RegisterCustomDialog", function(name, info) -- TODO remove this hack in favor of a better solution
         if(name == "CONFIRM_TRADING_HOUSE_CANCEL_LISTING") then
             info.buttons[1].callback = function(dialog)
-                activityManager:CancelSale(dialog.listingIndex)
+                DoCancelSale(dialog.listingIndex)
                 dialog.listingIndex = nil
             end
         end
     end)
 
-    local ActivityBase = AwesomeGuildStore.ActivityBase
+    local ActivityBase = AwesomeGuildStore.class.ActivityBase
     local originalZO_TradingHouse_CreateListingItemData = ZO_TradingHouse_CreateListingItemData
     ZO_TradingHouse_CreateListingItemData = function(index)
         local result = originalZO_TradingHouse_CreateListingItemData(index)
         if(result) then
             local guildId = GetSelectedTradingHouseGuildId()
-            local key = string.format("%d_%d", ActivityBase.ACTIVITY_TYPE_CANCEL_SALE, guildId) -- TODO: make it work with multiple cancel operations
+            local key = string.format("%d_%d", ActivityBase.ACTIVITY_TYPE_CANCEL_ITEM, guildId) -- TODO: make it work with multiple cancel operations
             local operation = activityManager:GetActivity(key)
             if(operation and operation.listingIndex == result.slotIndex) then
                 result.cancelPending = true
@@ -235,7 +241,8 @@ end
 function ListingTabWrapper:InitializeRequestListingsOperation(tradingHouseWrapper)
     local activityManager = tradingHouseWrapper.activityManager
     tradingHouseWrapper.tradingHouse.RequestListings = function()
-        activityManager:RequestListings()
+        local guildId = GetCurrentTradingHouseGuildDetails()
+        activityManager:RequestListings(guildId)
     end
 end
 

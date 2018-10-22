@@ -1,0 +1,28 @@
+<GuiXml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sir.insidi.at/or/schema/esoui.xsd">
+    <Controls>
+        <Backdrop name="AwesomeGuildStoreSimpleInputBoxTemplate" virtual="true" resizeToFitDescendents="true" mouseEnabled="true" inherits="ZO_SingleLineEditBackdrop_Keyboard">
+            <Controls>
+                <Label name="$(parent)Virtual" font="ZoFontWinT1" hidden="true" excludeFromResizeToFitExtents="true" horizontalAlignment="RIGHT">
+                    <Anchor point="TOPRIGHT" offsetY="3" offsetX="16" />
+                    <Anchor point="BOTTOMRIGHT" offsetY="3" offsetX="16" />
+                </Label>
+                <EditBox name="$(parent)Box" font="ZoFontWinT1" inherits="ZO_DefaultEditForBackdrop">
+                    <DimensionConstraints minX="5" />
+                </EditBox>
+            </Controls>
+        </Backdrop>
+
+        <TopLevelControl name="AwesomeGuildStoreSimpleInputBoxPulse" hidden="true" tier="HIGH" keyboardEnabled="true">
+            <Controls>
+                <Backdrop name="$(parent)BG">
+                    <Anchor point="TOPLEFT" offsetX="-8" offsetY="-8" />
+                    <Anchor point="BOTTOMRIGHT" offsetX="8" offsetY="8" />
+
+                    <Edge file="EsoUI/Art/Miscellaneous/textEntry_highlight_edge.dds" edgeFileWidth="128" edgeFileHeight="16" />
+                    <Center file="EsoUI/Art/Crafting/crafting_toolTip_glow_center.dds" />
+                    <Insets left="16" top="16" right="-16" bottom="-16" />
+                </Backdrop>
+            </Controls>
+        </TopLevelControl>
+    </Controls>
+</GuiXml>

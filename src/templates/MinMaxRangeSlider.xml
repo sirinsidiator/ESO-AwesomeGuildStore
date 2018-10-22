@@ -1,0 +1,52 @@
+<GuiXml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sir.insidi.at/or/schema/esoui.xsd">
+    <Controls>
+        <Control name="AwesomeGuildStoreMinMaxRangeSliderTemplate" virtual="true">
+            <DimensionConstraints minX="50" minY="16" maxY="16"/>
+            <Controls>
+                <Button name="$(parent)MinSlider" level="4">
+                    <Dimensions x="10" y="16" />
+                    <Anchor point="LEFT" />
+                    <Textures normal="EsoUI/Art/Miscellaneous/scrollbox_elevator.dds" />
+                </Button>
+
+                <Button name="$(parent)MaxSlider" level="4">
+                    <Dimensions x="10" y="16" />
+                    <Anchor point="RIGHT" />
+                    <Textures normal="EsoUI/Art/Miscellaneous/scrollbox_elevator.dds" />
+                </Button>
+
+                <Control name="$(parent)Range" level="3">
+                    <Dimensions y="10" />
+                    <Anchor point="LEFT" relativeTo="$(parent)MinSlider" relativePoint="RIGHT" offsetX="-6" />
+                    <Anchor point="RIGHT" relativeTo="$(parent)MaxSlider" relativePoint="LEFT" offsetX="6" />
+
+                    <Controls>
+                        <Button name="$(parent)Slider">
+                            <Dimensions x="16" y="16" />
+                            <Anchor point="CENTER" />
+                            <Textures normal="AwesomeGuildStore/images/mover.dds" />
+                        </Button>
+                    </Controls>
+                </Control>
+
+                <Texture name="$(parent)Glow" textureFile="AwesomeGuildStore/images/minmaxsliderglow.dds" level="1">
+                    <Dimensions y="10" />
+                    <Anchor point="LEFT" relativeTo="$(parent)MinSlider" relativePoint="RIGHT" offsetX="-6" />
+                    <Anchor point="RIGHT" relativeTo="$(parent)MaxSlider" relativePoint="LEFT" offsetX="6" />
+                </Texture>
+
+                <Button name="$(parent)FullRange" level="2">
+                    <Anchor point="LEFT" />
+                    <Anchor point="RIGHT" />
+                    <Dimensions y="10" />
+                </Button>
+
+                <Backdrop name="$(parent)Backdrop" inherits="ZO_SliderBackdrop">
+                    <Anchor point="LEFT" />
+                    <Anchor point="RIGHT" />
+                    <Dimensions y="8" />
+                </Backdrop>
+            </Controls>
+        </Control>
+    </Controls>
+</GuiXml>

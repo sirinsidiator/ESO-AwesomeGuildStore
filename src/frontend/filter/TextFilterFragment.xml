@@ -1,0 +1,12 @@
+<GuiXml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sir.insidi.at/or/schema/esoui.xsd">
+    <Controls>
+        <Control name="AwesomeGuildStoreTextSearchInputTemplate" virtual="true" resizeToFitDescendents="true">
+            <Controls>
+                <Backdrop name="$(parent)Input" inherits="AwesomeGuildStoreSimpleInputBoxTemplate">
+                    <Anchor point="TOPLEFT" />
+                    <Anchor point="TOPRIGHT" />
+                </Backdrop>
+            </Controls>
+        </Control>
+    </Controls>
+</GuiXml>

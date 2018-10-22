@@ -34,16 +34,13 @@ function RecipeImprovementFilter:InitializeControls(name)
 	local container = self.container
 	local saveData = self.saveData
 
-	local label = container:CreateControl(name .. "Label", CT_LABEL)
-	label:SetFont("ZoFontWinH4")
-	label:SetText(self.preset.label .. ":")
-	self:SetLabelControl(label)
+	self:SetLabel(self.preset.label)
 
-	local slider = MinMaxRangeSlider:New(container, name .. "Slider")
+	local slider = MinMaxRangeSlider:New("$(parent)Slider", container)
 	slider:SetMinMax(MIN_VALUE, MAX_VALUE)
 	slider:SetRangeValue(MIN_VALUE, MAX_VALUE)
 	slider.control:ClearAnchors()
-	slider.control:SetAnchor(TOPLEFT, label, BOTTOMLEFT, 0, LINE_SPACING)
+	slider.control:SetAnchor(TOPLEFT, container, TOPLEFT, 0, LINE_SPACING)
 	slider.control:SetAnchor(RIGHT, container, RIGHT, 0, 0)
 	self.slider = slider
 	local function SafeSetRangeValue(button, value)
@@ -106,9 +103,6 @@ function RecipeImprovementFilter:InitializeControls(name)
 	end
 
 	container:SetHeight(71)
-
-	local tooltipText = gettext("Reset <<1>> Filter", self.preset.label)
-	self.resetButton:SetTooltipText(tooltipText)
 end
 
 local function ValueFromText(value, limit, old)
@@ -209,7 +203,7 @@ function RecipeImprovementFilter:GetTooltipText(state)
 	end
 
 	if(improvement ~= "") then
-		return {{label = self.preset.label, text = improvement}}
+		return {{label = self:GetLabel(), text = improvement}}
 	end
 	return {}
 end

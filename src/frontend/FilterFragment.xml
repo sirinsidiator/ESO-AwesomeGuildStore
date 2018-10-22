@@ -1,0 +1,35 @@
+<GuiXml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sir.insidi.at/or/schema/esoui.xsd">
+    <Controls>
+        <Control name="AwesomeGuildStoreFilterFragmentTemplate" virtual="true" resizeToFitDescendents="true">
+            <DimensionConstraints minX="250" maxX="250" minY="40" />
+            <Controls>
+                <Label name="$(parent)Label" mouseEnabled="true" maxLineCount="1" wrapMode="ELLIPSIS" font="ZoFontWinH4" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_SELECTED">
+                    <Anchor point="TOPLEFT" />
+                    <Anchor point="TOPRIGHT" offsetX="-18" />
+                    <OnMouseUp>
+                        if(button == MOUSE_BUTTON_INDEX_RIGHT and upInside) then
+                            self.fragment:ShowMenu()
+                        end
+                    </OnMouseUp>
+                </Label>
+
+                <Button name="$(parent)Reset" mouseEnabled="true" hidden="true">
+                    <Anchor point="LEFT" relativeTo="$(parent)Label" relativePoint="RIGHT" />
+                    <Dimensions x="18" y="18" />
+                    <Textures normal="EsoUI/Art/Buttons/decline_up.dds" pressed="EsoUI/Art/Buttons/decline_down.dds" mouseOver="EsoUI/Art/Buttons/decline_over.dds" />
+                    <OnMouseUp>
+                        if(button == MOUSE_BUTTON_INDEX_LEFT and upInside) then
+                            PlaySound("Click")
+                            self.fragment:Reset()
+                        end
+                    </OnMouseUp>
+                </Button>
+
+                <Control name="$(parent)Content" resizeToFitDescendents="true">
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)Label" relativePoint="BOTTOMLEFT" offsetY="5" />
+                    <DimensionConstraints minX="250" maxX="250" />
+                </Control>
+            </Controls>
+        </Control>
+    </Controls>
+</GuiXml>

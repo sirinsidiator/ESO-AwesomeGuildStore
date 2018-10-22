@@ -5,12 +5,12 @@ local MOUSE_LEFT = 1
 local MOUSE_RIGHT = 2
 local MOUSE_MIDDLE = 3
 
-function SimpleIconButton:New(name, icon, size, tooltipText)
+function SimpleIconButton:New(name, icon, size, tooltipText, parent)
 	local button = ZO_Object.New(self)
 	button.locked = false
 	button.mouseInside = false
 
-	local control = CreateControlFromVirtual(name, GuiRoot, "ZO_DefaultButton")
+	local control = CreateControlFromVirtual(name, parent or GuiRoot, "ZO_DefaultButton")
 	control:SetEndCapWidth(0)
 	control:SetDimensions(size, size)
 	control:SetHandler("OnMouseUp", function(control, mouseButton, isInside, ctrl, alt, shift)
@@ -34,9 +34,7 @@ function SimpleIconButton:New(name, icon, size, tooltipText)
 		button.mouseInside = true
 		local text = button.tooltipText
 		if(not text or text == "") then return end
-		InitializeTooltip(InformationTooltip)
-		InformationTooltip:ClearAnchors()
-		InformationTooltip:SetOwner(control, BOTTOM, 5, 0)
+		InitializeTooltip(InformationTooltip, control, BOTTOM, 5, 0)
 		SetTooltipText(InformationTooltip, text)
 	end)
 	control:SetHandler("OnMouseExit", function()

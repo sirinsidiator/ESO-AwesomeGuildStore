@@ -1,0 +1,23 @@
+<GuiXml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sir.insidi.at/or/schema/esoui.xsd">
+    <Controls>
+        <Control name="AwesomeGuildStoreMultiCategoryFilterRowTemplate" mouseEnabled="true" virtual="true">
+            <Dimensions y="24" />
+
+            <Controls>
+                <Texture name="$(parent)Bg" textureFile="EsoUI/Art/Miscellaneous/listItem_backdrop.dds">
+                    <AnchorFill />
+                    <TextureCoords left="0" right="1" top="0" bottom=".8125" />
+                </Texture>
+
+                <Texture name="$(parent)Highlight" textureFile="EsoUI/Art/Miscellaneous/listItem_highlight.dds" alpha="0">
+                    <AnchorFill />
+                    <TextureCoords left="0" right="1" top="0" bottom=".625" />
+                </Texture>
+
+                <Label name="$(parent)Label" font="ZoFontGameShadow" wrapMode="ELLIPSIS" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_TOOLTIP_DEFAULT">
+                    <AnchorFill />
+                </Label>
+            </Controls>
+        </Control>
+    </Controls>
+</GuiXml>

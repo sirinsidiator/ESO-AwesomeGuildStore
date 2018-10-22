@@ -4,212 +4,173 @@ local GuildSelector = ZO_Object:Subclass()
 AwesomeGuildStore.GuildSelector = GuildSelector
 
 function GuildSelector:New(...)
-	local selector = ZO_Object.New(self)
-	selector:Initialize(...)
-	return selector
+    local selector = ZO_Object.New(self)
+    selector:Initialize(...)
+    return selector
 end
 
-function GuildSelector:Initialize(saveData)
-	self.saveData = saveData
+function GuildSelector:Initialize(tradingHouseWrapper)
+    self.tradingHouseWrapper = tradingHouseWrapper
 
-	local parent = TRADING_HOUSE.m_control:GetNamedChild("Title")
-	local control = CreateControlFromVirtual("AwesomeGuildStoreGuildSelector", parent, "AwesomeGuildStoreGuildSelectorTemplate")
+    local tradingHouse = tradingHouseWrapper.tradingHouse
 
-	self.guildSelector = control
-	self.entryByGuildId = {}
-	self.guildIdByIndex = {}
-	self.selectedGuildId = 0
+    local parent = tradingHouse.m_control:GetNamedChild("Title")
+    local control = CreateControlFromVirtual("AwesomeGuildStoreGuildSelector", parent, "AwesomeGuildStoreGuildSelectorTemplate")
+    self.titleLabel = parent:GetNamedChild("Label")
+    self.titleLabel:SetModifyTextType(MODIFY_TEXT_TYPE_NONE)
 
-	local comboBoxControl = GetControl(control, "ComboBox")
-	self.comboBox = ZO_ComboBox_ObjectFromContainer(comboBoxControl)
-	self.selectedItemText = GetControl(comboBoxControl, "SelectedItemText")
-	self.selectedItemText.guildId = 0
+    self.guildIdByMenuIndex = {}
+    self.guildSelector = control -- TODO rename
 
-	self:InitializeComboBox(comboBoxControl, self.comboBox)
-	self:InitializeHiredTraderTooltip(comboBoxControl, self.comboBox)
+    local comboBoxControl = GetControl(control, "ComboBox")
+    self.comboBox = ZO_ComboBox_ObjectFromContainer(comboBoxControl)
+    self.selectedItemText = GetControl(comboBoxControl, "SelectedItemText")
+    self.selectedItemText.guildId = 0
 
-	ZO_PreHook(TRADING_HOUSE, "UpdateForGuildChange", function()
-		self:UpdateSelectedGuild()
-	end)
+    self:InitializeComboBox(comboBoxControl, self.comboBox)
+    self:InitializeHiredTraderTooltip(comboBoxControl, self.comboBox)
 
-	local originalSelectTradingHouseGuildId = SelectTradingHouseGuildId
-	SelectTradingHouseGuildId = function(guildId, skipUpdates, ...)
-		local result = {originalSelectTradingHouseGuildId(guildId, ...)}
-		if(skipUpdates ~= true) then
-			self:UpdateSelectedGuild()
-			local guildId, guildName = GetCurrentTradingHouseGuildDetails()
-			if(guildId ~= 0) then
-				self.saveData.lastGuildName = guildName
-			end
-		end
-		return unpack(result)
-	end
+    AwesomeGuildStore:RegisterCallback("AvailableGuildsChanged", function(guilds) -- TODO: test what happens when we fire this callback outside a trading house
+        self:SetupGuildList(guilds)
+
+        local hasGuilds = (#guilds > 0)
+        self.guildSelector:SetHidden(not hasGuilds)
+        self.titleLabel:SetHidden(hasGuilds)
+    end)
+
+    AwesomeGuildStore:RegisterCallback("SelectedGuildChanged", function(guildData)
+        local focused = WINDOW_MANAGER:GetFocusControl()
+        if(focused) then focused:LoseFocus() end
+
+        self.selectedGuildData = guildData
+        self.selectedItemText.guildId = guildData.guildId -- TODO
+        self.comboBox:SetSelectedItem(guildData.guildName)
+        self.traderTooltip:Update(self.selectedItemText)
+        tradingHouse:UpdateForGuildChange() -- TODO: disable all the unnecessary stuff in there
+    end)
 end
 
 function GuildSelector:InitializeComboBox(comboBoxControl, comboBox)
-	comboBox:SetSortsItems(false)
-	comboBox:SetSelectedItemFont("ZoFontWindowTitle")
-	comboBox:SetDropdownFont("ZoFontHeader2")
-	comboBox:SetSpacing(8)
-	comboBoxControl:SetHandler("OnMouseWheel", function(control, delta, ctrl, alt, shift)
-		local selectedEntry = self.entryByGuildId[self.selectedGuildId]
-		if(selectedEntry) then
-			local newEntry = selectedEntry
-			local sellMode = TRADING_HOUSE:IsInSellMode()
+    local tradingHouse = self.tradingHouseWrapper.tradingHouse
 
-			repeat
-				if(delta < 0) then
-					newEntry = newEntry.next
-				elseif(delta > 0) then
-					newEntry = newEntry.prev
-				end
-			until not sellMode or newEntry.canSell or newEntry == selectedEntry
+    comboBox:SetSortsItems(false)
+    comboBox:SetSelectedItemFont("ZoFontWindowTitle")
+    comboBox:SetDropdownFont("ZoFontHeader2")
+    comboBox:SetSpacing(8)
 
-			if(newEntry ~= selectedEntry) then
-				local focused = WINDOW_MANAGER:GetFocusControl()
-				if(focused) then focused:LoseFocus() end
-				self:OnGuildChanged(comboBox, newEntry.name, newEntry)
-			end
-		end
-	end)
+    comboBoxControl:SetHandler("OnMouseWheel", function(control, delta, ctrl, alt, shift)
+        local currentData = self.selectedGuildData
+        local newData = currentData
+        local buyMode = tradingHouse:IsInSearchMode()
+
+        repeat
+            if(delta < 0) then
+                newData = newData.next
+            elseif(delta > 0) then
+                newData = newData.previous
+            end
+
+            -- break out of the loop if the new guild can be used in the current mode
+            -- TODO: remove this. just don't kick us out of the sell tab
+            if(buyMode and newData.canBuy) then
+                break
+            elseif(not buyMode and newData.canSell) then
+                break
+            end
+        until newData == currentData
+
+        if(newData ~= currentData) then
+            SelectTradingHouseGuildId(newData.guildId)
+        end
+    end)
 end
 
 function GuildSelector:InitializeHiredTraderTooltip(comboBoxControl, comboBox)
-	local traderTooltip = HiredTraderTooltip:New(self.saveData)
-	local function GuildSelectorShowTooltip(control)
-		traderTooltip:Show(control)
-	end
-	local function GuildSelectorHideTooltip(control)
-		traderTooltip:Hide(control)
-	end
+    local traderTooltip = HiredTraderTooltip:New(self.tradingHouseWrapper.saveData)
+    local function GuildSelectorShowTooltip(control)
+        traderTooltip:Show(control)
+    end
+    local function GuildSelectorHideTooltip(control)
+        traderTooltip:Hide(control)
+    end
 
-	-- allow for tooltips on the drop down entries
-	local originalShow = comboBox.ShowDropdownInternal
-	comboBox.ShowDropdownInternal = function(comboBox)
-		originalShow(comboBox)
-		local entries = ZO_Menu.items
-		for i = 1, #entries do
-			local entry = entries[i]
-			local control = entries[i].item
-			control.guildId = self.guildIdByIndex[i]
-			entry.onMouseEnter = control:GetHandler("OnMouseEnter")
-			entry.onMouseExit = control:GetHandler("OnMouseExit")
-			ZO_PreHookHandler(control, "OnMouseEnter", GuildSelectorShowTooltip)
-			ZO_PreHookHandler(control, "OnMouseExit", GuildSelectorHideTooltip)
-		end
-	end
+    -- allow for tooltips on the drop down entries
+    local function AddMenuItemCallback() -- TODO not working
+        local entry = ZO_Menu.items[#ZO_Menu.items] -- fetch the last added entry
+        local control = entry.item
+        df("AddMenuItem(%d)", control.menuIndex)
+        control.guildId = self.guildIdByMenuIndex[control.menuIndex] -- TODO find a better solution
+        entry.onMouseEnter = control:GetHandler("OnMouseEnter")
+        entry.onMouseExit = control:GetHandler("OnMouseExit")
+        ZO_PreHookHandler(control, "OnMouseEnter", GuildSelectorShowTooltip)
+        ZO_PreHookHandler(control, "OnMouseExit", GuildSelectorHideTooltip)
+    end
 
-	local originalHide = comboBox.HideDropdownInternal
-	comboBox.HideDropdownInternal = function(self)
-		local entries = ZO_Menu.items
-		for i = 1, #entries do
-			local entry = entries[i]
-			local control = entries[i].item
-			control:SetHandler("OnMouseEnter", entry.onMouseEnter)
-			control:SetHandler("OnMouseExit", entry.onMouseExit)
-			control.guildId = nil
-		end
-		originalHide(self)
-	end
+    ZO_PreHook(comboBox, "ShowDropdownInternal", function(comboBox)
+        d("show dropdown")
+        SetAddMenuItemCallback(AddMenuItemCallback)
+    end)
 
-	self.traderTooltip = traderTooltip
+    ZO_PreHook(comboBox, "HideDropdownInternal", function(comboBox)
+        d("hide dropdown")
+        local entries = ZO_Menu.items
+        for i = 1, #entries do
+            local entry = entries[i]
+            local control = entries[i].item
+            control:SetHandler("OnMouseEnter", entry.onMouseEnter)
+            control:SetHandler("OnMouseExit", entry.onMouseExit)
+            control.guildId = nil
+        end
+    end)
 
-	self.selectedItemText:SetHandler("OnMouseEnter", GuildSelectorShowTooltip)
-	self.selectedItemText:SetHandler("OnMouseExit", GuildSelectorHideTooltip)
+    self.traderTooltip = traderTooltip
+
+    self.selectedItemText:SetHandler("OnMouseEnter", GuildSelectorShowTooltip)
+    self.selectedItemText:SetHandler("OnMouseExit", GuildSelectorHideTooltip)
 end
 
-function GuildSelector:SetupGuildList()
-	self:ReselectLastGuild()
-
-	local OnGuildChanged = function(...) self:OnGuildChanged(...) end
-	local comboBox = self.comboBox
-
-	comboBox:ClearItems()
-	local entryByGuildId = {}
-	local entries = {}
-
-	local selectedEntry
-	for i = 1, GetNumTradingHouseGuilds() do
-		local guildId, guildName, guildAlliance = GetTradingHouseGuildDetails(i)
-		local iconPath = GetAllianceBannerIcon(guildAlliance)
-		local entryText = iconPath and zo_iconTextFormat(iconPath, 36, 36, guildName) or guildName
-		local entry = comboBox:CreateItemEntry(entryText, OnGuildChanged)
-		entry.guildId = guildId
-		entry.canSell = CanSellOnTradingHouse(guildId)
-		table.insert(entries, entry)
-
-		if((not selectedEntry) or (guildId == self.selectedGuildId)) then
-			selectedEntry = entry
-		end
-		entryByGuildId[guildId] = entry
-	end
-
-	table.sort(entries, function(a, b) return a.guildId < b.guildId end)
-	comboBox:AddItems(entries)
-
-	local guildIdByIndex = {}
-	local prevEntry = entries[#entries]
-	for i = 1, #entries do
-		local entry = entries[i]
-		guildIdByIndex[i] = entry.guildId
-
-		prevEntry.next = entry
-		entry.prev = prevEntry
-		prevEntry = entry
-	end
-
-	self.entryByGuildId = entryByGuildId
-	self.guildIdByIndex = guildIdByIndex
-
-	OnGuildChanged(comboBox, selectedEntry.name, selectedEntry)
+local function OnSelectionChanged(comboBox, selectedName, selectedEntry)
+    SelectTradingHouseGuildId(selectedEntry.data.guildId)
 end
 
-function GuildSelector:ReselectLastGuild()
-	local guildId, guildName = GetCurrentTradingHouseGuildDetails()
-	if(self.saveData.lastGuildName and self.saveData.lastGuildName ~= guildName) then
-		for i = 1, GetNumTradingHouseGuilds() do
-			guildId, guildName = GetTradingHouseGuildDetails(i)
-			if(guildName == self.saveData.lastGuildName) then
-				SelectTradingHouseGuildId(guildId, true)
-				TRADING_HOUSE:UpdateForGuildChange()
-				break
-			end
-		end
-	end
-	self:UpdateSelectedGuild()
-end
+--local function ByGuildIdAsc(a, b)
+--    return a.guildId < b.guildId
+--end
 
-function GuildSelector:UpdateSelectedGuild()
-	local guildId, guildName = GetCurrentTradingHouseGuildDetails()
-	if(guildId and self.entryByGuildId[guildId]) then
-		self.comboBox:SetSelectedItem(self.entryByGuildId[guildId].name)
-	end
-	self.selectedGuildId = guildId
-	self.selectedItemText.guildId = guildId
-end
+function GuildSelector:SetupGuildList(guilds)
+    local comboBox = self.comboBox
+    comboBox:ClearItems()
 
-function GuildSelector:OnGuildChanged(comboBox, selectedName, selectedEntry)
-	if(SelectTradingHouseGuildId(selectedEntry.guildId)) then
-		TRADING_HOUSE:UpdateForGuildChange()
-		if(TRADING_HOUSE.m_currentMode == ZO_TRADING_HOUSE_MODE_LISTINGS) then
-			TRADING_HOUSE:RequestListings()
-		end
-		self.traderTooltip:Update(self.selectedItemText)
-	end
+    local entries = {}
+    for i = 1, #guilds do
+        local data = guilds[i]
+        local entry = comboBox:CreateItemEntry(data.entryText, OnSelectionChanged)
+        entry.data = data
+        entries[#entries + 1] = entry
+    end
+    --    table.sort(entries, ByGuildIdAsc)
+
+    comboBox:AddItems(entries)
+
+    local guildIdByMenuIndex = self.guildIdByMenuIndex -- TODO this can be removed if we don't need to sort anyways
+    for i = 1, #entries do
+        local entry = entries[i]
+        guildIdByMenuIndex[i] = entry.guildId
+    end
 end
 
 function GuildSelector:Enable()
-	self.comboBox:SetEnabled(true)
+    self.comboBox:SetEnabled(true)
 end
 
 function GuildSelector:Disable()
-	self.comboBox:SetEnabled(false)
+    self.comboBox:SetEnabled(false)
 end
 
 function GuildSelector:Show()
-	self.guildSelector:SetHidden(false)
+    self.guildSelector:SetHidden(false)
 end
 
 function GuildSelector:Hide()
-	self.guildSelector:SetHidden(true)
+    self.guildSelector:SetHidden(true)
 end
