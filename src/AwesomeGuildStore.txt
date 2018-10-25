@@ -32,7 +32,6 @@ lib/LibFilters-2.0/helper.lua
 lib/libCommonInventoryFilters/libCommonInventoryFilters.lua
 lib/LibTextFilter/LibTextFilter.lua
 lib/LibCustomTitles/LibCustomTitles.lua
-lib/LibCustomMenu/LibCustomMenu.lua
 lib/LibAnnyoingUpdateNotificationInGame/LibAnnyoingUpdateNotificationInGame.lua
 lib/LibMapPing/LibMapPing.lua
 lib/LibGPS/LibGPS.lua
