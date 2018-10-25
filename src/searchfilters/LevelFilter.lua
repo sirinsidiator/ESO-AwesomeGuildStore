@@ -173,9 +173,7 @@ function LevelFilter:InitializeHandlers(tradingHouseWrapper)
             local currentRange = self.currentRange
             min = currentRange.currentMin
             max = currentRange.currentMax
-            if(min ~= nil and min == max) then
-                max = nil
-            elseif(min == nil and max ~= nil) then
+            if(min == nil and max ~= nil) then
                 min = currentRange.min
             elseif(min ~= nil and max == nil) then
                 max = currentRange.max

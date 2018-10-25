@@ -109,7 +109,6 @@ function QualityFilter:InitializeHandlers(tradingHouse)
     ZO_PreHook(TRADING_HOUSE.m_search, "InternalExecuteSearch", function(self)
         local min, max = slider:GetRangeValue()
         if min == MIN_QUALITY then min = ITEM_QUALITY_TRASH end
-        if min == max then max = nil end
         self.m_filters[TRADING_HOUSE_FILTER_TYPE_QUALITY].values = {min, max}
     end)
 end
