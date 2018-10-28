@@ -2,7 +2,8 @@
 ## Author: sirinsidiator
 ## Version: @VERSION_NUMBER@
 ## APIVersion: @API_VERSION@
-## OptionalDependsOn: LibStub LibAddonMenu-2.0 libFilters libCommonInventoryFilters LibTextFilter LibCustomTitles LibCustomMenu LibMapPing LibGPS LibDateTime LibPromises LibGetText LibAnnyoingUpdateNotificationInGame
+## DependsOn: LibStub LibCustomMenu
+## OptionalDependsOn: LibAddonMenu-2.0 libFilters libCommonInventoryFilters LibTextFilter LibCustomTitles LibMapPing LibGPS LibDateTime LibPromises LibGetText LibAnnyoingUpdateNotificationInGame
 ## SavedVariables: AwesomeGuildStore_Data
 ##
 ## This Add-on is not created by, affiliated with or sponsored by ZeniMax Media Inc. or its affiliates. 
@@ -11,7 +12,6 @@
 ##
 ## You can read the full terms at https://account.elderscrollsonline.com/add-on-terms
 
-lib/LibStub/LibStub.lua
 lib/LibAddonMenu-2.0/LibAddonMenu-2.0.lua
 lib/LibAddonMenu-2.0/controls/panel.lua
 lib/LibAddonMenu-2.0/controls/submenu.lua
