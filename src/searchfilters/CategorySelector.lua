@@ -195,7 +195,7 @@ function CategorySelector:CreateSubcategoryGroup(name, category)
 end
 
 local function ShowGuildSpecificItems()
-	TRADING_HOUSE.m_noItemsLabel:SetHidden(true) -- hide the no items found message as we will show the tabard anyways
+	TRADING_HOUSE.noSearchItemsContainer:SetHidden(true) -- hide the no items found message as we will show the tabard anyways
 	TRADING_HOUSE:AddGuildSpecificItems(true) -- add the tabard whenever we change to the costume subcategory, because this function clears the search result
 end
 
