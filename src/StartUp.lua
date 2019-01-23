@@ -39,7 +39,13 @@ AwesomeGuildStore.RegisterForEvent = RegisterForEvent
 AwesomeGuildStore.WrapFunction = WrapFunction
 -----------------------------------------------------------------------------------------
 
-AwesomeGuildStore.GetAPIVersion = function() return 3 end
+AwesomeGuildStore.GetAPIVersion = function()
+    if(GetAPIVersion() >= 100026) then
+        return -1 -- some arbitrary number that hopefully won't cause errors
+    else
+        return 3
+    end
+end
 
 -- convenience functions for using the callback object:
 function AwesomeGuildStore:RegisterBeforeInitialSetupCallback(...)
@@ -200,40 +206,76 @@ local function IntegrityCheck()
     assert(AwesomeGuildStore.SalesCategorySelector)
 end
 
-OnAddonLoaded(function()
-    IntegrityCheck()
+if(GetAPIVersion() >= 100026) then
+    -- Due to the changes to the trading house in Wrathstone, this version of AGS is no longer capable of running.
+    -- To avoid producing errors, we don't run any code and instead show a message to the user that they need to update
+    -- to AwesomeGuildStore v1.0 when they open the guild store.
 
-    local saveData = AwesomeGuildStore.LoadSettings()
-    AwesomeGuildStore.SetMessagePrefix(saveData.shortMessagePrefix)
-    if(saveData.guildTraderListEnabled) then
-        AwesomeGuildStore.InitializeGuildStoreList(saveData)
-    end
-    AwesomeGuildStore.main = AwesomeGuildStore.TradingHouseWrapper:New(saveData)
-    AwesomeGuildStore.InitializeAugmentedMails(saveData)
+    local dialogName = "AGSCompatibilityDialog"
+    local eventHandle
+    eventHandle = RegisterForEvent(EVENT_OPEN_TRADING_HOUSE, function()
+        UnregisterForEvent(EVENT_OPEN_TRADING_HOUSE, eventHandle)
 
-    local gettext = LibStub("LibGetText")("AwesomeGuildStore").gettext
-
-    local actionName, defaultKey = "AGS_SUPPRESS_LOCAL_FILTERS", KEY_CTRL
-    -- TRANSLATORS: keybind label in the controls menu
-    ZO_CreateStringId("SI_BINDING_NAME_AGS_SUPPRESS_LOCAL_FILTERS", gettext("Suppress Local Filters"))
-
-    local function HandleKeyBindReset()
-        saveData.hasTouchedAction = {}
-    end
-
-    ZO_PreHook("ResetAllBindsToDefault", HandleKeyBindReset)
-    ZO_PreHook("ResetKeyboardBindsToDefault", HandleKeyBindReset)
-
-    local function HandleKeyBindTouched(_, layerIndex, categoryIndex, actionIndex, bindingIndex)
-        if(IsSameAction(actionName, layerIndex, categoryIndex, actionIndex) and bindingIndex == 1) then
-            saveData.hasTouchedAction[actionName] = true
+        if(not ZO_Dialogs_IsDialogRegistered(dialogName)) then
+            ZO_Dialogs_RegisterCustomDialog(dialogName, {
+                canQueue = true,
+                title = {
+                    text = "Awesome Guild Store",
+                },
+                mainText = {
+                    text = "This version of the addon is no longer compatible with the current game version.\n\nPlease install the latest AwesomeGuildStore in order to continue using it.",
+                },
+                buttons = {
+                    [1] = {
+                        text = "Open Addon Page",
+                        callback = function()
+                            RequestOpenUnsafeURL("https://www.esoui.com/downloads/info695-AwesomeGuildStore.html")
+                        end
+                    },
+                    [2] = {
+                        text = "Continue",
+                    },
+                },
+            })
+            ZO_Dialogs_ShowDialog(dialogName)
         end
-    end
+    end)
+else
+    OnAddonLoaded(function()
+        IntegrityCheck()
 
-    RegisterForEvent(EVENT_KEYBINDING_CLEARED, HandleKeyBindTouched)
-    RegisterForEvent(EVENT_KEYBINDING_SET, HandleKeyBindTouched)
+        local saveData = AwesomeGuildStore.LoadSettings()
+        AwesomeGuildStore.SetMessagePrefix(saveData.shortMessagePrefix)
+        if(saveData.guildTraderListEnabled) then
+            AwesomeGuildStore.InitializeGuildStoreList(saveData)
+        end
+        AwesomeGuildStore.main = AwesomeGuildStore.TradingHouseWrapper:New(saveData)
+        AwesomeGuildStore.InitializeAugmentedMails(saveData)
 
-    if(not saveData.hasTouchedAction["AGS_SUPPRESS_LOCAL_FILTERS"]) then
-        CreateDefaultActionBind(actionName, defaultKey)
-    end
-end)
+        local gettext = LibStub("LibGetText")("AwesomeGuildStore").gettext
+
+        local actionName, defaultKey = "AGS_SUPPRESS_LOCAL_FILTERS", KEY_CTRL
+        -- TRANSLATORS: keybind label in the controls menu
+        ZO_CreateStringId("SI_BINDING_NAME_AGS_SUPPRESS_LOCAL_FILTERS", gettext("Suppress Local Filters"))
+
+        local function HandleKeyBindReset()
+            saveData.hasTouchedAction = {}
+        end
+
+        ZO_PreHook("ResetAllBindsToDefault", HandleKeyBindReset)
+        ZO_PreHook("ResetKeyboardBindsToDefault", HandleKeyBindReset)
+
+        local function HandleKeyBindTouched(_, layerIndex, categoryIndex, actionIndex, bindingIndex)
+            if(IsSameAction(actionName, layerIndex, categoryIndex, actionIndex) and bindingIndex == 1) then
+                saveData.hasTouchedAction[actionName] = true
+            end
+        end
+
+        RegisterForEvent(EVENT_KEYBINDING_CLEARED, HandleKeyBindTouched)
+        RegisterForEvent(EVENT_KEYBINDING_SET, HandleKeyBindTouched)
+
+        if(not saveData.hasTouchedAction["AGS_SUPPRESS_LOCAL_FILTERS"]) then
+            CreateDefaultActionBind(actionName, defaultKey)
+        end
+    end)
+end
