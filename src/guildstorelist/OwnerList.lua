@@ -1,4 +1,4 @@
-local LDT = LibStub("LibDateTime")
+local LDT = LibDateTime
 
 local function SortDesc(a, b) return a > b end
 
@@ -51,13 +51,13 @@ function OwnerList:Initialize(saveData)
     self.weekOrder = weekOrder
 end
 
-function OwnerList:GetCurrentWeek()
+function OwnerList:GetCurrentWeek() -- TODO use LDT directly?
     local currentYearAndWeek = LDT:GetTraderWeek()
     return currentYearAndWeek
 end
 
-function OwnerList:IsTimeInCurrentWeek(time)
-    return LDT:IsInTraderWeek(LDT:New(time))
+function OwnerList:IsTimeInCurrentWeek(time) -- TODO use LDT directly?
+    return LDT:IsInTraderWeek(time)
 end
 
 function OwnerList:GetStartAndEndForWeek(yearAndWeek)

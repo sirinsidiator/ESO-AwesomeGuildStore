@@ -1,4 +1,6 @@
 local gettext = LibStub("LibGetText")("AwesomeGuildStore").gettext
+local LDT = LibDateTime
+local osdate = os.date
 
 local HISTORY_DATA = 1
 local HISTORY_ROW_HEIGHT = 30
@@ -50,8 +52,8 @@ function KioskHistoryControl:InitializeList(control, storeList, kioskList, owner
     local function SortHistory(listEntry1, listEntry2)
         local sortKey = self.currentSortKey
 
-        local startTime1 = listEntry1.data.startTime:GetTimeStamp()
-        local startTime2 = listEntry2.data.startTime:GetTimeStamp()
+        local startTime1 = listEntry1.data.startTime
+        local startTime2 = listEntry2.data.startTime
         local value1, value2
         if(sortKey == SORT_KEY_WEEK) then
             value1 = startTime1
@@ -88,8 +90,6 @@ function KioskHistoryControl:SetSelectedGuild(guildName)
     self.selectedGuildName = guildName
 end
 
-local LDT = LibStub("LibDateTime")
-
 function KioskHistoryControl:BuildMasterList()
     ZO_ClearNumericallyIndexedTable(self.masterList)
     if(not self.selectedGuildName) then return end
@@ -111,8 +111,8 @@ function KioskHistoryControl:BuildMasterList()
 
         local startTime, endTime = ownerList:GetStartAndEndForWeek(yearAndWeek)
         local isoYear, isoWeek = LDT:SeparateIsoWeekAndYear(yearAndWeek)
-        local startTimeString = startTime:Format("%Y-%m-%d %H:%M")
-        local endTimeString = endTime:Format("%Y-%m-%d %H:%M")
+        local startTimeString = osdate("%F %H:%M", startTime)
+        local endTimeString = osdate("%F %H:%M", endTime)
         local kiosk = kioskList:GetKiosk(kioskName)
         local store = storeList:GetStore(kiosk.storeIndex)
         assert(store ~= nil, kiosk.storeIndex)
@@ -143,8 +143,8 @@ function KioskHistoryControl:BuildMasterList()
                     _, endTime = ownerList:GetStartAndEndForWeek(endWeek)
                 end
                 local isoYear, isoWeek = LDT:SeparateIsoWeekAndYear(startWeek)
-                local startTimeString = startTime:Format("%Y-%m-%d %H:%M")
-                local endTimeString = endTime:Format("%Y-%m-%d %H:%M")
+                local startTimeString = osdate("%F %H:%M", startTime)
+                local endTimeString = osdate("%F %H:%M", endTime)
                 self.masterList[#self.masterList + 1] = {
                     type = HISTORY_DATA,
                     startTime = startTime,

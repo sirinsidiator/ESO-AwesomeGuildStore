@@ -5,11 +5,13 @@ local IsCurrentMapZoneMap = AwesomeGuildStore.IsCurrentMapZoneMap
 local GetKioskName = AwesomeGuildStore.GetKioskName
 local RegisterForEvent = AwesomeGuildStore.RegisterForEvent
 local gettext = LibStub("LibGetText")("AwesomeGuildStore").gettext
+local osdate = os.date
 
 local REFRESH_HANDLE = "AwesomeGuildStoreListRefresh"
 local REFRESH_INTERVAL = 15000
 
 local libGPS = LibStub("LibGPS2")
+local LDT = LibDateTime
 
 local menu = MAIN_MENU_KEYBOARD
 local category = MENU_CATEGORY_GUILDS
@@ -104,7 +106,6 @@ local function InitializeGuildList(saveData, kioskList, storeList, ownerList)
     local historyList = AwesomeGuildStore.KioskHistoryControl:New(detailOwnerHistory, storeList, kioskList, ownerList)
     window.historyList = historyList
 
-    local LDT = LibStub("LibDateTime")
     local selectedTraderData
     local function SetSelectedDetails(data)
         selectedTraderData = data
@@ -125,7 +126,7 @@ local function InitializeGuildList(saveData, kioskList, storeList, ownerList)
                     data.lastVisitedLabel = GetLastVisitLabel(realLastVisited or lastVisited)
                 elseif(guild.lastVisitedWeek ~= 0) then
                     local yearA, weekA = LDT:SeparateIsoWeekAndYear(guild.lastVisitedWeek)
-                    local weekB, yearB = LDT:New():GetIsoWeek()
+                    local yearB, weekB = LDT:CalculateIsoWeekAndYear()
                     local diff = LDT:CalculateIsoWeekDifference(yearA, weekA, yearB, weekB)
                     -- TRANSLATORS: text for the last visited label in the guild list detail view. $d is a placeholder for the number of weeks 
                     data.lastVisitedLabel = zo_strformat(gettext("<<1[this week/1 week ago/$d weeks ago]>>"), diff)
@@ -147,8 +148,7 @@ local function InitializeGuildList(saveData, kioskList, storeList, ownerList)
 
     local function GetExactLastVisitLabel(lastVisited)
         if(lastVisited) then
-            local date = LDT:New(lastVisited)
-            return date:Format("%Y-%m-%d %H:%M")
+            return osdate("%F %H:%M", lastVisited)
         else
             -- TRANSLATORS: text for the last visited field of an unvisited kiosk on the guild kiosk tab
             return gettext("never")

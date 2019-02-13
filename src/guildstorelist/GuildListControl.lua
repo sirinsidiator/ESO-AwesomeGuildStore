@@ -28,6 +28,7 @@ local SORT_ORDER_DOWN = {
 }
 
 local LTF = LibStub("LibTextFilter")
+local LDT = LibDateTime
 
 local function GetZoneLabel(store)
     local zoneIndex = GetZoneIndex(store.zoneId)
@@ -171,8 +172,7 @@ function GuildListControl:BuildMasterList()
     ZO_ClearNumericallyIndexedTable(self.masterList)
     self:UpdateEmptyText()
 
-    local LDT = LibStub("LibDateTime")
-    local weekB, yearB = LDT:New():GetIsoWeek()
+    local yearB, weekB = LDT:CalculateIsoWeekAndYear()
 
     local upToDateCount = 0
     local visitedCount = 0

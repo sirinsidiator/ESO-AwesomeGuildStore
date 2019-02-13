@@ -6,6 +6,7 @@ local GetKioskName = AwesomeGuildStore.GetKioskName
 local RegisterForEvent = AwesomeGuildStore.RegisterForEvent
 local Print = AwesomeGuildStore.Print
 local gettext = LibStub("LibGetText")("AwesomeGuildStore").gettext
+local osdate = os.date
 
 local KIOSK_ICON = "/esoui/art/icons/servicemappins/servicepin_guildkiosk.dds"
 local VENDOR_ICON = "/esoui/art/icons/servicemappins/servicepin_vendor.dds"
@@ -271,11 +272,9 @@ local function InitializeStoreListWindow(saveData, kioskList, storeList, ownerLi
         historyList:RefreshData()
     end
 
-    local LDT = LibStub("LibDateTime")
     local function GetExactLastVisitLabel(lastVisited)
         if(lastVisited) then
-            local date = LDT:New(lastVisited)
-            return date:Format("%Y-%m-%d %H:%M")
+            return osdate("%F %H:%M", lastVisited)
         else
             -- TRANSLATORS: text for the last visited field of an unvisited kiosk on the guild kiosk tab
             return gettext("never")
