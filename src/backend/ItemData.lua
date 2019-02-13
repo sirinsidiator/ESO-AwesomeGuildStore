@@ -6,6 +6,7 @@ local ItemData = ZO_Object:Subclass()
 AwesomeGuildStore.ItemData = ItemData
 
 local MISSING_ICON = "/esoui/art/icons/icon_missing.dds"
+    local UNIT_PRICE_PRECISION = .01
 
 function ItemData:New(...)
     local object = ZO_Object.New(self)
@@ -22,7 +23,7 @@ function ItemData:Initialize(itemUniqueId, guildName)
     self.sellerName = ""
     self.timeRemaining = 0
     self.purchasePrice = 0
-    self.unitPrice = nil
+    self.purchasePricePerUnit = 0
     self.currencyType = 0
     self.lastSeen = 0
     self.itemLink = ""
@@ -32,11 +33,7 @@ function ItemData:Initialize(itemUniqueId, guildName)
 end
 
 function ItemData:UpdateFromStore(slotIndex, guildName)
-    local icon, itemName, quality, stackCount, sellerName, timeRemaining, price, currencyType, itemUniqueId = GetTradingHouseSearchResultItemInfo(slotIndex)
-
-    if(price ~= self.purchasePrice or stackCount ~= self.stackCount) then
-        self.unitPrice = nil
-    end
+    local icon, itemName, quality, stackCount, sellerName, timeRemaining, price, currencyType, itemUniqueId, purchasePricePerUnit = GetTradingHouseSearchResultItemInfo(slotIndex)
 
     self.slotIndex = itemUniqueId
     self.icon = icon
@@ -46,6 +43,8 @@ function ItemData:UpdateFromStore(slotIndex, guildName)
     self.sellerName = sellerName
     self.timeRemaining = timeRemaining
     self.purchasePrice = price
+    self.purchasePricePerUnitRaw = purchasePricePerUnit
+    self.purchasePricePerUnit = zo_roundToNearest(purchasePricePerUnit, UNIT_PRICE_PRECISION)
     self.currencyType = currencyType
     self.itemUniqueId = itemUniqueId
     self.guildName = guildName
@@ -56,10 +55,6 @@ end
 function ItemData:UpdateFromGuildSpecificItem(index, guildName)
     local icon, itemName, quality, stackCount, _, _, price, currencyType = GetGuildSpecificItemInfo(index)
 
-    if(price ~= self.purchasePrice or stackCount ~= self.stackCount) then
-        self.unitPrice = nil
-    end
-
     self.slotIndex = index
     self.icon = icon
     self.name = itemName
@@ -67,6 +62,7 @@ function ItemData:UpdateFromGuildSpecificItem(index, guildName)
     self.stackCount = stackCount
     self.sellerName = GetString(SI_GUILD_HERALDRY_SELLER_NAME)
     self.purchasePrice = price
+    self.purchasePricePerUnit = price
     self.currencyType = currencyType
     self.guildName = guildName
     self.itemLink = GetGuildSpecificItemLink(index, LINK_STYLE_DEFAULT)
@@ -85,18 +81,6 @@ function ItemData:GetStackCount()
     return self.effectiveStackCount
 end
 
-function ItemData:GetUnitPrice()
-    if(not self.unitPrice) then
-        local stackCount = self:GetStackCount()
-        if(stackCount > 1) then
-            self.unitPrice = tonumber(string.format("%.2f", self.purchasePrice / stackCount))
-        elseif(stackCount > 0) then
-            self.unitPrice = self.purchasePrice
-        end
-    end
-    return self.unitPrice
-end
-
 function ItemData:GetSetInfo()
     if(self.hasSet == nil) then
         local hasSet, setName = GetItemLinkSetInfo(self.itemLink)
@@ -111,7 +95,6 @@ function ItemData:GetDataEntry(type)
     if(not self.dataEntry) then
         ZO_ScrollList_CreateDataEntry(type, self)
         self:GetStackCount()
-        self:GetUnitPrice()
         self:GetSetInfo()
     else
         self.dataEntry.typeId = type

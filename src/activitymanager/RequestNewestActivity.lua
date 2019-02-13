@@ -37,11 +37,7 @@ function RequestNewestActivity:RequestSearch()
     if(not self.responsePromise) then
         self.responsePromise = Promise:New()
 
-        local search = self.tradingHouseWrapper.tradingHouse.m_search
-        search:ResetSearchData()
-        search:ResetPageData()
-        search:UpdateSortOption(SortOrderBase.SORT_FIELD_TIME_LEFT, SortOrderBase.SORT_ORDER_DOWN)
-        search:InternalExecuteSearch()
+        ExecuteTradingHouseSearch(0, SortOrderBase.SORT_FIELD_TIME_LEFT, SortOrderBase.SORT_ORDER_DOWN) -- TODO request all new pages
     end
     return self.responsePromise
 end
@@ -54,24 +50,13 @@ function RequestNewestActivity:GetLogEntry()
     return self.logEntry
 end
 
-function RequestNewestActivity:OnSearchResults(guildId, numItems, page, hasMore, panel)
-    if(self.responsePromise) then
-        logger:Debug("handle newest results received")
-        self.state = ActivityBase.STATE_SUCCEEDED
-        self.itemDatabase:Update(self.pendingGuildName, numItems)
-        -- TODO: check if any of the returned items already exist -> if not, we need to request another page
-        self.searchManager.searchPageHistory:SetRequestNewest(self.pendingGuildName)
-        zo_callLater(function() -- TODO: this should probably be triggered somewhere else
-            self.searchManager.activityManager:RequestNewestResults(self.guildId)
-        end, 0)
-
-        panel:SetStatusText("Request finished") -- TODO translate
-        panel:Refresh()
-
-        self.responsePromise:Resolve(self)
-        return true
-    end
-    return false
+function RequestSearchActivity:HandleSearchResultsReceived()
+    logger:Debug("handle newest results received")
+    -- TODO: check if any of the returned items already exist -> if not, we need to request another page
+    self.searchManager.searchPageHistory:SetRequestNewest(self.pendingGuildName)
+    zo_callLater(function() -- TODO: this should probably be triggered somewhere else
+        self.searchManager.activityManager:RequestNewestResults(self.guildId)
+    end, 0)
 end
 
 function RequestNewestActivity:GetType()

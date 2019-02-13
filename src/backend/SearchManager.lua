@@ -39,9 +39,10 @@ function SearchManager:Initialize(tradingHouseWrapper, saveData)
     self.categoryFilter = nil
     self.sortFilter = nil
 
-    self.search = tradingHouseWrapper.tradingHouse.m_search
+    self.search = tradingHouseWrapper.search
     -- disable the internal filter system
-    ZO_ClearNumericallyIndexedTable(self.search.m_setters)
+    self.search:DisassociateWithSearchFeatures()
+    self.search.features = {} -- TODO better way?
 end
 
 function SearchManager:SetCategoryFilter(categoryFilter)
@@ -115,9 +116,6 @@ function SearchManager:RegisterFilter(filter)
     assert(not self.availableFilters[filterId], "Filter is already registered")
     filter:SetSearchManager(self)
     self.availableFilters[filterId] = filter
-    if(not filter:IsLocal()) then
-        self.search:AddSetter(filter)
-    end
 end
 
 function SearchManager:GetFilter(filterId)
@@ -278,26 +276,6 @@ function SearchManager:RequestSearch()
 end
 
 function SearchManager:DoSearch() -- TODO remove / this is now handled by the activity
-    local guildName = select(2, GetCurrentTradingHouseGuildDetails())
-    local currentState = self.activeSearch:GetFilterState()
-    local page = self.searchPageHistory:GetNextPage(guildName, currentState)
-    if(page) then
-        local search = self.tradingHouseWrapper.tradingHouse.m_search
-
-        search:ResetSearchData()
-        search:ResetPageData()
-
-        search.m_page = page
-
-        for _, setter in ipairs(search.m_setters) do
-            setter:ApplyToSearch(search)
-        end
-
-        self.pendingGuildName = guildName
-        self.pendingSearchState = currentState
-        search:InternalExecuteSearch()
-        return true
-    end
-
+    assert(false, "should not be called anymore")
     return false
 end

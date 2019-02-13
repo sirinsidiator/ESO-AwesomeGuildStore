@@ -31,14 +31,6 @@ local PRIORITY_TO_STRING = {
     [ActivityBase.PRIORITY_MEDIUM] = "PRIORITY_MEDIUM",
     [ActivityBase.PRIORITY_HIGH] = "PRIORITY_HIGH",
 }
-local STATE_TO_STRING = {
-    [ActivityBase.STATE_QUEUED] = "STATE_QUEUED",
-    [ActivityBase.STATE_PENDING] = "STATE_PENDING",
-    [ActivityBase.STATE_AWAITING_RESPONSE] = "STATE_AWAITING_RESPONSE",
-    [ActivityBase.STATE_FAILED] = "STATE_FAILED",
-    [ActivityBase.STATE_SUCCEEDED] = "STATE_SUCCEEDED",
-    [ActivityBase.STATE_CANCELLED] = "STATE_CANCELLED",
-}
 local QSTATE_TO_STRING = {
     [QSTATE_QUEUED] = "QUEUED",
     [QSTATE_CURRENT] = "EXECUTING",
@@ -81,10 +73,9 @@ function ActivityPanel:Initialize(activityManager)
     local TOOLTIP_LINE_TEMPLATE = "%s: |cFFFFFF%s|r"
     local function EnterRow(control)
         local data = ZO_ScrollList_GetData(control)
-        local text = table.concat({
-            TOOLTIP_LINE_TEMPLATE:format("State", data.stateText), -- TODO translate
-            TOOLTIP_LINE_TEMPLATE:format("Key", data.key), -- TODO translate
-        }, "\n")
+        local output = {}
+        data:AddTooltipText(output)
+        local text = table.concat(output, "\n")
 
         InitializeTooltip(InformationTooltip, control, RIGHT, -5, 0)
         SetTooltipText(InformationTooltip, text)
@@ -117,7 +108,7 @@ function ActivityPanel:Initialize(activityManager)
         end
 
         local textControl = control:GetNamedChild("Text")
-        textControl:SetText(data.message)
+        textControl:SetText(data:GetLogEntry())
         textControl:SetColor(textColor:UnpackRGBA())
         -- TODO set tooltip with additional details (status, created time, update time, etc)
     end
@@ -166,16 +157,8 @@ function ActivityPanel:Initialize(activityManager)
     end)
     ZO_ScrollList_EnableHighlight(list.list, "ZO_ThinListHighlight")
 
-    local function CreateEntry(activity, type) -- TODO can we use the activity directly?
-        return ZO_ScrollList_CreateDataEntry(type, {
-            key = activity:GetKey(),
-            activity = ACTIVITY_TO_STRING[activity:GetType()],
-            priority = PRIORITY_TO_STRING[activity.priority],
-            stateText = STATE_TO_STRING[activity.state],
-            state = activity.state,
-            qstate = QSTATE_TO_STRING[activity.qstate],
-            message = activity:GetLogEntry()
-        })
+    local function CreateEntry(activity, type)
+        return ZO_ScrollList_CreateDataEntry(type, activity)
     end
 
     self.activitylog = {}

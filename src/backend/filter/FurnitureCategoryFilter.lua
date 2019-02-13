@@ -78,9 +78,9 @@ function FurnitureCategoryFilter:IsLocal()
     return false
 end
 
-function FurnitureCategoryFilter:ApplyToSearch(search)
+function FurnitureCategoryFilter:ApplyToSearch()
     if(not self:IsAttached() or self:IsDefault()) then return end
     local categoryId, subcategoryId = self:GetSelectedCategoryIndicesForServer()
-    search.m_filters[TRADING_HOUSE_FILTER_TYPE_FURNITURE_CATEGORY].values[VALUE_INDEX] = categoryId
-    search.m_filters[TRADING_HOUSE_FILTER_TYPE_FURNITURE_SUBCATEGORY].values[VALUE_INDEX] = subcategoryId
+    SetTradingHouseFilter(TRADING_HOUSE_FILTER_TYPE_FURNITURE_CATEGORY, categoryId)
+    SetTradingHouseFilter(TRADING_HOUSE_FILTER_TYPE_FURNITURE_SUBCATEGORY, subcategoryId)
 end

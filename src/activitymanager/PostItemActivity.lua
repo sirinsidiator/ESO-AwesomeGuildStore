@@ -4,9 +4,26 @@ local ActivityBase = AGS.class.ActivityBase
 
 local logger = AGS.internal.logger
 local gettext = AGS.internal.gettext
+local RegisterForEvent = AGS.RegisterForEvent
+local UnregisterForEvent = AGS.UnregisterForEvent
 
+local Promise = LibStub("LibPromises")
 local sformat = string.format
 
+
+local STEP_BEGIN_EXECUTION = 1
+local STEP_MOVE_ITEM = 2
+local STEP_SET_PENDING = 3
+local STEP_POST_ITEM = 4
+local STEP_FINALIZE_POSTING = 5
+
+local STEP_TO_STRING = {
+    [STEP_BEGIN_EXECUTION] = "STEP_BEGIN_EXECUTION",
+    [STEP_MOVE_ITEM] = "STEP_MOVE_ITEM",
+    [STEP_SET_PENDING] = "STEP_SET_PENDING",
+    [STEP_POST_ITEM] = "STEP_POST_ITEM",
+    [STEP_FINALIZE_POSTING] = "STEP_FINALIZE_POSTING",
+}
 
 local PostItemActivity = ActivityBase:Subclass()
 AGS.class.PostItemActivity = PostItemActivity
@@ -15,7 +32,7 @@ function PostItemActivity:New(...)
     return ActivityBase.New(self, ...)
 end
 
-function PostItemActivity:Initialize(tradingHouseWrapper, guildId, bagId, slotIndex, stackCount, price, uniqueId)
+function PostItemActivity:Initialize(tradingHouseWrapper, guildId, bagId, slotIndex, stackCount, price)
     local key = PostItemActivity.nextKey or PostItemActivity.CreateKey()
     PostItemActivity.nextKey = nil
 
@@ -24,28 +41,81 @@ function PostItemActivity:Initialize(tradingHouseWrapper, guildId, bagId, slotIn
     self.slotIndex = slotIndex
     self.stackCount = stackCount
     self.price = price
-    self.uniqueId = uniqueId
+    self.itemLink = GetItemLink(bagId, slotIndex, LINK_STYLE_DEFAULT)
 end
 
 function PostItemActivity:Update()
     self.canExecute = self.guildSelection:IsAppliedGuildId(self.guildId) or (GetTradingHouseCooldownRemaining() == 0)
 end
 
-function PostItemActivity:DoExecute() -- TODO: make this method handle both regular and craft bag listings
-    if(not self.guildSelection:ApplySelectedGuildId(self.guildId)) then
-        logger:Warn(sformat("Could not select %s for post operation", GetGuildName(self.guildId)))
-        return false
+local function GetItemStackCount(bagId, slotIndex)
+    local _, stackCount = GetItemInfo(bagId, slotIndex)
+    return stackCount
+end
+
+function PostItemActivity:MoveItemIfNeeded()
+    local promise = Promise:New()
+
+    if(self.bagId ~= BAG_BACKPACK or self.stackCount ~= GetItemStackCount(self.bagId, self.slotIndex)) then
+        self.step = STEP_MOVE_ITEM
+        self.effectiveSlotIndex = FindFirstEmptySlotInBag(BAG_BACKPACK)
+
+        local eventHandle
+        eventHandle = RegisterForEvent(EVENT_INVENTORY_SINGLE_SLOT_UPDATE, function(_, bagId, slotId, isNewItem, itemSoundCategory, inventoryUpdateReason, stackCountChange)
+            if(bagId == BAG_BACKPACK and slotId == self.effectiveSlotIndex) then
+                UnregisterForEvent(EVENT_INVENTORY_SINGLE_SLOT_UPDATE, eventHandle)
+                promise:Resolve(self)
+            end
+        end)
+
+        CallSecureProtected("RequestMoveItem", self.bagId, self.slotIndex, BAG_BACKPACK, self.effectiveSlotIndex, self.stackCount)
+    else
+        self.effectiveSlotIndex = self.slotIndex
+        promise:Resolve(self)
     end
 
-    local uniqueId = GetItemUniqueId(self.bag, self.slotIndex)
-    local _, stackCount = GetItemInfo(self.bagId, self.slotIndex)
-    if(uniqueId ~= self.uniqueId or stackCount < self.stackCount) then
-        logger:Warn(sformat("Inventory item doesn't match for post operation (%s => %s, %d => %d)", Id64ToString(uniqueId), Id64ToString(self.uniqueId), stackCount, self.stackCount))
-        return false
-    end
+    return promise
+end
 
-    RequestPostItemOnTradingHouse(self.bag, self.slotIndex, self.stackCount, self.price)
-    return true
+function PostItemActivity:SetPending()
+    local promise = Promise:New()
+    self.step = STEP_SET_PENDING
+
+    local eventHandle
+    eventHandle = RegisterForEvent(EVENT_TRADING_HOUSE_PENDING_ITEM_UPDATE, function(_, slotId, isPending)
+        if(isPending and slotId == self.effectiveSlotIndex) then
+            UnregisterForEvent(EVENT_TRADING_HOUSE_PENDING_ITEM_UPDATE, eventHandle)
+            promise:Resolve(self)
+        end
+    end)
+
+    SetPendingItemPost(BAG_BACKPACK, self.effectiveSlotIndex, self.stackCount)
+
+    return promise
+end
+
+function PostItemActivity:PostItem()
+    if(not self.responsePromise) then
+        self.step = STEP_POST_ITEM
+        self.responsePromise = Promise:New()
+        RequestPostItemOnTradingHouse(BAG_BACKPACK, self.effectiveSlotIndex, self.stackCount, self.price)
+    end
+    return self.responsePromise
+end
+
+function PostItemActivity:FinalizePosting()
+    local promise = Promise:New()
+    self.step = STEP_FINALIZE_POSTING
+
+    AGS:FireCallbacks("ItemPosted", self.guildId, self.itemLink, self.price, self.stackCount) -- TODO
+    promise:Resolve(self)
+
+    return promise
+end
+
+function PostItemActivity:DoExecute(panel)
+    self.step = STEP_BEGIN_EXECUTION
+    return self:ApplyGuildId(panel):Then(self.MoveItemIfNeeded):Then(self.SetPending):Then(self.PostItem):Then(self.FinalizePosting)
 end
 
 function PostItemActivity:GetErrorMessage()
@@ -56,9 +126,16 @@ end
 function PostItemActivity:GetLogEntry()
     if(not self.logEntry) then
         -- TRANSLATORS: log text shown to the user for each post item request. Placeholders are for the stackCount, itemLink, price and guild name respectively
-        self.logEntry = zo_strformat(gettext("Post <<1>>x <<2>> for <<3>> to <<4>>"), self.stackCount, GetItemLink(self.bag, self.slotIndex), self.price, GetGuildName(self.guildId))
+        self.logEntry = zo_strformat(gettext("Post <<1>>x <<2>> for <<3>> to <<4>>"), self.stackCount, GetItemLink(self.bagId, self.slotIndex), self.price, GetGuildName(self.guildId))
     end
     return self.logEntry
+end
+
+function PostItemActivity:AddTooltipText(output)
+    ActivityBase.AddTooltipText(self, output)
+    if(self.step) then -- TODO translate
+        output[#output + 1] = ActivityBase.TOOLTIP_LINE_TEMPLATE:format("Item Count", STEP_TO_STRING[self.step])
+    end
 end
 
 function PostItemActivity:GetType()

@@ -88,9 +88,9 @@ local WEAPON_ENCHANTMENT_FILTER = {
             icon = "EsoUI/Art/Crafting/provisioner_indexIcon_beer_%s.dds",
         },
         {
-            id = ENCHANTMENT_SEARCH_CATEGORY_OTHER, -- prismatic enchantments
-            label = GetString("SI_ENCHANTMENTSEARCHCATEGORYTYPE", ENCHANTMENT_SEARCH_CATEGORY_OTHER),
-            icon = "EsoUI/Art/Inventory/inventory_tabIcon_misc_%s.dds",
+            id = ENCHANTMENT_SEARCH_CATEGORY_PRISMATIC_ONSLAUGHT, -- prismatic enchantments
+            label = GetString("SI_ENCHANTMENTSEARCHCATEGORYTYPE", ENCHANTMENT_SEARCH_CATEGORY_PRISMATIC_ONSLAUGHT),
+            icon = "EsoUI/Art/Inventory/inventory_tabIcon_misc_%s.dds", -- TODO
         },
     }
 }
@@ -125,8 +125,8 @@ local ARMOR_ENCHANTMENT_FILTER = {
             icon = "EsoUI/Art/Crafting/provisioner_indexIcon_beer_%s.dds",
         },
         {
-            id = ENCHANTMENT_SEARCH_CATEGORY_OTHER, -- prismatic enchantments
-            label = GetString("SI_ENCHANTMENTSEARCHCATEGORYTYPE", ENCHANTMENT_SEARCH_CATEGORY_OTHER),
+            id = ENCHANTMENT_SEARCH_CATEGORY_PRISMATIC_DEFENSE, -- prismatic enchantments
+            label = GetString("SI_ENCHANTMENTSEARCHCATEGORYTYPE", ENCHANTMENT_SEARCH_CATEGORY_PRISMATIC_DEFENSE),
             icon = "EsoUI/Art/Inventory/inventory_tabIcon_misc_%s.dds",
         },
     }
@@ -233,11 +233,6 @@ local JEWELRY_ENCHANTMENT_FILTER = {
             id = ENCHANTMENT_SEARCH_CATEGORY_STAMINA_REGEN, -- adds x stamina recovery
             label = GetString("SI_ENCHANTMENTSEARCHCATEGORYTYPE", ENCHANTMENT_SEARCH_CATEGORY_STAMINA_REGEN),
             icon = "EsoUI/Art/Crafting/provisioner_indexIcon_beer_%s.dds",
-        },
-        {
-            id = ENCHANTMENT_SEARCH_CATEGORY_OTHER, -- ?
-            label = GetString("SI_ENCHANTMENTSEARCHCATEGORYTYPE", ENCHANTMENT_SEARCH_CATEGORY_OTHER),
-            icon = "EsoUI/Art/Inventory/inventory_tabIcon_misc_%s.dds",
         },
     }
 }

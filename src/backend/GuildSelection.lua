@@ -66,7 +66,7 @@ function GuildSelection:UpdateGuildData()
 
     local guildCount = GetNumTradingHouseGuilds()
     local guildId = self.originalGetCurrentTradingHouseGuildDetails()
-    if(guildCount > 1 and guildId > 0) then -- only then we are at a trading house with multiple guilds
+    if(guildId > 0) then
         for i = 1, guildCount do
             local guildId, guildName, guildAlliance = GetTradingHouseGuildDetails(i)
             local iconPath = GetAllianceBannerIcon(guildAlliance)

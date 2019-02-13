@@ -642,19 +642,18 @@ function ItemCategoryFilter:IsLocal()
     return false
 end
 
-function ItemCategoryFilter:ApplyToSearch(search)
-    df("ApplyToSearch - %s, %s", tostring(self:IsAttached()), tostring(self:IsDefault()))
+function ItemCategoryFilter:ApplyToSearch()
     if(not self:IsAttached() or self:IsDefault()) then return end
-    d("set values")
 
     local filters = self:GetCurrentFilterDefinition(self.subcategory) -- TODO: use external value
     for i = 1, #filters do
         local filter = filters[i]
         if(filter.type ~= ITEMFILTERTYPE_LOCAL) then
-            local filterValues = search.m_filters[filter.type].values
+            local values = {}
             for value in pairs(filter.allowed) do
-                filterValues[#filterValues + 1] = value
+                values[#values + 1] = value
             end
+            SetTradingHouseFilter(filter.type, unpack(values))
         end
     end
 end

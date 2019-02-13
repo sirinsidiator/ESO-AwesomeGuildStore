@@ -7,50 +7,50 @@ function KeybindStripWrapper:New(...)
     return wrapper
 end
 
-function KeybindStripWrapper:Initialize(tradingHouseWrapper)
-    local tradingHouse = tradingHouseWrapper.tradingHouse
-    local searchManager = tradingHouseWrapper.searchTab.searchManager
-    local keybindStripDescriptor = tradingHouse.keybindStripDescriptor
-
-    local secondaryDescriptor = keybindStripDescriptor[1]
-    assert(secondaryDescriptor.keybind == "UI_SHORTCUT_SECONDARY")
-    local originalEnabled = secondaryDescriptor.enabled
-    secondaryDescriptor.enabled = function()
-        if(tradingHouse:IsInSearchMode()) then
-            return not self.isSearchDisabled
-        else
-            return originalEnabled()
-        end
-    end
-
-    secondaryDescriptor.callback = function()
-        if(tradingHouse:IsInSearchMode()) then
-            searchManager:RequestSearch()
-        elseif(tradingHouse:CanPostWithMoneyCheck()) then
-            tradingHouse:PostPendingItem()
-        end
-    end
-
-    local tertiaryDescriptor = keybindStripDescriptor[2]
-    assert(tertiaryDescriptor.keybind == "UI_SHORTCUT_TERTIARY")
-    tertiaryDescriptor.enabled = function()
-        return not self.isSearchDisabled
-    end
-
-    self.keybindStripDescriptor = keybindStripDescriptor
-    self.keybindStrip = KEYBIND_STRIP
+function KeybindStripWrapper:Initialize(tradingHouseWrapper) -- TODO redo
+--    local tradingHouse = tradingHouseWrapper.tradingHouse
+--    local searchManager = tradingHouseWrapper.searchTab.searchManager
+--    local keybindStripDescriptor = tradingHouse.keybindStripDescriptor
+--
+--    local secondaryDescriptor = keybindStripDescriptor[1]
+--    assert(secondaryDescriptor.keybind == "UI_SHORTCUT_SECONDARY")
+--    local originalEnabled = secondaryDescriptor.enabled
+--    secondaryDescriptor.enabled = function()
+--        if(tradingHouse:IsInSearchMode()) then
+--            return not self.isSearchDisabled
+--        else
+--            return originalEnabled()
+--        end
+--    end
+--
+--    secondaryDescriptor.callback = function()
+--        if(tradingHouse:IsInSearchMode()) then
+--            searchManager:RequestSearch()
+--        elseif(tradingHouse:CanPostWithMoneyCheck()) then
+--            tradingHouse:PostPendingItem()
+--        end
+--    end
+--
+--    local tertiaryDescriptor = keybindStripDescriptor[2]
+--    assert(tertiaryDescriptor.keybind == "UI_SHORTCUT_TERTIARY")
+--    tertiaryDescriptor.enabled = function()
+--        return not self.isSearchDisabled
+--    end
+--
+--    self.keybindStripDescriptor = keybindStripDescriptor
+--    self.keybindStrip = KEYBIND_STRIP
 end
 
 function KeybindStripWrapper:DisableSearch()
-    self.isSearchDisabled = true
-    self:UpdateKeybindStrip()
+--    self.isSearchDisabled = true
+--    self:UpdateKeybindStrip()
 end
 
 function KeybindStripWrapper:EnableSearch()
-    self.isSearchDisabled = false
-    self:UpdateKeybindStrip()
+--    self.isSearchDisabled = false
+--    self:UpdateKeybindStrip()
 end
 
 function KeybindStripWrapper:UpdateKeybindStrip()
-    self.keybindStrip:UpdateKeybindButtonGroup(self.keybindButtonDescriptor)
+--    self.keybindStrip:UpdateKeybindButtonGroup(self.keybindButtonDescriptor)
 end

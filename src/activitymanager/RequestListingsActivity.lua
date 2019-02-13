@@ -28,7 +28,13 @@ end
 function RequestListingsActivity:RequestListings()
     if(not self.responsePromise) then
         self.responsePromise = Promise:New()
-        RequestTradingHouseListings()
+        if(not HasTradingHouseListings()) then
+            RequestTradingHouseListings()
+        else
+            self.state = ActivityBase.STATE_SUCCEEDED
+            self.result = TRADING_HOUSE_RESULT_SUCCESS
+            self.responsePromise:Resolve(self)
+        end
     end
     return self.responsePromise
 end

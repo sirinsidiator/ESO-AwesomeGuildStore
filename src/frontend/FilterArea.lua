@@ -14,7 +14,7 @@ end
 -- offer buttons to add, remove, (un)pin and reset filters
 -- default frame for filters
 -- use sortfilter list? would make some things easy
-function FilterArea:Initialize(container, buttonArea, searchManager)
+function FilterArea:Initialize(container, searchManager)
     self.searchManager = searchManager
     self.availableFragments = {}
     self.attachedFragments = {}
@@ -23,7 +23,7 @@ function FilterArea:Initialize(container, buttonArea, searchManager)
     local filterArea = CreateControlFromVirtual("AwesomeGuildStoreFilterArea", container, "ZO_ScrollContainer")
     filterArea:ClearAnchors()
     filterArea:SetAnchor(TOPLEFT, container, TOPLEFT, 0, 0)
-    filterArea:SetAnchor(BOTTOMRIGHT, buttonArea, TOPRIGHT, 16, -10) -- have to account for the 16px of the scroll bar
+    filterArea:SetAnchor(BOTTOMRIGHT, container, BOTTOMRIGHT, 16, 0) -- have to account for the 16px of the scroll bar
     self.filterArea = filterArea
 
     local filterAreaScrollChild = filterArea:GetNamedChild("ScrollChild")

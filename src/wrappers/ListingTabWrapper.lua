@@ -85,29 +85,29 @@ end
 
 function ListingTabWrapper:InitializeListingCount(tradingHouseWrapper)
     local tradingHouse = tradingHouseWrapper.tradingHouse
-    self.listingControl = tradingHouse.m_currentListings
+    self.listingControl = tradingHouse.currentListings
     self.infoControl = self.listingControl:GetParent()
     self.itemControl = self.infoControl:GetNamedChild("Item")
-    self.postedItemsControl = tradingHouse.m_postedItemsHeader:GetParent()
+    self.postedItemsControl = tradingHouse.postedItemsHeader:GetParent()
 end
 
-function ListingTabWrapper:InitializeLoadingOverlay(tradingHouseWrapper)
-    tradingHouseWrapper:PreHook("OnAwaitingResponse", function(self, responseType)
-        if(responseType == TRADING_HOUSE_RESULT_LISTINGS_PENDING or responseType == TRADING_HOUSE_RESULT_CANCEL_SALE_PENDING) then
-            if(self:IsInListingsMode()) then
-                tradingHouseWrapper:ShowLoadingOverlay()
-            end
-        end
-    end)
-
-    tradingHouseWrapper:PreHook("OnResponseReceived", function(self, responseType, result)
-        if(responseType == TRADING_HOUSE_RESULT_LISTINGS_PENDING or responseType == TRADING_HOUSE_RESULT_CANCEL_SALE_PENDING) then
-            if(result == TRADING_HOUSE_RESULT_SUCCESS) then
-                self:UpdateListingCounts()
-            end
-            tradingHouseWrapper:HideLoadingOverlay()
-        end
-    end)
+function ListingTabWrapper:InitializeLoadingOverlay(tradingHouseWrapper) -- TODO remove
+--    tradingHouseWrapper:PreHook("OnAwaitingResponse", function(self, responseType)
+--        if(responseType == TRADING_HOUSE_RESULT_LISTINGS_PENDING or responseType == TRADING_HOUSE_RESULT_CANCEL_SALE_PENDING) then
+--            if(self:IsInListingsMode()) then
+--                tradingHouseWrapper:ShowLoadingOverlay()
+--            end
+--        end
+--    end)
+--
+--    tradingHouseWrapper:PreHook("OnResponseReceived", function(self, responseType, result)
+--        if(responseType == TRADING_HOUSE_RESULT_LISTINGS_PENDING or responseType == TRADING_HOUSE_RESULT_CANCEL_SALE_PENDING) then
+--            if(result == TRADING_HOUSE_RESULT_SUCCESS) then
+--                self:UpdateListingCounts()
+--            end
+--            tradingHouseWrapper:HideLoadingOverlay()
+--        end
+--    end)
 end
 
 function ListingTabWrapper:InitializeUnitPriceDisplay(tradingHouseWrapper)
@@ -120,7 +120,7 @@ function ListingTabWrapper:InitializeUnitPriceDisplay(tradingHouseWrapper)
 
     local saveData = self.saveData
     local tradingHouse = tradingHouseWrapper.tradingHouse
-    local dataType = tradingHouse.m_postedItemsList.dataTypes[ITEM_LISTINGS_DATA_TYPE]
+    local dataType = tradingHouse.postedItemsList.dataTypes[ITEM_LISTINGS_DATA_TYPE]
     local originalSetupCallback = dataType.setupCallback
 
     dataType.setupCallback = function(rowControl, postedItem)
@@ -137,8 +137,7 @@ function ListingTabWrapper:InitializeUnitPriceDisplay(tradingHouseWrapper)
             end
 
             if(postedItem.stackCount > 1) then
-                local unitPrice = tonumber(string.format("%.2f", postedItem.purchasePrice / postedItem.stackCount))
-                ZO_CurrencyControl_SetSimpleCurrency(perItemPrice, postedItem.currencyType, unitPrice, PER_UNIT_PRICE_CURRENCY_OPTIONS, nil, tradingHouse.m_playerMoney[postedItem.currencyType] < postedItem.purchasePrice)
+                ZO_CurrencyControl_SetSimpleCurrency(perItemPrice, postedItem.currencyType, postedItem.purchasePricePerUnit, PER_UNIT_PRICE_CURRENCY_OPTIONS, nil, false)
                 perItemPrice:SetText("@" .. perItemPrice:GetText():gsub("|t.-:.-:", "|t12:12:"))
                 perItemPrice:SetHidden(false)
                 sellPriceControl:ClearAnchors()
@@ -217,7 +216,7 @@ function ListingTabWrapper:InitializeCancelSaleOperation(tradingHouseWrapper)
     end
 
     local ITEM_LISTINGS_DATA_TYPE = 2
-    local rowType = tradingHouseWrapper.tradingHouse.m_postedItemsList.dataTypes[ITEM_LISTINGS_DATA_TYPE]
+    local rowType = tradingHouseWrapper.tradingHouse.postedItemsList.dataTypes[ITEM_LISTINGS_DATA_TYPE]
     local originalSetupCallback = rowType.setupCallback
     rowType.setupCallback = function(rowControl, postedItem)
         originalSetupCallback(rowControl, postedItem)
@@ -226,7 +225,7 @@ function ListingTabWrapper:InitializeCancelSaleOperation(tradingHouseWrapper)
 end
 
 function ListingTabWrapper:SetListedItemPending(index)
-    local list = self.tradingHouseWrapper.tradingHouse.m_postedItemsList
+    local list = self.tradingHouseWrapper.tradingHouse.postedItemsList
     local scrollData = ZO_ScrollList_GetDataList(list)
     for i = 1, #scrollData do
         local data = ZO_ScrollList_GetDataEntryData(scrollData[i])
@@ -280,8 +279,7 @@ function ListingTabWrapper:InitializeOverallPrice(tradingHouseWrapper)
     listingPriceSumControl:SetHidden(true)
     self.listingPriceSumControl = listingPriceSumControl
 
-    tradingHouseWrapper:Wrap("OnListingsRequestSuccess", function(originalOnListingsRequestSuccess, ...)
-        originalOnListingsRequestSuccess(...)
+    tradingHouseWrapper:PreHook("RebuildListingsScrollList", function()
         self:RefreshListingPriceSumDisplay()
     end)
 end
@@ -306,7 +304,7 @@ function ListingTabWrapper:ChangeSort(key, order)
 end
 
 function ListingTabWrapper:UpdateResultList()
-    local list = TRADING_HOUSE.m_postedItemsList
+    local list = TRADING_HOUSE.postedItemsList
     local scrollData = ZO_ScrollList_GetDataList(list)
     local sortFunctions = self.currentSortOrder and ascSortFunctions or descSortFunctions
     table.sort(scrollData, sortFunctions[self.currentSortKey or TRADING_HOUSE_SORT_LISTING_TIME])

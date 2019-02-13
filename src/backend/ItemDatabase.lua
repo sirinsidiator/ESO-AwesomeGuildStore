@@ -25,7 +25,7 @@ function ItemDatabase:Initialize(tradingHouseWrapper)
     GetTradingHouseSearchResultItemInfo = function(slotIndex)
         local item = self:TryGetItemDataInCurrentGuildByUniqueId(slotIndex)
         if(item) then
-            return item.icon, item.name, item.quality, item.stackCount, item.sellerName, item.timeRemaining, item.purchasePrice, item.currencyType, item.itemUniqueId
+            return item.icon, item.name, item.quality, item.stackCount, item.sellerName, item.timeRemaining, item.purchasePrice, item.currencyType, item.itemUniqueId, item.purchasePricePerUnitRaw
         end
 
         return self.originalGetTradingHouseSearchResultItemInfo(slotIndex)
@@ -101,6 +101,8 @@ function ItemDatabase:Update(guildName, numItems)
     end
 
     self:GetItemView(guildName):MarkDirty()
+
+    AwesomeGuildStore:FireCallbacks("ItemDatabaseUpdated", self, guildName)
 end
 
 function ItemDatabase:GetItemUniqueIdForSlotIndex(slotIndex)

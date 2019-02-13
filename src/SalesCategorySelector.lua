@@ -38,7 +38,7 @@ function SalesCategorySelector:New(parent, name)
     local container = parent:CreateControl(name .. "Container", CT_CONTROL)
     container:SetResizeToFitDescendents(true)
     container:ClearAnchors()
-    container:SetAnchor(TOPLEFT, parent, TOPRIGHT, 160, -47)
+    container:SetAnchor(TOPLEFT, parent, TOPRIGHT, 100, -47)
     selector.control = container
     selector.group = {}
     selector.subfilters = {}

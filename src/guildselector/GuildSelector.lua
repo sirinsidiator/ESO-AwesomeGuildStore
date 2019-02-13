@@ -14,7 +14,7 @@ function GuildSelector:Initialize(tradingHouseWrapper)
 
     local tradingHouse = tradingHouseWrapper.tradingHouse
 
-    local parent = tradingHouse.m_control:GetNamedChild("Title")
+    local parent = tradingHouse.control:GetNamedChild("Title")
     local control = CreateControlFromVirtual("AwesomeGuildStoreGuildSelector", parent, "AwesomeGuildStoreGuildSelectorTemplate")
     self.titleLabel = parent:GetNamedChild("Label")
     self.titleLabel:SetModifyTextType(MODIFY_TEXT_TYPE_NONE)

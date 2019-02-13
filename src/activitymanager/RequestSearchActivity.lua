@@ -1,6 +1,7 @@
 local AGS = AwesomeGuildStore
 
 local ActivityBase = AGS.class.ActivityBase
+local SortOrderBase = AGS.class.SortOrderBase
 
 local logger = AGS.internal.logger
 local gettext = AGS.internal.gettext
@@ -30,25 +31,26 @@ end
 
 function RequestSearchActivity:RequestSearch()
     if(not self.responsePromise) then
+        d("RequestSearch")
         self.responsePromise = Promise:New()
 
         local searchManager = self.searchManager
         local filterState = searchManager:GetActiveSearch():GetFilterState()
         local page = searchManager.searchPageHistory:GetNextPage(self.pendingGuildName, filterState)
         if(page) then
-            local search = self.tradingHouseWrapper.tradingHouse.m_search
+            ClearAllTradingHouseSearchTerms()
 
-            search:ResetSearchData()
-            search:ResetPageData()
-
-            search.m_page = page
-
-            for _, setter in ipairs(search.m_setters) do -- TODO use search manager instead and only apply active filters
-                setter:ApplyToSearch(search)
+            local filters = searchManager:GetActiveFilters()
+            for _, filter in ipairs(filters) do
+                if(not filter:IsLocal()) then
+                    filter:ApplyToSearch()
+                end
             end
 
             self.pendingFilterState = filterState
-            search:InternalExecuteSearch()
+
+            d("Execute search")
+            ExecuteTradingHouseSearch(page, SortOrderBase.SORT_FIELD_TIME_LEFT, SortOrderBase.SORT_ORDER_DOWN) -- TODO
         else
             self.result = ActivityBase.ERROR_PAGE_ALREADY_LOADED
             self.responsePromise:Reject(self)
@@ -61,44 +63,45 @@ function RequestSearchActivity:DoExecute(panel)
     return self:ApplyGuildId(panel):Then(self.RequestSearch)
 end
 
+local AUTO_SEARCH_RESULT_COUNT_THRESHOLD = 50 -- TODO: tweak value
 function RequestSearchActivity:OnResponse(responseType, result, panel)
-    if(responseType == self.expectedResponseType and result ~= TRADING_HOUSE_RESULT_SUCCESS) then
-        self.state = ActivityBase.STATE_FAILED
-        panel:SetStatusText("Request failed") -- TODO translate
-        panel:Refresh()
-        if(self.responsePromise) then self.responsePromise:Reject(self) end
+    if(responseType == self.expectedResponseType) then
+        self.result = result
+        if(result == TRADING_HOUSE_RESULT_SUCCESS and self.responsePromise) then
+            self.numItems, self.page, self.hasMore = GetTradingHouseSearchResultsInfo()
+            self.state = ActivityBase.STATE_SUCCEEDED
+            self.itemDatabase:Update(self.pendingGuildName, self.numItems)
+
+            self:HandleSearchResultsReceived()
+
+            panel:SetStatusText("Request finished") -- TODO translate
+            panel:Refresh()
+            self.responsePromise:Resolve(self)
+        else
+            self.state = ActivityBase.STATE_FAILED
+            panel:SetStatusText("Request failed") -- TODO translate
+            panel:Refresh()
+            if(self.responsePromise) then self.responsePromise:Reject(self) end
+        end
         return true
     end
     return false
 end
 
-local AUTO_SEARCH_RESULT_COUNT_THRESHOLD = 50 -- TODO: tweak value
-
-function RequestSearchActivity:OnSearchResults(guildId, numItems, page, hasMore, panel)
-    if(self.responsePromise) then
-        logger:Debug("handle results received")
-        self.state = ActivityBase.STATE_SUCCEEDED
-        self.itemDatabase:Update(self.pendingGuildName, numItems)
-        if(hasMore) then
-            self.searchManager.searchPageHistory:SetHighestSearchedPage(self.pendingGuildName, self.pendingFilterState, page)
-            local results = self.itemDatabase:GetFilteredView(self.pendingGuildName, self.pendingFilterState):GetItems() -- TODO: should store the view for each request and get the info from there
-            if(#results < AUTO_SEARCH_RESULT_COUNT_THRESHOLD) then
-                zo_callLater(function()
-                    d("search more") -- TODO
-                    self.searchManager:RequestSearch()
-                end, 0)
-            end
-        else
-            self.searchManager.searchPageHistory:SetStateHasNoMorePages(self.pendingGuildName, self.pendingFilterState)
+function RequestSearchActivity:HandleSearchResultsReceived()
+    logger:Debug("handle results received")
+    if(self.hasMore) then
+        self.searchManager.searchPageHistory:SetHighestSearchedPage(self.pendingGuildName, self.pendingFilterState, self.page)
+        local results = self.itemDatabase:GetFilteredView(self.pendingGuildName, self.pendingFilterState):GetItems() -- TODO: should store the view for each request and get the info from there
+        if(#results < AUTO_SEARCH_RESULT_COUNT_THRESHOLD) then
+            zo_callLater(function()
+                d("search more") -- TODO
+                self.searchManager:RequestSearch()
+            end, 0)
         end
-
-        panel:SetStatusText("Request finished") -- TODO translate
-        panel:Refresh()
-
-        self.responsePromise:Resolve(self)
-        return true
+    else
+        self.searchManager.searchPageHistory:SetStateHasNoMorePages(self.pendingGuildName, self.pendingFilterState)
     end
-    return false
 end
 
 function RequestSearchActivity:GetErrorMessage()
@@ -112,6 +115,19 @@ function RequestSearchActivity:GetLogEntry()
         self.logEntry = zo_strformat(gettext("Request search results in <<1>>"), self.pendingGuildName)
     end
     return self.logEntry
+end
+
+function RequestSearchActivity:AddTooltipText(output)
+    ActivityBase.AddTooltipText(self, output)
+    if(self.numItems) then -- TODO translate
+        output[#output + 1] = ActivityBase.TOOLTIP_LINE_TEMPLATE:format("Item Count", tostring(self.numItems))
+    end
+    if(self.page) then
+        output[#output + 1] = ActivityBase.TOOLTIP_LINE_TEMPLATE:format("Page", tostring(self.page + 1)) -- pages are zero based
+    end
+    if(self.hasMore ~= nil) then
+        output[#output + 1] = ActivityBase.TOOLTIP_LINE_TEMPLATE:format("Last Page", tostring(not self.hasMore))
+    end
 end
 
 function RequestSearchActivity:GetType()

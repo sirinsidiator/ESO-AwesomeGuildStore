@@ -66,14 +66,6 @@ local function CreateSlider(container, data, name)
     return container
 end
 
-local function MoveItem(sourceBag, sourceSlot, destBag, destSlot, stackCount)
-    if IsProtectedFunction("RequestMoveItem") then
-        CallSecureProtected("RequestMoveItem", sourceBag, sourceSlot, destBag, destSlot, stackCount)
-    else
-        RequestMoveItem(sourceBag, sourceSlot, destBag, destSlot, stackCount)
-    end
-end
-
 local function GetMasterMerchantPrice(itemLink)
     if(not MasterMerchant) then return end
 
@@ -175,9 +167,24 @@ function SellTabWrapper:InitializeListingInput(tradingHouseWrapper)
     local tradingHouse = tradingHouseWrapper.tradingHouse
     self.tradingHouse = tradingHouse
 
-    local container = tradingHouse.m_postItems:GetNamedChild("FormInvoice")
+    local postItemPane = tradingHouse.postItemPane
+    postItemPane:SetWidth(250)
+    postItemPane:GetNamedChild("Form"):SetHeight(160)
+
+    local container = tradingHouse.invoice
     container.data = {} -- required for LAM
     self.sellPriceControl = container:GetNamedChild("SellPrice")
+
+    local repetitionSlider = CreateSlider(container, {
+        name = gettext("Number of stacks:"),
+        getFunc = function() return self.currentRepetitions end,
+        setFunc = function(value)
+            self:SetRepetitions(value, SKIP_UPDATE_SLIDER)
+        end,
+        decimals = 0,
+    }, "AwesomeGuildStoreFormInvoiceNumberOfStacksSlider")
+    repetitionSlider:SetAnchor(TOPLEFT, container, TOPLEFT, 0, 0)
+    self.repetitionSlider = repetitionSlider
 
     local quantitySlider = CreateSlider(container, {
         name = zo_strformat(GetString(SI_TRADING_HOUSE_POSTING_QUANTITY)) .. ":",
@@ -187,7 +194,7 @@ function SellTabWrapper:InitializeListingInput(tradingHouseWrapper)
         end,
         decimals = 0,
     }, "AwesomeGuildStoreFormInvoiceQuantitySlider")
-    quantitySlider:SetAnchor(TOPLEFT, container, TOPLEFT, 0, 0)
+    quantitySlider:SetAnchor(TOPLEFT, repetitionSlider, TOPLEFT, 0, 10)
     self.quantitySlider = quantitySlider
 
     -- TRANSLATORS: tooltip text for the quantity selection buttons on the sell tab
@@ -267,20 +274,20 @@ function SellTabWrapper:InitializeListingInput(tradingHouseWrapper)
         end
     end
 
-    local priceLabel = tradingHouse.m_postItems:GetNamedChild("FormInvoiceSellPriceLabel")
+    local priceLabel = container:GetNamedChild("SellPriceLabel")
     priceLabel:ClearAnchors()
     priceLabel:SetAnchor(TOPLEFT, ppuSlider, BOTTOMLEFT, 0, 20)
 
-    local bg = tradingHouse.m_pendingItemBG
+    local bg = tradingHouse.pendingItemBG
     bg:ClearAnchors()
-    bg:SetAnchor(TOPRIGHT, tradingHouse.m_postItems, TOPRIGHT, 0, 0)
+    bg:SetAnchor(TOPRIGHT, postItemPane, TOPRIGHT, 0, 0)
 
     local highlight = bg:GetNamedChild("ItemHighlight")
     highlight:ClearAnchors()
     highlight:SetAnchor(TOPRIGHT, bg, TOPRIGHT, 10, -18)
 
-    local invoice = tradingHouse.m_invoice
-    local profitLabel = invoice:GetNamedChild("ProfitLabel")
+    local invoice = tradingHouse.invoice
+    local profitLabel = tradingHouse.invoiceProfit
     local profitWarning = CreateControlFromVirtual("$(parent)ProfitWarning", invoice, "ZO_HelpIcon")
     profitWarning:SetAnchor(RIGHT, profitLabel, LEFT, -3, 0)
     profitWarning:SetTexture("EsoUI/Art/Miscellaneous/ESO_Icon_Warning.dds")
@@ -304,15 +311,16 @@ function SellTabWrapper:IsAboveVendorPrice()
 end
 
 function SellTabWrapper:InitializeCategoryFilter(tradingHouseWrapper)
-    local postItems = tradingHouseWrapper.tradingHouse.m_postItems
+    local postItems = tradingHouseWrapper.tradingHouse.postItemPane
     self.salesCategoryFilter = AwesomeGuildStore.SalesCategorySelector:New(postItems, "AwesomeGuildStoreSalesItemCategory")
 end
 
 function SellTabWrapper:InitializeCraftingBag(tradingHouseWrapper)
     local tradingHouse = tradingHouseWrapper.tradingHouse
+    local postItemPane = tradingHouse.postItemPane
 
-    local container = tradingHouse.m_postItems:CreateControl("AwesomeGuildStoreSellTabButtons", CT_CONTROL)
-    container:SetAnchor(BOTTOM, tradingHouse.m_postItems, TOP, 0, 10)
+    local container = postItemPane:CreateControl("AwesomeGuildStoreSellTabButtons", CT_CONTROL)
+    container:SetAnchor(BOTTOM, postItemPane, TOP, 0, 10)
     container:SetDimensions(INVENTORY_BUTTON_SIZE * 2, INVENTORY_BUTTON_SIZE)
     local inventoryButton = ToggleButton:New(container, "$(parent)InventoryButton", INVENTORY_TEXTURE, 0, 0, INVENTORY_BUTTON_SIZE, INVENTORY_BUTTON_SIZE, zo_strformat(GetString(SI_INVENTORY_MENU_INVENTORY)), SOUNDS.MENU_BAR_CLICK)
     local craftbagButton = ToggleButton:New(container, "$(parent)CraftingBagButton", CRAFTING_BAG_TEXTURE, INVENTORY_BUTTON_SIZE, 0, INVENTORY_BUTTON_SIZE, INVENTORY_BUTTON_SIZE, zo_strformat(GetString(SI_GAMEPAD_INVENTORY_CRAFT_BAG_HEADER)), SOUNDS.MENU_BAR_CLICK)
@@ -334,45 +342,56 @@ function SellTabWrapper:InitializeCraftingBag(tradingHouseWrapper)
     end
     craftbagButton.HandleRelease = function(button, doRelease) return doRelease end
 
-    local function TryInitiatingItemPost(inventorySlot, skipMouseEnter)
-        local bag, slot = ZO_Inventory_GetBagAndIndex(inventorySlot)
-        self:SetPendingItemLockColor(ZO_ScrollList_GetData(inventorySlot:GetParent()))
-        self:SetPendingItem(bag, slot)
+    local function TryInitiatingItemPost(bag, index)
+        self:UnsetPendingItem()
+
+        PLAYER_INVENTORY:OnInventorySlotLocked(bag, index)
+        self:SetPendingItem(bag, index)
         if(self.pendingStackCount > 0) then
-            tradingHouse.m_pendingItemSlot = -1 -- set it to something so the trading house reacts correctly
+            tradingHouse.pendingSaleIsValid = false
+            tradingHouse.pendingItemSlot = -1 -- set it to something so the trading house reacts correctly
 
-            local pendingItem = tradingHouse.m_pendingItem
-            ZO_Inventory_BindSlot(pendingItem, SLOT_TYPE_TRADING_HOUSE_POST_ITEM, slot, bag)
+            local pendingItem = tradingHouse.pendingItem
+            ZO_Inventory_BindSlot(pendingItem, SLOT_TYPE_TRADING_HOUSE_POST_ITEM, index, bag)
             self:UpdateListing()
-            self.quantitySlider:UpdateValue()
+            self.repetitionSlider:UpdateValue()
             self.ppuSlider:UpdateValue()
-            tradingHouse.m_pendingItemName:SetText(zo_strformat(SI_TOOLTIP_ITEM_NAME, GetItemName(bag, slot)))
+            tradingHouse.pendingItemName:SetText(zo_strformat(SI_TOOLTIP_ITEM_NAME, GetItemName(bag, index)))
 
-            tradingHouse.m_pendingItemBG:SetHidden(false)
-            tradingHouse.m_invoice:SetHidden(false)
+            tradingHouse.pendingItemBG:SetHidden(false)
+            tradingHouse.invoice:SetHidden(false)
 
             tradingHouse:SetPendingPostPrice(self.currentSellPrice)
 
             ZO_InventorySlot_HandleInventoryUpdate(pendingItem)
-            if(not skipMouseEnter) then
-                ZO_InventorySlot_OnMouseEnter(inventorySlot)
-            end
         end
     end
 
-    -- replace the primary action on the craft bag context menu
+    -- hide the original context menu entries for adding and removing posts
+    local suppressAction = true
+    ZO_PreHook(ZO_InventorySlotActions, "AddSlotAction", function(self, labelId, callback)
+        if(suppressAction and (labelId == SI_TRADING_HOUSE_ADD_ITEM_TO_LISTING or labelId == SI_TRADING_HOUSE_REMOVE_PENDING_POST)) then
+            return true
+        end
+    end)
+
+    -- instead add our own actions
     local function UpdateSlotActions(inventorySlot, slotActions)
-        if(self.isOpen and self:IsCraftBagActive()) then
+        if(self.isOpen) then
+            suppressAction = false
             if(self:IsItemAlreadyBeingPosted(inventorySlot)) then
                 slotActions:AddCustomSlotAction(SI_TRADING_HOUSE_REMOVE_PENDING_POST, function()
-                    self.tradingHouse:ClearPendingPost()
+                    self:UnsetPendingItem()
                     ZO_InventorySlot_OnMouseEnter(inventorySlot)
                 end, "primary")
             elseif(inventorySlot.slotType ~= SLOT_TYPE_TRADING_HOUSE_POST_ITEM) then
                 slotActions:AddCustomSlotAction(SI_TRADING_HOUSE_ADD_ITEM_TO_LISTING, function()
-                    TryInitiatingItemPost(inventorySlot)
+                    local bag, index = ZO_Inventory_GetBagAndIndex(inventorySlot)
+                    TryInitiatingItemPost(bag, index)
+                    ZO_InventorySlot_OnMouseEnter(inventorySlot)
                 end, "primary")
             end
+            suppressAction = true
         end
         return false
     end
@@ -381,99 +400,6 @@ function SellTabWrapper:InitializeCraftingBag(tradingHouseWrapper)
     LCM:RegisterContextMenu(UpdateSlotActions, LCM.CATEGORY_EARLY)
     LCM:RegisterKeyStripEnter(UpdateSlotActions, LCM.CATEGORY_EARLY)
 
-    RegisterForEvent(EVENT_TRADING_HOUSE_PENDING_ITEM_UPDATE, function(_, slotId, isPending)
-        if(isPending) then
-            self:SetPendingItem(BAG_BACKPACK, slotId)
-            self:UpdateListing()
-            self.quantitySlider:UpdateValue()
-            self.ppuSlider:UpdateValue()
-            if(self.pendingItemUpdateCallback) then
-                self.pendingItemUpdateCallback(slotId)
-            end
-        end
-    end)
-
-    local Promise = LibStub("LibPromises")
-    local TEMP_STACK_ERROR_INVALID_SELL_PRICE = 1
-    local TEMP_STACK_ERROR_INVENTORY_FULL = 2
-    local TEMP_STACK_ERROR_TIMEOUT_ON_SPLIT = 3
-    local TEMP_STACK_ERROR_TIMEOUT_ON_SET_PENDING = 4
-    local TEMP_STACK_ERROR_SLOT_DID_NOT_UPDATE = 4
-    local TEMP_STACK_ERROR_MESSAGE = {}
-    -- TRANSLATORS: error message when splitting a stack fails while trying to list an item on a store
-    TEMP_STACK_ERROR_MESSAGE[TEMP_STACK_ERROR_INVALID_SELL_PRICE] = gettext("Failed to update listing price")
-    TEMP_STACK_ERROR_MESSAGE[TEMP_STACK_ERROR_INVENTORY_FULL] = GetString(SI_INVENTORY_ERROR_INVENTORY_FULL)
-    -- TRANSLATORS: error message when splitting a stack fails while trying to list an item on a store
-    TEMP_STACK_ERROR_MESSAGE[TEMP_STACK_ERROR_TIMEOUT_ON_SPLIT] = gettext("Failed to split stack")
-    -- TRANSLATORS: error message when splitting a stack fails while trying to list an item on a store
-    TEMP_STACK_ERROR_MESSAGE[TEMP_STACK_ERROR_TIMEOUT_ON_SET_PENDING] = gettext("Failed to set stack pending")
-    -- TRANSLATORS: error message when splitting a stack fails while trying to list an item on a store
-    TEMP_STACK_ERROR_MESSAGE[TEMP_STACK_ERROR_SLOT_DID_NOT_UPDATE] = gettext("Failed to update pending slot")
-    local TEMP_STACK_WATCHDOG_TIMEOUT = 5000
-
-    local function CreateTempStack()
-        local promise = Promise:New()
-        if(self.currentSellPrice <= 0) then
-            promise:Reject(TEMP_STACK_ERROR_INVALID_SELL_PRICE)
-        elseif(not self.tempSlot) then
-            promise:Reject(TEMP_STACK_ERROR_INVENTORY_FULL)
-        else
-            local eventHandle, timeout
-
-            local function CleanUp()
-                UnregisterForEvent(EVENT_INVENTORY_SINGLE_SLOT_UPDATE, eventHandle)
-                ClearCallLater(timeout)
-            end
-
-            timeout = zo_callLater(function()
-                CleanUp()
-                promise:Reject(TEMP_STACK_ERROR_TIMEOUT_ON_SPLIT)
-            end, TEMP_STACK_WATCHDOG_TIMEOUT)
-
-            eventHandle = RegisterForEvent(EVENT_INVENTORY_SINGLE_SLOT_UPDATE, function(_, bagId, slotId, isNewItem, itemSoundCategory, inventoryUpdateReason, stackCountChange)
-                if(bagId == BAG_BACKPACK and slotId == self.tempSlot) then
-                    CleanUp()
-                    promise:Resolve()
-                end
-            end)
-
-            MoveItem(self.pendingBagId, self.pendingSlotIndex, BAG_BACKPACK, self.tempSlot, self.currentStackCount)
-        end
-        return promise
-    end
-
-    local function SetTempStackPending()
-        local promise = Promise:New()
-
-        local eventHandle, timeout
-
-        local function CleanUp()
-            self.pendingItemUpdateCallback = nil
-            ClearCallLater(timeout)
-        end
-
-        timeout = zo_callLater(function()
-            CleanUp()
-            promise:Reject(TEMP_STACK_ERROR_TIMEOUT_ON_SET_PENDING)
-        end, TEMP_STACK_WATCHDOG_TIMEOUT)
-
-        -- save the current data before it is cleared
-        local sellPrice = self.currentSellPrice
-
-        self.pendingItemUpdateCallback = function(slotId)
-            CleanUp()
-            tradingHouse:SetPendingPostPrice(sellPrice, SUPPRESS_PRICE_PER_PIECE_UPDATE)
-            if(self.tempSlot ~= self.pendingSlotIndex) then
-                promise:Reject(TEMP_STACK_ERROR_SLOT_DID_NOT_UPDATE)
-            else
-                promise:Resolve()
-            end
-        end
-
-        SetPendingItemPost(BAG_BACKPACK, self.tempSlot, self.currentStackCount)
-        return promise
-    end
-
     local function UpdateLastSoldData()
         if(IsItemLinkStackable(self.pendingItemLink)) then
             self.lastSoldStackCount[self.pendingItemIdentifier] = self.currentStackCount
@@ -481,48 +407,62 @@ function SellTabWrapper:InitializeCraftingBag(tradingHouseWrapper)
         self.lastSoldPricePerUnit[self.pendingItemIdentifier] = self.currentPricePerUnit
     end
 
-    tradingHouseWrapper:Wrap("PostPendingItem", function(originalPostPendingItem, tradingHouse)
-        UpdateLastSoldData() -- update regardless of the outcome
-        if(self.requiresTempSlot) then
-            CreateTempStack():Then(SetTempStackPending):Then(function()
-                -- now we can post the item for real
-                tradingHouse:PostPendingItem()
-            end, function(error)
-                local message = TEMP_STACK_ERROR_MESSAGE[error]
-                if(message) then
-                    ZO_Alert(UI_ALERT_CATEGORY_ERROR, SOUNDS.NEGATIVE_CLICK, message)
-                else
-                    PlaySound(SOUNDS.NEGATIVE_CLICK)
-                    Print("Could not create temporary stack", error)
-                end
-            end)
-        else
-            originalPostPendingItem(tradingHouse)
+    local activityManager = tradingHouseWrapper.activityManager -- TODO move
+
+    -- we completely replace the original function with our own
+    tradingHouse.PostPendingItem = function(tradingHouse)
+        if(tradingHouse.pendingItemSlot and tradingHouse.pendingSaleIsValid) then
+            UpdateLastSoldData() -- update regardless of the outcome
+            local guildId = GetCurrentTradingHouseGuildDetails()
+            local bagId, slotIndex = ZO_Inventory_GetBagAndIndex(tradingHouse.pendingItem)
+
+            for i = 1, self.currentRepetitions do
+                activityManager:PostItem(guildId, bagId, slotIndex, self.currentStackCount, self.currentSellPrice)
+            end
         end
-    end)
+    end
 
     tradingHouseWrapper:PreHook("ClearPendingPost", function(tradingHouse)
-        if(self.pendingBagId == BAG_BACKPACK) then SetPendingItemPost(BAG_BACKPACK, 0, 0) end
-
-        self:ClearPendingItemLockColor()
         self:ClearPendingItem()
-
-        tradingHouse.m_pendingItemSlot = nil
     end)
     self.tradingHouse = tradingHouse
 
+    local function HandleReceivedDrag(control, button)
+        if(button == MOUSE_BUTTON_INDEX_LEFT) then
+            ZO_InventorySlot_OnReceiveDrag(TRADING_HOUSE.pendingItem)
+        end
+    end
+    postItemPane:SetMouseEnabled(true)
+    postItemPane:SetHandler("OnReceiveDrag", HandleReceivedDrag)
+    postItemPane:SetHandler("OnMouseUp", HandleReceivedDrag)
+    tradingHouse.pendingItem:SetHandler("OnMouseUp", HandleReceivedDrag)
+
+    -- this hack prevents the lock from disappearing when dragging an item from the regular inventory
+    self.suppressNextInventorySlotEvent = false
+    local function HandleSlotEvent()
+        if(self.suppressNextInventorySlotEvent) then
+            self.suppressNextInventorySlotEvent = false
+            return true
+        end
+    end
+
+    ZO_PreHook(PLAYER_INVENTORY, "OnInventorySlotLocked", HandleSlotEvent)
+    ZO_PreHook(PLAYER_INVENTORY, "OnInventorySlotUnlocked", HandleSlotEvent)
+
     ZO_PreHook("ZO_InventorySlot_OnDragStart", function(inventorySlot)
-        if(self.isOpen and self:IsCraftBagActive() and GetCursorContentType() == MOUSE_CONTENT_EMPTY) then
+        if(self.isOpen and GetCursorContentType() == MOUSE_CONTENT_EMPTY) then
             local inventorySlotButton = ZO_InventorySlot_GetInventorySlotComponents(inventorySlot)
             if(ZO_InventorySlot_GetStackCount(inventorySlotButton) > 0) then
                 local bag, index = ZO_Inventory_GetBagAndIndex(inventorySlotButton)
+                PLAYER_INVENTORY:OnInventorySlotLocked(bag, index)
+
+                self.suppressNextInventorySlotEvent = (bag == BAG_BACKPACK)
                 CallSecureProtected("PickupInventoryItem", bag, index)
-                if(inventorySlotButton.slotType == SLOT_TYPE_TRADING_HOUSE_POST_ITEM and self.pendingInventorySlot) then
-                    self.draggedSlot = ZO_InventorySlot_GetInventorySlotComponents(self.pendingInventorySlot.slotControl)
-                    self.tradingHouse:ClearPendingPost()
-                else
-                    self.draggedSlot = inventorySlotButton
+
+                if(inventorySlotButton.slotType == SLOT_TYPE_TRADING_HOUSE_POST_ITEM) then
+                    tradingHouse:OnPendingPostItemUpdated(0, false)
                 end
+
                 return true
             end
         end
@@ -530,47 +470,53 @@ function SellTabWrapper:InitializeCraftingBag(tradingHouseWrapper)
 
     ZO_PreHook("ZO_InventorySlot_OnReceiveDrag", function(inventorySlot)
         if(self.isOpen and GetCursorContentType() ~= MOUSE_CONTENT_EMPTY) then
+            local bag, index = GetCursorBagId(), GetCursorSlotIndex()
+
             if(inventorySlot.slotType == SLOT_TYPE_TRADING_HOUSE_POST_ITEM) then
                 -- small hack so the quick click handler doesn't clear the item right away
                 self.suppressNextClick = true
+
+                TryInitiatingItemPost(bag, index)
+            else
+                PLAYER_INVENTORY:OnInventorySlotUnlocked(bag, index)
             end
 
-            if(self.draggedSlot and self:IsCraftBagActive()) then
-                if(inventorySlot.slotType == SLOT_TYPE_TRADING_HOUSE_POST_ITEM) then
-                    local bag, index = ZO_Inventory_GetBagAndIndex(self.draggedSlot)
-                    if(index and bag == BAG_VIRTUAL) then
-                        TryInitiatingItemPost(self.draggedSlot, SKIP_MOUSE_ENTER)
-                        ClearCursor()
-                        self.draggedSlot = nil
-                        return true
-                    end
-                else
-                    -- do nothing
-                    ClearCursor()
-                    return true
-                end
-            end
+            self.suppressNextInventorySlotEvent = (bag == BAG_BACKPACK)
+            self.dragFinalized = true
+            ClearCursor()
+            return true
         end
     end)
 
     RegisterForEvent(EVENT_CURSOR_PICKUP, function(_, type, bag, index)
-        if(self.isOpen and self:IsCraftBagActive()) then
-            PLAYER_INVENTORY:OnInventorySlotLocked(bag, index)
+        if(self.isOpen) then
+            self.dragFinalized = false
         end
     end)
 
     RegisterForEvent(EVENT_CURSOR_DROPPED, function(_, type, bag, index)
-        if(self.isOpen and self:IsCraftBagActive() and not (self.pendingBagId == bag and self.pendingSlotIndex == index)) then
-            PLAYER_INVENTORY:OnInventorySlotUnlocked(bag, index)
+        if(self.isOpen and not self.dragFinalized) then
+            self.dragFinalized = true
+            local pendingBagId, pendingSlotIndex = ZO_Inventory_GetBagAndIndex(tradingHouse.pendingItem)
+            self.suppressNextInventorySlotEvent = (bag == BAG_BACKPACK)
+            if(bag ~= pendingBagId or index ~= pendingSlotIndex) then
+                PLAYER_INVENTORY:OnInventorySlotUnlocked(bag, index)
+            end
         end
     end)
 end
 
 function SellTabWrapper:ClearPendingItem()
     self.pendingIcon, self.pendingStackCount, self.pendingSellPrice = "", 0, 0
-    self.pendingBagId, self.pendingSlotIndex, self.requiresTempSlot = 0, 0, false
+    self.pendingBagId, self.pendingSlotIndex, self.currentRepetitions = 0, 0, 0
     self.currentStackCount, self.currentPricePerUnit, self.currentSellPrice = 0, 0, 0
     self.pendingItemLink, self.pendingItemIdentifier, self.isMasterWrit = "", "", false
+end
+
+function SellTabWrapper:UnsetPendingItem()
+    local bagId, slotIndex = ZO_Inventory_GetBagAndIndex(self.tradingHouse.pendingItem)
+    PLAYER_INVENTORY:OnInventorySlotUnlocked(bagId, slotIndex)
+    self.tradingHouse:OnPendingPostItemUpdated(0, false)
 end
 
 function SellTabWrapper:IsItemAlreadyBeingPosted(inventorySlot)
@@ -585,16 +531,16 @@ end
 function SellTabWrapper:UpdateListing()
     local tradingHouse = self.tradingHouse
     local price = math.ceil(self.currentStackCount * self.currentPricePerUnit)
-    ZO_ItemSlot_SetupSlot(tradingHouse.m_pendingItem, self.currentStackCount, self.pendingIcon)
+    ZO_ItemSlot_SetupSlot(tradingHouse.pendingItem, self.currentStackCount, self.pendingIcon)
     tradingHouse:SetPendingPostPrice(price, SUPPRESS_PRICE_PER_PIECE_UPDATE)
     self.profitWarning:SetHidden(self:IsAboveVendorPrice())
 end
 
 function SellTabWrapper:SetQuantity(value, skipUpdateSlider)
     self.currentStackCount = math.max(1, math.min(self.pendingStackCount, value))
+    self.repetitionSlider:SetMinMax(1, math.floor(self.pendingStackCount / self.currentStackCount))
     if(not skipUpdateSlider) then self.quantitySlider:UpdateValue() end
     self:UpdateListing()
-    self:UpdateTempSlot()
 end
 
 function SellTabWrapper:GetQuantity()
@@ -609,36 +555,6 @@ end
 
 function SellTabWrapper:GetUnitPrice()
     return self.currentPricePerUnit
-end
-
-function SellTabWrapper:UpdateTempSlot()
-    self.requiresTempSlot = (not self.isMasterWrit) and (self.currentStackCount ~= self.pendingStackCount or self.pendingBagId ~= BAG_BACKPACK)
-    if(self.requiresTempSlot) then
-        self.tempSlot = FindFirstEmptySlotInBag(BAG_BACKPACK)
-        if(not self.tempSlot) then
-            ZO_Alert(UI_ALERT_CATEGORY_ERROR, SOUNDS.NEGATIVE_CLICK, SI_INVENTORY_ERROR_INVENTORY_FULL)
-        end
-    end
-end
-
-function SellTabWrapper:SetPendingItemLockColor(slot)
-    self:ClearPendingItemLockColor()
-    slot.locked = true
-    if(slot.slotControl) then
-        ZO_PlayerInventorySlot_SetupUsableAndLockedColor(slot.slotControl, slot.meetsUsageRequirement, slot.locked)
-    end
-    self.pendingInventorySlot = slot
-end
-
-function SellTabWrapper:ClearPendingItemLockColor()
-    if(self.pendingInventorySlot) then
-        local slot = self.pendingInventorySlot
-        slot.locked = false
-        if(slot.slotControl) then
-            ZO_PlayerInventorySlot_SetupUsableAndLockedColor(slot.slotControl, slot.meetsUsageRequirement, slot.locked)
-        end
-        self.pendingInventorySlot = nil
-    end
 end
 
 local function IsMasterWrit(bagId, slotIndex)
@@ -672,21 +588,23 @@ function SellTabWrapper:SetPendingItem(bagId, slotIndex)
             end
         end
         self.currentSellPrice = self.currentPricePerUnit * self.currentStackCount
-
-        self:UpdateTempSlot()
+        self.currentRepetitions = 1
 
         self.ppuSlider:SetMinMax(0, math.max(math.ceil(self.currentPricePerUnit * 3), 100))
         self.priceButtonContainer:ClearAnchors()
         if(self.pendingStackCount > 1) then
+            self.repetitionSlider:Show()
             self.quantitySlider:SetMinMax(1, self.pendingStackCount)
             self.quantitySlider:Show()
             self.ppuSlider:Show()
             self.priceButtonContainer:SetAnchor(TOPRIGHT, self.ppuSlider, TOPRIGHT, 0, 0)
         elseif(self.isMasterWrit) then
+            self.repetitionSlider:Hide()
             self.quantitySlider:Hide()
             self.ppuSlider:Show()
             self.priceButtonContainer:SetAnchor(TOPRIGHT, self.ppuSlider, TOPRIGHT, 0, 0)
         else
+            self.repetitionSlider:Hide()
             self.quantitySlider:Hide()
             self.ppuSlider:Hide()
             self.priceButtonContainer:SetAnchor(BOTTOMRIGHT, self.sellPriceControl, TOPRIGHT, 0, 0)
@@ -698,11 +616,11 @@ function SellTabWrapper:InitializeListedNotification(tradingHouseWrapper)
     local saveData = self.saveData
     local listedMessage = ""
     tradingHouseWrapper:Wrap("PostPendingItem", function(originalPostPendingItem, self)
-        if(self.m_pendingItemSlot and self.m_pendingSaleIsValid) then
-            local count = ZO_InventorySlot_GetStackCount(self.m_pendingItem)
-            local price = ZO_Currency_FormatPlatform(CURT_MONEY, self.m_invoiceSellPrice.sellPrice or 0, ZO_CURRENCY_FORMAT_AMOUNT_ICON)
+        if(self.pendingItemSlot and self.pendingSaleIsValid) then
+            local count = ZO_InventorySlot_GetStackCount(self.pendingItem)
+            local price = ZO_Currency_FormatPlatform(CURT_MONEY, self.invoiceSellPrice.sellPrice or 0, ZO_CURRENCY_FORMAT_AMOUNT_ICON)
             local _, guildName = GetCurrentTradingHouseGuildDetails()
-            local itemLink = GetItemLink(BAG_BACKPACK, self.m_pendingItemSlot)
+            local itemLink = GetItemLink(BAG_BACKPACK, self.pendingItemSlot)
 
             -- TRANSLATORS: chat message when a item is listed on a store. <<1>> is replaced with the item count, <<t:2>> with the item link, <<3>> with the price and <<4>> with the guild store name. e.g. You have listed 1x [Rosin] for 5000g in Imperial Trading Company
             listedMessage = gettext("You have listed <<1>>x <<t:2>> for <<3>> in <<4>>", count, itemLink, price, guildName)
@@ -712,7 +630,7 @@ function SellTabWrapper:InitializeListedNotification(tradingHouseWrapper)
 
     RegisterForEvent(EVENT_TRADING_HOUSE_RESPONSE_RECEIVED, function(_, responseType, result)
         if(responseType == TRADING_HOUSE_RESULT_POST_PENDING and result == TRADING_HOUSE_RESULT_SUCCESS) then
-            self.tradingHouse:ClearPendingPost()
+            self.tradingHouse:OnPendingPostItemUpdated(0, false)
             if(saveData.listedNotification and listedMessage ~= "") then
                 Print(listedMessage)
                 listedMessage = ""
@@ -728,7 +646,8 @@ function SellTabWrapper:ResetSalesCategoryFilter()
 end
 
 function SellTabWrapper:SetCurrentInventory(bagId)
-    self.tradingHouse:ClearPendingPost()
+    self:UnsetPendingItem()
+
     SCENE_MANAGER:RemoveFragment(self.currentInventoryFragment)
     if(bagId == BAG_BACKPACK) then
         self.currentInventoryFragment = INVENTORY_FRAGMENT
@@ -773,4 +692,6 @@ function SellTabWrapper:OnClose(tradingHouseWrapper)
         SCENE_MANAGER:RemoveFragment(CRAFT_BAG_FRAGMENT)
     end
     self.isOpen = false
+    self.suppressNextInventorySlotEvent = false
+    self.dragFinalized = true
 end

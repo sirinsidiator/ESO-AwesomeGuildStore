@@ -64,7 +64,8 @@ function ActivityManager:Initialize(tradingHouseWrapper, loadingIndicator, loadi
         end
     end)
 
-    RegisterForEvent(EVENT_TRADING_HOUSE_RESPONSE_RECEIVED, function(_, responseType, result) -- TODO prehook?
+    -- need to prehook this in order to update the itemdatabase before anything else happens
+    tradingHouseWrapper:PreHook("OnResponseReceived", function(_, responseType, result)
         logger:Debug(string.format("cooldown on response: %d", GetTradingHouseCooldownRemaining()))
         if(self.currentActivity) then
             self.currentActivity:OnResponse(responseType, result, self.panel) -- TODO panel
@@ -77,14 +78,6 @@ function ActivityManager:Initialize(tradingHouseWrapper, loadingIndicator, loadi
             self.panel:HideLoading()
             self.panel:Refresh()
             self:ExecuteNext()
-        end
-    end)
-
-    -- use the prehook so we process the event as early as possible
-    tradingHouseWrapper:PreHook("OnSearchResultsReceived", function(_, guildId, numItems, page, hasMore)
-        logger:Debug(string.format("cooldown on search results: %d", GetTradingHouseCooldownRemaining()))
-        if(self.currentActivity) then
-            self.currentActivity:OnSearchResults(guildId, numItems, page, hasMore, self.panel)
         end
     end)
 
@@ -248,7 +241,7 @@ function ActivityManager:GetActivity(key)
 end
 
 function ActivityManager:ExecuteNext()
-    if(self.currentActivity or not self.tradingHouse:IsAtTradingHouse()) then return false end
+    if(self.currentActivity or not self.tradingHouseWrapper.search:IsAtTradingHouse()) then return false end
 
     local queue = self.queue
 
@@ -289,6 +282,10 @@ end
 
 function ActivityManager:OnFailure(activity)
     d("OnFailure")
+    if(type(activity) == "string") then
+        error(activity)
+        return
+    end
     activity.qstate = ActivityPanel.QSTATE_REMOVED -- TODO remove?
 
     local message = activity:GetErrorMessage()
@@ -330,19 +327,18 @@ end
 
 function ActivityManager:RequestListings(guildId)
     local key = RequestListingsActivity.CreateKey(guildId)
-    if(not self:CanQueue(key)) then return end -- TODO: check currently opened tab too
+    if(not self:CanQueue(key)) then return end -- TODO: check currently opened tab too?
 
     local activity = RequestListingsActivity:New(self.tradingHouseWrapper, guildId)
     self:QueueActivity(activity)
     return activity
 end
 
-function ActivityManager:PostItem(guildId, bagId, slotIndex, stackCount, price) -- TODO use
-    local uniqueId = GetItemUniqueId(bagId, slotIndex)
-    local key = PostItemActivity.CreateKey(guildId, guildId, bagId, slotIndex, stackCount, price, uniqueId)
+function ActivityManager:PostItem(guildId, bagId, slotIndex, stackCount, price)
+    local key = PostItemActivity.CreateKey()
     if(not self:CanQueue(key)) then return end
 
-    local activity = PostItemActivity:New(self.tradingHouseWrapper, guildId, bagId, slotIndex, stackCount, price, uniqueId)
+    local activity = PostItemActivity:New(self.tradingHouseWrapper, guildId, bagId, slotIndex, stackCount, price)
     self:QueueActivity(activity)
     return activity
 end
@@ -357,8 +353,8 @@ function ActivityManager:PurchaseItem(guildId, itemData)
 end
 
 function ActivityManager:CancelItem(guildId, listingIndex)
-    local price, _, uniqueId = select(7, GetTradingHouseListingItemInfo(listingIndex))
-    local key = CancelItemActivity.CreateKey(guildId, listingIndex, uniqueId, price)
+    local uniqueId = select(9, GetTradingHouseListingItemInfo(listingIndex))
+    local key = CancelItemActivity.CreateKey(guildId, uniqueId)
     if(not self:CanQueue(key)) then return end
 
     local activity = CancelItemActivity:New(self.tradingHouseWrapper, guildId, listingIndex, uniqueId, price)

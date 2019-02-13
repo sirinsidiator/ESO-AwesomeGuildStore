@@ -29,16 +29,16 @@ function GenericTradingHouseFilter:IsLocal()
     return false
 end
 
-function GenericTradingHouseFilter:ApplyToSearch(search)
-    if(not self.filterType or not search.m_filters[self.filterType]
-        or not self:IsAttached() or self:IsDefault()) then
+function GenericTradingHouseFilter:ApplyToSearch()
+    if(not self.filterType or not self:IsAttached() or self:IsDefault()) then
         return
     end
 
-    local filterValues = search.m_filters[self.filterType].values
+    local values = {}
     for value, enabled in pairs(self.selection) do
         if(enabled) then
-            filterValues[#filterValues + 1] = value.id
+            values[#value + 1] = value.id
         end
     end
+    SetTradingHouseFilter(self.filterType, unpack(values))
 end

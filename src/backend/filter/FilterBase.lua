@@ -105,7 +105,7 @@ function FilterBase:IsLocal()
     return true
 end
 
-function FilterBase:ApplyToSearch(search)
+function FilterBase:ApplyToSearch()
 -- this function can be used to manipulate the server filters
 end
 

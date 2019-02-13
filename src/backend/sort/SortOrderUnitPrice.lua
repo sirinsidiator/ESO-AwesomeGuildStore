@@ -17,11 +17,9 @@ function SortOrderUnitPrice:Initialize()
     -- TRANSLATORS: label of the last seen sort order
     local label = gettext("Unit Price")
     SortOrderBase.Initialize(self, SORT_ORDER_ID.UNIT_PRICE_ORDER, label, function(a, b)
-        local unitPriceA = a:GetUnitPrice()
-        local unitPriceB = a:GetUnitPrice()
-        if(unitPriceA == unitPriceB) then
+        if(a.purchasePricePerUnit == b.purchasePricePerUnit) then
             return 0
         end
-        return unitPriceA < unitPriceB and 1 or -1
+        return a.purchasePricePerUnit < b.purchasePricePerUnit and 1 or -1
     end)
 end

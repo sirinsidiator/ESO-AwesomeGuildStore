@@ -19,6 +19,7 @@ end
 function CategorySelector:Initialize(parent, searchManager)
     self.searchManager = searchManager
     local control = CreateControlFromVirtual("AwesomeGuildStoreSearchCategorySelector", parent, "AwesomeGuildStoreCategorySelectorTemplate")
+
     control.fragment = self
     ZO_SimpleSceneFragment.Initialize(self, control)
     self.categoryContainer = control:GetNamedChild("MainCategories")

@@ -18,12 +18,13 @@ function TradingHouseWrapper:Initialize(saveData)
     self.saveData = saveData
     local tradingHouse = TRADING_HOUSE
     self.tradingHouse = tradingHouse
+    self.search = TRADING_HOUSE_SEARCH
 
     self.loadingOverlay = AwesomeGuildStore.LoadingOverlay:New("AwesomeGuildStoreLoadingOverlay")
     self.loadingIndicator = AwesomeGuildStore.LoadingIcon:New("AwesomeGuildStoreLoadingIndicator")
-    self.loadingIndicator:SetParent(tradingHouse.m_control)
+    self.loadingIndicator:SetParent(tradingHouse.control)
     self.loadingIndicator:ClearAnchors()
-    self.loadingIndicator:SetAnchor(BOTTOMLEFT, tradingHouse.m_control, BOTTOMLEFT, 15, 20)
+    self.loadingIndicator:SetAnchor(BOTTOMLEFT, tradingHouse.control, BOTTOMLEFT, 15, 20)
     local itemDatabase = ItemDatabase:New(self)
     self.itemDatabase = itemDatabase
     local searchTab = AwesomeGuildStore.SearchTabWrapper:New(saveData)
@@ -57,7 +58,6 @@ function TradingHouseWrapper:Initialize(saveData)
     -- SetCurrentMode is the first method called after RunInitialSetup
     self:PreHook("SetCurrentMode", function()
         if(ranInitialSetup) then return end
-        tradingHouse.m_numItemsOnPage = 0
 
         AwesomeGuildStore:FireBeforeInitialSetupCallbacks(self)
         for mode, tab in next, self.modeToTab do
@@ -73,14 +73,6 @@ function TradingHouseWrapper:Initialize(saveData)
         AwesomeGuildStore:FireAfterInitialSetupCallbacks(self)
 
         ranInitialSetup = true
-    end)
-
-    self:PreHook("ClearSearchResults", function(self) self.m_numItemsOnPage = 0 end) -- TODO is this still needed?
-
-    self:Wrap("OnSearchResultsReceived", function(originalOnSearchResultsReceived, self, ...) -- TODO is this still needed?
-        self.isReceivingResults = true -- we use this to automatically advance to the next page if local filters hide every item
-        originalOnSearchResultsReceived(self, ...)
-        self.isReceivingResults = false
     end)
 
     local currentTab = searchTab

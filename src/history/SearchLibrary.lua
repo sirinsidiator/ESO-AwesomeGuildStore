@@ -84,12 +84,12 @@ function SearchLibrary:Initialize(saveData)
 		end
 	end)
 
-	local parent = TRADING_HOUSE.m_browseItems
+	local parent = TRADING_HOUSE.browseItemsLeftPane
 	-- TRANSLATORS: tooltip text for the toggle search library button on the search tab
 	local toggleButtonLabel = gettext("Toggle Search Library")
 	local toggleButton = ToggleButton:New(parent, control:GetName() .. "ToggleButton", "EsoUI/Art/Journal/journal_tabIcon_loreLibrary_%s.dds", 0, 0, 28, 28, toggleButtonLabel)
 	toggleButton.control:ClearAnchors()
-	toggleButton.control:SetAnchor(TOPRIGHT, parent:GetNamedChild("Header"), TOPLEFT, 225, -2)
+	toggleButton.control:SetAnchor(TOPRIGHT, parent, TOPLEFT, 225, -2)
 	if(saveData.isActive) then
 		toggleButton:Press()
 	end

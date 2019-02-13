@@ -214,7 +214,9 @@ OnAddonLoaded(function()
     if(saveData.guildTraderListEnabled) then
         AwesomeGuildStore.InitializeGuildStoreList(saveData)
     end
-    AwesomeGuildStore.main = AwesomeGuildStore.TradingHouseWrapper:New(saveData)
+    if(GetAPIVersion() >= 100026) then -- TODO
+        AwesomeGuildStore.main = AwesomeGuildStore.TradingHouseWrapper:New(saveData)
+    end
     AwesomeGuildStore.InitializeAugmentedMails(saveData)
 
     local gettext = LibStub("LibGetText")("AwesomeGuildStore").gettext

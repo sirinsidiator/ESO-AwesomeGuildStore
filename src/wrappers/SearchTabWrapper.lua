@@ -27,7 +27,7 @@ end
 
 local iconMarkup = string.format("|t%u:%u:%s|t", 16, 16, "EsoUI/Art/currency/currency_gold.dds")
 function SearchTabWrapper:RunInitialSetup(tradingHouseWrapper)
-    self:InitializeContainers(tradingHouseWrapper)
+    self:PrepareIngameControls(tradingHouseWrapper)
     self:InitializeFilters(tradingHouseWrapper)
     self:InitializeButtons(tradingHouseWrapper)
     self:InitializeNavigation(tradingHouseWrapper)
@@ -41,13 +41,13 @@ function SearchTabWrapper:RunInitialSetup(tradingHouseWrapper)
     self.tradingHouseWrapper = tradingHouseWrapper
 
     local saveData = self.saveData
---    CALLBACK_MANAGER:RegisterCallback("AwesomeGuildStore_SearchLibraryEntry_Selected", function(entry)
---        if(saveData.autoSearch) then
---            self.fromSearchLibrary = true
---            tradingHouseWrapper.tradingHouse:ClearSearchResults()
---            self:Search()
---        end
---    end)
+    --    CALLBACK_MANAGER:RegisterCallback("AwesomeGuildStore_SearchLibraryEntry_Selected", function(entry)
+    --        if(saveData.autoSearch) then
+    --            self.fromSearchLibrary = true
+    --            tradingHouseWrapper.tradingHouse:ClearSearchResults()
+    --            self:Search()
+    --        end
+    --    end)
 end
 
 local function SortByFilterPriority(a, b)
@@ -120,65 +120,55 @@ end
 function SearchTabWrapper:RefreshFilterDimensions() -- TODO remove
 end
 
-function SearchTabWrapper:InitializeContainers(tradingHouseWrapper)
+function SearchTabWrapper:PrepareIngameControls(tradingHouseWrapper)
     local tradingHouse = tradingHouseWrapper.tradingHouse
-    local leftPane = tradingHouse.m_leftPane
-    local browseItemsControl = tradingHouse.m_browseItems
-    local common = browseItemsControl:GetNamedChild("Common")
-    local header = browseItemsControl:GetNamedChild("Header")
-    header:ClearAnchors()
-    header:SetAnchor(TOPLEFT, common:GetParent(), TOPLEFT, 0, -43)
+    local browseItemsControl = tradingHouse.browseItemsLeftPane
 
-    common:ClearAnchors()
-    common:SetAnchor(TOPLEFT, leftPane, TOPLEFT, 0, -10)
-    common:SetAnchor(BOTTOMRIGHT, leftPane, BOTTOMRIGHT, 0, 0)
-    self.common = common
-    leftPane:SetWidth(250)
+    -- hide all built in filters
+    browseItemsControl:GetNamedChild("GlobalFeatureArea"):SetHidden(true)
+    browseItemsControl:GetNamedChild("CategoryListContainer"):SetHidden(true)
+    tradingHouse.itemNameSearch:SetHidden(true)
+    tradingHouse.itemNameSearchLabel:SetHidden(true)
+    tradingHouse.itemNameSearchAutoComplete:SetHidden(true)
+    tradingHouse.featureAreaControl:SetHidden(true)
+    tradingHouse.subcategoryTabsControl:SetHidden(true)
 
-    for i = 1, common:GetNumChildren() do -- TODO: maybe just hide the common area and attach button and filter area to its parent?
-        common:GetChild(i):SetHidden(true)
-    end
+    -- make sure they are not shown on tab switch
+    local dummyControl = { SetHidden = function() end }
+    tradingHouse.itemNameSearch = dummyControl
+    tradingHouse.itemNameSearchLabel = dummyControl
+    tradingHouse.itemNameSearchAutoComplete = dummyControl
+    tradingHouse.featureAreaControl = dummyControl
+    tradingHouse.subcategoryTabsControl = dummyControl
 
-    local buttonArea = WINDOW_MANAGER:CreateControl("AwesomeGuildStoreButtonArea", common, CT_CONTROL)
-    buttonArea:SetAnchor(BOTTOMLEFT, common, BOTTOMLEFT, 0, 0)
-    buttonArea:SetAnchor(BOTTOMRIGHT, common, BOTTOMIGHT, 0, 0)
-    self.buttonArea = buttonArea
-    self.nextButtonIndex = 1
-    self.attachedButtons = {}
+    -- reanchor controls to account for the free space from hiding things
+    browseItemsControl:SetAnchor(TOPLEFT, tradingHouse.control, TOPLEFT, 0, 10)
 end
 
 function SearchTabWrapper:UpdateItemsLabels(tradingHouse, itemCount, filteredItemCount)
-    tradingHouse.m_resultCount:SetText(zo_strformat(GetString(SI_TRADING_HOUSE_RESULT_COUNT) .. " (<<2>>)", itemCount, filteredItemCount))
+    tradingHouse.resultCount:SetText(zo_strformat(GetString(SI_TRADING_HOUSE_RESULT_COUNT) .. " (<<2>>)", itemCount, filteredItemCount))
 end
 
 function SearchTabWrapper:InitializeFilters(tradingHouseWrapper)
     local saveData = self.saveData
     local tradingHouse = tradingHouseWrapper.tradingHouse
-    local tradingHouseControl = tradingHouse.m_control
-    local browseItemsControl = tradingHouse.m_browseItems
-    local common = browseItemsControl:GetNamedChild("Common")
 
     local searchLibrary = AwesomeGuildStore.SearchLibrary:New(saveData.searchLibrary)
     self.searchLibrary = searchLibrary
     local searchManager = AwesomeGuildStore.SearchManager:New(tradingHouseWrapper, saveData.searchManager) -- TODO
     saveData.searchManager = searchManager:GetSaveData()
     self.searchManager = searchManager -- TODO: move to tradinghouse wrapper
-    self.categorySelector = AwesomeGuildStore.class.CategorySelector:New(browseItemsControl, searchManager) -- TODO pass the category filter to it
-    TRADING_HOUSE_SCENE:AddFragment(self.categorySelector) -- TODO
-    local categorySelectorControl = self.categorySelector:GetControl()
-    categorySelectorControl:SetAnchor(TOPLEFT, self.common, TOPRIGHT, 50, 0)
-    categorySelectorControl:SetAnchor(TOPRIGHT, tradingHouseControl, TOPRIGHT, 0, 0)
-    tradingHouseControl:GetNamedChild("ItemPane"):SetAnchor(TOPLEFT, categorySelectorControl, BOTTOMLEFT, 0, 20)
-    browseItemsControl:GetNamedChild("ItemCategory"):SetHidden(true)
+    self.categorySelector = AwesomeGuildStore.class.CategorySelector:New(tradingHouse.itemPane, searchManager) -- TODO pass the category filter to it
+    tradingHouse.searchSortHeadersControl:SetAnchor(TOPRIGHT, self.categorySelector:GetControl(), BOTTOMRIGHT)
+    TRADING_HOUSE_SCENE:AddFragment(self.categorySelector) -- TODO is this the right place?
 
-    self.filterArea = AwesomeGuildStore.FilterArea:New(self.common, self.buttonArea, searchManager) -- TODO make buttonArea part of it
+    self.filterArea = AwesomeGuildStore.FilterArea:New(tradingHouse.browseItemsLeftPane, searchManager)
 
-    SLASH_COMMANDS["/ags"] = function(command)
-        -- TODO: make proper command handler once we have more
+    SLASH_COMMANDS["/ags"] = function(command) -- TODO remove
         if(command == "reset") then
             searchLibrary:ResetPosition()
             Print("Default search library position restored")
-        end
+    end
     end
 
     searchManager:RegisterFilter(AwesomeGuildStore.class.ItemCategoryFilter:New())
@@ -377,115 +367,13 @@ function SearchTabWrapper:InitializeFilters(tradingHouseWrapper)
     searchLibrary:Serialize()
 end
 
-function SearchTabWrapper:UpdateButtonAnchors()
-    local buttonArea = self.buttonArea
-    local count = buttonArea:GetNumChildren()
-
-    local previousChild = buttonArea
-    local buttons = {}
-    local height = 0
-    for i = 1, count do
-        local button = buttonArea:GetChild(i)
-        buttons[#buttons + 1] = button
-    end
-    table.sort(buttons, function(a, b) return a.__agsIndex < b.__agsIndex end)
-    for i = 1, #buttons do
-        local button = buttons[i]
-        local isFirst = (i == 1)
-        button:ClearAnchors()
-        button:SetAnchor(TOPLEFT, previousChild, isFirst and TOPLEFT or BOTTOMLEFT, 0, isFirst and 0 or 2)
-        button:SetAnchor(TOPRIGHT, previousChild, isFirst and TOPRIGHT or BOTTOMRIGHT, 0, isFirst and 0 or 2)
-        height = height + button:GetHeight() + 2
-        previousChild = button
-    end
-    buttonArea:SetHeight(height)
+function SearchTabWrapper:AttachButton(button) -- TODO remove
 end
 
-function SearchTabWrapper:AttachButton(button)
-    if(self.attachedButtons[button:GetName()]) then return end
-
-    self.attachedButtons[button:GetName()] = button
-    local hidden = button:IsControlHidden()
-    button:SetParent(self.buttonArea)
-
-    -- collapse buttons when they are hidden
-    button.__agsSetHidden = button.SetHidden
-    button.__agsHeight = button:GetHeight()
-    button.SetHidden = function(button, hidden)
-        if(not button:IsHidden() and hidden) then
-            button.__agsHeight = button:GetHeight()
-            button:SetHeight(0)
-        elseif(button:IsHidden() and not hidden) then
-            button:SetHeight(button.__agsHeight)
-        end
-        button:__agsSetHidden(hidden)
-        self:UpdateButtonAnchors()
-    end
-    if(hidden) then button:SetHeight(0) end
-
-    if(not button.__agsIndex) then
-        button.__agsIndex = self.nextButtonIndex
-        self.nextButtonIndex = self.nextButtonIndex + 1
-    end
-
-    self:UpdateButtonAnchors()
+function SearchTabWrapper:DetachButton(button) -- TODO remove
 end
 
-function SearchTabWrapper:DetachButton(button)
-    if(not self.attachedButtons[button:GetName()]) then return end
-
-    button.SetHidden = button.__agsSetHidden
-    if(button:IsHidden()) then button:SetHeight(button.__agsHeight) end
-    button:SetParent(GuiRoot)
-    self:UpdateButtonAnchors()
-    self.attachedButtons[button:GetName()] = nil
-end
-
-function SearchTabWrapper:InitializeButtons(tradingHouseWrapper)
-    local saveData = self.saveData
-    local tradingHouse = tradingHouseWrapper.tradingHouse
-
-    local browseItemsControl = tradingHouse.m_browseItems
-    local common = browseItemsControl:GetNamedChild("Common")
-
-    local searchButton = CreateControlFromVirtual("AwesomeGuildStoreStartSearchButton", GuiRoot, "ZO_DefaultButton") -- TODO: remove
-    searchButton:SetText(GetString(SI_TRADING_HOUSE_DO_SEARCH))
-    searchButton:SetHandler("OnMouseUp",function(control, button, isInside)
-        if(control:GetState() == BSTATE_NORMAL and button == 1 and isInside) then
-            self.searchManager:RequestSearch()
-        end
-    end)
-    self:AttachButton(searchButton)
-    self.searchButton = searchButton
-
-    local RESET_BUTTON_SIZE = 24
-    local RESET_BUTTON_TEXTURE = "EsoUI/Art/Buttons/decline_%s.dds"
-
-    -- TRANSLATORS: tooltip text for the reset all filters button on the search tab
-    local resetButtonLabel = gettext("Reset All Filters")
-    local resetButton = AwesomeGuildStore.SimpleIconButton:New("AwesomeGuildStoreFilterResetButton", RESET_BUTTON_TEXTURE, RESET_BUTTON_SIZE, resetButtonLabel)
-    resetButton:SetAnchor(TOPRIGHT, browseItemsControl:GetNamedChild("Header"), TOPLEFT, 196, 0)
-    resetButton.OnClick = function()
-        self.searchManager:GetActiveSearch():Reset()
-        self.searchList:Refresh()
-    end
-
-    -- TRANSLATORS: tooltip text for the toggle auto search button on the search tab
-    local autoSearchButtonLabel = gettext("Toggle Auto Search") -- TODO: remove
-    local autoSearchButton = ToggleButton:New(browseItemsControl:GetNamedChild("Header"), "AwesomeGuildStoreAutoSearchButton", "EsoUI/Art/lfg/lfg_tabIcon_groupTools_%s.dds", 0, 0, 28, 28, autoSearchButtonLabel)
-    autoSearchButton.control:ClearAnchors()
-    autoSearchButton.control:SetAnchor(TOPRIGHT, browseItemsControl:GetNamedChild("Header"), TOPLEFT, 278, -2)
-    if(saveData.autoSearch) then
-        autoSearchButton:Press()
-    end
-    autoSearchButton.HandlePress = function()
-        saveData.autoSearch = true
-        return true
-    end
-    autoSearchButton.HandleRelease = function()
-        saveData.autoSearch = false
-        return true
-    end
+function SearchTabWrapper:InitializeButtons(tradingHouseWrapper) -- TODO remove?
 end
 
 function SearchTabWrapper:InitializeNavigation(tradingHouseWrapper) -- TODO: remove
@@ -514,7 +402,7 @@ function SearchTabWrapper:InitializeNavigation(tradingHouseWrapper) -- TODO: rem
         color = ZO_ColorDef:New("50D35D")
     }
 
-    ZO_ScrollList_AddDataType(tradingHouse.m_searchResultsList, SHOW_MORE_DATA_TYPE, "AwesomeGuildStoreShowMoreRowTemplate", 32, function(rowControl, entry)
+    ZO_ScrollList_AddDataType(tradingHouse.searchResultsList, SHOW_MORE_DATA_TYPE, "AwesomeGuildStoreShowMoreRowTemplate", 32, function(rowControl, entry)
         local label = rowControl:GetNamedChild("Text")
         label:SetText(entry.label)
         rowControl.label = label
@@ -564,7 +452,7 @@ function SearchTabWrapper:InitializeNavigation(tradingHouseWrapper) -- TODO: rem
         ZO_ObjectPool_DefaultResetControl(rowControl)
     end)
 
-    ZO_ScrollList_AddDataType(tradingHouse.m_searchResultsList, HAS_HIDDEN_DATA_TYPE, "AwesomeGuildStoreHasHiddenRowTemplate", 24, function(rowControl, entry)
+    ZO_ScrollList_AddDataType(tradingHouse.searchResultsList, HAS_HIDDEN_DATA_TYPE, "AwesomeGuildStoreHasHiddenRowTemplate", 24, function(rowControl, entry)
         local label = rowControl:GetNamedChild("Text")
         -- TRANSLATORS: placeholder text when all search results are hidden by local filters
         label:SetText(gettext("All items are hidden by local filters."))
@@ -594,7 +482,7 @@ function SearchTabWrapper:InitializeNavigation(tradingHouseWrapper) -- TODO: rem
     --        end
     --    end)
 
-    self.paging = AwesomeGuildStore.Paging:New(tradingHouseWrapper)
+    --    self.paging = AwesomeGuildStore.Paging:New(tradingHouseWrapper)
 
     tradingHouseWrapper:Wrap("UpdatePagingButtons", function(originalUpdatePagingButtons, self)
         if(showPreviousPageEntry.rowControl ~= nil) then showPreviousPageEntry.updateState(showPreviousPageEntry.rowControl) end
@@ -612,7 +500,8 @@ local SEARCH_RESULTS_DATA_TYPE = 1
 local GUILD_SPECIFIC_ITEM_DATA_TYPE = 3
 
 local function SetUnitPrice(tradingHouse, rowControl, sellPriceControl, perItemPrice, result, unitPrice)
-    ZO_CurrencyControl_SetSimpleCurrency(perItemPrice, result.currencyType, unitPrice, PER_UNIT_PRICE_CURRENCY_OPTIONS, nil, tradingHouse.m_playerMoney[result.currencyType] < result.purchasePrice)
+    ZO_CurrencyControl_SetSimpleCurrency(perItemPrice, result.currencyType, unitPrice, PER_UNIT_PRICE_CURRENCY_OPTIONS, nil, tradingHouse.playerMoney[result.currencyType] < result.purchasePrice)
+    perItemPrice:SetFont(UNIT_PRICE_FONT)
     perItemPrice:SetText("@" .. perItemPrice:GetText():gsub("|t.-:.-:", "|t12:12:"))
     perItemPrice:SetHidden(false)
     sellPriceControl:ClearAnchors()
@@ -622,44 +511,78 @@ end
 function SearchTabWrapper:InitializeUnitPriceDisplay(tradingHouseWrapper)
     local saveData = self.saveData
     local tradingHouse = tradingHouseWrapper.tradingHouse
-    local dataType = tradingHouse.m_searchResultsList.dataTypes[SEARCH_RESULTS_DATA_TYPE] -- TODO use ZO_ScrollList_GetDataTypeTable(self, typeId)
+    local dataType = tradingHouse.searchResultsList.dataTypes[SEARCH_RESULTS_DATA_TYPE] -- TODO use ZO_ScrollList_GetDataTypeTable(self, typeId)
     local originalSetupCallback = dataType.setupCallback
 
-    dataType.setupCallback = function(rowControl, result)
+    dataType.setupCallback = function(rowControl, result) -- TODO move into search result list wrapper
         originalSetupCallback(rowControl, result)
 
         local sellPriceControl = rowControl:GetNamedChild("SellPrice")
-        local perItemPrice = rowControl:GetNamedChild("SellPricePerItem")
+        local perItemPrice = rowControl:GetNamedChild("SellPricePerUnit")
         local shouldShow = false
         if(saveData.displayPerUnitPrice) then
-            if(not perItemPrice) then
-                perItemPrice = rowControl:CreateControl("$(parent)SellPricePerItem", CT_LABEL)
+            -- TODO is it showing by default?
+            if(not perItemPrice.__AGS_INIT) then
+                sellPriceControl:ClearAnchors()
+                perItemPrice:ClearAnchors()
                 perItemPrice:SetAnchor(TOPRIGHT, sellPriceControl, BOTTOMRIGHT, 0, 0)
-                perItemPrice:SetFont(UNIT_PRICE_FONT)
+                perItemPrice.__AGS_INIT = true
             end
 
-            local unitPrice = result:GetUnitPrice()
-            if(unitPrice ~= result.purchasePrice) then
-                SetUnitPrice(tradingHouse, rowControl, sellPriceControl, perItemPrice, result, unitPrice)
+            if(result:GetStackCount() > 1) then
+                SetUnitPrice(tradingHouse, rowControl, sellPriceControl, perItemPrice, result, result.purchasePricePerUnit)
                 shouldShow = true
             end
         end
 
-        if(perItemPrice and not shouldShow) then
+        if(not shouldShow) then
             perItemPrice:SetHidden(true)
             sellPriceControl:ClearAnchors()
             sellPriceControl:SetAnchor(RIGHT, rowControl, RIGHT, -5, 0)
         end
 
         -- TODO
-        local timeRemaining = rowControl:GetNamedChild("TimeRemaining")
-        local lastSeen = rowControl:GetNamedChild("LastSeen")
-        if(not lastSeen) then
-            lastSeen = rowControl:CreateControl("$(parent)LastSeen", CT_LABEL)
-            lastSeen:SetAnchor(TOPRIGHT, timeRemaining, BOTTOMRIGHT, 0, 0) -- TODO move timeRemaining up so everything is centered
-            lastSeen:SetFont(UNIT_PRICE_FONT)
+        local nameControl = rowControl:GetNamedChild("Name")
+        nameControl:SetWidth(310)
+        nameControl:SetMaxLineCount(1)
+
+        nameControl:ClearAnchors() -- TODO should probably check if anchor really needs to change -> test performance impact
+        local offsetY = 0
+        local sellerName = rowControl:GetNamedChild("SellerName")
+        if(saveData.displaySellerName or true) then -- TODO or sortOrder == sellerName
+            offsetY = -8
+            if(not sellerName) then
+                sellerName = rowControl:CreateControl("$(parent)SellerName", CT_LABEL)
+                sellerName:SetAnchor(TOPLEFT, nameControl, BOTTOMLEFT, 10, 0)
+                sellerName:SetFont(UNIT_PRICE_FONT)
+                sellerName:SetColor(ZO_NORMAL_TEXT:UnpackRGBA())
+            end
+            sellerName:SetText(gettext("Seller:|cffffff %s"):format(result.sellerName))
+        elseif(sellerName) then
+            sellerName:SetHidden(true)
+            sellerName:SetText("")
         end
-        lastSeen:SetText(ZO_FormatDurationAgo(GetTimeStamp() - result.lastSeen))
+        nameControl:SetAnchor(LEFT, nil, LEFT, ZO_TRADING_HOUSE_SEARCH_RESULT_ITEM_ICON_MAX_WIDTH, offsetY)
+
+        if(math.abs(result.purchasePrice / result:GetStackCount() - result.purchasePricePerUnitRaw) > 0.01) then -- TODO remove
+            sellerName:SetColor(1, 0, 0, 1)
+            sellerName:SetText("mismatch: ".. tostring(result.purchasePrice / result:GetStackCount() - result.purchasePricePerUnitRaw))
+        else
+            sellerName:SetColor(ZO_NORMAL_TEXT:UnpackRGBA())
+        end
+
+        local timeRemaining = rowControl:GetNamedChild("TimeRemaining")
+        timeRemaining:SetAnchor(LEFT, nil, LEFT, 410, 0)
+
+        local traitInfo = rowControl:GetNamedChild("TraitInfo")
+        traitInfo:SetAnchor(LEFT, nil, LEFT, 380, 0)
+        --        local lastSeen = rowControl:GetNamedChild("LastSeen")
+        --        if(not lastSeen) then
+        --            lastSeen = rowControl:CreateControl("$(parent)LastSeen", CT_LABEL)
+        --            lastSeen:SetAnchor(TOPRIGHT, timeRemaining, BOTTOMRIGHT, 0, 0) -- TODO move timeRemaining up so everything is centered
+        --            lastSeen:SetFont(UNIT_PRICE_FONT)
+        --        end
+        --        lastSeen:SetText(ZO_FormatDurationAgo(GetTimeStamp() - result.lastSeen))
     end
 end
 
@@ -703,7 +626,7 @@ function SearchTabWrapper:InitializeSearchResultMasterList(tradingHouseWrapper) 
     local tradingHouse = tradingHouseWrapper.tradingHouse
     local itemDatabase = tradingHouseWrapper.itemDatabase
 
-    tradingHouse.m_control:UnregisterForEvent(EVENT_TRADING_HOUSE_CONFIRM_ITEM_PURCHASE)
+    tradingHouse.control:UnregisterForEvent(EVENT_TRADING_HOUSE_CONFIRM_ITEM_PURCHASE)
 
     tradingHouseWrapper:Wrap("VerifyBuyItemAndShowErrors", function(originalVerifyBuyItemAndShowErrors, tradingHouse, inventorySlot)
         if(originalVerifyBuyItemAndShowErrors(tradingHouse, inventorySlot)) then
@@ -735,7 +658,7 @@ function SearchTabWrapper:InitializeSearchResultMasterList(tradingHouseWrapper) 
             tradingHouseWrapper.activityManager:PurchaseItem(guildId, itemData)
         end
         dialog.buttons[2].callback = function()
-            -- nothing to do here
+        -- nothing to do here
         end
 
         ZO_Dialogs_ShowDialog = originalZO_Dialogs_ShowDialog
@@ -746,9 +669,9 @@ function SearchTabWrapper:InitializeSearchResultMasterList(tradingHouseWrapper) 
     AwesomeGuildStore:RegisterCallback("ItemPurchased", function(itemData) -- TODO
         if(saveData.purchaseNotification) then
             self:PrintPurchaseMessageForEntry(itemData)
-        end
-        itemData.purchased = true
-        self.searchResultList:RefreshVisible()
+    end
+    itemData.purchased = true
+    self.searchResultList:RefreshVisible()
     end)
 
     tradingHouseWrapper:Wrap("CanBuyItem", function(originalCanBuyItem, tradingHouse, inventorySlot)
@@ -764,14 +687,14 @@ function SearchTabWrapper:InitializeSearchResultMasterList(tradingHouseWrapper) 
         return true
     end)
 
-    local dataType = tradingHouse.m_searchResultsList.dataTypes[SEARCH_RESULTS_DATA_TYPE]
+    local dataType = tradingHouse.searchResultsList.dataTypes[SEARCH_RESULTS_DATA_TYPE]
     local originalSetupCallback = dataType.setupCallback
     dataType.setupCallback = function(rowControl, result) -- TODO consolidate all of these hooks
         originalSetupCallback(rowControl, result)
 
         local background = rowControl:GetNamedChild("Bg")
         local timeRemaining = rowControl:GetNamedChild("TimeRemaining")
-        local lastSeen = rowControl:GetNamedChild("LastSeen")
+        --        local lastSeen = rowControl:GetNamedChild("LastSeen")
         if(result.purchased) then
             background:SetTexture(PURCHASED_BG_TEXTURE)
             background:SetTextureCoords(unpack(PURCHASED_VERTEX_COORDS))
@@ -787,7 +710,7 @@ function SearchTabWrapper:InitializeSearchResultMasterList(tradingHouseWrapper) 
             background:SetTexture(DEFAULT_BG_TEXTURE)
             background:SetTextureCoords(unpack(DEFAULT_VERTEX_COORDS))
         end
-        lastSeen:SetHidden(result.purchased or result.soldout)
+        --        lastSeen:SetHidden(result.purchased or result.soldout)
     end
 end
 
@@ -814,42 +737,18 @@ function SearchTabWrapper:CancelSearch()
     self.tradingHouseWrapper.activityManager:CancelSearch()
 end
 
-function SearchTabWrapper:RelocateButtons(tradingHouse)
-    local buttonArea = self.buttonArea
-
-    local leftPane = tradingHouse.m_leftPane
-    local buttonsToAdd = {}
-    for i = 1, leftPane:GetNumChildren() do
-        local child = leftPane:GetChild(i)
-        if(child and child:GetType() == CT_BUTTON and not child.__AGS_NO_REANCHOR) then
-            buttonsToAdd[#buttonsToAdd + 1] = child
-        end
-    end
-
-    local common = tradingHouse.m_browseItems:GetNamedChild("Common")
-    for i = 1, common:GetNumChildren() do
-        local child = common:GetChild(i)
-        if(child and child:GetType() == CT_BUTTON and not child.__AGS_NO_REANCHOR) then
-            buttonsToAdd[#buttonsToAdd + 1] = child
-        end
-    end
-
-    for i = 1, #buttonsToAdd do
-        self:AttachButton(buttonsToAdd[i])
-    end
-end
-
 function SearchTabWrapper:OnOpen(tradingHouseWrapper)
     local tradingHouse = tradingHouseWrapper.tradingHouse
-   -- tradingHouse.m_searchAllowed = true -- TODO is this still required?
-   -- tradingHouse:OnSearchCooldownUpdate(GetTradingHouseCooldownRemaining()) -- TODO is this still required?
-   -- AwesomeGuildStore:FireOnOpenSearchTabCallbacks(tradingHouseWrapper) -- TODO is this still required?
-    self:RelocateButtons(tradingHouse) -- TODO get rid of this. buttons are no longer our worry once we are done
+    self.categorySelector:GetControl():SetHidden(false)
+    -- tradingHouse.m_searchAllowed = true -- TODO is this still required?
+    -- tradingHouse:OnSearchCooldownUpdate(GetTradingHouseCooldownRemaining()) -- TODO is this still required?
+    -- AwesomeGuildStore:FireOnOpenSearchTabCallbacks(tradingHouseWrapper) -- TODO is this still required?
     PushActionLayerByName(ACTION_LAYER_NAME) -- TODO should this action layer only be active here or better in the whole trading house?
     self.isOpen = true
 end
 
 function SearchTabWrapper:OnClose(tradingHouseWrapper)
+    self.categorySelector:GetControl():SetHidden(true)
     self.tradingHouseWrapper.activityManager:CancelSearch()
     self.tradingHouseWrapper.activityManager:CancelRequestNewest()
     RemoveActionLayerByName(ACTION_LAYER_NAME)

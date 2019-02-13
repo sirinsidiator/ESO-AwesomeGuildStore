@@ -90,7 +90,7 @@ end
 
 function SortFilter:ApplyToSearch(search)
     if(self.sortOrder) then
-        self.sortOrder:ApplySortValues(search)
+        -- TODO self.sortOrder:ApplySortValues(search)
     end
 end
 

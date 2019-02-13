@@ -62,11 +62,9 @@ function QualityFilter:IsLocal()
     return false
 end
 
-function QualityFilter:ApplyToSearch(search)
+function QualityFilter:ApplyToSearch()
     if(not self:IsAttached() or self:IsDefault()) then return end
-    local filterValues = search.m_filters[TRADING_HOUSE_FILTER_TYPE_QUALITY].values
-    filterValues[MIN_INDEX] = self.min
-    filterValues[MAX_INDEX] = self.max
+    SetTradingHouseFilterRange(TRADING_HOUSE_FILTER_TYPE_QUALITY, self.min, self.max)
 end
 
 function QualityFilter:FilterLocalResult(itemData)

@@ -38,11 +38,9 @@ function PriceFilter:IsLocal()
     return false
 end
 
-function PriceFilter:ApplyToSearch(search)
+function PriceFilter:ApplyToSearch()
     if(not self:IsAttached() or self:IsDefault()) then return end
-    local filterValues = search.m_filters[TRADING_HOUSE_FILTER_TYPE_PRICE].values
-    filterValues[MIN_INDEX] = self.min
-    filterValues[MAX_INDEX] = self.max
+    SetTradingHouseFilterRange(TRADING_HOUSE_FILTER_TYPE_PRICE, self.min, self.max)
 end
 
 function PriceFilter:FilterLocalResult(itemData)

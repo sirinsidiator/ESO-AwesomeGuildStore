@@ -79,7 +79,7 @@ function LevelFilter:IsLocal()
     return false
 end
 
-function LevelFilter:ApplyToSearch(search)
+function LevelFilter:ApplyToSearch()
     if(not self:IsAttached() or self:IsDefault()) then return end
     local category = self.searchManager:GetCurrentCategories()
     if(not CAN_SERVER_FILTER_IN_CATEGORY[category.id]) then return end
@@ -95,9 +95,7 @@ function LevelFilter:ApplyToSearch(search)
         max = max - MAX_LEVEL
     end
 
-    local filterValues = search.m_filters[minType].values
-    filterValues[MIN_INDEX] = min
-    filterValues[MAX_INDEX] = max
+    SetTradingHouseFilterRange(minType, min, max)
 end
 
 function LevelFilter:FilterLocalResult(itemData)
