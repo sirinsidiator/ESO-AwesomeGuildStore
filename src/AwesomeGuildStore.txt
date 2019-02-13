@@ -3,7 +3,7 @@
 ## Version: @VERSION_NUMBER@
 ## APIVersion: @API_VERSION@
 ## DependsOn: LibStub LibCustomMenu LibDebugLogger
-## OptionalDependsOn: LibAddonMenu-2.0 libFilters libCommonInventoryFilters LibTextFilter LibCustomTitles LibMapPing LibGPS LibDateTime LibPromises LibGetText LibAnnyoingUpdateNotificationInGame
+## OptionalDependsOn: LibAddonMenu-2.0 LibFilters-2.0 libCommonInventoryFilters LibTextFilter LibCustomTitles LibMapPing LibGPS LibDateTime LibPromises LibGetText LibAnnyoingUpdateNotificationInGame
 ## SavedVariables: AwesomeGuildStore_Data
 ##
 ## This Add-on is not created by, affiliated with or sponsored by ZeniMax Media Inc. or its affiliates. 
@@ -27,8 +27,6 @@ lib/LibAddonMenu-2.0/controls/slider.lua
 lib/LibAddonMenu-2.0/controls/texture.lua
 lib/LibAddonMenu-2.0/controls/iconpicker.lua
 lib/LibAddonMenu-2.0/controls/divider.lua
-lib/LibFilters-2.0/LibFilters-2.0.lua
-lib/LibFilters-2.0/helper.lua
 lib/libCommonInventoryFilters/libCommonInventoryFilters.lua
 lib/LibTextFilter/LibTextFilter.lua
 lib/LibCustomTitles/LibCustomTitles.lua

@@ -235,10 +235,12 @@ local BACKPACK_TRADING_HOUSE_LAYOUT_FRAGMENT_ADVANCED = ZO_BackpackLayoutFragmen
 
 local function InitializeLibFilterHooks()
     -- let libFilters hook into our custom fragments to ensure compatibility with other addons
-    local libFilters = LibStub("LibFilters-2.0")
-    libFilters:HookAdditionalFilter(LF_GUILDSTORE_SELL, BACKPACK_TRADING_HOUSE_LAYOUT_FRAGMENT_BASIC)
-    libFilters:HookAdditionalFilter(LF_GUILDSTORE_SELL, BACKPACK_TRADING_HOUSE_LAYOUT_FRAGMENT_ADVANCED)
-    InitializeLibFilterHooks = function() end
+    local libFilters = LibStub("LibFilters-2.0", true)
+    if(libFilters) then
+        libFilters:HookAdditionalFilter(LF_GUILDSTORE_SELL, BACKPACK_TRADING_HOUSE_LAYOUT_FRAGMENT_BASIC)
+        libFilters:HookAdditionalFilter(LF_GUILDSTORE_SELL, BACKPACK_TRADING_HOUSE_LAYOUT_FRAGMENT_ADVANCED)
+        InitializeLibFilterHooks = function() end
+    end
 end
 
 function SalesCategorySelector:HandleChange()
