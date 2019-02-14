@@ -171,19 +171,42 @@ function SellTabWrapper:InitializeListingInput(tradingHouseWrapper)
     postItemPane:SetWidth(250)
     postItemPane:GetNamedChild("Form"):SetHeight(160)
 
+    local listingFeeLabel = tradingHouse.invoice:GetNamedChild("ListingFeeLabel")
+    tradingHouse.invoiceListingFee:ClearAnchors()
+    tradingHouse.invoiceListingFee:SetAnchor(RIGHT, listingFeeLabel, RIGHT)
+    local theirCutLabel = tradingHouse.invoice:GetNamedChild("TheirCutLabel")
+    local listingFeeHelp = tradingHouse.invoice:GetNamedChild("ListingFeeHelp")
+    theirCutLabel:SetAnchor(TOPLEFT, listingFeeLabel, BOTTOMLEFT, 0, 10)
+    tradingHouse.invoiceTheirCut:ClearAnchors()
+    tradingHouse.invoiceTheirCut:SetAnchor(RIGHT, theirCutLabel, RIGHT)
+    local divider = tradingHouse.invoice:GetNamedChild("Divider")
+    local theirCutHelp = tradingHouse.invoice:GetNamedChild("TheirCutHelp")
+    theirCutHelp:SetAnchor(TOPLEFT, listingFeeHelp, BOTTOMLEFT, 0, 0)
+    divider:SetAnchor(TOPLEFT, theirCutHelp, BOTTOMLEFT, -10, 0)
+    local profitLabel = tradingHouse.invoice:GetNamedChild("ProfitLabel")
+    profitLabel:SetAnchor(TOPLEFT, theirCutLabel, BOTTOMLEFT, 0, 10)
+    tradingHouse.invoiceProfit:ClearAnchors()
+    tradingHouse.invoiceProfit:SetAnchor(RIGHT, profitLabel, RIGHT)
+
     local container = tradingHouse.invoice
     container.data = {} -- required for LAM
     self.sellPriceControl = container:GetNamedChild("SellPrice")
 
+    self.maxRepetitions = 0
     local repetitionSlider = CreateSlider(container, {
-        name = gettext("Number of stacks:"),
+        -- TRANSLATORS: the label for the listing repetition slider on the sell tab
+        name = gettext("Listings:"),
         getFunc = function() return self.currentRepetitions end,
         setFunc = function(value)
-            self:SetRepetitions(value, SKIP_UPDATE_SLIDER)
+            self.currentRepetitions = value
+        end,
+        disabled = function()
+            return self.maxRepetitions <= 1
         end,
         decimals = 0,
-    }, "AwesomeGuildStoreFormInvoiceNumberOfStacksSlider")
-    repetitionSlider:SetAnchor(TOPLEFT, container, TOPLEFT, 0, 0)
+    }, "AwesomeGuildStoreFormInvoiceRepetitionSlider")
+    repetitionSlider:SetAnchor(TOP, profitLabel, BOTTOM, 0, 20, ANCHOR_CONSTRAINS_Y)
+    repetitionSlider:SetAnchor(LEFT, container, LEFT, 0, 0, ANCHOR_CONSTRAINS_X)
     self.repetitionSlider = repetitionSlider
 
     local quantitySlider = CreateSlider(container, {
@@ -194,7 +217,7 @@ function SellTabWrapper:InitializeListingInput(tradingHouseWrapper)
         end,
         decimals = 0,
     }, "AwesomeGuildStoreFormInvoiceQuantitySlider")
-    quantitySlider:SetAnchor(TOPLEFT, repetitionSlider, TOPLEFT, 0, 10)
+    quantitySlider:SetAnchor(TOPLEFT, container, TOPLEFT, 0, 0)
     self.quantitySlider = quantitySlider
 
     -- TRANSLATORS: tooltip text for the quantity selection buttons on the sell tab
@@ -217,8 +240,10 @@ function SellTabWrapper:InitializeListingInput(tradingHouseWrapper)
             if(lastSoldQuantity > self.pendingStackCount) then
                 lastSoldQuantity = self.pendingStackCount
             end
-            self:SetQuantity(lastSoldQuantity)
+        else
+            lastSoldQuantity = 1
         end
+        self:SetQuantity(lastSoldQuantity)
     end
 
     local ppuSlider = CreateSlider(container, {
@@ -507,6 +532,7 @@ function SellTabWrapper:InitializeCraftingBag(tradingHouseWrapper)
 end
 
 function SellTabWrapper:ClearPendingItem()
+    self.pendingTotalStackCount = 0
     self.pendingIcon, self.pendingStackCount, self.pendingSellPrice = "", 0, 0
     self.pendingBagId, self.pendingSlotIndex, self.currentRepetitions = 0, 0, 0
     self.currentStackCount, self.currentPricePerUnit, self.currentSellPrice = 0, 0, 0
@@ -538,9 +564,24 @@ end
 
 function SellTabWrapper:SetQuantity(value, skipUpdateSlider)
     self.currentStackCount = math.max(1, math.min(self.pendingStackCount, value))
-    self.repetitionSlider:SetMinMax(1, math.floor(self.pendingStackCount / self.currentStackCount))
     if(not skipUpdateSlider) then self.quantitySlider:UpdateValue() end
     self:UpdateListing()
+    self:UpdateRepetitions()
+end
+
+function SellTabWrapper:UpdateRepetitions(reset)
+    local current, max = GetTradingHouseListingCounts()
+    self.maxRepetitions = math.min(max - current, math.floor(self.pendingTotalStackCount / self.currentStackCount))
+
+    if(reset) then
+        self.currentRepetitions = 1
+    else
+        self.currentRepetitions = math.min(self.currentRepetitions, self.maxRepetitions)
+    end
+
+    self.repetitionSlider:UpdateValue()
+    self.repetitionSlider:SetMinMax(1, self.maxRepetitions)
+    self.repetitionSlider:UpdateDisabled()
 end
 
 function SellTabWrapper:GetQuantity()
@@ -566,6 +607,7 @@ function SellTabWrapper:SetPendingItem(bagId, slotIndex)
     local icon, stackCount, sellPrice = GetItemInfo(bagId, slotIndex)
     if(stackCount > 0) then
         local _, maxStackSize = GetSlotStackSize(bagId, slotIndex)
+        self.pendingTotalStackCount = stackCount
         self.pendingIcon, self.pendingStackCount, self.pendingSellPrice = icon, math.min(maxStackSize, stackCount), sellPrice
         self.pendingBagId, self.pendingSlotIndex = bagId, slotIndex
         self.pendingItemLink = GetItemLink(bagId, slotIndex)
@@ -588,19 +630,22 @@ function SellTabWrapper:SetPendingItem(bagId, slotIndex)
             end
         end
         self.currentSellPrice = self.currentPricePerUnit * self.currentStackCount
-        self.currentRepetitions = 1
+        self:UpdateRepetitions(true)
 
         self.ppuSlider:SetMinMax(0, math.max(math.ceil(self.currentPricePerUnit * 3), 100))
         self.priceButtonContainer:ClearAnchors()
         if(self.pendingStackCount > 1) then
             self.repetitionSlider:Show()
             self.quantitySlider:SetMinMax(1, self.pendingStackCount)
+            self.quantitySlider:UpdateValue()
             self.quantitySlider:Show()
+            self.ppuSlider:UpdateValue()
             self.ppuSlider:Show()
             self.priceButtonContainer:SetAnchor(TOPRIGHT, self.ppuSlider, TOPRIGHT, 0, 0)
         elseif(self.isMasterWrit) then
             self.repetitionSlider:Hide()
             self.quantitySlider:Hide()
+            self.ppuSlider:UpdateValue()
             self.ppuSlider:Show()
             self.priceButtonContainer:SetAnchor(TOPRIGHT, self.ppuSlider, TOPRIGHT, 0, 0)
         else
