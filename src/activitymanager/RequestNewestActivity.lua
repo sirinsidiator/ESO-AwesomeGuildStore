@@ -50,7 +50,7 @@ function RequestNewestActivity:GetLogEntry()
     return self.logEntry
 end
 
-function RequestSearchActivity:HandleSearchResultsReceived()
+function RequestNewestActivity:HandleSearchResultsReceived()
     logger:Debug("handle newest results received")
     -- TODO: check if any of the returned items already exist -> if not, we need to request another page
     self.searchManager.searchPageHistory:SetRequestNewest(self.pendingGuildName)
