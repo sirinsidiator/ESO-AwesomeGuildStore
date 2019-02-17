@@ -23,6 +23,7 @@ function SearchList:Initialize(searchManager)
     scrollBar:SetHidden(true)
     ZO_PreHook(scrollBar, "SetHidden", function() return true end)
     self.list = list
+    self.container = container
 
     local newSearchIndex = 1
     local SEARCH_ENTRY = 1
@@ -121,4 +122,12 @@ end
 
 function SearchList:Refresh()
     self.list:RefreshFilters()
+end
+
+function SearchList:Show()
+    self.container:SetHidden(false)
+end
+
+function SearchList:Hide()
+    self.container:SetHidden(true)
 end

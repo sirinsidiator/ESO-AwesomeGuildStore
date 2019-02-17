@@ -740,6 +740,7 @@ end
 function SearchTabWrapper:OnOpen(tradingHouseWrapper)
     local tradingHouse = tradingHouseWrapper.tradingHouse
     self.categorySelector:GetControl():SetHidden(false)
+    self.searchList:Show()
     -- tradingHouse.m_searchAllowed = true -- TODO is this still required?
     -- tradingHouse:OnSearchCooldownUpdate(GetTradingHouseCooldownRemaining()) -- TODO is this still required?
     -- AwesomeGuildStore:FireOnOpenSearchTabCallbacks(tradingHouseWrapper) -- TODO is this still required?
@@ -748,6 +749,7 @@ function SearchTabWrapper:OnOpen(tradingHouseWrapper)
 end
 
 function SearchTabWrapper:OnClose(tradingHouseWrapper)
+    self.searchList:Hide()
     self.categorySelector:GetControl():SetHidden(true)
     self.tradingHouseWrapper.activityManager:CancelSearch()
     self.tradingHouseWrapper.activityManager:CancelRequestNewest()
