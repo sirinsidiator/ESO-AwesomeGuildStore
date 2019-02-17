@@ -426,10 +426,12 @@ local function InitializeStoreListWindow(saveData, kioskList, storeList, ownerLi
         OnRowFieldEnter(control)
         InformationTooltip:ClearLines()
         local data = ZO_ScrollList_GetData(control:GetParent())
-        local text = GetExactLastVisitLabel(data.lastVisited)
+        local text
         if(data.isMember) then
             -- TRANSLATORS: tooltip for the last visited field of a joined guild on the guild kiosk tab
             text = gettext("You are a member of this guild.")
+        else
+            text = GetExactLastVisitLabel(data.lastVisited)
         end
         SetTooltipText(InformationTooltip, text)
     end
