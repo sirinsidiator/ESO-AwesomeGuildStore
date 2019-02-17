@@ -1,6 +1,9 @@
-local myNAME, myVERSION = "libCommonInventoryFilters", 1.10
-local libCIF = LibStub:NewLibrary(myNAME, myVERSION)
-if not libCIF then return end
+local myNAME, myVERSION = "libCommonInventoryFilters", 1.11
+LibCIF = LibCIF or {}
+if not LibCIF then return end
+local libCIF = LibCIF
+libCIF.name     = myNAME
+libCIF.version  = myVERSION
 
 local function enableGuildStoreSellFilters()
     local tradingHouseLayout = BACKPACK_TRADING_HOUSE_LAYOUT_FRAGMENT.layoutData
@@ -63,6 +66,20 @@ local function fixSearchBoxBugs()
             SafeUpdateList(PLAYER_INVENTORY, INVENTORY_GUILD_BANK)
         end)
 
+    -- bank search box bug for deposit
+    local inventoryFragment = INVENTORY_FRAGMENT
+    inventoryFragment:RegisterCallback("StateChange",
+        function(oldState, newState)
+            if libCIF._searchBoxesDisabled then return false end
+            if newState == SCENE_FRAGMENT_SHOWN then
+                zo_callLater(function()
+                    ZO_PlayerInventorySearch:SetHidden(false)
+                end, 1) --if not delayed by 1 ms the searchbar will be hidden
+            elseif newState == SCENE_FRAGMENT_HIDDEN then
+                ZO_PlayerInventorySearch:SetHidden(true)
+            end
+        end)
+
     -- guild bank search box bug #3: wrong search box cleared
     local guildBankScene = SCENE_MANAGER:GetScene("guildBank")
     guildBankScene:RegisterCallback("StateChange",
@@ -72,6 +89,7 @@ local function fixSearchBoxBugs()
             end
         end)
 end
+
 
 local function showSearchBoxes()
     -- new in 3.2: player inventory fragments set the search bar visible when the layout is applied
@@ -84,24 +102,24 @@ local function showSearchBoxes()
     BACKPACK_LAUNDER_LAYOUT_FRAGMENT.layoutData.useSearchBar = true
 
     -- re-anchoring is necessary because they overlap with sort headers
-    ZO_PlayerInventorySearchBox:ClearAnchors()
-    ZO_PlayerInventorySearchBox:SetAnchor(BOTTOMRIGHT, nil, TOPRIGHT, -15, -55)
-    ZO_PlayerInventorySearchBox:SetHidden(false)
+    ZO_PlayerInventorySearch:ClearAnchors()
+    ZO_PlayerInventorySearch:SetAnchor(BOTTOMRIGHT, nil, TOPRIGHT, -15, -55)
+    ZO_PlayerInventorySearch:SetHidden(false)
 
-    ZO_PlayerBankSearchBox:ClearAnchors()
-    ZO_PlayerBankSearchBox:SetAnchor(BOTTOMRIGHT, nil, TOPRIGHT, -15, -55)
-    ZO_PlayerBankSearchBox:SetWidth(ZO_PlayerInventorySearchBox:GetWidth())
-    ZO_PlayerBankSearchBox:SetHidden(false)
+    ZO_PlayerBankSearch:ClearAnchors()
+    ZO_PlayerBankSearch:SetAnchor(BOTTOMRIGHT, nil, TOPRIGHT, -15, -55)
+    ZO_PlayerBankSearch:SetWidth(ZO_PlayerInventorySearch:GetWidth())
+    ZO_PlayerBankSearch:SetHidden(false)
 
-    ZO_GuildBankSearchBox:ClearAnchors()
-    ZO_GuildBankSearchBox:SetAnchor(BOTTOMRIGHT, nil, TOPRIGHT, -15, -55)
-    ZO_GuildBankSearchBox:SetWidth(ZO_PlayerInventorySearchBox:GetWidth())
-    ZO_GuildBankSearchBox:SetHidden(false)
+    ZO_GuildBankSearch:ClearAnchors()
+    ZO_GuildBankSearch:SetAnchor(BOTTOMRIGHT, nil, TOPRIGHT, -15, -55)
+    ZO_GuildBankSearch:SetWidth(ZO_PlayerInventorySearch:GetWidth())
+    ZO_GuildBankSearch:SetHidden(false)
 
-    ZO_CraftBagSearchBox:ClearAnchors()
-    ZO_CraftBagSearchBox:SetAnchor(BOTTOMRIGHT, nil, TOPRIGHT, -15, -55)
-    ZO_CraftBagSearchBox:SetWidth(ZO_PlayerInventorySearchBox:GetWidth())
-    ZO_CraftBagSearchBox:SetHidden(false)
+    ZO_CraftBagSearch:ClearAnchors()
+    ZO_CraftBagSearch:SetAnchor(BOTTOMRIGHT, nil, TOPRIGHT, -15, -55)
+    ZO_CraftBagSearch:SetWidth(ZO_PlayerInventorySearch:GetWidth())
+    ZO_CraftBagSearch:SetHidden(false)
 end
 
 local function onPlayerActivated(eventCode)
