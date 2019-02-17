@@ -193,6 +193,71 @@ function SearchResultListWrapper:Initialize(tradingHouseWrapper, searchManager)
         end
     end
 
+    -- TODO move
+    local SHOW_MORE_DATA_TYPE = 4 -- watch out for changes in tradinghouse.lua
+    ZO_ScrollList_AddDataType(tradingHouse.searchResultsList, SHOW_MORE_DATA_TYPE, "AwesomeGuildStoreShowMoreRowTemplate", 32, function(rowControl, entry)
+        local label = rowControl:GetNamedChild("Text")
+        label:SetText(entry.label)
+        rowControl.label = label
+
+        local highlight = rowControl:GetNamedChild("Highlight")
+        if(entry.color) then
+            highlight:SetColor(entry.color:UnpackRGB())
+            highlight:SetAlpha(0.5)
+        end
+
+        if not highlight.animation then
+            highlight.animation = ANIMATION_MANAGER:CreateTimelineFromVirtual("ShowOnMouseOverLabelAnimation", highlight)
+            local alphaAnimation = highlight.animation:GetFirstAnimation()
+            alphaAnimation:SetAlphaValues(0.5, 1)
+        end
+
+        rowControl:SetHandler("OnMouseEnter", function()
+            highlight.animation:PlayForward()
+        end)
+
+        rowControl:SetHandler("OnMouseExit", function()
+            highlight.animation:PlayBackward()
+        end)
+
+        rowControl:SetHandler("OnMouseUp", function(control, button, isInside)
+            if(rowControl.enabled and button == 1 and isInside) then
+                PlaySound("Click")
+                entry.callback()
+            end
+        end)
+
+        rowControl.SetEnabled = function(self, enabled)
+            rowControl.enabled = enabled
+            highlight.animation:GetFirstAnimation():SetAlphaValues(0.5, enabled and 1 or 0.5)
+            label:SetColor((enabled and ZO_NORMAL_TEXT or ZO_DEFAULT_DISABLED_COLOR):UnpackRGBA())
+        end
+
+        entry.updateState(rowControl)
+        rowControl.entry = entry
+        entry.rowControl = rowControl
+    end, nil, nil, function(rowControl)
+        rowControl.enabled = nil
+        rowControl.label = nil
+        rowControl.SetEnabled = nil
+        rowControl.entry.rowControl = nil
+        rowControl.entry = nil
+        ZO_ObjectPool_DefaultResetControl(rowControl)
+    end)
+
+    local searchManager = tradingHouseWrapper.searchTab.searchManager
+    local showNextPageEntry =  { -- TODO move into setup since we only have one entry now
+        -- TRANSLATORS: Label for the row at the end of the search results which toggles the search of the next page
+        label = gettext("Show More Results"),
+        callback = function()
+            searchManager:RequestSearch(true)
+        end,
+        updateState = function(rowControl)
+            rowControl:SetEnabled(true)
+        end,
+        color = ZO_ColorDef:New("50D35D")
+    }
+
     function list:FilterScrollList()
         local scrollData = ZO_ScrollList_GetDataList(self.list)
         ZO_ClearNumericallyIndexedTable(scrollData)
@@ -208,9 +273,12 @@ function SearchResultListWrapper:Initialize(tradingHouseWrapper, searchManager)
             local filterState = activeSearch:GetFilterState()
             local view = itemDatabase:GetFilteredView(guildName, filterState)
             local filteredItems = view:GetItems()
-            df("get items: %d", #filteredItems)
             for i = 1, #filteredItems do
                 scrollData[i] = filteredItems[i]:GetDataEntry(SEARCH_RESULTS_DATA_TYPE)
+            end
+
+            if(searchManager:HasMorePages()) then
+                scrollData[#scrollData + 1] = ZO_ScrollList_CreateDataEntry(SHOW_MORE_DATA_TYPE, showNextPageEntry)
             end
         end
 

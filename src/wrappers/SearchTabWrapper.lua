@@ -402,55 +402,6 @@ function SearchTabWrapper:InitializeNavigation(tradingHouseWrapper) -- TODO: rem
         color = ZO_ColorDef:New("50D35D")
     }
 
-    ZO_ScrollList_AddDataType(tradingHouse.searchResultsList, SHOW_MORE_DATA_TYPE, "AwesomeGuildStoreShowMoreRowTemplate", 32, function(rowControl, entry)
-        local label = rowControl:GetNamedChild("Text")
-        label:SetText(entry.label)
-        rowControl.label = label
-
-        local highlight = rowControl:GetNamedChild("Highlight")
-        if(entry.color) then
-            highlight:SetColor(entry.color:UnpackRGB())
-            highlight:SetAlpha(0.5)
-        end
-
-        if not highlight.animation then
-            highlight.animation = ANIMATION_MANAGER:CreateTimelineFromVirtual("ShowOnMouseOverLabelAnimation", highlight)
-            local alphaAnimation = highlight.animation:GetFirstAnimation()
-            alphaAnimation:SetAlphaValues(0.5, 1)
-        end
-
-        rowControl:SetHandler("OnMouseEnter", function()
-            highlight.animation:PlayForward()
-        end)
-
-        rowControl:SetHandler("OnMouseExit", function()
-            highlight.animation:PlayBackward()
-        end)
-
-        rowControl:SetHandler("OnMouseUp", function(control, button, isInside)
-            if(rowControl.enabled and button == 1 and isInside) then
-                PlaySound("Click")
-                entry.callback()
-            end
-        end)
-
-        rowControl.SetEnabled = function(self, enabled)
-            rowControl.enabled = enabled
-            highlight.animation:GetFirstAnimation():SetAlphaValues(0.5, enabled and 1 or 0.5)
-            label:SetColor((enabled and ZO_NORMAL_TEXT or ZO_DEFAULT_DISABLED_COLOR):UnpackRGBA())
-        end
-
-        entry.updateState(rowControl)
-        rowControl.entry = entry
-        entry.rowControl = rowControl
-    end, nil, nil, function(rowControl)
-        rowControl.enabled = nil
-        rowControl.label = nil
-        rowControl.SetEnabled = nil
-        rowControl.entry.rowControl = nil
-        rowControl.entry = nil
-        ZO_ObjectPool_DefaultResetControl(rowControl)
-    end)
 
     ZO_ScrollList_AddDataType(tradingHouse.searchResultsList, HAS_HIDDEN_DATA_TYPE, "AwesomeGuildStoreHasHiddenRowTemplate", 24, function(rowControl, entry)
         local label = rowControl:GetNamedChild("Text")

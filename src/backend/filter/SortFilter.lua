@@ -111,9 +111,14 @@ function SortFilter:SetUpLocalFilter()
     return false
 end
 
-local sortOrder
+local MAX_RESULT_TYPE_ID = 3 -- keep in sync with tradinghouse_keyboard.lua
+local sortOrder -- TODO make part of class
 local function SortEntries(listEntry1, listEntry2)
     local data1, data2 = listEntry1.data or listEntry1, listEntry2.data or listEntry2
+    if(listEntry1.typeId > MAX_RESULT_TYPE_ID or listEntry2.typeId > MAX_RESULT_TYPE_ID) then
+        return listEntry1.typeId < listEntry2.typeId
+    end
+
     local result = sortOrder:GetSortResult(data1, data2)
     if(result == 0) then
         -- TODO use other sort functions as tie breaker

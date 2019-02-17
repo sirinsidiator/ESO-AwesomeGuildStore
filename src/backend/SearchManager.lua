@@ -260,12 +260,19 @@ function SearchManager:GetNumVisibleResults(guildName)
     return #results
 end
 
-function SearchManager:RequestSearch()
+function SearchManager:HasMorePages()
+    local _, guildName = GetCurrentTradingHouseGuildDetails()
+    local currentState = self.activeSearch:GetFilterState()
+    local page = self.searchPageHistory:GetNextPage(guildName, currentState)
+    return page ~= false
+end
+
+function SearchManager:RequestSearch(ignoreResultCount)
     local guildId, guildName = GetCurrentTradingHouseGuildDetails()
     local currentState = self.activeSearch:GetFilterState()
     local page = self.searchPageHistory:GetNextPage(guildName, currentState)
     if(page) then -- TODO take into account if we already have enough results (+ an option to ignore that for the actual "search more" button)
-        if(self.activityManager:RequestSearchResults(guildId)) then
+        if(self.activityManager:RequestSearchResults(guildId, ignoreResultCount)) then
             logger:Debug("Queued request search results")
         else
             logger:Debug("Could not queue request search results")

@@ -138,8 +138,9 @@ function SellTabWrapper:Initialize(saveData)
         self.customFilterDisabled = true
     else
         self.customFilterDisabled = false
-        local libCIF = LibStub:GetLibrary("libCommonInventoryFilters", LibStub.SILENT)
-        libCIF:disableGuildStoreSellFilters()
+        if(LibCIF) then -- TODO: only allow this when LibCIF is loaded -> make it optional
+            LibCIF:disableGuildStoreSellFilters()
+        end
     end
     self.currentInventoryFragment = INVENTORY_FRAGMENT
 end
