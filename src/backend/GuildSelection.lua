@@ -100,6 +100,9 @@ function GuildSelection:TryReselectLastGuildId()
     local lastGuild = self.guildByName[self.saveData.lastGuildName]
     if(lastGuild) then
         self:SetSelectedGuildId(lastGuild.guildId)
+    else
+        local id = self.originalGetCurrentTradingHouseGuildDetails()
+        self:SetSelectedGuildId(id)
     end
 end
 
