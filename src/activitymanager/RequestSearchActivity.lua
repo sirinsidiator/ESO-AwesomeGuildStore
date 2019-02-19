@@ -68,9 +68,9 @@ function RequestSearchActivity:OnResponse(responseType, result, panel)
         if(result == TRADING_HOUSE_RESULT_SUCCESS and self.responsePromise) then
             self.numItems, self.page, self.hasMore = GetTradingHouseSearchResultsInfo()
             self.state = ActivityBase.STATE_SUCCEEDED
-            self.itemDatabase:Update(self.pendingGuildName, self.numItems)
+            local hasAnyResultAlreadyStored = self.itemDatabase:Update(self.pendingGuildName, self.numItems)
 
-            self:HandleSearchResultsReceived()
+            self:HandleSearchResultsReceived(hasAnyResultAlreadyStored)
 
             AGS:FireCallbacks(AGS.callback.SEARCH_RESULTS_RECEIVED, self.pendingGuildName, self.numItems, self.page, self.hasMore)
 
@@ -88,7 +88,7 @@ function RequestSearchActivity:OnResponse(responseType, result, panel)
     return false
 end
 
-function RequestSearchActivity:HandleSearchResultsReceived()
+function RequestSearchActivity:HandleSearchResultsReceived(hasAnyResultAlreadyStored)
     if(self.hasMore) then
         self.searchManager.searchPageHistory:SetHighestSearchedPage(self.pendingGuildName, self.pendingFilterState, self.page)
     else

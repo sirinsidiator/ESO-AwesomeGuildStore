@@ -50,11 +50,33 @@ function SearchManager:Initialize(tradingHouseWrapper, saveData)
         self:RequestResultUpdate()
     end
 
+    self.requestNewestInterval = nil
+    local function RequestNewest()
+        local guildId, guildName = GetCurrentTradingHouseGuildDetails()
+        local canRequest, cooldown = self.searchPageHistory:CanRequestNewest(guildName)
+        if(self.requestNewestInterval) then
+            ClearCallLater(self.requestNewestInterval)
+        end
+        if(canRequest) then
+            self.activityManager:RequestNewestResults(guildId)
+        else
+            self.requestNewestInterval = zo_callLater(function()
+                self.requestNewestInterval = nil
+                self.activityManager:RequestNewestResults(guildId)
+            end, cooldown * 1000)
+        end
+    end
+
     AGS:RegisterCallback(AGS.callback.FILTER_UPDATE, RequestRefreshResults)
     AGS:RegisterCallback(AGS.callback.GUILD_SELECTION_CHANGED, RequestRefreshResults)
     AGS:RegisterCallback(AGS.callback.CURRENT_ACTIVITY_CHANGED, function(currentActivity, previousActivity)
-        if(not currentActivity and previousActivity:GetType() == ActivityBase.ACTIVITY_TYPE_REQUEST_SEARCH) then
-            RequestRefreshResults()
+        if(not currentActivity) then
+            local type = previousActivity:GetType()
+            if(type == ActivityBase.ACTIVITY_TYPE_REQUEST_SEARCH) then
+                RequestRefreshResults()
+            elseif(type == ActivityBase.ACTIVITY_TYPE_REQUEST_NEWEST) then
+                RequestNewest()
+            end
         end
     end)
     AGS:RegisterCallback(AGS.callback.STORE_TAB_CHANGED, function(oldTab, newTab)
@@ -70,6 +92,8 @@ function SearchManager:Initialize(tradingHouseWrapper, saveData)
     AGS:RegisterCallback(AGS.callback.SEARCH_RESULT_UPDATE, function(searchResults, hasMorePages)
         if(hasMorePages and #searchResults < AUTO_SEARCH_RESULT_COUNT_THRESHOLD) then
             self:RequestSearch()
+        else
+            RequestNewest()
         end
     end)
 end
@@ -325,6 +349,10 @@ function SearchManager:RequestSearch(ignoreResultCount)
         local page = self.searchPageHistory:GetNextPage(guildName, currentState)
         if(page) then -- TODO take into account if we already have enough results (+ an option to ignore that for the actual "search more" button)
             if(self.activityManager:RequestSearchResults(guildId, ignoreResultCount)) then
+                if(self.requestNewestInterval) then
+                    ClearCallLater(self.requestNewestInterval)
+                end
+
                 logger:Debug("Queued request search results")
                 return true
         else

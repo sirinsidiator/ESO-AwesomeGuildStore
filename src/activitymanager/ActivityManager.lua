@@ -111,44 +111,28 @@ function ActivityManager:Initialize(tradingHouseWrapper, loadingIndicator, loadi
     self.panel = ActivityPanel:New(self)
     TRADING_HOUSE_SCENE:AddFragment(self.panel)
 
+    -- TODO handle this inside each tab?
     AGS:RegisterCallback(AGS.callback.STORE_TAB_CHANGED, function(oldTab, newTab)
         if(oldTab == tradingHouseWrapper.searchTab) then
             self:CancelSearch()
-            self:StopRequestingNewestResults()
         elseif(oldTab == tradingHouseWrapper.listingTab) then
             self:RemoveActivitiesByType(ActivityBase.ACTIVITY_TYPE_REQUEST_LISTINGS)
         end
 
-        if(newTab == tradingHouseWrapper.searchTab) then
-            local guildId = GetCurrentTradingHouseGuildDetails()
-            self:RequestSearchResults(guildId)
-            self:StartRequestingNewestResults(guildId)
-        elseif(newTab == tradingHouseWrapper.listingTab) then
+        if(newTab == tradingHouseWrapper.listingTab) then
             local guildId = GetCurrentTradingHouseGuildDetails()
             self:RequestListings(guildId)
         end
     end)
 
+    -- TODO handle this inside each tab?
     AGS:RegisterCallback(AGS.callback.GUILD_SELECTION_CHANGED, function(guildData)
         self:CancelSearch()
-        self:StopRequestingNewestResults()
-        self:RequestSearchResults(guildData.guildId) -- TODO: only request if we don't have yet -> should be handled somewhere else centrally for all cases
-        self:StartRequestingNewestResults(guildData.guildId)
 
         if(self.tradingHouse:IsInListingsMode()) then
-            self:RequestListings(guildData.guildId) -- TODO: keep track how often we request them?
+            self:RequestListings(guildData.guildId)
         end
     end)
-end
-
-function ActivityManager:StartRequestingNewestResults(guildId) -- TODO implement
-    self:RequestNewestResults(guildId)
-    --EVENT_MANAGER:RegisterForUpdate(WATCHDOG_NAME, WATCHDOG_INTERVAL, self.executeNext)
-end
-
-function ActivityManager:StopRequestingNewestResults(guildId) -- TODO implement
-    self:CancelRequestNewest(guildId)
-    --EVENT_MANAGER:UnregisterForUpdate(WATCHDOG_NAME, WATCHDOG_INTERVAL)
 end
 
 function ActivityManager:StartWatchdog()
@@ -277,14 +261,12 @@ function ActivityManager:ExecuteNext()
 end
 
 function ActivityManager:OnSuccess(activity)
-    d("OnSuccess")
     self.panel:HideLoading()
     self:RemoveCurrentActivity()
     self:ExecuteNext()
 end
 
 function ActivityManager:OnFailure(activity)
-    d("OnFailure", type(activity))
     if(type(activity) == "string") then
         d(activity)
         return

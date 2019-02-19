@@ -6,7 +6,7 @@ local SearchPageHistory = ZO_Object:Subclass()
 AGS.class.SearchPageHistory = SearchPageHistory
 
 local REQUEST_NEWEST_KEY = "newest"
-local REQUEST_NEWEST_THRESHOLD = 60
+local REQUEST_NEWEST_THRESHOLD = 120 -- TODO move into config file
 
 function SearchPageHistory:New(...)
     local object = ZO_Object.New(self)
@@ -69,10 +69,33 @@ end
 
 function SearchPageHistory:CanRequestNewest(guildName)
     local searches = self:GetGuildSearches(guildName)
-    return GetTimeStamp() - (searches[REQUEST_NEWEST_KEY] or 0) > REQUEST_NEWEST_THRESHOLD
+    local lastRequestTime = 0
+    if(searches[REQUEST_NEWEST_KEY]) then
+        if(searches[REQUEST_NEWEST_KEY].page > 0) then
+            return true, 0
+        end
+        lastRequestTime = searches[REQUEST_NEWEST_KEY].time
+    end
+    local delta = GetTimeStamp() - lastRequestTime
+    return delta >= REQUEST_NEWEST_THRESHOLD, math.max(0, math.min(REQUEST_NEWEST_THRESHOLD, REQUEST_NEWEST_THRESHOLD - delta))
 end
 
-function SearchPageHistory:SetRequestNewest(guildName)
+function SearchPageHistory:SetRequestNewest(guildName, nextPage)
     local searches = self:GetGuildSearches(guildName)
-    searches[REQUEST_NEWEST_KEY] = GetTimeStamp()
+    local data = searches[REQUEST_NEWEST_KEY]
+    if(not data) then
+        data = {}
+        nextPage = 0
+    end
+    data.time = GetTimeStamp()
+    data.page = nextPage
+    searches[REQUEST_NEWEST_KEY] = data
+end
+
+function SearchPageHistory:GetNextRequestNewestPage(guildName)
+    local searches = self:GetGuildSearches(guildName)
+    if(searches[REQUEST_NEWEST_KEY]) then
+        return searches[REQUEST_NEWEST_KEY].page
+    end
+    return 0
 end

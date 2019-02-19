@@ -93,16 +93,23 @@ end
 function ItemDatabase:Update(guildName, numItems)
     local data = self:GetOrCreateDataForGuild(guildName)
 
+    local hasAnyResultAlreadyStored = false
     for i = 1, numItems do
         local itemUniqueId = self:GetItemUniqueIdForSlotIndex(i)
-        local item = data[itemUniqueId] or ItemData:New(itemUniqueId)
+        local item = data[itemUniqueId]
+        if(item) then
+            hasAnyResultAlreadyStored = true
+        else
+            item = ItemData:New(itemUniqueId)
+        end
         data[itemUniqueId] = item
         item:UpdateFromStore(i, guildName)
     end
 
     self:GetItemView(guildName):MarkDirty()
 
-    AwesomeGuildStore:FireCallbacks(AwesomeGuildStore.callback.ITEM_DATABASE_UPDATE, self, guildName)
+    AwesomeGuildStore:FireCallbacks(AwesomeGuildStore.callback.ITEM_DATABASE_UPDATE, self, guildName, hasAnyResultAlreadyStored)
+    return hasAnyResultAlreadyStored
 end
 
 function ItemDatabase:GetItemUniqueIdForSlotIndex(slotIndex)

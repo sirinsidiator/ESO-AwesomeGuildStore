@@ -37,7 +37,10 @@ function RequestNewestActivity:RequestSearch()
     if(not self.responsePromise) then
         self.responsePromise = Promise:New()
 
-        ExecuteTradingHouseSearch(0, SortOrderBase.SORT_FIELD_TIME_LEFT, SortOrderBase.SORT_ORDER_DOWN) -- TODO request all new pages
+        local page = self.searchManager.searchPageHistory:GetNextRequestNewestPage(self.pendingGuildName)
+
+        ClearAllTradingHouseSearchTerms()
+        ExecuteTradingHouseSearch(page, SortOrderBase.SORT_FIELD_TIME_LEFT, SortOrderBase.SORT_ORDER_DOWN)
     end
     return self.responsePromise
 end
@@ -50,13 +53,13 @@ function RequestNewestActivity:GetLogEntry()
     return self.logEntry
 end
 
-function RequestNewestActivity:HandleSearchResultsReceived()
+function RequestNewestActivity:HandleSearchResultsReceived(hasAnyResultAlreadyStored)
     logger:Debug("handle newest results received")
-    -- TODO: check if any of the returned items already exist -> if not, we need to request another page
-    self.searchManager.searchPageHistory:SetRequestNewest(self.pendingGuildName)
-    zo_callLater(function() -- TODO: this should probably be triggered somewhere else
-        self.searchManager.activityManager:RequestNewestResults(self.guildId)
-    end, 0)
+    local page = 0
+    if(not hasAnyResultAlreadyStored and self.hasMore) then
+        page = self.page + 1
+    end
+    self.searchManager.searchPageHistory:SetRequestNewest(self.pendingGuildName, page)
 end
 
 function RequestNewestActivity:GetType()
