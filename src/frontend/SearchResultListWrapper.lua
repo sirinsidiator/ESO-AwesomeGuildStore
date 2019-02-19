@@ -234,7 +234,6 @@ function SearchResultListWrapper:Initialize(tradingHouseWrapper, searchManager)
     end
 
     local function SetupShowMoreRow(rowControl, entry)
-        d("Setup Show More Row")
         local highlight = rowControl:GetNamedChild("Highlight")
         highlight:SetColor(SHOW_MORE_ROW_COLOR:UnpackRGB())
         highlight:SetAlpha(SHOW_MORE_DEFAULT_ALPHA)
@@ -300,7 +299,7 @@ function SearchResultListWrapper:Initialize(tradingHouseWrapper, searchManager)
             scrollData[i] = searchResults[i]:GetDataEntry(SEARCH_RESULTS_DATA_TYPE)
         end
 
-        if(searchManager:HasMorePages()) then
+        if(#searchResults > 0 and searchManager:HasMorePages()) then
             scrollData[#scrollData + 1] = ZO_ScrollList_CreateDataEntry(SHOW_MORE_DATA_TYPE, {})
         end
 
