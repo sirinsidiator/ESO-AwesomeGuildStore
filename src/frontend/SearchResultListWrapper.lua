@@ -1,6 +1,7 @@
 local AGS = AwesomeGuildStore
 
 local ItemData = AwesomeGuildStore.ItemData
+local ActivityBase = AwesomeGuildStore.class.ActivityBase
 
 local SORT_ORDER_ID = AGS.data.SORT_ORDER_ID
 
@@ -63,7 +64,6 @@ function SearchResultListWrapper:Initialize(tradingHouseWrapper, searchManager)
     priceHeader:SetWidth(nil)
     priceHeader:SetResizeToFitDescendents(true)
     local priceHeaderLabel = priceHeader:GetNamedChild("Name")
---    priceHeaderLabel:SetDimensionConstraints(priceHeaderLabel:GetTextWidth() + 1)
     priceHeaderLabel:ClearAnchors()
     priceHeaderLabel:SetAnchor(RIGHT)
 
@@ -80,7 +80,6 @@ function SearchResultListWrapper:Initialize(tradingHouseWrapper, searchManager)
     local unitPriceHeaderLabel = unitPriceHeader:GetNamedChild("Name")
     unitPriceHeaderLabel:ClearAnchors()
     unitPriceHeaderLabel:SetAnchor(RIGHT)
---    unitPriceHeaderLabel:SetDimensionConstraints(unitPriceHeaderLabel:GetTextWidth() + 1)
 
     local nameHeader = sortHeaderGroup.headerContainer:GetNamedChild("Name")
     nameHeader:SetWidth(340)
@@ -110,7 +109,6 @@ function SearchResultListWrapper:Initialize(tradingHouseWrapper, searchManager)
 
     AGS:RegisterCallback(AGS.callback.FILTER_VALUE_CHANGED, function(id, sortOrder)
         if(id ~= sortFilter:GetId()) then return end
-        df("sort order changed: %d, %s", sortOrder:GetId(), tostring(sortOrder:GetDirection()))
 
         local header = sortHeaderGroup:HeaderForKey(sortOrder:GetId())
         if(not header) then
@@ -194,8 +192,14 @@ function SearchResultListWrapper:Initialize(tradingHouseWrapper, searchManager)
     end
 
     -- TODO move
+    local showMoreEntry
+    local inProgress = false
+    local searchManager = tradingHouseWrapper.searchTab.searchManager
+    local activityManager = tradingHouseWrapper.activityManager
     local SHOW_MORE_DATA_TYPE = 4 -- watch out for changes in tradinghouse.lua
     ZO_ScrollList_AddDataType(tradingHouse.searchResultsList, SHOW_MORE_DATA_TYPE, "AwesomeGuildStoreShowMoreRowTemplate", 32, function(rowControl, entry)
+        d("Setup Show More Row")
+        
         local label = rowControl:GetNamedChild("Text")
         label:SetText(entry.label)
         rowControl.label = label
@@ -223,7 +227,12 @@ function SearchResultListWrapper:Initialize(tradingHouseWrapper, searchManager)
         rowControl:SetHandler("OnMouseUp", function(control, button, isInside)
             if(rowControl.enabled and button == 1 and isInside) then
                 PlaySound("Click")
-                entry.callback()
+                rowControl:SetEnabled(false)
+                if(searchManager:RequestSearch(true)) then
+                    label:SetText("waiting for cooldown ...") -- TODO
+                else
+                    list:RefreshFilters()
+                end
             end
         end)
 
@@ -233,10 +242,27 @@ function SearchResultListWrapper:Initialize(tradingHouseWrapper, searchManager)
             label:SetColor((enabled and ZO_NORMAL_TEXT or ZO_DEFAULT_DISABLED_COLOR):UnpackRGBA())
         end
 
-        entry.updateState(rowControl)
+        local activity = activityManager:GetCurrentActivity()
+        if(activity and activity:GetType() == ActivityBase.ACTIVITY_TYPE_REQUEST_SEARCH) then
+            inProgress = true
+            label:SetText("loading results ...") -- TODO
+        else
+            local searchActivities = activityManager:GetActivitiesByType(ActivityBase.ACTIVITY_TYPE_REQUEST_SEARCH)
+            if(#searchActivities > 0) then
+                inProgress = true
+                label:SetText("waiting for cooldown ...") -- TODO
+            else
+                inProgress = false
+            end
+        end
+        rowControl:SetEnabled(not inProgress)
+
         rowControl.entry = entry
         entry.rowControl = rowControl
+        showMoreEntry = rowControl
     end, nil, nil, function(rowControl)
+        d("Cleanup Show More Row")
+        showMoreEntry = nil
         rowControl.enabled = nil
         rowControl.label = nil
         rowControl.SetEnabled = nil
@@ -245,16 +271,22 @@ function SearchResultListWrapper:Initialize(tradingHouseWrapper, searchManager)
         ZO_ObjectPool_DefaultResetControl(rowControl)
     end)
 
-    local searchManager = tradingHouseWrapper.searchTab.searchManager
+    AGS:RegisterCallback(AGS.callback.CURRENT_ACTIVITY_CHANGED, function(activity)
+        if(showMoreEntry) then
+            if(activity and activity:GetType() == ActivityBase.ACTIVITY_TYPE_REQUEST_SEARCH) then
+                inProgress = true
+                showMoreEntry.label:SetText("loading results ...") -- TODO
+            elseif(inProgress and not activity) then
+                inProgress = false
+                showMoreEntry.label:SetText(showMoreEntry.entry.label)
+            end
+            showMoreEntry:SetEnabled(not inProgress)
+        end
+    end)
+
     local showNextPageEntry =  { -- TODO move into setup since we only have one entry now
         -- TRANSLATORS: Label for the row at the end of the search results which toggles the search of the next page
         label = gettext("Show More Results"),
-        callback = function()
-            searchManager:RequestSearch(true)
-        end,
-        updateState = function(rowControl)
-            rowControl:SetEnabled(true)
-        end,
         color = ZO_ColorDef:New("50D35D")
     }
 
@@ -262,29 +294,19 @@ function SearchResultListWrapper:Initialize(tradingHouseWrapper, searchManager)
         local scrollData = ZO_ScrollList_GetDataList(self.list)
         ZO_ClearNumericallyIndexedTable(scrollData)
 
-        -- TODO cleanup
-        --        for i = 1, #guildSpecificItems do
-        --            AddResultIfNecessary(scrollData, guildSpecificItems[i], GUILD_SPECIFIC_ITEM_DATA_TYPE, isFiltering)
-        --        end
-
-        local guildName = select(2, GetCurrentTradingHouseGuildDetails())
-        local activeSearch = searchManager:GetActiveSearch()
-        if(activeSearch) then
-            local filterState = activeSearch:GetFilterState()
-            local view = itemDatabase:GetFilteredView(guildName, filterState)
-            local filteredItems = view:GetItems()
-            for i = 1, #filteredItems do
-                scrollData[i] = filteredItems[i]:GetDataEntry(SEARCH_RESULTS_DATA_TYPE)
-            end
-
-            if(searchManager:HasMorePages()) then
-                scrollData[#scrollData + 1] = ZO_ScrollList_CreateDataEntry(SHOW_MORE_DATA_TYPE, showNextPageEntry)
-            end
+        local searchResults = searchManager:GetSearchResults()
+        for i = 1, #searchResults do
+            scrollData[i] = searchResults[i]:GetDataEntry(SEARCH_RESULTS_DATA_TYPE)
         end
 
+        if(searchManager:HasMorePages()) then
+            scrollData[#scrollData + 1] = ZO_ScrollList_CreateDataEntry(SHOW_MORE_DATA_TYPE, showNextPageEntry)
+        end
+
+        local guildName = select(2, GetCurrentTradingHouseGuildDetails())
         local items = itemDatabase:GetItemView(guildName):GetItems()
         resultCount:SetHidden(false)
-        resultCount:SetText(gettext("Items:|cffffff %d / %d"):format(#scrollData, #items))
+        resultCount:SetText(gettext("Items:|cffffff %d / %d"):format(#searchResults, #items))
     end
 
     function list:SortScrollList() -- TODO should this also happen in the database?
@@ -293,14 +315,16 @@ function SearchResultListWrapper:Initialize(tradingHouseWrapper, searchManager)
     end
 
     local function DoRefreshResults()
-        d("DoRefreshResults")
-        list:RefreshFilters()
+        --list:RefreshFilters()
     end
 
     tradingHouse.RebuildSearchResultsPage = DoRefreshResults -- TODO noop
     tradingHouse.ClearSearchResults = DoRefreshResults -- TODO noop
-    AGS:RegisterCallback(AGS.callback.FILTER_UPDATE, DoRefreshResults)
-    AGS:RegisterCallback(AGS.callback.ITEM_DATABASE_UPDATE, DoRefreshResults)
+--    AGS:RegisterCallback(AGS.callback.FILTER_UPDATE, DoRefreshResults)
+--    AGS:RegisterCallback(AGS.callback.ITEM_DATABASE_UPDATE, DoRefreshResults)
+    AGS:RegisterCallback(AGS.callback.SEARCH_RESULT_UPDATE, function(searchResults, hasMore)
+        list:RefreshFilters()
+    end)
 
     self.list = list
 end

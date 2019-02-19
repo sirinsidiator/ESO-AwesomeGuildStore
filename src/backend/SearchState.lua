@@ -162,12 +162,12 @@ function SearchState:Apply()
         local id, values, state = unpack(filterValues[i])
         local filter = availableFilters[id]
         if(filter) then
-            filter:SetValues(unpack(values)) -- TODO: silent mode so we can change everything at once - still needed?
+            filter:SetValues(unpack(values)) -- TODO: transaction mode so we can change everything at once - still needed?
         end
     end
     self.applying = false
 
-    searchManager:UpdateAttachedFilters()
+    AwesomeGuildStore:FireCallbacks(AwesomeGuildStore.callback.SELECTED_SEARCH_CHANGED, self)
 end
 
 function SearchState:IsApplying()

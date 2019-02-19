@@ -10,10 +10,18 @@ AGS.callback.AVAILABLE_GUILDS_CHANGED = "AvailableGuildsChanged"
 AGS.callback.SELECTED_SEARCH_CHANGED = "SelectedSearchChanged"
 AGS.callback.ITEM_DATABASE_UPDATE = "ItemDatabaseUpdated"
 AGS.callback.CURRENT_ACTIVITY_CHANGED = "CurrentActivityChanged"
+AGS.callback.SEARCH_RESULT_UPDATE = "SearchResultUpdate"
+AGS.callback.SEARCH_RESULTS_RECEIVED = "SearchResultsReceived"
 
-AGS.callback.FILTER_UPDATE = "FilterUpdate"
+-- fires when a filter value has changed
+-- filterId, ... (filter values)
 AGS.callback.FILTER_VALUE_CHANGED = "FilterValueChanged"
+-- fires when a filter is attached or detached
+-- filter
 AGS.callback.FILTER_ACTIVE_CHANGED = "FilterActiveChanged"
+-- fires on the next frame after any filter has changed. In other words after all FILTER_VALUE_CHANGED and FILTER_ACTIVE_CHANGED callbacks have fired
+-- activeFilters
+AGS.callback.FILTER_UPDATE = "FilterUpdate"
 
 AGS.callback.ITEM_PURCHASED = "ItemPurchased"
 AGS.callback.ITEM_CANCELLED = "ItemCancelled"

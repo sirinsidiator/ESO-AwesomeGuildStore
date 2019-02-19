@@ -89,7 +89,9 @@ function ActivityManager:Initialize(tradingHouseWrapper, loadingIndicator, loadi
     end)
 
     RegisterForEvent(EVENT_CLOSE_TRADING_HOUSE, function(_) -- TODO prehook?
-        self.currentActivity = nil -- TODO: current activity shouldn't just disappear
+        if(self.currentActivity) then
+            self:RemoveCurrentActivity()
+        end
         self:ClearQueue()
         self:StopWatchdog()
         self.panel:Refresh()
@@ -130,7 +132,7 @@ function ActivityManager:Initialize(tradingHouseWrapper, loadingIndicator, loadi
     AGS:RegisterCallback(AGS.callback.GUILD_SELECTION_CHANGED, function(guildData)
         self:CancelSearch()
         self:StopRequestingNewestResults()
-        self:RequestSearchResults(guildData.guildId)
+        self:RequestSearchResults(guildData.guildId) -- TODO: only request if we don't have yet -> should be handled somewhere else centrally for all cases
         self:StartRequestingNewestResults(guildData.guildId)
 
         if(self.tradingHouse:IsInListingsMode()) then
@@ -186,7 +188,9 @@ function ActivityManager:RemoveCurrentActivity()
         self.currentActivity:OnRemove()
         self.panel:AddActivity(self.currentActivity)
         self.lookup[self.currentActivity:GetKey()] = nil
+        local oldActivity = self.currentActivity
         self.currentActivity = nil
+        AGS:FireCallbacks(AGS.callback.CURRENT_ACTIVITY_CHANGED, nil, oldActivity)
         self.panel:Refresh()
     end
 end
@@ -223,6 +227,22 @@ function ActivityManager:GetActivity(key)
     return self.lookup[key]
 end
 
+function ActivityManager:GetActivitiesByType(activityType)
+    local activities = {}
+    local queue = self.queue
+    for i = 1, #queue do
+        local activity = queue[i]
+        if(activity:GetType() == activityType) then
+            activities[#activities + 1] = queue[i]
+        end
+    end
+    return activities
+end
+
+function ActivityManager:GetCurrentActivity()
+    return self.currentActivity
+end
+
 function ActivityManager:ExecuteNext()
     if(self.currentActivity or not self.tradingHouseWrapper.search:IsAtTradingHouse()) then return false end
 
@@ -239,6 +259,7 @@ function ActivityManager:ExecuteNext()
         table.remove(queue, 1)
 
         self.currentActivity = activity
+        AGS:FireCallbacks(AGS.callback.CURRENT_ACTIVITY_CHANGED, activity)
         self.panel:SetStatusText("Execute next activity") -- TODO
         self.panel:ShowLoading()
 

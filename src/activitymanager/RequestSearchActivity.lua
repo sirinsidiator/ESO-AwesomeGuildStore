@@ -31,7 +31,6 @@ end
 
 function RequestSearchActivity:RequestSearch()
     if(not self.responsePromise) then
-        d("RequestSearch")
         self.responsePromise = Promise:New()
 
         local searchManager = self.searchManager
@@ -49,7 +48,6 @@ function RequestSearchActivity:RequestSearch()
 
             self.pendingFilterState = filterState
 
-            d("Execute search")
             ExecuteTradingHouseSearch(page, SortOrderBase.SORT_FIELD_TIME_LEFT, SortOrderBase.SORT_ORDER_DOWN) -- TODO
         else
             self.result = ActivityBase.ERROR_PAGE_ALREADY_LOADED
@@ -74,6 +72,8 @@ function RequestSearchActivity:OnResponse(responseType, result, panel)
 
             self:HandleSearchResultsReceived()
 
+            AGS:FireCallbacks(AGS.callback.SEARCH_RESULTS_RECEIVED, self.pendingGuildName, self.numItems, self.page, self.hasMore)
+
             panel:SetStatusText("Request finished") -- TODO translate
             panel:Refresh()
             self.responsePromise:Resolve(self)
@@ -89,16 +89,8 @@ function RequestSearchActivity:OnResponse(responseType, result, panel)
 end
 
 function RequestSearchActivity:HandleSearchResultsReceived()
-    logger:Debug("handle results received")
     if(self.hasMore) then
         self.searchManager.searchPageHistory:SetHighestSearchedPage(self.pendingGuildName, self.pendingFilterState, self.page)
-        local results = self.itemDatabase:GetFilteredView(self.pendingGuildName, self.pendingFilterState):GetItems() -- TODO: should store the view for each request and get the info from there
-        if(#results < AUTO_SEARCH_RESULT_COUNT_THRESHOLD) then
-            zo_callLater(function()
-                d("search more") -- TODO
-                self.searchManager:RequestSearch()
-            end, 0)
-        end
     else
         self.searchManager.searchPageHistory:SetStateHasNoMorePages(self.pendingGuildName, self.pendingFilterState)
     end

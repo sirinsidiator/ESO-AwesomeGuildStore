@@ -3,10 +3,12 @@ local AGS = AwesomeGuildStore
 local logger = AGS.internal.logger
 local RegisterForEvent = AGS.RegisterForEvent
 
+local ActivityBase = AGS.class.ActivityBase
 local SearchState = AGS.SearchState
 local ClearCallLater = AGS.ClearCallLater
 
 local FILTER_UPDATE_DELAY = 0 -- TODO do we even need this? check with profiler
+local AUTO_SEARCH_RESULT_COUNT_THRESHOLD = 50 -- TODO: global
 local SILENT = true
 
 local SearchManager = ZO_Object:Subclass()
@@ -36,11 +38,40 @@ function SearchManager:Initialize(tradingHouseWrapper, saveData)
     self.searches = {}
     self.categoryFilter = nil
     self.sortFilter = nil
+    self.searchResults = {}
+    self.hasMorePages = true
 
     self.search = tradingHouseWrapper.search
     -- disable the internal filter system
     self.search:DisassociateWithSearchFeatures()
     self.search.features = {} -- TODO better way?
+
+    local function RequestRefreshResults()
+        self:RequestResultUpdate()
+    end
+
+    AGS:RegisterCallback(AGS.callback.FILTER_UPDATE, RequestRefreshResults)
+    AGS:RegisterCallback(AGS.callback.GUILD_SELECTION_CHANGED, RequestRefreshResults)
+    AGS:RegisterCallback(AGS.callback.CURRENT_ACTIVITY_CHANGED, function(currentActivity, previousActivity)
+        if(not currentActivity and previousActivity:GetType() == ActivityBase.ACTIVITY_TYPE_REQUEST_SEARCH) then
+            RequestRefreshResults()
+        end
+    end)
+    AGS:RegisterCallback(AGS.callback.STORE_TAB_CHANGED, function(oldTab, newTab)
+        if(newTab == tradingHouseWrapper.searchTab) then
+            RequestRefreshResults()
+        end
+    end)
+
+    AGS:RegisterCallback(AGS.callback.SELECTED_SEARCH_CHANGED, function()
+        self:UpdateAttachedFilters()
+    end)
+
+    AGS:RegisterCallback(AGS.callback.SEARCH_RESULT_UPDATE, function(searchResults, hasMorePages)
+        if(hasMorePages and #searchResults < AUTO_SEARCH_RESULT_COUNT_THRESHOLD) then
+            self:RequestSearch()
+        end
+    end)
 end
 
 function SearchManager:SetCategoryFilter(categoryFilter)
@@ -73,12 +104,9 @@ function SearchManager:OnFiltersInitialized()
     self.activeSearch = self.searches[saveData.activeIndex]
 
     self.tradingHouseWrapper.tradingHouse.DoSearch = function() -- TODO
+        d("DoSearch", debug.traceback())
         self:RequestSearch()
     end
-
-    RegisterForEvent(EVENT_TRADING_HOUSE_STATUS_RECEIVED, function()
-        self:RequestSearch()
-    end)
 
     self.activeSearch:Apply()
 
@@ -88,16 +116,10 @@ function SearchManager:OnFiltersInitialized()
             self:UpdateAttachedFilters(SILENT)
         end
         self.activeSearch:HandleFilterChanged(self.availableFilters[id])
-        if(not self.activeSearch:IsApplying()) then
-            self:RequestSearch()
-        end
     end)
 
     AwesomeGuildStore:RegisterCallback(AGS.callback.FILTER_ACTIVE_CHANGED, function(filter)
         self.activeSearch:HandleFilterChanged(filter)
-        if(not self.activeSearch:IsApplying()) then
-            self:RequestSearch()
-        end
     end)
 end
 
@@ -126,17 +148,24 @@ end
 
 function SearchManager:UpdateAttachedFilters(silent)
     df("UpdateAttachedFilters %s", tostring(silent)) -- TODO
+    local hasChanges = false
     for filterId, filter in pairs(self.availableFilters) do
-        local isAttached = filter:IsAttached()
         local shouldAttach = (filter:IsPinned() or self.activeSearch:IsFilterActive(filterId)) and filter:CanAttach()
-        if(isAttached and (not shouldAttach)) then
-            self:DetachFilter(filterId)
-        elseif((not isAttached) and shouldAttach) then
-            self:AttachFilter(filterId)
+        if(filter:IsAttached() ~= shouldAttach) then
+            hasChanges = true
+            if(shouldAttach) then
+                self:AttachFilter(filterId)
+            else
+                self:DetachFilter(filterId)
+            end
+            if(not silent) then
+                AwesomeGuildStore:FireCallbacks(AGS.callback.FILTER_ACTIVE_CHANGED, filter)
+            end
         end
-        if(not silent) then
-            AwesomeGuildStore:FireCallbacks(AGS.callback.FILTER_ACTIVE_CHANGED, filter)
-        end
+    end
+
+    if(hasChanges) then
+        self:RequestFilterUpdate()
     end
 end
 
@@ -175,7 +204,6 @@ function SearchManager:SetActiveSearch(searchId)
             self.activeSearch = search
             self.saveData.activeIndex = i
             search:Apply()
-            self:RequestSearch()
             return true
         end
     end
@@ -231,6 +259,30 @@ function SearchManager:GetActiveFilters()
     return self.activeFilters
 end
 
+function SearchManager:UpdateSearchResults()
+    ZO_ClearNumericallyIndexedTable(self.searchResults)
+
+    local guildName = select(2, GetCurrentTradingHouseGuildDetails())
+    local activeSearch = self:GetActiveSearch()
+    local filterState = activeSearch:GetFilterState()
+    local view = self.itemDatabase:GetFilteredView(guildName, filterState)
+    ZO_ShallowTableCopy(view:GetItems(), self.searchResults)
+
+    local page = self.searchPageHistory:GetNextPage(guildName, filterState)
+    self.hasMorePages = (page ~= false)
+    AwesomeGuildStore:FireCallbacks(AGS.callback.SEARCH_RESULT_UPDATE, self.searchResults, self.hasMorePages)
+end
+
+function SearchManager:RequestResultUpdate()
+    if(self.resultUpdateCallback) then -- TODO use the delay call lib we started but never finished
+        ClearCallLater(self.resultUpdateCallback)
+    end
+    self.resultUpdateCallback = zo_callLater(function()
+        self.resultUpdateCallback = nil
+        self:UpdateSearchResults()
+    end, FILTER_UPDATE_DELAY)
+end
+
 function SearchManager:RequestFilterUpdate()
     if(self.updateCallback) then -- TODO use the delay call lib we started but never finished
         ClearCallLater(self.updateCallback)
@@ -255,29 +307,34 @@ function SearchManager:GetNumVisibleResults(guildName)
     end
     local filterState = self.activeSearch:GetFilterState()
     local results = self.itemDatabase:GetFilteredView(guildName, filterState):GetItems()
-    return #results
+    return #self.searchResults
 end
 
 function SearchManager:HasMorePages()
-    local _, guildName = GetCurrentTradingHouseGuildDetails()
-    local currentState = self.activeSearch:GetFilterState()
-    local page = self.searchPageHistory:GetNextPage(guildName, currentState)
-    return page ~= false
+    return self.hasMorePages
+end
+
+function SearchManager:GetSearchResults()
+    return self.searchResults
 end
 
 function SearchManager:RequestSearch(ignoreResultCount)
     local guildId, guildName = GetCurrentTradingHouseGuildDetails()
-    local currentState = self.activeSearch:GetFilterState()
-    local page = self.searchPageHistory:GetNextPage(guildName, currentState)
-    if(page) then -- TODO take into account if we already have enough results (+ an option to ignore that for the actual "search more" button)
-        if(self.activityManager:RequestSearchResults(guildId, ignoreResultCount)) then
-            logger:Debug("Queued request search results")
+    if(ignoreResultCount or self:GetNumVisibleResults(guildName) < AUTO_SEARCH_RESULT_COUNT_THRESHOLD) then
+        local currentState = self.activeSearch:GetFilterState()
+        local page = self.searchPageHistory:GetNextPage(guildName, currentState)
+        if(page) then -- TODO take into account if we already have enough results (+ an option to ignore that for the actual "search more" button)
+            if(self.activityManager:RequestSearchResults(guildId, ignoreResultCount)) then
+                logger:Debug("Queued request search results")
+                return true
         else
             logger:Debug("Could not queue request search results")
         end
-    else
-        logger:Debug("No more pages for current state") -- TODO user feedback
+        else
+            logger:Debug("No more pages for current state") -- TODO user feedback
+        end
     end
+    return false
 end
 
 function SearchManager:DoSearch() -- TODO remove / this is now handled by the activity
