@@ -54,8 +54,8 @@ function ItemDatabase:Initialize(tradingHouseWrapper)
         self:GetItemView(guildName):MarkDirty()
     end
 
-    AwesomeGuildStore:RegisterCallback("FilterValueChanged", SetDirty)
-    AwesomeGuildStore:RegisterCallback("FilterActiveChanged", SetDirty)
+    AwesomeGuildStore:RegisterCallback(AwesomeGuildStore.callback.FILTER_VALUE_CHANGED, SetDirty)
+    AwesomeGuildStore:RegisterCallback(AwesomeGuildStore.callback.FILTER_ACTIVE_CHANGED, SetDirty)
 end
 
 -- next steps:
@@ -102,7 +102,7 @@ function ItemDatabase:Update(guildName, numItems)
 
     self:GetItemView(guildName):MarkDirty()
 
-    AwesomeGuildStore:FireCallbacks("ItemDatabaseUpdated", self, guildName)
+    AwesomeGuildStore:FireCallbacks(AwesomeGuildStore.callback.ITEM_DATABASE_UPDATE, self, guildName)
 end
 
 function ItemDatabase:GetItemUniqueIdForSlotIndex(slotIndex)

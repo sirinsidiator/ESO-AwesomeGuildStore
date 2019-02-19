@@ -44,11 +44,11 @@ function FilterArea:Initialize(container, searchManager)
 end
 
 function FilterArea:OnFiltersInitialized()
-    AwesomeGuildStore:RegisterCallback("FilterValueChanged", function(id)
+    AwesomeGuildStore:RegisterCallback(AwesomeGuildStore.callback.FILTER_VALUE_CHANGED, function(id)
         if(id ~= FILTER_ID.CATEGORY_FILTER) then return end
         self:UpdateDisplayedFilters()
     end)
-    AwesomeGuildStore:RegisterCallback("FilterActiveChanged", function(filter)
+    AwesomeGuildStore:RegisterCallback(AwesomeGuildStore.callback.FILTER_ACTIVE_CHANGED, function(filter)
         self:UpdateDisplayedFilters()
     end)
     self:UpdateDisplayedFilters()

@@ -19,7 +19,7 @@ function FilterFragment:Initialize(filter)
 
     self:SetLabelText(filter:GetLabel())
 
-    AwesomeGuildStore:RegisterCallback("FilterValueChanged", function(id, ...)
+    AwesomeGuildStore:RegisterCallback(AwesomeGuildStore.callback.FILTER_VALUE_CHANGED, function(id, ...)
         if(id ~= self.filter:GetId()) then return end
         self:OnValueChanged(...)
         self.reset:SetHidden(self.filter:IsDefault())

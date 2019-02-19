@@ -95,7 +95,7 @@ end
 
 function FilterBase:HandleChange(...)
     self.dirty = true
-    AGS:FireCallbacks("FilterValueChanged", self.id, ...) -- TODO use constant for callback name
+    AGS:FireCallbacks(AGS.callback.FILTER_VALUE_CHANGED, self.id, ...)
     if(self.searchManager) then
         self.searchManager:RequestFilterUpdate()
     end

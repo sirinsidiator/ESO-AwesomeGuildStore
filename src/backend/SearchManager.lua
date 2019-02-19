@@ -7,9 +7,7 @@ local SearchState = AGS.SearchState
 local ClearCallLater = AGS.ClearCallLater
 
 local FILTER_UPDATE_DELAY = 0 -- TODO do we even need this? check with profiler
-local FILTER_UPDATE_CALLBACK_NAME = "FilterUpdateRequest"
 local SILENT = true
-AGS.FILTER_UPDATE_CALLBACK_NAME = FILTER_UPDATE_CALLBACK_NAME -- TODO move somewhere else
 
 local SearchManager = ZO_Object:Subclass()
 AGS.SearchManager = SearchManager
@@ -84,7 +82,7 @@ function SearchManager:OnFiltersInitialized()
 
     self.activeSearch:Apply()
 
-    AwesomeGuildStore:RegisterCallback("FilterValueChanged", function(id)
+    AwesomeGuildStore:RegisterCallback(AGS.callback.FILTER_VALUE_CHANGED, function(id)
         local filter = self.availableFilters[id]
         if(filter == self.categoryFilter) then
             self:UpdateAttachedFilters(SILENT)
@@ -95,7 +93,7 @@ function SearchManager:OnFiltersInitialized()
         end
     end)
 
-    AwesomeGuildStore:RegisterCallback("FilterActiveChanged", function(filter)
+    AwesomeGuildStore:RegisterCallback(AGS.callback.FILTER_ACTIVE_CHANGED, function(filter)
         self.activeSearch:HandleFilterChanged(filter)
         if(not self.activeSearch:IsApplying()) then
             self:RequestSearch()
@@ -137,7 +135,7 @@ function SearchManager:UpdateAttachedFilters(silent)
             self:AttachFilter(filterId)
         end
         if(not silent) then
-            AwesomeGuildStore:FireCallbacks("FilterActiveChanged", filter)
+            AwesomeGuildStore:FireCallbacks(AGS.callback.FILTER_ACTIVE_CHANGED, filter)
         end
     end
 end
@@ -239,7 +237,7 @@ function SearchManager:RequestFilterUpdate()
     end
     self.updateCallback = zo_callLater(function()
         self.updateCallback = nil
-        AwesomeGuildStore:FireCallbacks(FILTER_UPDATE_CALLBACK_NAME, self.activeFilters)
+        AwesomeGuildStore:FireCallbacks(AGS.callback.FILTER_UPDATE, self.activeFilters)
     end, FILTER_UPDATE_DELAY)
 end
 

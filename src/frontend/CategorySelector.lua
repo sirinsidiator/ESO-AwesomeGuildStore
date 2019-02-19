@@ -69,7 +69,7 @@ function CategorySelector:Initialize(parent, searchManager)
         end
     end
 
-    AwesomeGuildStore:RegisterCallback("FilterValueChanged", function(id, category, subcategory)
+    AwesomeGuildStore:RegisterCallback(AwesomeGuildStore.callback.FILTER_VALUE_CHANGED, function(id, category, subcategory)
         if(id ~= FILTER_ID.CATEGORY_FILTER) then return end
         self:Update(category, subcategory)
     end)

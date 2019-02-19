@@ -92,7 +92,7 @@ function GuildSelection:UpdateGuildData()
         guilds[guildCount].next = guilds[1]
     end
 
-    AwesomeGuildStore:FireCallbacks("AvailableGuildsChanged", guilds)
+    AwesomeGuildStore:FireCallbacks(AwesomeGuildStore.callback.AVAILABLE_GUILDS_CHANGED, guilds)
 end
 
 function GuildSelection:TryReselectLastGuildId()
@@ -111,7 +111,7 @@ function GuildSelection:SetSelectedGuildId(guildId)
     if(guildData) then
         self.selectedGuildId = guildId
         self.saveData.lastGuildName = guildData.guildName
-        AwesomeGuildStore:FireCallbacks("SelectedGuildChanged", guildData)
+        AwesomeGuildStore:FireCallbacks(AwesomeGuildStore.callback.GUILD_SELECTION_CHANGED, guildData)
         return true
     end
 end

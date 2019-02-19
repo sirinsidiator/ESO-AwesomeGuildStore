@@ -107,7 +107,7 @@ function PostItemActivity:FinalizePosting()
     local promise = Promise:New()
     self.step = STEP_FINALIZE_POSTING
 
-    AGS:FireCallbacks("ItemPosted", self.guildId, self.itemLink, self.price, self.stackCount) -- TODO
+    AGS:FireCallbacks(AGS.callback.ITEM_POSTED, self.guildId, self.itemLink, self.price, self.stackCount)
     promise:Resolve(self)
 
     return promise

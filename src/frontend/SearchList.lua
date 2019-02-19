@@ -112,7 +112,7 @@ function SearchList:Initialize(searchManager)
 
     list:RefreshFilters()
 
-    AwesomeGuildStore:RegisterCallback("FilterValueChanged", function(id)
+    AwesomeGuildStore:RegisterCallback(AwesomeGuildStore.callback.FILTER_VALUE_CHANGED, function(id)
         if(id ~= FILTER_ID.CATEGORY_FILTER) then return end
         list:RefreshFilters() -- TODO: use RefreshVisible instead, since we just need to adjust label and icon
     end)

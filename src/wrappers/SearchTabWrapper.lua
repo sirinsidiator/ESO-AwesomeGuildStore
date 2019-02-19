@@ -355,7 +355,7 @@ function SearchTabWrapper:InitializeFilters(tradingHouseWrapper)
     self.filterArea:RegisterFilterFragment(AwesomeGuildStore.class.MultiCategoryFilterFragment:New(furnitureCategoryFilter))
     searchManager:RegisterFilter(furnitureCategoryFilter)
 
-    AwesomeGuildStore:FireOnInitializeFiltersCallbacks(tradingHouseWrapper)
+    AwesomeGuildStore:FireCallbacks(AwesomeGuildStore.callback.AFTER_FILTER_SETUP, tradingHouseWrapper)
 
     self.searchResultList = AwesomeGuildStore.class.SearchResultListWrapper:New(tradingHouseWrapper, searchManager)
     searchManager:OnFiltersInitialized()
@@ -617,7 +617,7 @@ function SearchTabWrapper:InitializeSearchResultMasterList(tradingHouseWrapper) 
         tradingHouse.ConfirmPendingPurchase = originalConfirmPendingPurchase
     end)
 
-    AwesomeGuildStore:RegisterCallback("ItemPurchased", function(itemData) -- TODO
+    AwesomeGuildStore:RegisterCallback(AwesomeGuildStore.callback.ITEM_PURCHASED, function(itemData)
         if(saveData.purchaseNotification) then
             self:PrintPurchaseMessageForEntry(itemData)
     end
@@ -694,7 +694,6 @@ function SearchTabWrapper:OnOpen(tradingHouseWrapper)
     self.searchList:Show()
     -- tradingHouse.m_searchAllowed = true -- TODO is this still required?
     -- tradingHouse:OnSearchCooldownUpdate(GetTradingHouseCooldownRemaining()) -- TODO is this still required?
-    -- AwesomeGuildStore:FireOnOpenSearchTabCallbacks(tradingHouseWrapper) -- TODO is this still required?
     PushActionLayerByName(ACTION_LAYER_NAME) -- TODO should this action layer only be active here or better in the whole trading house?
     self.isOpen = true
 end

@@ -109,7 +109,7 @@ function ActivityManager:Initialize(tradingHouseWrapper, loadingIndicator, loadi
     self.panel = ActivityPanel:New(self)
     TRADING_HOUSE_SCENE:AddFragment(self.panel)
 
-    AGS:RegisterCallback("StoreTabChanged", function(oldTab, newTab)
+    AGS:RegisterCallback(AGS.callback.STORE_TAB_CHANGED, function(oldTab, newTab)
         if(oldTab == tradingHouseWrapper.searchTab) then
             self:CancelSearch()
             self:StopRequestingNewestResults()
@@ -127,7 +127,7 @@ function ActivityManager:Initialize(tradingHouseWrapper, loadingIndicator, loadi
         end
     end)
 
-    AGS:RegisterCallback("SelectedGuildChanged", function(guildData)
+    AGS:RegisterCallback(AGS.callback.GUILD_SELECTION_CHANGED, function(guildData)
         self:CancelSearch()
         self:StopRequestingNewestResults()
         self:RequestSearchResults(guildData.guildId)

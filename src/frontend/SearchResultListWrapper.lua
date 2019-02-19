@@ -108,7 +108,7 @@ function SearchResultListWrapper:Initialize(tradingHouseWrapper, searchManager)
 
     list.sortHeaderGroup = sortHeaderGroup
 
-    AGS:RegisterCallback("FilterValueChanged", function(id, sortOrder)
+    AGS:RegisterCallback(AGS.callback.FILTER_VALUE_CHANGED, function(id, sortOrder)
         if(id ~= sortFilter:GetId()) then return end
         df("sort order changed: %d, %s", sortOrder:GetId(), tostring(sortOrder:GetDirection()))
 
@@ -297,10 +297,10 @@ function SearchResultListWrapper:Initialize(tradingHouseWrapper, searchManager)
         list:RefreshFilters()
     end
 
-    tradingHouse.RebuildSearchResultsPage = DoRefreshResults
-    tradingHouse.ClearSearchResults = DoRefreshResults
-    AGS:RegisterCallback(AGS.FILTER_UPDATE_CALLBACK_NAME, DoRefreshResults)
-    AGS:RegisterCallback("ItemDatabaseUpdated", DoRefreshResults)
+    tradingHouse.RebuildSearchResultsPage = DoRefreshResults -- TODO noop
+    tradingHouse.ClearSearchResults = DoRefreshResults -- TODO noop
+    AGS:RegisterCallback(AGS.callback.FILTER_UPDATE, DoRefreshResults)
+    AGS:RegisterCallback(AGS.callback.ITEM_DATABASE_UPDATE, DoRefreshResults)
 
     self.list = list
 end

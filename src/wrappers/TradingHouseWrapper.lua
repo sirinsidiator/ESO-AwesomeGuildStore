@@ -59,7 +59,7 @@ function TradingHouseWrapper:Initialize(saveData)
     self:PreHook("SetCurrentMode", function()
         if(ranInitialSetup) then return end
 
-        AwesomeGuildStore:FireBeforeInitialSetupCallbacks(self)
+        AwesomeGuildStore:FireCallbacks(AGS.callback.BEFORE_INITIAL_SETUP, self)
         for mode, tab in next, self.modeToTab do
             tab:RunInitialSetup(self)
         end
@@ -70,7 +70,7 @@ function TradingHouseWrapper:Initialize(saveData)
 
         self:InitializeGuildSelector()
         self:InitializeKeybindStripWrapper()
-        AwesomeGuildStore:FireAfterInitialSetupCallbacks(self)
+        AwesomeGuildStore:FireCallbacks(AGS.callback.AFTER_INITIAL_SETUP, self)
 
         ranInitialSetup = true
     end)
@@ -87,7 +87,7 @@ function TradingHouseWrapper:Initialize(saveData)
         if currentTab then
             currentTab:OnOpen(self)
         end
-        AGS:FireCallbacks("StoreTabChanged", oldTab, currentTab)
+        AGS:FireCallbacks(AGS.callback.STORE_TAB_CHANGED, oldTab, currentTab)
     end)
 
     RegisterForEvent(EVENT_CLOSE_TRADING_HOUSE, function()

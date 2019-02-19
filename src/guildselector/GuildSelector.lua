@@ -30,7 +30,7 @@ function GuildSelector:Initialize(tradingHouseWrapper)
     self:InitializeComboBox(comboBoxControl, self.comboBox)
     self:InitializeHiredTraderTooltip(comboBoxControl, self.comboBox)
 
-    AwesomeGuildStore:RegisterCallback("AvailableGuildsChanged", function(guilds) -- TODO: test what happens when we fire this callback outside a trading house
+    AwesomeGuildStore:RegisterCallback(AwesomeGuildStore.callback.AVAILABLE_GUILDS_CHANGED, function(guilds) -- TODO: test what happens when we fire this callback outside a trading house
         self:SetupGuildList(guilds)
 
         local hasGuilds = (#guilds > 0)
@@ -38,7 +38,7 @@ function GuildSelector:Initialize(tradingHouseWrapper)
         self.titleLabel:SetHidden(hasGuilds)
     end)
 
-    AwesomeGuildStore:RegisterCallback("SelectedGuildChanged", function(guildData)
+    AwesomeGuildStore:RegisterCallback(AwesomeGuildStore.callback.GUILD_SELECTION_CHANGED, function(guildData)
         local focused = WINDOW_MANAGER:GetFocusControl()
         if(focused) then focused:LoseFocus() end
 

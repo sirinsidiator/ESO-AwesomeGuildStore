@@ -35,6 +35,7 @@ lib/LibGPS/LibGPS.lua
 lib/LibPromises/LibPromises.lua
 lib/LibGetText/LibGetText.lua
 StartUp.lua
+CallbackNames.lua
 i18n/en.lua
 i18n/$(language).lua
 Settings.lua
