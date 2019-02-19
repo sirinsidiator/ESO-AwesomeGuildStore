@@ -284,9 +284,9 @@ function ActivityManager:OnSuccess(activity)
 end
 
 function ActivityManager:OnFailure(activity)
-    d("OnFailure", activity)
+    d("OnFailure", type(activity))
     if(type(activity) == "string") then
-        error(activity)
+        d(activity)
         return
     end
 
