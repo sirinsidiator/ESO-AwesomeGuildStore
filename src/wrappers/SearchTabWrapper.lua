@@ -39,15 +39,6 @@ function SearchTabWrapper:RunInitialSetup(tradingHouseWrapper)
         --TODO: self.categoryFilter:UpdateSubfilterVisibility() -- fix inpage filters not working on first visit
     end, 1)
     self.tradingHouseWrapper = tradingHouseWrapper
-
-    local saveData = self.saveData
-    --    CALLBACK_MANAGER:RegisterCallback("AwesomeGuildStore_SearchLibraryEntry_Selected", function(entry)
-    --        if(saveData.autoSearch) then
-    --            self.fromSearchLibrary = true
-    --            tradingHouseWrapper.tradingHouse:ClearSearchResults()
-    --            self:Search()
-    --        end
-    --    end)
 end
 
 local function SortByFilterPriority(a, b)
@@ -82,19 +73,6 @@ function SearchTabWrapper:UpdateFilterAnchors()
 end
 
 local function HandleFilterChanged(self)
-    if(not self.fromSearchLibrary) then
-        self:CancelSearch()
-    end
-end
-
-local function RequestHandleFilterChanged(self)
-    if(self.fireChangeCallback) then
-        ClearCallLater(self.fireChangeCallback)
-    end
-    self.fireChangeCallback = zo_callLater(function()
-        self.handleChangeCallback = nil
-        HandleFilterChanged(self)
-    end, 10)
 end
 
 local function RebuildSearchResultsPage()
@@ -377,69 +355,6 @@ function SearchTabWrapper:InitializeButtons(tradingHouseWrapper) -- TODO remove?
 end
 
 function SearchTabWrapper:InitializeNavigation(tradingHouseWrapper) -- TODO: remove
-    local SHOW_MORE_DATA_TYPE = 4 -- watch out for changes in tradinghouse.lua
-    local HAS_HIDDEN_DATA_TYPE = 5
-    local tradingHouse = tradingHouseWrapper.tradingHouse
-    local search = tradingHouse.m_search
-
-    local showPreviousPageEntry =  {
-        -- TRANSLATORS: Label for the row at the beginning of the search results which toggles the search of the previous page
-        label = gettext("Show Previous Page"),
-        callback = function() self:SearchPreviousPage() end,
-        updateState = function(rowControl)
-            rowControl:SetEnabled(true)
-        end,
-        color = ZO_ColorDef:New("F97431")
-    }
-
-    local showNextPageEntry =  {
-        -- TRANSLATORS: Label for the row at the end of the search results which toggles the search of the next page
-        label = gettext("Show More Results"),
-        callback = function() self:SearchNextPage() end,
-        updateState = function(rowControl)
-            rowControl:SetEnabled(true)
-        end,
-        color = ZO_ColorDef:New("50D35D")
-    }
-
-
-    ZO_ScrollList_AddDataType(tradingHouse.searchResultsList, HAS_HIDDEN_DATA_TYPE, "AwesomeGuildStoreHasHiddenRowTemplate", 24, function(rowControl, entry)
-        local label = rowControl:GetNamedChild("Text")
-        -- TRANSLATORS: placeholder text when all search results are hidden by local filters
-        label:SetText(gettext("All items are hidden by local filters."))
-    end, nil, nil, function(rowControl)
-        ZO_ObjectPool_DefaultResetControl(rowControl)
-    end)
-    -- TODO
-    --    tradingHouseWrapper:Wrap("RebuildSearchResultsPage", function(originalRebuildSearchResultsPage, self)
-    --        originalRebuildSearchResultsPage(self)
-    --
-    --        local hasPrev = search:HasPreviousPage()
-    --        local hasNext = search:HasNextPage()
-    --        if(hasPrev or hasNext) then
-    --            local list = self.m_searchResultsList
-    --            local scrollData = ZO_ScrollList_GetDataList(list)
-    --            local isEmpty = (#scrollData == 0)
-    --            if(hasPrev) then
-    --                table.insert(scrollData, 1, ZO_ScrollList_CreateDataEntry(SHOW_MORE_DATA_TYPE, showPreviousPageEntry))
-    --            end
-    --            if(isEmpty) then
-    --                scrollData[#scrollData + 1] = ZO_ScrollList_CreateDataEntry(HAS_HIDDEN_DATA_TYPE, {})
-    --            end
-    --            if(hasNext) then
-    --                scrollData[#scrollData + 1] = ZO_ScrollList_CreateDataEntry(SHOW_MORE_DATA_TYPE, showNextPageEntry)
-    --            end
-    --            ZO_ScrollList_Commit(list)
-    --        end
-    --    end)
-
-    --    self.paging = AwesomeGuildStore.Paging:New(tradingHouseWrapper)
-
-    tradingHouseWrapper:Wrap("UpdatePagingButtons", function(originalUpdatePagingButtons, self)
-        if(showPreviousPageEntry.rowControl ~= nil) then showPreviousPageEntry.updateState(showPreviousPageEntry.rowControl) end
-        if(showNextPageEntry.rowControl ~= nil) then showNextPageEntry.updateState(showNextPageEntry.rowControl) end
-        originalUpdatePagingButtons(self)
-    end)
 end
 
 local PER_UNIT_PRICE_CURRENCY_OPTIONS = {
@@ -670,22 +585,6 @@ function SearchTabWrapper:InitializeKeybinds(tradingHouseWrapper) -- TODO: remov
         self.suppressLocalFilters = pressed
         TRADING_HOUSE:RebuildSearchResultsPage()
     end
-end
-
-function SearchTabWrapper:Search(page)
-    self.searchManager:RequestSearch()
-end
-
-function SearchTabWrapper:SearchPreviousPage()
-    self.searchManager:RequestSearch()
-end
-
-function SearchTabWrapper:SearchNextPage()
-    self.searchManager:RequestSearch()
-end
-
-function SearchTabWrapper:CancelSearch()
-    self.tradingHouseWrapper.activityManager:CancelSearch()
 end
 
 function SearchTabWrapper:OnOpen(tradingHouseWrapper)

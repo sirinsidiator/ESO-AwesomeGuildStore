@@ -79,7 +79,6 @@ history/MailBox.lua
 guildselector/HiredTraderTooltip.lua
 guildselector/GuildSelector.lua
 guildselector/GuildSelector.xml
-paging/Paging.lua
 backend/sort/SortOrderBase.lua
 activityManager/ActivityBase.lua
 activityManager/RequestSearchActivity.lua

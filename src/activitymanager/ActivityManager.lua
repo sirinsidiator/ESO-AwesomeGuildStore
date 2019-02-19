@@ -165,7 +165,6 @@ function ActivityManager:QueueActivity(activity)
     lookup[key] = activity
     zo_callLater(self.executeNext, 0)
 
-    activity.qstate = ActivityPanel.QSTATE_QUEUED
     self.panel:Refresh()
 
     return true
@@ -173,7 +172,6 @@ end
 
 function ActivityManager:ClearQueue()
     for _, activity in pairs(self.queue) do
-        activity.qstate = ActivityPanel.QSTATE_CLEARED
         activity:OnRemove()
         self.panel:AddActivity(activity)
     end
@@ -185,19 +183,6 @@ end
 
 function ActivityManager:RemoveCurrentActivity()
     if(self.currentActivity) then
-        local state = self.currentActivity.state -- TODO remove
-        if(state == ActivityBase.STATE_FAILED) then
-            self.counterFailure = self.counterFailure + 1
-        elseif(state == ActivityBase.STATE_SUCCEEDED) then
-            self.counterSuccess = self.counterSuccess + 1
-        else
-            self.counterOther = self.counterOther + 1
-        end
-        local sum = self.counterFailure + self.counterSuccess + self.counterOther
-        df("overall: %d, success: %d, failed: %d, other: %d", sum, self.counterSuccess, self.counterFailure, self.counterOther)
-
-
-        self.currentActivity.qstate = ActivityPanel.QSTATE_REMOVED
         self.currentActivity:OnRemove()
         self.panel:AddActivity(self.currentActivity)
         self.lookup[self.currentActivity:GetKey()] = nil
@@ -213,7 +198,6 @@ function ActivityManager:RemoveActivitiesByType(activityType)
         if(activity:GetType() == activityType) then
             table.remove(queue, i)
             self.lookup[activity:GetKey()] = nil
-            activity.qstate = ActivityPanel.QSTATE_REMOVED
             activity:OnRemove()
             self.panel:AddActivity(activity)
         end
@@ -228,7 +212,6 @@ function ActivityManager:RemoveActivityByKey(key)
         if(activity:GetKey() == key) then
             table.remove(queue, i)
             self.lookup[key] = nil
-            activity.qstate = ActivityPanel.QSTATE_REMOVED
             activity:OnRemove()
             self.panel:AddActivity(activity)
         end
@@ -255,7 +238,6 @@ function ActivityManager:ExecuteNext()
     if(activity and activity:CanExecute()) then
         table.remove(queue, 1)
 
-        activity.qstate = ActivityPanel.QSTATE_CURRENT -- TODO remove?
         self.currentActivity = activity
         self.panel:SetStatusText("Execute next activity") -- TODO
         self.panel:ShowLoading()
@@ -281,12 +263,11 @@ function ActivityManager:OnSuccess(activity)
 end
 
 function ActivityManager:OnFailure(activity)
-    d("OnFailure")
+    d("OnFailure", activity)
     if(type(activity) == "string") then
         error(activity)
         return
     end
-    activity.qstate = ActivityPanel.QSTATE_REMOVED -- TODO remove?
 
     local message = activity:GetErrorMessage()
     ZO_Alert(UI_ALERT_CATEGORY_ERROR, SOUNDS.NEGATIVE_CLICK, message)
