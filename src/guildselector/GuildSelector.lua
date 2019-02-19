@@ -133,9 +133,9 @@ local function OnSelectionChanged(comboBox, selectedName, selectedEntry)
     SelectTradingHouseGuildId(selectedEntry.data.guildId)
 end
 
---local function ByGuildIdAsc(a, b)
---    return a.guildId < b.guildId
---end
+local function ByGuildIdAsc(a, b)
+    return a.data.guildId < b.data.guildId
+end
 
 function GuildSelector:SetupGuildList(guilds)
     local comboBox = self.comboBox
@@ -148,11 +148,11 @@ function GuildSelector:SetupGuildList(guilds)
         entry.data = data
         entries[#entries + 1] = entry
     end
-    --    table.sort(entries, ByGuildIdAsc)
+    table.sort(entries, ByGuildIdAsc)
 
     comboBox:AddItems(entries)
 
-    local guildIdByMenuIndex = self.guildIdByMenuIndex -- TODO this can be removed if we don't need to sort anyways
+    local guildIdByMenuIndex = self.guildIdByMenuIndex
     for i = 1, #entries do
         local entry = entries[i]
         guildIdByMenuIndex[i] = entry.guildId
