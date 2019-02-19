@@ -129,15 +129,15 @@ function SearchResultListWrapper:Initialize(tradingHouseWrapper, searchManager)
         local timeRemaining = rowControl:GetNamedChild("TimeRemaining")
         timeRemaining:SetText(zo_strformat(SI_TRADING_HOUSE_BROWSE_ITEM_REMAINING_TIME, ZO_FormatTime(math.max(0, result.timeRemaining - lastSeenDelta), TIME_FORMAT_STYLE_SHOW_LARGEST_UNIT_DESCRIPTIVE, TIME_FORMAT_PRECISION_SECONDS, TIME_FORMAT_DIRECTION_DESCENDING)))
 
---        local lastSeen = rowControl:GetNamedChild("LastSeen")
---        lastSeen:SetText(ZO_FormatDurationAgo(lastSeenDelta))
+        --        local lastSeen = rowControl:GetNamedChild("LastSeen")
+        --        lastSeen:SetText(ZO_FormatDurationAgo(lastSeenDelta))
     end
 
---    function list:RefreshVisible()
---        ZO_ScrollList_RefreshVisible(self.list, nil, UpdateResultTimes)
---    end
---
---    list:SetUpdateInterval(10) -- seconds
+    --    function list:RefreshVisible()
+    --        ZO_ScrollList_RefreshVisible(self.list, nil, UpdateResultTimes)
+    --    end
+    --
+    --    list:SetUpdateInterval(10) -- seconds
 
     local filters = searchManager:GetActiveFilters()
     local activeFilters, numActiveFilters = {}, 0
@@ -197,24 +197,51 @@ function SearchResultListWrapper:Initialize(tradingHouseWrapper, searchManager)
     local searchManager = tradingHouseWrapper.searchTab.searchManager
     local activityManager = tradingHouseWrapper.activityManager
     local SHOW_MORE_DATA_TYPE = 4 -- watch out for changes in tradinghouse.lua
-    ZO_ScrollList_AddDataType(tradingHouse.searchResultsList, SHOW_MORE_DATA_TYPE, "AwesomeGuildStoreShowMoreRowTemplate", 32, function(rowControl, entry)
+
+    local SHOW_MORE_ROW_COLOR = ZO_ColorDef:New("50D35D")
+    local SHOW_MORE_DEFAULT_ALPHA = 0.5
+    local SHOW_MORE_HIGHLIGHT_ALPHA = 1
+    local IGNORE_RESULT_COUNT = true
+
+    -- TRANSLATORS: Label for the row at the end of the search result list which triggers the search for more results
+    local SHOW_MORE_READY_LABEL = gettext("Show More Results")
+    -- TRANSLATORS: Label for the row at the end of the search result list when a search is already pending, but cannot start yet due to the request cooldown
+    local SHOW_MORE_COOLDOWN_LABEL = gettext("Waiting For Cooldown ...")
+    -- TRANSLATORS: Label for the row at the end of the search result list when a search is currently in progress
+    local SHOW_MORE_LOADING_LABEL = gettext("Requesting Results ...")
+    -- TRANSLATORS: Label for the result count below the search result list. First number indicates the visible results, second number the overall number of locally stored items for the current guild
+    local ITEM_COUNT_TEMPLATE = gettext("Items:|cffffff %d / %d")
+
+    local function UpdateShowMoreRowState()
+        local label = showMoreEntry.label
+        local activity = activityManager:GetCurrentActivity()
+        local text
+        if(activity and activity:GetType() == ActivityBase.ACTIVITY_TYPE_REQUEST_SEARCH) then
+            text = SHOW_MORE_LOADING_LABEL
+            inProgress = true
+        else
+            local searchActivities = activityManager:GetActivitiesByType(ActivityBase.ACTIVITY_TYPE_REQUEST_SEARCH)
+            if(#searchActivities > 0) then
+                text = SHOW_MORE_COOLDOWN_LABEL
+                inProgress = true
+            else
+                text = SHOW_MORE_READY_LABEL
+                inProgress = false
+            end
+        end
+        label:SetText(text)
+        showMoreEntry:SetEnabled(not inProgress)
+    end
+
+    local function SetupShowMoreRow(rowControl, entry)
         d("Setup Show More Row")
-        
-        local label = rowControl:GetNamedChild("Text")
-        label:SetText(entry.label)
-        rowControl.label = label
-
         local highlight = rowControl:GetNamedChild("Highlight")
-        if(entry.color) then
-            highlight:SetColor(entry.color:UnpackRGB())
-            highlight:SetAlpha(0.5)
-        end
+        highlight:SetColor(SHOW_MORE_ROW_COLOR:UnpackRGB())
+        highlight:SetAlpha(SHOW_MORE_DEFAULT_ALPHA)
 
-        if not highlight.animation then
-            highlight.animation = ANIMATION_MANAGER:CreateTimelineFromVirtual("ShowOnMouseOverLabelAnimation", highlight)
-            local alphaAnimation = highlight.animation:GetFirstAnimation()
-            alphaAnimation:SetAlphaValues(0.5, 1)
-        end
+        highlight.animation = ANIMATION_MANAGER:CreateTimelineFromVirtual("ShowOnMouseOverLabelAnimation", highlight)
+        local alphaAnimation = highlight.animation:GetFirstAnimation()
+        alphaAnimation:SetAlphaValues(SHOW_MORE_DEFAULT_ALPHA, SHOW_MORE_HIGHLIGHT_ALPHA)
 
         rowControl:SetHandler("OnMouseEnter", function()
             highlight.animation:PlayForward()
@@ -225,47 +252,34 @@ function SearchResultListWrapper:Initialize(tradingHouseWrapper, searchManager)
         end)
 
         rowControl:SetHandler("OnMouseUp", function(control, button, isInside)
-            if(rowControl.enabled and button == 1 and isInside) then
+            if(rowControl.enabled and button == MOUSE_BUTTON_INDEX_LEFT and isInside) then
                 PlaySound("Click")
-                rowControl:SetEnabled(false)
-                if(searchManager:RequestSearch(true)) then
-                    label:SetText("waiting for cooldown ...") -- TODO
-                else
-                    list:RefreshFilters()
+                if(searchManager:RequestSearch(IGNORE_RESULT_COUNT)) then
+                    UpdateShowMoreRowState()
                 end
             end
         end)
 
+        local label = rowControl:GetNamedChild("Text")
+        rowControl.label = label
+
         rowControl.SetEnabled = function(self, enabled)
             rowControl.enabled = enabled
             highlight.animation:GetFirstAnimation():SetAlphaValues(0.5, enabled and 1 or 0.5)
-            label:SetColor((enabled and ZO_NORMAL_TEXT or ZO_DEFAULT_DISABLED_COLOR):UnpackRGBA())
+            label:SetColor((enabled and ZO_NORMAL_TEXT or ZO_DEFAULT_DISABLED_COLOR):UnpackRGBA()) -- TODO disabled color is not visible enough
         end
+    end
 
-        local activity = activityManager:GetCurrentActivity()
-        if(activity and activity:GetType() == ActivityBase.ACTIVITY_TYPE_REQUEST_SEARCH) then
-            inProgress = true
-            label:SetText("loading results ...") -- TODO
-        else
-            local searchActivities = activityManager:GetActivitiesByType(ActivityBase.ACTIVITY_TYPE_REQUEST_SEARCH)
-            if(#searchActivities > 0) then
-                inProgress = true
-                label:SetText("waiting for cooldown ...") -- TODO
-            else
-                inProgress = false
-            end
+    ZO_ScrollList_AddDataType(tradingHouse.searchResultsList, SHOW_MORE_DATA_TYPE, "AwesomeGuildStoreShowMoreRowTemplate", 32, function(rowControl, entry)
+        if(not rowControl.label) then
+            SetupShowMoreRow(rowControl, entry)
         end
-        rowControl:SetEnabled(not inProgress)
-
         rowControl.entry = entry
         entry.rowControl = rowControl
         showMoreEntry = rowControl
+        UpdateShowMoreRowState()
     end, nil, nil, function(rowControl)
-        d("Cleanup Show More Row")
         showMoreEntry = nil
-        rowControl.enabled = nil
-        rowControl.label = nil
-        rowControl.SetEnabled = nil
         rowControl.entry.rowControl = nil
         rowControl.entry = nil
         ZO_ObjectPool_DefaultResetControl(rowControl)
@@ -273,22 +287,9 @@ function SearchResultListWrapper:Initialize(tradingHouseWrapper, searchManager)
 
     AGS:RegisterCallback(AGS.callback.CURRENT_ACTIVITY_CHANGED, function(activity)
         if(showMoreEntry) then
-            if(activity and activity:GetType() == ActivityBase.ACTIVITY_TYPE_REQUEST_SEARCH) then
-                inProgress = true
-                showMoreEntry.label:SetText("loading results ...") -- TODO
-            elseif(inProgress and not activity) then
-                inProgress = false
-                showMoreEntry.label:SetText(showMoreEntry.entry.label)
-            end
-            showMoreEntry:SetEnabled(not inProgress)
+            UpdateShowMoreRowState()
         end
     end)
-
-    local showNextPageEntry =  { -- TODO move into setup since we only have one entry now
-        -- TRANSLATORS: Label for the row at the end of the search results which toggles the search of the next page
-        label = gettext("Show More Results"),
-        color = ZO_ColorDef:New("50D35D")
-    }
 
     function list:FilterScrollList()
         local scrollData = ZO_ScrollList_GetDataList(self.list)
@@ -300,13 +301,13 @@ function SearchResultListWrapper:Initialize(tradingHouseWrapper, searchManager)
         end
 
         if(searchManager:HasMorePages()) then
-            scrollData[#scrollData + 1] = ZO_ScrollList_CreateDataEntry(SHOW_MORE_DATA_TYPE, showNextPageEntry)
+            scrollData[#scrollData + 1] = ZO_ScrollList_CreateDataEntry(SHOW_MORE_DATA_TYPE, {})
         end
 
         local guildName = select(2, GetCurrentTradingHouseGuildDetails())
         local items = itemDatabase:GetItemView(guildName):GetItems()
         resultCount:SetHidden(false)
-        resultCount:SetText(gettext("Items:|cffffff %d / %d"):format(#searchResults, #items))
+        resultCount:SetText(ITEM_COUNT_TEMPLATE:format(#searchResults, #items))
     end
 
     function list:SortScrollList() -- TODO should this also happen in the database?
@@ -315,13 +316,13 @@ function SearchResultListWrapper:Initialize(tradingHouseWrapper, searchManager)
     end
 
     local function DoRefreshResults()
-        --list:RefreshFilters()
+    --list:RefreshFilters()
     end
 
     tradingHouse.RebuildSearchResultsPage = DoRefreshResults -- TODO noop
     tradingHouse.ClearSearchResults = DoRefreshResults -- TODO noop
---    AGS:RegisterCallback(AGS.callback.FILTER_UPDATE, DoRefreshResults)
---    AGS:RegisterCallback(AGS.callback.ITEM_DATABASE_UPDATE, DoRefreshResults)
+    --    AGS:RegisterCallback(AGS.callback.FILTER_UPDATE, DoRefreshResults)
+    --    AGS:RegisterCallback(AGS.callback.ITEM_DATABASE_UPDATE, DoRefreshResults)
     AGS:RegisterCallback(AGS.callback.SEARCH_RESULT_UPDATE, function(searchResults, hasMore)
         list:RefreshFilters()
     end)
