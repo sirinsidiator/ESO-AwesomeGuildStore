@@ -165,7 +165,34 @@ local function DecodeData(encodedString, format, separator)
     return data, version
 end
 
+local MAX_SAVE_DATA_LENGTH = 1999 -- buffer length used by ZOS
+local function WriteToSavedVariable(t, key, value)
+    local output = value
+    local byteLength = #value
+    if(byteLength > MAX_SAVE_DATA_LENGTH) then
+        output = {}
+        local startPos = 1
+        local endPos = startPos + MAX_SAVE_DATA_LENGTH - 1
+        while startPos <= byteLength do
+            output[#output + 1] = value:sub(startPos, endPos)
+            startPos = endPos + 1
+            endPos = startPos + MAX_SAVE_DATA_LENGTH - 1
+        end
+    end
+    t[key] = output
+end
+
+local function ReadFromSavedVariable(t, key, defaultValue)
+    local value = t[key] or defaultValue
+    if(type(value) == "table") then
+        return table.concat(value, "")
+    end
+    return value
+end
+
 AwesomeGuildStore.EncodeValue = EncodeValue
 AwesomeGuildStore.DecodeValue = DecodeValue
 AwesomeGuildStore.EncodeData = EncodeData
 AwesomeGuildStore.DecodeData = DecodeData
+AwesomeGuildStore.internal.WriteToSavedVariable = WriteToSavedVariable
+AwesomeGuildStore.internal.ReadFromSavedVariable = ReadFromSavedVariable

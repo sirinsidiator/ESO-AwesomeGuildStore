@@ -2,6 +2,8 @@ local ItemCategoryFilter = AwesomeGuildStore.class.ItemCategoryFilter
 local FilterState = AwesomeGuildStore.class.FilterState
 local FILTER_ID = AwesomeGuildStore.data.FILTER_ID
 local CATEGORY_DEFINITION = AwesomeGuildStore.data.CATEGORY_DEFINITION
+local WriteToSavedVariable = AwesomeGuildStore.internal.WriteToSavedVariable
+local ReadFromSavedVariable = AwesomeGuildStore.internal.ReadFromSavedVariable
 
 local VERSION = "4"
 local ID_SEPARATOR = ":"
@@ -14,29 +16,40 @@ AwesomeGuildStore.SearchState = SearchState
 SearchState.DEFAULT_STATE = string.format("%s%s%s", VERSION, FIELD_SEPARATOR, DEFAULT_PLACEHOLDER)
 SearchState.nextId = 1
 
--- comparison, serializing, deserializing etc is handled by it for each entry
--- needs to hold a reference to our filter/sort manager ?
--- quick access to all filter states, icon, label etc
-
 function SearchState:New(...)
     local object = ZO_Object.New(self)
     object:Initialize(...)
     return object
 end
 
+local REVERSE_FILTER_ID = {}
+for name, id in pairs(FILTER_ID) do
+    REVERSE_FILTER_ID[id] = name
+end
+
 local function DeserializeActiveFilters(active)
     active = {zo_strsplit(FIELD_SEPARATOR , active)}
+    local deserialized = {}
     for i = 1, #active do
-        active[i] = tonumber(active[i])
+        local id = tonumber(active[i])
+        if(id and REVERSE_FILTER_ID[id]) then
+            deserialized[id] = true
+        else
+            df("Tried to deserialize non-existing filter id '%s'", tostring(id)) -- TODO use logger
+        end
     end
-    return active
+    return deserialized
 end
 
 local function SerializeActiveFilters(active)
     local sorted = {}
     for id, active in pairs(active) do
         if(active) then
-            sorted[#sorted + 1] = id
+            if(REVERSE_FILTER_ID[id]) then
+                sorted[#sorted + 1] = id
+            else
+                df("Tried to serialize non-existing filter id '%s'", tostring(id)) -- TODO use logger
+            end
         end
     end
     table.sort(sorted)
@@ -90,7 +103,7 @@ function SearchState:Initialize(searchManager, saveData)
     self.id = saveData.id
     self.customLabel = (saveData.label ~= nil)
     self.filterActive = DeserializeActiveFilters(saveData.active)
-    self.filterState = FilterState.Deserialize(searchManager, saveData.state)
+    self.filterState = FilterState.Deserialize(searchManager, ReadFromSavedVariable(saveData, "state"))
     local values = self.filterState:GetValues()
     for i = 1, #values do
         self.filterActive[values[i][FilterState.ID_INDEX]] = true
@@ -140,7 +153,7 @@ function SearchState:HandleFilterChanged(filter)
         filterStates[id] = state
 
         self.filterState = FilterState:New(self.searchManager, filterStates)
-        self.saveData.state = self.filterState:GetState()
+        WriteToSavedVariable(self.saveData, "state", self.filterState:GetState())
         if(id == FILTER_ID.CATEGORY_FILTER) then
             self:Update()
         end
@@ -148,7 +161,6 @@ function SearchState:HandleFilterChanged(filter)
 end
 
 function SearchState:Apply()
-    df("apply %s", self.label)
     self.applying = true
     local searchManager = self.searchManager
     local availableFilters = searchManager:GetAvailableFilters()
@@ -192,7 +204,6 @@ function SearchState:Update()
     else
         self.icon = subcategory.icon
     end
-    d("update", self.label)
 end
 
 function SearchState:GetId()
@@ -244,7 +255,6 @@ end
 -- we change the active state
 function SearchState:SetFilterActive(filter, active)
     if(not filter) then return false end
-
     local filterId = filter:GetId()
     if(self.filterActive[filterId] ~= active) then
         self.filterActive[filterId] = active
