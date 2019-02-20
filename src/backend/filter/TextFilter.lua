@@ -5,6 +5,8 @@ local FilterBase = AGS.class.FilterBase
 local FILTER_ID = AGS.data.FILTER_ID
 
 local gettext = AGS.internal.gettext
+local EncodeValue = AGS.EncodeValue
+local DecodeValue = AGS.DecodeValue
 
 
 local TextFilter = FilterBase:Subclass()
@@ -77,9 +79,9 @@ function TextFilter:CanAttach()
 end
 
 function TextFilter:Serialize(text)
-    return text -- TODO: escape ":" and ";" -> everything to base64?
+    return EncodeValue("base64", text)
 end
 
 function TextFilter:Deserialize(state)
-    return state  -- TODO encoding
+    return DecodeValue("base64", state)
 end
