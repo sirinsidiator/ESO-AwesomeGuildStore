@@ -96,7 +96,7 @@ end
 
 -- return an object containing {filterId, values, state}
 -- or nil if the filter is not part of this state
-function FilterState:GetFilterValues(id)
+function FilterState:GetRawFilterValues(id)
     return self.valuesById[id]
 end
 
@@ -117,6 +117,14 @@ function FilterState:GetFilterState(id)
     local values = self.valuesById[id]
     if(not values) then return nil end
     return values[FilterState.STATE_INDEX]
+end
+
+-- return the individual values for a filter as multiple return values
+-- or nil if the filter is not part of this state
+function FilterState:GetFilterValues(id)
+    local values = self.valuesById[id]
+    if(not values) then return nil end
+    return unpack(values[FilterState.VALUES_INDEX])
 end
 
 -- return the state for a group as a string

@@ -1,4 +1,3 @@
-local ItemCategoryFilter = AwesomeGuildStore.class.ItemCategoryFilter
 local FilterState = AwesomeGuildStore.class.FilterState
 local FILTER_ID = AwesomeGuildStore.data.FILTER_ID
 local CATEGORY_DEFINITION = AwesomeGuildStore.data.CATEGORY_DEFINITION
@@ -165,7 +164,7 @@ function SearchState:Apply()
     local searchManager = self.searchManager
     local availableFilters = searchManager:GetAvailableFilters()
     for id, filter in pairs(availableFilters) do
-        if(not self.filterState:GetFilterValues(id) and not filter:IsDefault()) then
+        if(not self.filterState:GetRawFilterValues(id) and not filter:IsDefault()) then
             filter:Reset()
         end
     end
@@ -187,8 +186,7 @@ function SearchState:IsApplying()
 end
 
 function SearchState:Update()
-    local state = self.filterState:GetFilterState(FILTER_ID.CATEGORY_FILTER) or DEFAULT_PLACEHOLDER -- TODO get rid of the default placeholder
-    local subcategory = ItemCategoryFilter.GetSubcategoryFromSerializedData(state) -- TODO: we should use the value directly now
+    local subcategory = self.filterState:GetFilterValues(FILTER_ID.CATEGORY_FILTER)
     local category = CATEGORY_DEFINITION[subcategory.category]
 
     if(not self.customLabel) then

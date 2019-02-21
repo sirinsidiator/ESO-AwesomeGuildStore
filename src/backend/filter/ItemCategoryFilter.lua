@@ -741,14 +741,10 @@ function ItemCategoryFilter:Serialize(subcategory)
     return EncodeValue("integer", subcategory.id)
 end
 
-function ItemCategoryFilter.GetSubcategoryFromSerializedData(serializedState)
-    local subcategoryId = DecodeValue("integer", serializedState)
+function ItemCategoryFilter:Deserialize(state)
+    local subcategoryId = DecodeValue("integer", state)
     if(subcategoryId and SUB_CATEGORY_DEFINITION[subcategoryId]) then
         return SUB_CATEGORY_DEFINITION[subcategoryId]
     end
     return SUB_CATEGORY_DEFINITION[DEFAULT_SUB_CATEGORY_ID[DEFAULT_CATEGORY_ID]]
-end
-
-function ItemCategoryFilter:Deserialize(state)
-    return ItemCategoryFilter.GetSubcategoryFromSerializedData(state)
 end
