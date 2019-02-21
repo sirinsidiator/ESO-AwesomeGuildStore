@@ -82,17 +82,6 @@ function SearchList:Initialize(searchManager)
     end
     ZO_ScrollList_AddDataType(list.list, SEARCH_ENTRY, "AwesomeGuildStoreSearchListEntry", 38, SetupRow)
 
-    --    local searchList = AwesomeGuildStore.main.searchTab.searchLibrary.searchList -- TODO convert them once when we upgrade the savedata
-    --    for state, entry in pairs(searchList) do
-    --        if(entry.favorite) then
-    --            local search = searchManager:AddSearch() -- TODO persist
-    --            search:SetLabel(entry.label)
-    --            --state = SearchState.DEFAULT_STATE -- TODO convert old states into new format
-    --            --search:LoadState(state)
-    --            searchManager:SetActiveSearch(search:GetId()) -- TODO don't need to do this yet
-    --        end
-    --    end
-
     function list:FilterScrollList()
         local scrollData = ZO_ScrollList_GetDataList(self.list)
         ZO_ClearNumericallyIndexedTable(scrollData)

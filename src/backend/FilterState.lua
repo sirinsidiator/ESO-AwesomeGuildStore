@@ -13,7 +13,6 @@ FilterState.STATE_INDEX = 3
 local VERSION = "4"
 local ID_SEPARATOR = ":"
 local FIELD_SEPARATOR = ";"
-local DEFAULT_PLACEHOLDER = "-"
 
 -- TODO: use luadoc comments
 function FilterState:New(...)
@@ -26,11 +25,9 @@ function FilterState.Deserialize(searchManager, state) -- TODO: see if this can 
     local filterState = {}
     local temp = {zo_strsplit(FIELD_SEPARATOR, state)}
     if(temp[1] == VERSION) then
-        if(#temp > 2 or temp[2] ~= DEFAULT_PLACEHOLDER) then -- TODO: get rid of the default placeholder, instead just save the state as is
-            for i = 2, #temp do
-                local id, state = zo_strsplit(ID_SEPARATOR, temp[i])
-                filterState[tonumber(id)] = state
-        end
+        for i = 2, #temp do
+            local id, state = zo_strsplit(ID_SEPARATOR, temp[i])
+            filterState[tonumber(id)] = state
         end
     end
     return FilterState:New(searchManager, filterState)
@@ -91,7 +88,6 @@ function FilterState:Initialize(searchManager, filterStates)
     self.values = values
     self.valuesById = valuesById
     self.valuesByGroup = valuesByGroup
-df("init %d, %d, %s", #values, #groups, self.state)
 end
 
 -- return an object containing {filterId, values, state}
