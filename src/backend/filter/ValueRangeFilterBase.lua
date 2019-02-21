@@ -3,6 +3,8 @@ local AGS = AwesomeGuildStore
 local FilterBase = AGS.class.FilterBase
 
 local ClampValue = AGS.internal.ClampValue
+local EncodeValue = AGS.EncodeValue
+local DecodeValue = AGS.DecodeValue
 
 
 local ValueRangeFilterBase = FilterBase:Subclass()
@@ -17,7 +19,7 @@ function ValueRangeFilterBase:Initialize(id, group, config)
     self:SetLabel(config.label)
     self:SetEnabledSubcategories(config.enabled)
     self.config = config
-    self.serializationFormat = string.format("%%.%df", config.precision or 0)
+    self.modifier = math.pow(10, config.precision or 0)
     self.temp = {}
     self.min = config.min
     self.max = config.max
@@ -68,22 +70,15 @@ function ValueRangeFilterBase:IsDefault()
     return not (self.min ~= self.config.min or self.max ~= self.config.max)
 end
 
-local DEFAULT_PLACEHOLDER = "-" -- TODO: use codec?
-local function SerializeNumber(format, value, default)
-    if(value ~= default) then
-        return string.format(format, value)
-    else
-        return DEFAULT_PLACEHOLDER
-    end
-end
-
 function ValueRangeFilterBase:Serialize(min, max)
-    self.temp[1] = SerializeNumber(self.serializationFormat, min, self.config.min)
-    self.temp[2] = SerializeNumber(self.serializationFormat, max, self.config.max)
+    self.temp[1] = EncodeValue("integer", min * self.modifier)
+    self.temp[2] = EncodeValue("integer", max * self.modifier)
     return table.concat(self.temp, ",")
 end
 
 function ValueRangeFilterBase:Deserialize(state)
     local min, max = zo_strsplit("," , state)
-    return tonumber(min) or self.config.min, tonumber(max) or self.config.max
+    min = DecodeValue("integer", min) / self.modifier
+    max = DecodeValue("integer", max) / self.modifier
+    return min, max
 end

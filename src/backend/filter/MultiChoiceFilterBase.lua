@@ -1,4 +1,6 @@
 local FilterBase = AwesomeGuildStore.class.FilterBase
+local EncodeValue = AwesomeGuildStore.EncodeValue
+local DecodeValue = AwesomeGuildStore.DecodeValue
 
 local SILENT = true
 
@@ -11,6 +13,13 @@ end
 
 function MultiChoiceFilterBase:Initialize(id, group, values)
     FilterBase.Initialize(self, id, group)
+
+    -- detect the encoding based on the used value types
+    self.encoding = type(values[1].id)
+    -- for numbers, we default to integer, since it is more compact
+    -- if a filter needs a different encoding they have to specify it
+    if(self.encoding == "number") then self.encoding = "integer" end
+
     self.values = values
     self.temp = {}
 
@@ -30,6 +39,10 @@ function MultiChoiceFilterBase:Initialize(id, group, values)
 
     self.selection = {}
     self:Reset(SILENT)
+end
+
+function MultiChoiceFilterBase:SetEncoding(encoding)
+    self.encoding = encoding
 end
 
 function MultiChoiceFilterBase:GetRawValues()
@@ -102,29 +115,12 @@ function MultiChoiceFilterBase:SetUpLocalFilter(selection)
     return next(selection) ~= nil
 end
 
-local DEFAULT_PLACEHOLDER = "-"
-local BOOLEAN_TRUE = tostring(true) -- TODO: move somewhere?
-local BOOLEAN_FALSE = tostring(false)
-local function DeserializeId(value)
-    if(value == BOOLEAN_TRUE) then
-        return true
-    elseif(value == BOOLEAN_FALSE) then
-        return false
-    else
-        local number = tonumber(value)
-        if(number) then
-            return number
-        end
-    end
-    return value
-end
-
 function MultiChoiceFilterBase:Serialize(selection)
     local temp = self.temp
     ZO_ClearTable(temp)
     for value, selected in pairs(selection) do
         if(selected) then
-            temp[#temp + 1] = tostring(value.id)
+            temp[#temp + 1] = EncodeValue(self.encoding, value.id)
         end
     end
     table.sort(temp)
@@ -141,7 +137,7 @@ function MultiChoiceFilterBase:Deserialize(state)
     end
 
     for i = 1, #ids do
-        local id = DeserializeId(ids[i])
+        local id = DecodeValue(self.encoding, ids[i])
         local value = self.valueById[id]
         if(value) then
             selection[value] = true

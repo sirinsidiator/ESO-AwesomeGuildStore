@@ -12,6 +12,8 @@ local DEFAULT_SUB_CATEGORY_ID = AGS.data.DEFAULT_SUB_CATEGORY_ID
 
 local gettext = AGS.internal.gettext
 local logger = AGS.internal.logger
+local EncodeValue = AGS.EncodeValue
+local DecodeValue = AGS.DecodeValue
 
 
 local ITEMFILTERTYPE_LOCAL = "itemFilterType"
@@ -736,11 +738,11 @@ function ItemCategoryFilter:IsDefault()
 end
 
 function ItemCategoryFilter:Serialize(subcategory)
-    return tostring(subcategory.id)
+    return EncodeValue("integer", subcategory.id)
 end
 
-function ItemCategoryFilter.GetSubcategoryFromSerializedData(serializedState) -- TODO is this used outside? merge into Deserialize
-    local subcategoryId = tonumber(serializedState)
+function ItemCategoryFilter.GetSubcategoryFromSerializedData(serializedState)
+    local subcategoryId = DecodeValue("integer", serializedState)
     if(subcategoryId and SUB_CATEGORY_DEFINITION[subcategoryId]) then
         return SUB_CATEGORY_DEFINITION[subcategoryId]
     end
