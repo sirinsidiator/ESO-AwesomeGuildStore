@@ -1,4 +1,518 @@
-local FILTER_PRESETS = AwesomeGuildStore.FILTER_PRESETS
+local FILTER_PRESETS = {
+    [ITEMFILTERTYPE_ALL] = {
+        name = "All",
+        label = GetString("SI_ITEMFILTERTYPE", ITEMFILTERTYPE_ALL),
+        texture = "EsoUI/Art/Inventory/inventory_tabIcon_all_%s.dds",
+        index = 0,
+        hasLevelFilter = true,
+        isDefault = true,
+        subcategories = {}
+    },
+    [ITEMFILTERTYPE_WEAPONS] = {
+        name = "Weapon",
+        label = GetString("SI_ITEMFILTERTYPE", ITEMFILTERTYPE_WEAPONS),
+        texture = "EsoUI/Art/Inventory/inventory_tabIcon_weapons_%s.dds",
+        index = 1,
+        hasLevelFilter = true,
+        subcategories = {
+            {
+                label = GetString("SI_ITEMFILTERTYPE", ITEMFILTERTYPE_ALL),
+                texture = "EsoUI/Art/Inventory/inventory_tabIcon_all_%s.dds",
+                isDefault = true,
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_EQUIP] = { EQUIP_TYPE_ONE_HAND, EQUIP_TYPE_TWO_HAND }
+                },
+            },
+            {
+                label = GetString("SI_EQUIPTYPE", EQUIP_TYPE_ONE_HAND),
+                texture = "AwesomeGuildStore/images/weapon/onehand_%s.dds",
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_EQUIP] = { EQUIP_TYPE_ONE_HAND }
+                },
+            },
+            {
+                label = GetString("SI_EQUIPTYPE", EQUIP_TYPE_TWO_HAND),
+                texture = "AwesomeGuildStore/images/weapon/twohand_%s.dds",
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_EQUIP] = { EQUIP_TYPE_TWO_HAND },
+                    [TRADING_HOUSE_FILTER_TYPE_WEAPON] = { WEAPONTYPE_TWO_HANDED_AXE, WEAPONTYPE_TWO_HANDED_SWORD, WEAPONTYPE_TWO_HANDED_HAMMER }
+                },
+            },
+            {
+                label = GetString("SI_WEAPONTYPE", WEAPONTYPE_BOW),
+                texture = "AwesomeGuildStore/images/weapon/bow_%s.dds",
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_EQUIP] = { EQUIP_TYPE_TWO_HAND },
+                    [TRADING_HOUSE_FILTER_TYPE_WEAPON] = { WEAPONTYPE_BOW }
+                },
+            },
+            {
+                label = zo_strformat(SI_SKILLS_TREE_NAME_FORMAT, GetSkillLineInfo(SKILL_TYPE_WEAPON, 5)),
+                texture = "AwesomeGuildStore/images/weapon/fire_%s.dds",
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_EQUIP] = { EQUIP_TYPE_TWO_HAND },
+                    [TRADING_HOUSE_FILTER_TYPE_WEAPON] = { WEAPONTYPE_FIRE_STAFF, WEAPONTYPE_FROST_STAFF, WEAPONTYPE_LIGHTNING_STAFF }
+                },
+            },
+            {
+                label = zo_strformat(SI_SKILLS_TREE_NAME_FORMAT, GetSkillLineInfo(SKILL_TYPE_WEAPON, 6)),
+                texture = "AwesomeGuildStore/images/weapon/restoration_%s.dds",
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_EQUIP] = { EQUIP_TYPE_TWO_HAND },
+                    [TRADING_HOUSE_FILTER_TYPE_WEAPON] = { WEAPONTYPE_HEALING_STAFF }
+                },
+            }
+        }
+    },
+    [ITEMFILTERTYPE_ARMOR] = {
+        name = "Armor",
+        label = GetString("SI_ITEMFILTERTYPE", ITEMFILTERTYPE_ARMOR),
+        texture = "EsoUI/Art/Inventory/inventory_tabIcon_armor_%s.dds",
+        index = 2,
+        hasLevelFilter = true,
+        subcategories = {
+            {
+                label = GetString("SI_ITEMFILTERTYPE", ITEMFILTERTYPE_ALL),
+                texture = "EsoUI/Art/Inventory/inventory_tabIcon_all_%s.dds",
+                index = 1,
+                isDefault = true,
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_EQUIP] = { EQUIP_TYPE_HEAD, EQUIP_TYPE_CHEST, EQUIP_TYPE_SHOULDERS, EQUIP_TYPE_WAIST, EQUIP_TYPE_LEGS, EQUIP_TYPE_FEET, EQUIP_TYPE_HAND, EQUIP_TYPE_OFF_HAND, EQUIP_TYPE_COSTUME },
+                },
+            },
+            {
+                label = GetString(SI_TRADING_HOUSE_BROWSE_ARMOR_TYPE_HEAVY),
+                texture = "EsoUI/Art/Inventory/inventory_tabIcon_armor_%s.dds",
+                index = 2,
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_EQUIP] = { EQUIP_TYPE_HEAD, EQUIP_TYPE_CHEST, EQUIP_TYPE_SHOULDERS, EQUIP_TYPE_WAIST, EQUIP_TYPE_LEGS, EQUIP_TYPE_FEET, EQUIP_TYPE_HAND },
+                    [TRADING_HOUSE_FILTER_TYPE_ARMOR] = { ARMORTYPE_HEAVY }
+                },
+            },
+            {
+                label = GetString(SI_TRADING_HOUSE_BROWSE_ARMOR_TYPE_MEDIUM),
+                texture = "AwesomeGuildStore/images/armor/medium_%s.dds",
+                index = 3,
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_EQUIP] = { EQUIP_TYPE_HEAD, EQUIP_TYPE_CHEST, EQUIP_TYPE_SHOULDERS, EQUIP_TYPE_WAIST, EQUIP_TYPE_LEGS, EQUIP_TYPE_FEET, EQUIP_TYPE_HAND },
+                    [TRADING_HOUSE_FILTER_TYPE_ARMOR] = { ARMORTYPE_MEDIUM }
+                },
+            },
+            {
+                label = GetString(SI_TRADING_HOUSE_BROWSE_ARMOR_TYPE_LIGHT),
+                texture = "AwesomeGuildStore/images/armor/light_%s.dds",
+                index = 4,
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_EQUIP] = { EQUIP_TYPE_HEAD, EQUIP_TYPE_CHEST, EQUIP_TYPE_SHOULDERS, EQUIP_TYPE_WAIST, EQUIP_TYPE_LEGS, EQUIP_TYPE_FEET, EQUIP_TYPE_HAND },
+                    [TRADING_HOUSE_FILTER_TYPE_ARMOR] = { ARMORTYPE_LIGHT }
+                },
+            },
+            {
+                label = GetString(SI_TRADING_HOUSE_BROWSE_ARMOR_TYPE_SHIELD),
+                texture = "AwesomeGuildStore/images/armor/shield_%s.dds",
+                index = 5,
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_EQUIP] = { EQUIP_TYPE_OFF_HAND },
+                    [TRADING_HOUSE_FILTER_TYPE_WEAPON] = { WEAPONTYPE_SHIELD }
+                },
+            },
+            {
+                -- this is the old entry for jewelry. we have to keep it around for now, due to way the state is saved and how tooltips work
+                hidden = true,
+                label = GetString(SI_GAMEPADITEMCATEGORY38),
+                texture = "AwesomeGuildStore/images/armor/neck_%s.dds",
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_EQUIP] = { EQUIP_TYPE_RING, EQUIP_TYPE_NECK },
+                },
+            },
+            {
+                label = GetString("SI_EQUIPTYPE", EQUIP_TYPE_COSTUME),
+                texture = "AwesomeGuildStore/images/armor/costume_%s.dds",
+                index = 6,
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_EQUIP] = { EQUIP_TYPE_COSTUME },
+                },
+                showTabards = true,
+            }
+        }
+    },
+    [ITEMFILTERTYPE_JEWELRY] = {
+        name = "Jewelry",
+        label = GetString("SI_ITEMFILTERTYPE", ITEMFILTERTYPE_JEWELRY),
+        texture = "AwesomeGuildStore/images/jewelry_%s.dds",
+        index = 3,
+        hasLevelFilter = true,
+        subcategories = {
+            {
+                label = GetString("SI_ITEMFILTERTYPE", ITEMFILTERTYPE_ALL),
+                texture = "EsoUI/Art/Inventory/inventory_tabIcon_all_%s.dds",
+                isDefault = true,
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_EQUIP] = { EQUIP_TYPE_RING, EQUIP_TYPE_NECK },
+                },
+            },
+            {
+                label = GetString("SI_EQUIPTYPE", EQUIP_TYPE_RING),
+                texture = "AwesomeGuildStore/images/armor/ring_%s.dds",
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_EQUIP] = { EQUIP_TYPE_RING },
+                },
+            },
+            {
+                label = GetString("SI_EQUIPTYPE", EQUIP_TYPE_NECK),
+                texture = "AwesomeGuildStore/images/armor/neck_%s.dds",
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_EQUIP] = { EQUIP_TYPE_NECK },
+                },
+            },
+        }
+    },
+    [ITEMFILTERTYPE_CONSUMABLE] = {
+        name = "Consumable",
+        label = GetString("SI_ITEMFILTERTYPE", ITEMFILTERTYPE_CONSUMABLE),
+        texture = "EsoUI/Art/Inventory/inventory_tabIcon_consumables_%s.dds",
+        index = 4,
+        subcategories = {
+            {
+                label = GetString("SI_ITEMFILTERTYPE", ITEMFILTERTYPE_ALL),
+                texture = "EsoUI/Art/Inventory/inventory_tabIcon_all_%s.dds",
+                isDefault = true,
+                index = 1,
+                hasLevelFilter = true,
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_FOOD, ITEMTYPE_DRINK, ITEMTYPE_RECIPE, ITEMTYPE_POTION, ITEMTYPE_POISON, ITEMTYPE_RACIAL_STYLE_MOTIF, ITEMTYPE_CONTAINER, ITEMTYPE_FISH, ITEMTYPE_AVA_REPAIR, ITEMTYPE_MASTER_WRIT }
+                },
+            },
+            {
+                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_ITEMTYPE", ITEMTYPE_FOOD)),
+                texture = "EsoUI/Art/Crafting/provisioner_indexIcon_meat_%s.dds",
+                index = 2,
+                hasLevelFilter = true,
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_FOOD },
+                },
+            },
+            {
+                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_ITEMTYPE", ITEMTYPE_DRINK)),
+                texture = "EsoUI/Art/Crafting/provisioner_indexIcon_beer_%s.dds",
+                index = 3,
+                hasLevelFilter = true,
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_DRINK },
+                },
+            },
+            {
+                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_ITEMTYPE", ITEMTYPE_RECIPE)),
+                texture = "EsoUI/Art/Guild/tabIcon_roster_%s.dds",
+                index = 4,
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_RECIPE },
+                },
+            },
+            {
+                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_ITEMTYPE", ITEMTYPE_POTION)),
+                texture = "EsoUI/Art/Inventory/inventory_tabIcon_consumables_%s.dds",
+                index = 5,
+                hasLevelFilter = true,
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_POTION },
+                },
+            },
+            {
+                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_ITEMTYPE", ITEMTYPE_POISON)),
+                texture = "EsoUI/Art/Crafting/alchemy_tabIcon_solvent_%s.dds",
+                index = 6,
+                hasLevelFilter = true,
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_POISON },
+                },
+            },
+            {
+                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_ITEMTYPE", ITEMTYPE_RACIAL_STYLE_MOTIF)),
+                texture = "EsoUI/Art/MainMenu/menuBar_journal_%s.dds",
+                index = 7,
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_RACIAL_STYLE_MOTIF },
+                },
+            },
+            {
+                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_ITEMTYPE", ITEMTYPE_CONTAINER)),
+                texture = "EsoUI/Art/MainMenu/menuBar_inventory_%s.dds",
+                index = 9,
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_CONTAINER, ITEMTYPE_FISH },
+                },
+            },
+            {
+                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_ITEMTYPE", ITEMTYPE_AVA_REPAIR)),
+                texture = "EsoUI/Art/Vendor/vendor_tabIcon_repair_%s.dds",
+                index = 10,
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_AVA_REPAIR },
+                },
+            },
+            { -- needs to stay here because the table index is used for the save data
+                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_ITEMTYPE", ITEMTYPE_MASTER_WRIT)),
+                texture = "EsoUI/Art/crafting/formulae_tabicon_%s.dds",
+                index = 8,
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_MASTER_WRIT },
+                },
+            },
+        }
+    },
+    [ITEMFILTERTYPE_CRAFTING] = {
+        name = "Crafting",
+        label = GetString("SI_ITEMFILTERTYPE", ITEMFILTERTYPE_CRAFTING),
+        texture = "EsoUI/Art/Inventory/inventory_tabIcon_crafting_%s.dds",
+        index = 5,
+        subcategories = {
+            {
+                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, ZO_GetCraftingSkillName(CRAFTING_TYPE_BLACKSMITHING)),
+                texture = "EsoUI/Art/Inventory/inventory_tabIcon_craftbag_blacksmithing_%s.dds",
+                index = 2,
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_BLACKSMITHING_RAW_MATERIAL, ITEMTYPE_BLACKSMITHING_MATERIAL, ITEMTYPE_BLACKSMITHING_BOOSTER },
+                },
+            },
+            {
+                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, ZO_GetCraftingSkillName(CRAFTING_TYPE_CLOTHIER)),
+                texture = "EsoUI/Art/Inventory/inventory_tabIcon_craftbag_clothing_%s.dds",
+                index = 3,
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_CLOTHIER_RAW_MATERIAL, ITEMTYPE_CLOTHIER_MATERIAL, ITEMTYPE_CLOTHIER_BOOSTER },
+                },
+            },
+            {
+                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, ZO_GetCraftingSkillName(CRAFTING_TYPE_WOODWORKING)),
+                texture = "EsoUI/Art/Inventory/inventory_tabIcon_craftbag_woodworking_%s.dds",
+                index = 4,
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_WOODWORKING_RAW_MATERIAL, ITEMTYPE_WOODWORKING_MATERIAL, ITEMTYPE_WOODWORKING_BOOSTER },
+                },
+            },
+            {
+                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, ZO_GetCraftingSkillName(CRAFTING_TYPE_ALCHEMY)),
+                texture = "EsoUI/Art/Inventory/inventory_tabIcon_craftbag_alchemy_%s.dds",
+                index = 6,
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_POTION_BASE, ITEMTYPE_POISON_BASE, ITEMTYPE_REAGENT },
+                },
+            },
+            {
+                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, ZO_GetCraftingSkillName(CRAFTING_TYPE_ENCHANTING)),
+                texture = "EsoUI/Art/Inventory/inventory_tabIcon_craftbag_enchanting_%s.dds",
+                index = 7,
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_ENCHANTING_RUNE_ASPECT, ITEMTYPE_ENCHANTING_RUNE_ESSENCE, ITEMTYPE_ENCHANTING_RUNE_POTENCY },
+                },
+            },
+            {
+                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, ZO_GetCraftingSkillName(CRAFTING_TYPE_PROVISIONING)),
+                texture = "EsoUI/Art/Inventory/inventory_tabIcon_craftbag_provisioning_%s.dds",
+                index = 8,
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_INGREDIENT },
+                },
+            },
+            {
+                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_ITEMTYPE", ITEMTYPE_STYLE_MATERIAL)),
+                texture = "EsoUI/Art/Inventory/inventory_tabIcon_craftbag_stylematerial_%s.dds",
+                index = 9,
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_STYLE_MATERIAL, ITEMTYPE_RAW_MATERIAL },
+                },
+            },
+            {
+                -- these are the old entries for traits. we have to keep them around for now, due to way the state is saved and how tooltips work
+                hidden = true,
+                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_ITEMTYPE", ITEMTYPE_WEAPON_TRAIT)),
+                texture = "EsoUI/Art/Crafting/smithing_tabIcon_weaponSet_%s.dds",
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_WEAPON_TRAIT },
+                }
+            },
+            {
+                hidden = true,
+                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_ITEMTYPE", ITEMTYPE_ARMOR_TRAIT)),
+                texture = "EsoUI/Art/Crafting/smithing_tabIcon_armorSet_%s.dds",
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_ARMOR_TRAIT },
+                }
+            },
+            {
+                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_FURNISHING_ORNAMENTAL)),
+                texture = "EsoUI/Art/treeIcons/collection_indexicon_furnishings_%s.dds",
+                index = 11,
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_FURNISHING_MATERIAL },
+                },
+            },
+            { -- needs to stay here because the table index is used for the save data
+                label = GetString("SI_ITEMFILTERTYPE", ITEMFILTERTYPE_ALL),
+                texture = "EsoUI/Art/Inventory/inventory_tabIcon_all_%s.dds",
+                isDefault = true,
+                index = 1,
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_ITEM] = {
+                        ITEMTYPE_BLACKSMITHING_RAW_MATERIAL, ITEMTYPE_BLACKSMITHING_MATERIAL, ITEMTYPE_BLACKSMITHING_BOOSTER,
+                        ITEMTYPE_CLOTHIER_RAW_MATERIAL, ITEMTYPE_CLOTHIER_MATERIAL, ITEMTYPE_CLOTHIER_BOOSTER,
+                        ITEMTYPE_WOODWORKING_RAW_MATERIAL, ITEMTYPE_WOODWORKING_MATERIAL, ITEMTYPE_WOODWORKING_BOOSTER,
+                        ITEMTYPE_POTION_BASE, ITEMTYPE_POISON_BASE, ITEMTYPE_REAGENT,
+                        ITEMTYPE_ENCHANTING_RUNE_ASPECT, ITEMTYPE_ENCHANTING_RUNE_ESSENCE, ITEMTYPE_ENCHANTING_RUNE_POTENCY,
+                        ITEMTYPE_INGREDIENT,
+                        ITEMTYPE_STYLE_MATERIAL, ITEMTYPE_RAW_MATERIAL,
+                        -- ITEMTYPE_WEAPON_TRAIT,
+                        -- ITEMTYPE_ARMOR_TRAIT,
+                        ITEMTYPE_FURNISHING_MATERIAL,
+                        -- ITEMTYPE_JEWELRY_TRAIT, ITEMTYPE_JEWELRY_RAW_TRAIT,
+                        ITEMTYPE_JEWELRYCRAFTING_RAW_MATERIAL, ITEMTYPE_JEWELRYCRAFTING_MATERIAL, ITEMTYPE_JEWELRYCRAFTING_RAW_BOOSTER, ITEMTYPE_JEWELRYCRAFTING_BOOSTER
+                    },
+                },
+            },
+            {
+                label = GetString("SI_ITEMFILTERTYPE", ITEMFILTERTYPE_JEWELRY),
+                texture = "EsoUI/Art/Inventory/inventory_tabIcon_craftBag_jewelryCrafting_%s.dds",
+                index = 5,
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_JEWELRYCRAFTING_RAW_MATERIAL, ITEMTYPE_JEWELRYCRAFTING_MATERIAL, ITEMTYPE_JEWELRYCRAFTING_RAW_BOOSTER, ITEMTYPE_JEWELRYCRAFTING_BOOSTER },
+                },
+            },
+            {
+                label = GetString("SI_ITEMFILTERTYPE", ITEMFILTERTYPE_TRAIT_ITEMS),
+                texture = "EsoUI/Art/Inventory/inventory_tabIcon_craftBag_itemTrait_%s.dds",
+                index = 10,
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_WEAPON_TRAIT, ITEMTYPE_ARMOR_TRAIT, ITEMTYPE_JEWELRY_TRAIT, ITEMTYPE_JEWELRY_RAW_TRAIT },
+                },
+            },
+        }
+    },
+    [ITEMFILTERTYPE_FURNISHING] = {
+        name = "Furnishing",
+        label = GetString("SI_ITEMFILTERTYPE", ITEMFILTERTYPE_FURNISHING),
+        texture = "EsoUI/Art/treeIcons/collection_indexicon_furnishings_%s.dds",
+        index = 6,
+        subcategories = {
+            {
+                label = GetString("SI_ITEMFILTERTYPE", ITEMFILTERTYPE_ALL),
+                texture = "EsoUI/Art/Inventory/inventory_tabIcon_all_%s.dds",
+                isDefault = true,
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_SPECIALIZED_ITEM] = {
+                        SPECIALIZED_ITEMTYPE_FURNISHING_ORNAMENTAL,
+                        SPECIALIZED_ITEMTYPE_FURNISHING_LIGHT,
+                        SPECIALIZED_ITEMTYPE_FURNISHING_SEATING,
+                        SPECIALIZED_ITEMTYPE_FURNISHING_CRAFTING_STATION,
+                        SPECIALIZED_ITEMTYPE_FURNISHING_TARGET_DUMMY,
+                        SPECIALIZED_ITEMTYPE_FURNISHING_ATTUNABLE_STATION
+                    },
+                },
+            },
+            {
+                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_FURNISHING_CRAFTING_STATION)),
+                texture = "EsoUI/Art/treeIcons/housing_indexicon_workshop_%s.dds",
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_SPECIALIZED_ITEM] = {
+                        SPECIALIZED_ITEMTYPE_FURNISHING_CRAFTING_STATION ,
+                        SPECIALIZED_ITEMTYPE_FURNISHING_ATTUNABLE_STATION
+                    },
+                },
+            },
+            {
+                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_FURNISHING_LIGHT)),
+                texture = "EsoUI/Art/treeIcons/housing_indexicon_shrine_%s.dds",
+                filters = {
+                    -- [TRADING_HOUSE_FILTER_TYPE_SPECIALIZED_ITEM] = { SPECIALIZED_ITEMTYPE_FURNISHING_LIGHT },
+                    [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_FURNISHING },
+                    [TRADING_HOUSE_FILTER_TYPE_FURNITURE_CATEGORY] = { 11 }, -- lighting
+                },
+            },
+            {
+                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_FURNISHING_ORNAMENTAL)),
+                texture = "EsoUI/Art/treeIcons/housing_indexicon_gallery_%s.dds",
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_SPECIALIZED_ITEM] = { SPECIALIZED_ITEMTYPE_FURNISHING_ORNAMENTAL },
+                },
+            },
+            {
+                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_FURNISHING_SEATING)),
+                texture = "EsoUI/Art/treeIcons/collection_indexicon_furnishings_%s.dds",
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_SPECIALIZED_ITEM] = { SPECIALIZED_ITEMTYPE_FURNISHING_SEATING },
+                },
+            },
+            {
+                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_FURNISHING_TARGET_DUMMY)),
+                texture = "EsoUI/Art/treeIcons/collection_indexicon_weapons+armor_%s.dds",
+                filters = {
+                    -- [TRADING_HOUSE_FILTER_TYPE_SPECIALIZED_ITEM] = { SPECIALIZED_ITEMTYPE_FURNISHING_TARGET_DUMMY },
+                    [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_FURNISHING },
+                    [TRADING_HOUSE_FILTER_TYPE_FURNITURE_CATEGORY] = { 25 }, -- services
+                    [TRADING_HOUSE_FILTER_TYPE_FURNITURE_SUBCATEGORY] = { 98 }, -- training dummies
+                },
+            },
+        },
+    },
+    [ITEMFILTERTYPE_MISCELLANEOUS] = {
+        name = "Misc",
+        label = GetString("SI_ITEMFILTERTYPE", ITEMFILTERTYPE_MISCELLANEOUS),
+        texture = "EsoUI/Art/Inventory/inventory_tabIcon_misc_%s.dds",
+        index = 7,
+        subcategories = {
+            {
+                label = GetString("SI_ITEMFILTERTYPE", ITEMFILTERTYPE_ALL),
+                texture = "EsoUI/Art/Inventory/inventory_tabIcon_all_%s.dds",
+                isDefault = true,
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_GLYPH_WEAPON, ITEMTYPE_GLYPH_JEWELRY, ITEMTYPE_GLYPH_ARMOR, ITEMTYPE_SOUL_GEM, ITEMTYPE_SIEGE, ITEMTYPE_LURE, ITEMTYPE_TOOL, ITEMTYPE_TROPHY, ITEMTYPE_COLLECTIBLE },
+                },
+            },
+            {
+                label = GetString(SI_GAMEPADITEMCATEGORY13),
+                texture = "AwesomeGuildStore/images/misc/glyphs_%s.dds",
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_GLYPH_WEAPON, ITEMTYPE_GLYPH_JEWELRY, ITEMTYPE_GLYPH_ARMOR },
+                },
+            },
+            {
+                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_ITEMTYPE", ITEMTYPE_SOUL_GEM)),
+                texture = "AwesomeGuildStore/images/misc/soulgem_%s.dds",
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_SOUL_GEM },
+                },
+            },
+            {
+                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_ITEMTYPE", ITEMTYPE_SIEGE)),
+                texture = "EsoUI/Art/MainMenu/menuBar_ava_%s.dds",
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_SIEGE },
+                },
+            },
+            {
+                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_ITEMTYPE", ITEMTYPE_LURE)),
+                texture = "EsoUI/Art/Inventory/inventory_tabIcon_craftbag_fishing_%s.dds",
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_LURE },
+                },
+            },
+            {
+                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_ITEMTYPE", ITEMTYPE_TOOL)),
+                texture = "EsoUI/Art/Vendor/vendor_tabIcon_repair_%s.dds",
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_TOOL },
+                },
+            },
+            {
+                label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_ITEMTYPE", ITEMTYPE_TROPHY)),
+                texture = "EsoUI/Art/Journal/journal_tabIcon_leaderboard_%s.dds",
+                filters = {
+                    [TRADING_HOUSE_FILTER_TYPE_ITEM] = { ITEMTYPE_TROPHY, ITEMTYPE_COLLECTIBLE },
+                },
+            },
+        },
+    },
+}
 
 local MAJOR_BUTTON_SIZE = 46
 local MINOR_BUTTON_SIZE = 32
@@ -41,7 +555,6 @@ function SalesCategorySelector:New(parent, name)
     container:SetAnchor(TOPLEFT, parent, TOPRIGHT, 100, -47)
     selector.control = container
     selector.group = {}
-    selector.subfilters = {}
     selector.category = ITEMFILTERTYPE_ALL
     selector.subcategory = {}
 
@@ -288,9 +801,6 @@ function SalesCategorySelector:Reset()
     self.mainGroup.defaultButton:Press()
     for _, group in pairs(self.group) do
         group.defaultButton:Press()
-    end
-    for _, subfilter in pairs(self.subfilters) do
-        subfilter:ReleaseAllButtons()
     end
 end
 
