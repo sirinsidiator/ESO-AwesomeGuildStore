@@ -15,6 +15,8 @@ local GUILD_SPECIFIC_ITEM_DATA_TYPE = 3
 local CAN_UPDATE_RESULT = {
     [SEARCH_RESULTS_DATA_TYPE] = true,
 }
+local ENABLED_DESATURATION = 0
+local DISABLED_DESATURATION = 1
 
 local SearchResultListWrapper = ZO_Object:Subclass()
 AGS.class.SearchResultListWrapper = SearchResultListWrapper
@@ -88,6 +90,7 @@ function SearchResultListWrapper:Initialize(tradingHouseWrapper, searchManager)
     sortHeaderGroup:AddHeader(nameHeader)
 
     local customHeader = CreateControlFromVirtual("$(parent)Custom", nameHeader:GetParent(), "ZO_SortHeaderIcon")
+    local customHeaderIcon = customHeader:GetNamedChild("Icon")
     customHeader:SetHidden(true)
     ZO_SortHeader_InitializeArrowHeader(customHeader, "custom", ZO_SORT_ORDER_UP)
     customHeader:SetAnchor(RIGHT, nameHeader, LEFT, -8, 0)
@@ -119,6 +122,20 @@ function SearchResultListWrapper:Initialize(tradingHouseWrapper, searchManager)
             customHeader:SetHidden(true)
         end
         sortHeaderGroup:OnHeaderClicked(header, SILENT, NO_RESELCT, sortOrder:GetDirection())
+    end)
+
+    local function SetHeaderEnabled(enabled)
+        sortHeaderGroup:SetEnabled(enabled)
+        customHeader:SetMouseEnabled(enabled)
+        customHeaderIcon:SetDesaturation(enabled and ENABLED_DESATURATION or DISABLED_DESATURATION)
+    end
+
+    AwesomeGuildStore:RegisterCallback(AwesomeGuildStore.callback.SEARCH_LOCK_STATE_CHANGED, function(search, isActiveSearch)
+        if(not isActiveSearch) then return end
+        SetHeaderEnabled(search:IsEnabled())
+    end)
+    AwesomeGuildStore:RegisterCallback(AwesomeGuildStore.callback.SELECTED_SEARCH_CHANGED, function(search)
+        SetHeaderEnabled(search:IsEnabled())
     end)
 
     local function UpdateResultTimes(rowControl, result) -- TODO remove
