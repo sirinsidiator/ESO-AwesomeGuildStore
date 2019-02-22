@@ -15,7 +15,12 @@ function MultiChoiceFilterBase:Initialize(id, group, values)
     FilterBase.Initialize(self, id, group)
 
     -- detect the encoding based on the used value types
-    self.encoding = type(values[1].id)
+    local first = values[1]
+    if(first.values) then
+        first = first.values[1]
+    end
+    self.encoding = type(first.id)
+
     -- for numbers, we default to integer, since it is more compact
     -- if a filter needs a different encoding they have to specify it
     if(self.encoding == "number") then self.encoding = "integer" end
