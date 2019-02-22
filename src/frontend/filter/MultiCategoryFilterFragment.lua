@@ -41,7 +41,6 @@ function MultiCategoryFilterFragment:Initialize(filter)
     self.menuCache = {}
     self:InitializeControls()
     self:InitializeHandlers()
-    self:UpdateSelectionList({}) -- TODO: remove once we properly load the current state
 end
 
 function MultiCategoryFilterFragment:InitializeControls()
