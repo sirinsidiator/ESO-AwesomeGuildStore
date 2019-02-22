@@ -28,7 +28,6 @@ end
 
 function PurchaseItemActivity:SetPendingItem()
     if(not self.pendingPromise) then
-        d("set pending item")
         self.pendingPromise = Promise:New()
         SetPendingItemPurchaseByItemUniqueId(self.itemData.itemUniqueId, self.itemData.purchasePrice)
     end
@@ -37,14 +36,12 @@ end
 
 function PurchaseItemActivity:OnPendingPurchaseChanged()
     if(self.pendingPromise) then
-        d("pending purchase changed")
         self.pendingPromise:Resolve(self)
     end
 end
 
 function PurchaseItemActivity:ConfirmPurchase()
     if(not self.responsePromise) then
-        d("confirm purchase")
         self.responsePromise = Promise:New()
         ConfirmPendingItemPurchase()
     end
@@ -59,7 +56,6 @@ function PurchaseItemActivity:FinalizePurchase()
 end
 
 function PurchaseItemActivity:DoExecute(panel)
-    d("do execute")
     return self:ApplyGuildId(panel):Then(self.SetPendingItem):Then(self.ConfirmPurchase):Then(self.FinalizePurchase)
 end
 

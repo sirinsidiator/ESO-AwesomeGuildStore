@@ -128,7 +128,6 @@ function SearchManager:OnFiltersInitialized()
     self.activeSearch = self.searches[saveData.activeIndex]
 
     self.tradingHouseWrapper.tradingHouse.DoSearch = function() -- TODO
-        d("DoSearch", debug.traceback())
         self:RequestSearch()
     end
 
@@ -171,7 +170,6 @@ function SearchManager:GetFilter(filterId)
 end
 
 function SearchManager:UpdateAttachedFilters(silent)
-    df("UpdateAttachedFilters %s", tostring(silent)) -- TODO
     local hasChanges = false
     for filterId, filter in pairs(self.availableFilters) do
         local shouldAttach = (filter:IsPinned() or self.activeSearch:IsFilterActive(filterId)) and filter:CanAttach()

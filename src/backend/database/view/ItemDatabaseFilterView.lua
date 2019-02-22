@@ -47,7 +47,6 @@ function ItemDatabaseFilterView:PrepareFilterFunction(activeFilters)
 end
 
 function ItemDatabaseFilterView:UpdateItems()
-    d("apply filters")
     -- before
     local filters = self.filters
     local activeFilters = {}
@@ -61,7 +60,6 @@ function ItemDatabaseFilterView:UpdateItems()
     -- table.sort(activeFilters, ByCost)
 
     -- do filter server
-    df("do filter: %d", #activeFilters)
     local FilterItem = self:PrepareFilterFunction(activeFilters)
 
     local parentItems = self.parent:GetItems()
@@ -73,7 +71,6 @@ function ItemDatabaseFilterView:UpdateItems()
             items[#items + 1] = item
         end
     end
-    df("filtered results: %d/%d", #items, #parentItems)
 
     -- after
     for i = 1, #activeFilters do

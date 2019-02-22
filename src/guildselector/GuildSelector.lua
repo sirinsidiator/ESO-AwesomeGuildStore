@@ -98,7 +98,6 @@ function GuildSelector:InitializeHiredTraderTooltip(comboBoxControl, comboBox)
     local function AddMenuItemCallback() -- TODO not working
         local entry = ZO_Menu.items[#ZO_Menu.items] -- fetch the last added entry
         local control = entry.item
-        df("AddMenuItem(%d)", control.menuIndex)
         control.guildId = self.guildIdByMenuIndex[control.menuIndex] -- TODO find a better solution
         entry.onMouseEnter = control:GetHandler("OnMouseEnter")
         entry.onMouseExit = control:GetHandler("OnMouseExit")
@@ -107,12 +106,10 @@ function GuildSelector:InitializeHiredTraderTooltip(comboBoxControl, comboBox)
     end
 
     ZO_PreHook(comboBox, "ShowDropdownInternal", function(comboBox)
-        d("show dropdown")
         SetAddMenuItemCallback(AddMenuItemCallback)
     end)
 
     ZO_PreHook(comboBox, "HideDropdownInternal", function(comboBox)
-        d("hide dropdown")
         local entries = ZO_Menu.items
         for i = 1, #entries do
             local entry = entries[i]

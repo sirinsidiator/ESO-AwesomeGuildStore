@@ -16,7 +16,6 @@ function ItemDatabaseGuildView:Initialize(itemDatabase, guildName)
 end
 
 function ItemDatabaseGuildView:UpdateItems()
-    df("update items for %s", self.guildName)
     local items = self.items
     ZO_ClearNumericallyIndexedTable(items)
 

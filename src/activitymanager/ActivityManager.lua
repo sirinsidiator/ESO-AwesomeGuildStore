@@ -91,10 +91,10 @@ function ActivityManager:Initialize(tradingHouseWrapper, loadingIndicator, loadi
     RegisterForEvent(EVENT_CLOSE_TRADING_HOUSE, function(_) -- TODO prehook?
         if(self.currentActivity) then
             self:RemoveCurrentActivity()
-        end
-        self:ClearQueue()
-        self:StopWatchdog()
-        self.panel:Refresh()
+    end
+    self:ClearQueue()
+    self:StopWatchdog()
+    self.panel:Refresh()
     end)
 
     RegisterForEvent(EVENT_TRADING_HOUSE_CONFIRM_ITEM_PURCHASE, function(_, index)
@@ -268,9 +268,10 @@ end
 
 function ActivityManager:OnFailure(activity)
     if(type(activity) == "string") then
-        d(activity)
+        logger:Error(activity)
         return
     end
+    -- TODO we should log real activity information too
 
     local message = activity:GetErrorMessage()
     ZO_Alert(UI_ALERT_CATEGORY_ERROR, SOUNDS.NEGATIVE_CLICK, message)
