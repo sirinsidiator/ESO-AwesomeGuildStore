@@ -73,8 +73,6 @@ searchfilters/TextFilter.lua
 searchfilters/UnitPriceFilter.lua
 searchfilters/RecipeImprovementFilter.lua
 history/SavedSearchTooltip.lua
-history/SearchLibrary.lua
-history/SearchLibrary.xml
 history/MailBox.lua
 guildselector/HiredTraderTooltip.lua
 guildselector/GuildSelector.lua

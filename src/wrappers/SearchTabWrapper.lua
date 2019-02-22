@@ -131,8 +131,6 @@ function SearchTabWrapper:InitializeFilters(tradingHouseWrapper)
     local saveData = self.saveData
     local tradingHouse = tradingHouseWrapper.tradingHouse
 
-    local searchLibrary = AwesomeGuildStore.SearchLibrary:New(saveData.searchLibrary)
-    self.searchLibrary = searchLibrary
     local searchManager = AwesomeGuildStore.SearchManager:New(tradingHouseWrapper, saveData.searchManager) -- TODO
     saveData.searchManager = searchManager:GetSaveData()
     self.searchManager = searchManager -- TODO: move to tradinghouse wrapper
@@ -141,13 +139,6 @@ function SearchTabWrapper:InitializeFilters(tradingHouseWrapper)
     TRADING_HOUSE_SCENE:AddFragment(self.categorySelector) -- TODO is this the right place?
 
     self.filterArea = AwesomeGuildStore.FilterArea:New(tradingHouse.browseItemsLeftPane, searchManager)
-
-    SLASH_COMMANDS["/ags"] = function(command) -- TODO remove
-        if(command == "reset") then
-            searchLibrary:ResetPosition()
-            Print("Default search library position restored")
-    end
-    end
 
     searchManager:RegisterFilter(AwesomeGuildStore.class.ItemCategoryFilter:New())
     local category, subcategory = searchManager:GetCurrentCategories()
@@ -338,11 +329,6 @@ function SearchTabWrapper:InitializeFilters(tradingHouseWrapper)
     self.searchResultList = AwesomeGuildStore.class.SearchResultListWrapper:New(tradingHouseWrapper, searchManager)
     searchManager:OnFiltersInitialized()
     self.filterArea:OnFiltersInitialized()
-
-    if(saveData.keepFiltersOnClose) then
-        searchLibrary:Deserialize(saveData.searchLibrary.lastState)
-    end
-    searchLibrary:Serialize()
 end
 
 function SearchTabWrapper:AttachButton(button) -- TODO remove
@@ -591,8 +577,6 @@ function SearchTabWrapper:OnOpen(tradingHouseWrapper)
     local tradingHouse = tradingHouseWrapper.tradingHouse
     self.categorySelector:GetControl():SetHidden(false)
     self.searchList:Show()
-    -- tradingHouse.m_searchAllowed = true -- TODO is this still required?
-    -- tradingHouse:OnSearchCooldownUpdate(GetTradingHouseCooldownRemaining()) -- TODO is this still required?
     PushActionLayerByName(ACTION_LAYER_NAME) -- TODO should this action layer only be active here or better in the whole trading house?
     self.isOpen = true
 end
