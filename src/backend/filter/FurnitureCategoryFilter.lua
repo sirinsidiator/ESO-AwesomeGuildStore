@@ -51,7 +51,7 @@ function FurnitureCategoryFilter:GetSelectedCategoryIndicesForServer()
         local firstValue = true
         for value, selected in pairs(self.selection) do
             if(selected) then
-                local categoryId = value.parent.id
+                local categoryId = value.parentId
                 if(firstValue) then
                     selectedCategoryId = categoryId
                     selectedSubcategoryId = value.id

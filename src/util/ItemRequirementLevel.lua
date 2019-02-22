@@ -1,3 +1,4 @@
+local AGS = AwesomeGuildStore
 local GetItemLinkItemId = GetItemLinkItemId
 local GetItemLinkItemType = GetItemLinkItemType
 local GetItemLinkRequiredLevel = GetItemLinkRequiredLevel
@@ -8,12 +9,14 @@ local GetItemLinkRequiredChampionPoints = GetItemLinkRequiredChampionPoints
 local unpack = unpack
 local mceil = math.ceil
 local mfloor = math.floor
-local range = AwesomeGuildStore.data.ITEM_REQUIREMENT_RANGE
+local range = AGS.data.ITEM_REQUIREMENT_RANGE
 
 local LVL = range.LVL
 local CP = range.CP
 local LVL_STEP = range.LVL_STEP
 local CP_STEP = range.CP_STEP
+local RANGE_TYPE_LEVEL = range.RANGE_TYPE_LEVEL
+local RANGE_TYPE_CHAMPION_POINTS = range.RANGE_TYPE_CHAMPION_POINTS
 local MIN_LEVEL_THRESHOLD = range.MIN_LEVEL_THRESHOLD
 local MIN_CP_THRESHOLD = range.MIN_CP_THRESHOLD
 local MIN_LEVEL = range.MIN_LEVEL
@@ -36,6 +39,24 @@ end
 local function GetNormalizedGlyphMinLevelFromItemLink(itemLink)
     local minLevel, minCp = GetItemLinkGlyphMinLevels(itemLink)
     return (minLevel or MAX_LEVEL) + (minCp or 0)
+end
+
+local function GetNormalizedLevel(level, type)
+    if(not level) then return nil end
+
+    if(type == RANGE_TYPE_CHAMPION_POINTS) then
+        return level + MAX_LEVEL
+    end
+    return level
+end
+
+local function GetLevelAndType(normalizedLevel)
+    if(not normalizedLevel) then return nil, nil end
+
+    if(normalizedLevel > MAX_LEVEL) then
+        return normalizedLevel - MAX_LEVEL, RANGE_TYPE_CHAMPION_POINTS
+    end
+    return normalizedLevel, RANGE_TYPE_LEVEL
 end
 
 local function GetSteppedNormalizedLevel(normalizedLevel)
@@ -140,5 +161,7 @@ local function GetItemLinkRequirementLevelRange(itemLink)
     return nil, nil
 end
 
-AwesomeGuildStore.internal.GetSteppedNormalizedLevel = GetSteppedNormalizedLevel
-AwesomeGuildStore.internal.GetItemLinkRequirementLevelRange = GetItemLinkRequirementLevelRange
+AGS.internal.GetNormalizedLevel = GetNormalizedLevel
+AGS.internal.GetLevelAndType = GetLevelAndType
+AGS.internal.GetSteppedNormalizedLevel = GetSteppedNormalizedLevel
+AGS.internal.GetItemLinkRequirementLevelRange = GetItemLinkRequirementLevelRange

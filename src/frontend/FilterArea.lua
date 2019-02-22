@@ -138,9 +138,10 @@ function FilterArea:UpdateAddFilterButton()
 end
 
 function FilterArea:HasFiltersToAttach()
+    local _, subcategory = self.searchManager:GetCurrentCategories()
     for id, fragment in pairs(self.availableFragments) do
         local filter = self.searchManager:GetFilter(id)
-        if(filter and not fragment:IsAttached() and filter:CanAttach()) then
+        if(filter and not fragment:IsAttached() and filter:CanAttach(subcategory)) then
             return true
         end
     end
@@ -149,10 +150,11 @@ end
 
 function FilterArea:GetSortedFilters()
     -- TODO: create new base class for filters which can also be used for SortOrder and CategorySelector (or maybe just exclude these two since they are special?)
+    local _, subcategory = self.searchManager:GetCurrentCategories()
     local filters = {} -- TODO create GetSortedFilters in searchManager
     for id, fragment in pairs(self.availableFragments) do
         local filter = self.searchManager:GetFilter(id)
-        if(filter and not fragment:IsAttached() and filter:CanAttach()) then
+        if(filter and not fragment:IsAttached() and filter:CanAttach(subcategory)) then
             filters[#filters + 1] = filter
         end
     end

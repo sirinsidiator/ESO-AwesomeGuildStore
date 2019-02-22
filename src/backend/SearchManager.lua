@@ -171,8 +171,9 @@ end
 
 function SearchManager:UpdateAttachedFilters(silent)
     local hasChanges = false
+    local _, subcategory = self.categoryFilter:GetCurrentCategories()
     for filterId, filter in pairs(self.availableFilters) do
-        local shouldAttach = (filter:IsPinned() or self.activeSearch:IsFilterActive(filterId)) and filter:CanAttach()
+        local shouldAttach = (filter:IsPinned() or self.activeSearch:IsFilterActive(filterId)) and filter:CanAttach(subcategory)
         if(filter:IsAttached() ~= shouldAttach) then
             hasChanges = true
             if(shouldAttach) then
@@ -193,7 +194,8 @@ end
 
 function SearchManager:AttachFilter(filterId)
     local filter = self:GetFilter(filterId)
-    if(filter and not filter:IsAttached() and filter:CanAttach()) then
+    local _, subcategory = self.categoryFilter:GetCurrentCategories()
+    if(filter and not filter:IsAttached() and filter:CanAttach(subcategory)) then
         filter:Attach()
         self.activeFilters[#self.activeFilters + 1] = filter
         return true

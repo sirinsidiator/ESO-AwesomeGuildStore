@@ -10,6 +10,11 @@ local logger = AGS.internal.logger
 
 local TRADING_HOUSE_SORT_ITEM_NAME = 3 -- TODO move somewhere
 
+local SORT_ORDER_TO_LABEL = {
+    [SortOrderBase.SORT_ORDER_UP] = gettext("ascending"),
+    [SortOrderBase.SORT_ORDER_DOWN] = gettext("descending"),
+}
+
 local SortFilter = FilterBase:Subclass()
 AwesomeGuildStore.class.SortFilter = SortFilter
 
@@ -146,7 +151,7 @@ function SortFilter:SortLocalResults(items, sortOrderId, direction)
     end
 end
 
-function SortFilter:CanAttach()
+function SortFilter:CanAttach(subcategory)
     return true
 end
 
@@ -161,4 +166,9 @@ function SortFilter:Deserialize(state)
         logger:Warn(string.format("Could not deserialize sort filter state '%s'", state))
     end
     return id, direction
+end
+
+function SortFilter:GetTooltipText(id, direction)
+    local sortOrder = self.availableSortOrders[id]
+    return string.format("%s (%s)", sortOrder:GetLabel(), SORT_ORDER_TO_LABEL[direction])
 end

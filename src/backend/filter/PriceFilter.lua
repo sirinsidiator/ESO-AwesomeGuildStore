@@ -52,6 +52,6 @@ function PriceFilter:FilterLocalResult(itemData)
     return true
 end
 
-function PriceFilter:CanAttach()
+function PriceFilter:CanAttach(subcategory)
     return true
 end

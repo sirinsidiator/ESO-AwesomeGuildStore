@@ -1,4 +1,8 @@
+local RANGE_TYPE_LEVEL = "LVL"
+local RANGE_TYPE_CHAMPION_POINTS = "CP"
+local MIN_LEVEL = 1
 local MAX_LEVEL = GetMaxLevel()
+local MIN_CHAMPION_POINTS = 1
 local MAX_CHAMPION_POINTS = GetChampionPointsPlayerProgressionCap()
 local LVL = 0
 local CP = MAX_LEVEL
@@ -261,13 +265,32 @@ AwesomeGuildStore.data.ITEM_REQUIREMENT_RANGE = {
     CP_STEP = 10,
     MIN_LEVEL_THRESHOLD = 4,
     MIN_CP_THRESHOLD = 10,
+    RANGE_TYPE_LEVEL = RANGE_TYPE_LEVEL,
+    RANGE_TYPE_CHAMPION_POINTS = RANGE_TYPE_CHAMPION_POINTS,
 
-    MIN_LEVEL = 1,
+    MIN_LEVEL = MIN_LEVEL,
     MAX_LEVEL = MAX_LEVEL,
-    MIN_CHAMPION_POINTS = 1,
+    MIN_CHAMPION_POINTS = MIN_CHAMPION_POINTS,
     MAX_CHAMPION_POINTS = MAX_CHAMPION_POINTS,
-    MIN_NORMALIZED_LEVEL = 1,
+    MIN_NORMALIZED_LEVEL = MIN_LEVEL,
     MAX_NORMALIZED_LEVEL = MAX_LEVEL + MAX_CHAMPION_POINTS,
+
+    BUTTON_INFO = {
+        [RANGE_TYPE_LEVEL] = {
+            min = MIN_LEVEL,
+            max = MAX_LEVEL,
+            normal="EsoUI/Art/LFG/LFG_normalDungeon_down.dds",
+            pressed="EsoUI/Art/LFG/LFG_normalDungeon_down.dds",
+            mouseOver="EsoUI/Art/LFG/LFG_normalDungeon_over.dds",
+        },
+        [RANGE_TYPE_CHAMPION_POINTS] = {
+            min = MIN_CHAMPION_POINTS,
+            max = MAX_CHAMPION_POINTS,
+            normal="EsoUI/Art/LFG/LFG_championDungeon_down.dds",
+            pressed="EsoUI/Art/LFG/LFG_championDungeon_down.dds",
+            mouseOver="EsoUI/Art/LFG/LFG_championDungeon_over.dds",
+        }
+    },
 
     MATERIAL_REQUIREMENT_LEVELS = MATERIAL_REQUIREMENT_LEVELS,
     PROVISIONING_ITEM_TYPE_HAS_FULL_RANGE = PROVISIONING_ITEM_TYPE_HAS_FULL_RANGE,

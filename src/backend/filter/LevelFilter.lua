@@ -7,8 +7,10 @@ local FILTER_ID = AGS.data.FILTER_ID
 local CATEGORY_ID = AGS.data.CATEGORY_ID
 local SUB_CATEGORY_ID = AGS.data.SUB_CATEGORY_ID
 local ITEM_REQUIREMENT_RANGE = AGS.data.ITEM_REQUIREMENT_RANGE
+local RANGE_INFO = ITEM_REQUIREMENT_RANGE.BUTTON_INFO
 
 local gettext = AGS.internal.gettext
+local GetLevelAndType = AGS.internal.GetLevelAndType
 local GetItemLinkRequirementLevelRange = AGS.internal.GetItemLinkRequirementLevelRange
 
 local TRADING_HOUSE_FILTER_TYPE_LEVEL = TRADING_HOUSE_FILTER_TYPE_LEVEL
@@ -18,6 +20,7 @@ local TRADING_HOUSE_FILTER_TYPE_CHAMPION_POINTS = TRADING_HOUSE_FILTER_TYPE_CHAM
 local MIN_INDEX = 1
 local MAX_INDEX = 2
 local MAX_LEVEL = ITEM_REQUIREMENT_RANGE.MAX_LEVEL
+local ICON_SIZE = 24
 
 local CAN_SERVER_FILTER_IN_CATEGORY = {
     [CATEGORY_ID.ALL] = true,
@@ -104,4 +107,10 @@ function LevelFilter:FilterLocalResult(itemData)
         return not (itemMax < self.localMin or itemMin > self.localMax)
     end
     return false
+end
+
+function LevelFilter:GetFormattedValue(value)
+    local level, type = GetLevelAndType(value)
+    local icon = RANGE_INFO[type].normal
+    return zo_strformat("<<1>> <<2>>", ZO_LocalizeDecimalNumber(value), zo_iconFormat(icon, ICON_SIZE, ICON_SIZE))
 end

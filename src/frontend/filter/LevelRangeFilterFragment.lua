@@ -8,32 +8,17 @@ local ITEM_REQUIREMENT_RANGE = AGS.data.ITEM_REQUIREMENT_RANGE
 
 local gettext = AGS.internal.gettext
 
+local GetNormalizedLevel = AGS.internal.GetNormalizedLevel
+local GetLevelAndType = AGS.internal.GetLevelAndType
 local GetSteppedNormalizedLevel = AGS.internal.GetSteppedNormalizedLevel
 
 
 local SKIP_UPDATE = true
-local RANGE_TYPE_LEVEL = "LVL"
-local RANGE_TYPE_CHAMPION_POINTS = "CP"
-local RANGE_INFO = {
-    [RANGE_TYPE_LEVEL] = {
-        min = ITEM_REQUIREMENT_RANGE.MIN_LEVEL,
-        max = ITEM_REQUIREMENT_RANGE.MAX_LEVEL,
-        normal="EsoUI/Art/LFG/LFG_normalDungeon_down.dds",
-        pressed="EsoUI/Art/LFG/LFG_normalDungeon_down.dds",
-        mouseOver="EsoUI/Art/LFG/LFG_normalDungeon_over.dds",
-    },
-    [RANGE_TYPE_CHAMPION_POINTS] = {
-        min = ITEM_REQUIREMENT_RANGE.MIN_CHAMPION_POINTS,
-        max = ITEM_REQUIREMENT_RANGE.MAX_CHAMPION_POINTS,
-        normal="EsoUI/Art/LFG/LFG_championDungeon_down.dds",
-        pressed="EsoUI/Art/LFG/LFG_championDungeon_down.dds",
-        mouseOver="EsoUI/Art/LFG/LFG_championDungeon_over.dds",
-    }
-}
+local RANGE_TYPE_LEVEL = ITEM_REQUIREMENT_RANGE.RANGE_TYPE_LEVEL
+local RANGE_TYPE_CHAMPION_POINTS = ITEM_REQUIREMENT_RANGE.RANGE_TYPE_CHAMPION_POINTS
+local RANGE_INFO = ITEM_REQUIREMENT_RANGE.BUTTON_INFO
 local MAX_LEVEL = ITEM_REQUIREMENT_RANGE.MAX_LEVEL
 local MIN_CHAMPION_POINTS = ITEM_REQUIREMENT_RANGE.MIN_CHAMPION_POINTS
-local MIN_NORMALIZED_LEVEL = ITEM_REQUIREMENT_RANGE.MIN_NORMALIZED_LEVEL
-local MAX_NORMALIZED_LEVEL = ITEM_REQUIREMENT_RANGE.MAX_NORMALIZED_LEVEL
 
 local LevelRangeFilterFragment = ValueRangeFilterFragmentBase:Subclass()
 AwesomeGuildStore.class.LevelRangeFilterFragment = LevelRangeFilterFragment
@@ -131,30 +116,12 @@ function LevelRangeFilterFragment:OnValueChanged(min, max)
     self.fromFilter = false
 end
 
-local function GetNormalizedLevel(level, type) -- TODO: this should be a util
-    if(not level) then return nil end
-
-    if(type == RANGE_TYPE_CHAMPION_POINTS) then
-        return level + MAX_LEVEL
-    end
-    return level
-end
-
 function LevelRangeFilterFragment:GetInputValues()
     local minType = self.currentRangeType[self.minLevelToggle]
     local maxType = self.currentRangeType[self.maxLevelToggle]
     local min = GetNormalizedLevel(self.minLevel:GetValue(), minType)
     local max = GetNormalizedLevel(self.maxLevel:GetValue(), maxType)
     return min, max
-end
-
-local function GetLevelAndType(normalizedLevel) -- TODO: this should be a util
-    if(not normalizedLevel) then return nil, nil end
-
-    if(normalizedLevel > MAX_LEVEL) then
-        return normalizedLevel - MAX_LEVEL, RANGE_TYPE_CHAMPION_POINTS
-    end
-    return normalizedLevel, RANGE_TYPE_LEVEL
 end
 
 function LevelRangeFilterFragment:SetInputValues(min, max)

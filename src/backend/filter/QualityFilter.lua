@@ -31,31 +31,40 @@ function QualityFilter:Initialize()
         steps = {
             {
                 id = ITEM_QUALITY_NORMAL,
-                label = GetString(SI_TRADING_HOUSE_BROWSE_QUALITY_NORMAL),
+                label = GetString("SI_ITEMQUALITY", ITEM_QUALITY_NORMAL),
                 icon = "AwesomeGuildStore/images/qualitybuttons/normal_%s.dds",
             },
             {
                 id = ITEM_QUALITY_MAGIC,
-                label = GetString(SI_TRADING_HOUSE_BROWSE_QUALITY_MAGIC),
+                label = GetString("SI_ITEMQUALITY", ITEM_QUALITY_MAGIC),
                 icon = "AwesomeGuildStore/images/qualitybuttons/magic_%s.dds",
             },
             {
                 id = ITEM_QUALITY_ARCANE,
-                label = GetString(SI_TRADING_HOUSE_BROWSE_QUALITY_ARCANE),
+                label = GetString("SI_ITEMQUALITY", ITEM_QUALITY_ARCANE),
                 icon = "AwesomeGuildStore/images/qualitybuttons/arcane_%s.dds",
             },
             {
                 id = ITEM_QUALITY_ARTIFACT,
-                label = GetString(SI_TRADING_HOUSE_BROWSE_QUALITY_ARTIFACT),
+                label = GetString("SI_ITEMQUALITY", ITEM_QUALITY_ARTIFACT),
                 icon = "AwesomeGuildStore/images/qualitybuttons/artifact_%s.dds",
             },
             {
                 id = ITEM_QUALITY_LEGENDARY,
-                label = GetString(SI_TRADING_HOUSE_BROWSE_QUALITY_LEGENDARY),
+                label = GetString("SI_ITEMQUALITY", ITEM_QUALITY_LEGENDARY),
                 icon = "AwesomeGuildStore/images/qualitybuttons/legendary_%s.dds",
             }
         }
     })
+
+    local qualityById = {}
+    for i = 1, #self.config.steps do
+        local step = self.config.steps[i]
+        local color = GetItemQualityColor(step.id)
+        step.colorizedLabel = color:Colorize(step.label)
+        qualityById[step.id] = step
+    end
+    self.qualityById = qualityById
 end
 
 function QualityFilter:IsLocal()
@@ -72,6 +81,18 @@ function QualityFilter:FilterLocalResult(itemData)
     return not (quality < self.localMin or quality > self.localMax)
 end
 
-function QualityFilter:CanAttach()
+function QualityFilter:CanAttach(subcategory)
     return true
+end
+
+function QualityFilter:GetTooltipText(min, max)
+    if(min ~= self.config.min or max ~= self.config.max) then
+        local out = {}
+        for id = min, max do
+            local step = self.qualityById[id]
+            out[#out + 1] = step.colorizedLabel
+        end
+        return table.concat(out, ", ")
+    end
+    return ""
 end

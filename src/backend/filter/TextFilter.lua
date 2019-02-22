@@ -74,7 +74,7 @@ function TextFilter:FilterLocalResult(itemData)
     return isMatch
 end
 
-function TextFilter:CanAttach()
+function TextFilter:CanAttach(subcategory)
     return true
 end
 
@@ -84,4 +84,8 @@ end
 
 function TextFilter:Deserialize(state)
     return DecodeValue("base64", state)
+end
+
+function TextFilter:GetTooltipText(text)
+    return text
 end

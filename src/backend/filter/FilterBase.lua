@@ -48,10 +48,7 @@ function FilterBase:SetEnabledSubcategories(categories)
     self.enabledSubcategory = categories or self.enabledSubcategory
 end
 
-function FilterBase:CanAttach()
-    if(not self.searchManager) then return false end
-
-    local _, subcategory = self.searchManager:GetCurrentCategories()
+function FilterBase:CanAttach(subcategory)
     return self.enabledSubcategory[subcategory.id] == true
 end
 
@@ -91,6 +88,10 @@ end
 
 function FilterBase:GetLabel()
     return self.label
+end
+
+function FilterBase:GetTooltipText(...)
+    return ""
 end
 
 function FilterBase:HandleChange(...)
@@ -146,8 +147,4 @@ end
 function FilterBase:Deserialize(state)
     -- returns the arguments for SetUpLocalFilter, SetValues and Serialize
     return nil
-end
-
-function FilterBase:GetTooltipText(state) -- TODO
-    return {}
 end

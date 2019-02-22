@@ -614,6 +614,8 @@ end
 
 function ItemCategoryFilter:Initialize()
     FilterBase.Initialize(self, FILTER_ID.CATEGORY_FILTER, FilterBase.GROUP_CATEGORY)
+    -- TRANSLATORS: label of the category filter
+    self:SetLabel(gettext("Item Category"))
 
     self.activeSubcategoryForCategory = {}
     for categoryId, subcategoryId in pairs(DEFAULT_SUB_CATEGORY_ID) do
@@ -690,7 +692,7 @@ function ItemCategoryFilter:FilterLocalResult(itemData)
     return true
 end
 
-function ItemCategoryFilter:CanAttach()
+function ItemCategoryFilter:CanAttach(subcategory)
     return true
 end
 
@@ -747,4 +749,14 @@ function ItemCategoryFilter:Deserialize(state)
         return SUB_CATEGORY_DEFINITION[subcategoryId]
     end
     return SUB_CATEGORY_DEFINITION[DEFAULT_SUB_CATEGORY_ID[DEFAULT_CATEGORY_ID]]
+end
+
+function ItemCategoryFilter:GetTooltipText(subcategory)
+    local category = CATEGORY_DEFINITION[subcategory.category]
+
+    if(subcategory.isDefault) then
+        return category.label
+    else
+        return string.format("%s > %s", category.label, subcategory.label)
+    end
 end

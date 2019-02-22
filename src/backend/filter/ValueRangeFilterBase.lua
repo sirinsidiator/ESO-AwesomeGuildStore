@@ -3,9 +3,11 @@ local AGS = AwesomeGuildStore
 local FilterBase = AGS.class.FilterBase
 
 local ClampValue = AGS.internal.ClampValue
+local gettext = AGS.internal.gettext
 local EncodeValue = AGS.EncodeValue
 local DecodeValue = AGS.DecodeValue
 
+local DONT_USE_SHORT_FORMAT = false
 
 local ValueRangeFilterBase = FilterBase:Subclass()
 AGS.class.ValueRangeFilterBase = ValueRangeFilterBase
@@ -77,8 +79,35 @@ function ValueRangeFilterBase:Serialize(min, max)
 end
 
 function ValueRangeFilterBase:Deserialize(state)
-    local min, max = zo_strsplit("," , state)
+    local min, max = string.match(state, "^(.-),(.-)$")
     min = DecodeValue("integer", min) / self.modifier
     max = DecodeValue("integer", max) / self.modifier
     return min, max
+end
+
+function ValueRangeFilterBase:GetFormattedValue(value)
+    if(self.config.currency) then
+        return ZO_CurrencyControl_FormatCurrencyAndAppendIcon(value, DONT_USE_SHORT_FORMAT, self.config.currency)
+    else
+        return zo_strformat("<<1>>", ZO_LocalizeDecimalNumber(value))
+    end
+end
+
+function ValueRangeFilterBase:GetTooltipText(min, max)
+    local text = ""
+    local hasMin = (min ~= self.config.min)
+    local hasMax = (max ~= self.config.max)
+    if(hasMin and hasMax) then
+        if(min == max) then
+            text = gettext("exactly <<1>>", self:GetFormattedValue(min))
+        else
+            text = gettext("<<1>> - <<2>>", self:GetFormattedValue(min), self:GetFormattedValue(max))
+        end
+    elseif(hasMin) then
+        text = gettext("over <<1>>", self:GetFormattedValue(min))
+    elseif(hasMax) then
+        text = gettext("under <<1>>", self:GetFormattedValue(max))
+    end
+
+    return text
 end

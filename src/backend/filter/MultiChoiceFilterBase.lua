@@ -135,19 +135,42 @@ end
 
 function MultiChoiceFilterBase:Deserialize(state)
     local selection = {}
-    local ids = {zo_strsplit("," , state)}
+    local ids
+    if(self.encoding == "boolean") then
+        -- boolean uses an empty string to express false, which is ignored by zo_strsplit
+        if(string.find(state, ",")) then
+            ids = {string.match(state, "^(.-),(.-)$")}
+        else
+            ids = {state}
+        end
+    else
+        ids = {zo_strsplit("," , state)}
+    end
 
     for _, value in pairs(self.valueById) do
         selection[value] = false
     end
 
-    for i = 1, #ids do
-        local id = DecodeValue(self.encoding, ids[i])
-        local value = self.valueById[id]
-        if(value) then
-            selection[value] = true
+    if(#ids > 0) then
+        for i = 1, #ids do
+            local id = DecodeValue(self.encoding, ids[i])
+            local value = self.valueById[id]
+            if(value) then
+                selection[value] = true
+            end
         end
     end
 
     return selection
+end
+
+function MultiChoiceFilterBase:GetTooltipText(selection)
+    local temp = self.temp
+    ZO_ClearTable(temp)
+    for value, selected in pairs(selection) do
+        if(selected) then
+            temp[#temp + 1] = value.label
+        end
+    end
+    return table.concat(temp, ", ")
 end

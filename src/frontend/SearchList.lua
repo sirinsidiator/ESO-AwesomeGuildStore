@@ -1,6 +1,9 @@
 local AGS = AwesomeGuildStore
 
 local FILTER_ID = AGS.data.FILTER_ID
+local SUB_CATEGORY_DEFINITION = AGS.data.SUB_CATEGORY_DEFINITION
+local DEFAULT_CATEGORY_ID = AGS.data.DEFAULT_CATEGORY_ID
+local DEFAULT_SUB_CATEGORY_ID = AGS.data.DEFAULT_SUB_CATEGORY_ID
 local gettext = AGS.internal.gettext
 local logger = AGS.internal.logger
 
@@ -24,6 +27,9 @@ local ROW_HEIGHT = 38
 
 local ADD_NEW_LABEL = gettext("New Search")
 local ADD_NEW_ICON = "EsoUI/Art/Progression/addpoints_up.dds"
+
+local r, g, b = ZO_TOOLTIP_DEFAULT_COLOR:UnpackRGB()
+local LINE_FORMAT = "%s: |cFFFFFF%s"
 
 local SearchList = ZO_Object:Subclass()
 AGS.SearchList = SearchList
@@ -80,10 +86,16 @@ function SearchList:Initialize(searchManager)
 
         control:SetHandler("OnMouseEnter", function()
             highlight.animation:PlayForward()
+            if(control.search) then
+                self:ShowTooltip(control)
+            end
         end)
 
         control:SetHandler("OnMouseExit", function()
             highlight.animation:PlayBackward()
+            if(control.search) then
+                self:HideTooltip()
+            end
         end)
     end
 
@@ -152,8 +164,41 @@ function SearchList:Initialize(searchManager)
         if(id ~= FILTER_ID.CATEGORY_FILTER) then return end
         list:RefreshVisible()
     end)
+end
 
-    self.toolTip = AGS.SavedSearchTooltip:New()
+function SearchList:ShowTooltip(control)
+    local search = control.search
+    local searchManager = self.searchManager
+
+    InitializeTooltip(InformationTooltip, control, RIGHT, -5, 0)
+    InformationTooltip:AddLine(search:GetLabel(), "ZoFontGameBold", r, g, b)
+
+    local filterState = search:GetFilterState()
+    local values = filterState:GetValues()
+
+    local subcategory = filterState:GetFilterValues(FILTER_ID.CATEGORY_FILTER)
+    if(not subcategory) then
+        subcategory = SUB_CATEGORY_DEFINITION[DEFAULT_SUB_CATEGORY_ID[DEFAULT_CATEGORY_ID]]
+    end
+
+    local categoryFilter = searchManager:GetCategoryFilter()
+    local text = string.format(LINE_FORMAT, categoryFilter:GetLabel(), categoryFilter:GetTooltipText(subcategory))
+    InformationTooltip:AddLine(text, "", r, g, b)
+
+    for i = 1, #values do
+        local id, values, state = unpack(values[i])
+        if(id ~= FILTER_ID.CATEGORY_FILTER) then
+            local filter = searchManager:GetFilter(id)
+            if(filter and (filter:IsPinned() or search:IsFilterActive(id)) and filter:CanAttach(subcategory)) then
+                local text = string.format(LINE_FORMAT, filter:GetLabel(), filter:GetTooltipText(unpack(values)))
+                InformationTooltip:AddLine(text, "", r, g, b)
+            end
+        end
+    end
+end
+
+function SearchList:HideTooltip()
+    ClearTooltip(InformationTooltip)
 end
 
 function SearchList:HandleClickSearchEntry(control, button, search)

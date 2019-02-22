@@ -12,6 +12,7 @@ FilterState.STATE_INDEX = 3
 
 local VERSION = "4"
 local ID_SEPARATOR = ":"
+local STATE_MATCHER = string.format("^(.-)%s(.-)$", ID_SEPARATOR)
 local FIELD_SEPARATOR = ";"
 
 -- TODO: use luadoc comments
@@ -26,7 +27,7 @@ function FilterState.Deserialize(searchManager, state) -- TODO: see if this can 
     local temp = {zo_strsplit(FIELD_SEPARATOR, state)}
     if(temp[1] == VERSION) then
         for i = 2, #temp do
-            local id, state = zo_strsplit(ID_SEPARATOR, temp[i])
+            local id, state = string.match(temp[i], STATE_MATCHER)
             filterState[tonumber(id)] = state
         end
     end
