@@ -122,7 +122,7 @@ function SearchManager:OnFiltersInitialized()
     if(#self.searches == 0) then
         self:AddSearch()
     end
-    if(not saveData.activeIndex) then
+    if(not saveData.activeIndex or not self.searches[saveData.activeIndex]) then
         saveData.activeIndex = 1
     end
     self.activeSearch = self.searches[saveData.activeIndex]
@@ -221,17 +221,17 @@ function SearchManager:UpdateState() -- TODO is this used?
 -- go through all activeFilters and store it
 end
 
-function SearchManager:SetActiveSearch(searchId)
-    for i = 1, #self.searches do
-        local search = self.searches[i]
-        if(search:GetId() == searchId) then
-            self.activeSearch = search
-            self.saveData.activeIndex = i
-            search:Apply()
-            return true
-        end
-    end
-    return false
+function SearchManager:SetActiveSearch(search)
+    if(search == self.activeSearch) then return false end
+
+    local searches = self.searches
+    local index = search:GetIndex()
+    if(not searches[index] or search ~= searches[index]) then return false end
+
+    self.activeSearch = search
+    self.saveData.activeIndex = index
+    search:Apply()
+    return true
 end
 
 function SearchManager:GetActiveSearch()
@@ -245,34 +245,52 @@ end
 function SearchManager:AddSearch()
     local search = SearchState:New(self)
     local newIndex = #self.searches + 1
+    search.sortIndex = newIndex -- this is so we do not have to refresh the list twice
     self.searches[newIndex] = search
     self.saveData.searches[newIndex] = search:GetSaveData()
     return search
 end
 
-function SearchManager:RemoveSearch(searchId)
+function SearchManager:RemoveSearch(search)
     local searches = self.searches
-    for i = 1, #searches do
-        if(searches[i]:GetId() == searchId) then
-            local removedSearch = table.remove(searches, i)
-            if(self.activeSearch == removedSearch) then
-                local activeSearch
-                if(#self.searches == 0) then
-                    activeSearch = self:AddSearch()
-                    self.saveData.activeIndex = 1
-                else
-                    local index = math.min(i, #searches)
-                    activeSearch = self.searches[index]
-                    self.saveData.activeIndex = index
-                end
+    local index = search:GetIndex()
+    if(not searches[index] or search ~= searches[index]) then return false end
 
-                self.activeSearch = activeSearch
-                activeSearch:Apply()
-                self:RequestSearch()
-            end
-            break
+    table.remove(searches, index)
+    table.remove(self.saveData.searches, index)
+    if(self.activeSearch == search) then
+        local activeSearch
+        if(#self.searches == 0) then
+            activeSearch = self:AddSearch()
+            self.saveData.activeIndex = 1
+        else
+            local index = math.min(index, #searches)
+            activeSearch = self.searches[index]
+            self.saveData.activeIndex = index
         end
+
+        self.activeSearch = activeSearch
+        activeSearch:Apply()
+    elseif(self.saveData.activeIndex > index) then
+        self.saveData.activeIndex = self.saveData.activeIndex - 1
     end
+    return true
+end
+
+function SearchManager:MoveSearch(search, newIndex)
+    local searches = self.searches
+    local index = search:GetIndex()
+    if(not searches[index] or search ~= searches[index]) then return false end
+    local savedSearches = self.saveData.searches
+
+    table.insert(searches, newIndex, table.remove(searches, index))
+    table.insert(savedSearches, newIndex, table.remove(savedSearches, index))
+
+    if(self.activeSearch == search) then
+        self.saveData.activeIndex = newIndex
+    end
+
+    return true
 end
 
 function SearchManager:GetAvailableFilters()

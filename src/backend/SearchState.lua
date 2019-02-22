@@ -1,13 +1,14 @@
 local FilterState = AwesomeGuildStore.class.FilterState
 local FILTER_ID = AwesomeGuildStore.data.FILTER_ID
 local CATEGORY_DEFINITION = AwesomeGuildStore.data.CATEGORY_DEFINITION
+local SUB_CATEGORY_DEFINITION = AwesomeGuildStore.data.SUB_CATEGORY_DEFINITION
+local DEFAULT_CATEGORY_ID = AwesomeGuildStore.data.DEFAULT_CATEGORY_ID
+local DEFAULT_SUB_CATEGORY_ID = AwesomeGuildStore.data.DEFAULT_SUB_CATEGORY_ID
 local WriteToSavedVariable = AwesomeGuildStore.internal.WriteToSavedVariable
 local ReadFromSavedVariable = AwesomeGuildStore.internal.ReadFromSavedVariable
 
 local SearchState = ZO_Object:Subclass()
 AwesomeGuildStore.SearchState = SearchState
-
-SearchState.nextId = 1
 
 function SearchState:New(...)
     local object = ZO_Object.New(self)
@@ -18,21 +19,16 @@ end
 function SearchState:Initialize(searchManager, saveData)
     if(not saveData) then
         saveData = {
-            id = SearchState.nextId, -- TODO remove
             label = nil,
             state = FilterState.DEFAULT_STATE:GetState(),
-            history = {} -- TODO implement
+            history = {}, -- TODO implement
         }
-        SearchState.nextId = SearchState.nextId + 1
-    else
-        SearchState.nextId = math.max(SearchState.nextId, saveData.id + 1)
     end
 
     self.searchManager = searchManager
     self.saveData = saveData
 
-    self.id = saveData.id
-    -- TODO self.index should reflect the position in the table and directly be used for the order in the list
+    self.label = saveData.label
     self.customLabel = (saveData.label ~= nil)
     self.filterActive = {}
     self.filterState = FilterState.Deserialize(searchManager, ReadFromSavedVariable(saveData, "state"))
@@ -52,6 +48,10 @@ function SearchState:Reset()
 
     self:Update()
     self:Apply()
+end
+
+function SearchState:GetIndex()
+    return self.sortIndex -- sort index is managed by the sort filter list
 end
 
 function SearchState:GetSaveData()
@@ -113,6 +113,9 @@ end
 
 function SearchState:Update()
     local subcategory = self.filterState:GetFilterValues(FILTER_ID.CATEGORY_FILTER)
+    if(not subcategory) then
+        subcategory = SUB_CATEGORY_DEFINITION[DEFAULT_SUB_CATEGORY_ID[DEFAULT_CATEGORY_ID]]
+    end
     local category = CATEGORY_DEFINITION[subcategory.category]
 
     if(not self.customLabel) then
@@ -128,10 +131,6 @@ function SearchState:Update()
     else
         self.icon = subcategory.icon
     end
-end
-
-function SearchState:GetId() -- TODO get rid of this and store the index instead
-    return self.id
 end
 
 function SearchState:SetLabel(label)
@@ -159,13 +158,11 @@ function SearchState:GetIcon()
     return self.icon
 end
 
-function SearchState:CreateDataEntry()
-    return { -- TODO cache object
-        id = self.id,
-        label = self.label,
-        icon = self.icon,
-        state = self.state,
-    }
+function SearchState:GetDataEntry(type)
+    if(not self.dataEntry) then
+        ZO_ScrollList_CreateDataEntry(type, self)
+    end
+    return self.dataEntry
 end
 
 function SearchState:IsFilterActive(filterId)

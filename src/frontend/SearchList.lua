@@ -1,4 +1,22 @@
 local FILTER_ID = AwesomeGuildStore.data.FILTER_ID
+local gettext = AwesomeGuildStore.internal.gettext
+
+local MENU_LABEL_SELECT = gettext("Set Active")
+local MENU_LABEL_RENAME = gettext("Change Label")
+local MENU_LABEL_RESET = gettext("Reset Label")
+local MENU_LABEL_MOVE_UP = gettext("Move Up")
+local MENU_LABEL_MOVE_DOWN = gettext("Move Down")
+local MENU_LABEL_REMOVE = gettext("Delete")
+
+local RENAME_DIALOG = "AwesomeGuildStore_RenameSearchDialog"
+
+local SEARCH_ENTRY = 1
+local ADD_NEW_ENTRY = 2
+
+local ROW_HEIGHT = 38
+
+local ADD_NEW_LABEL = gettext("New Search")
+local ADD_NEW_ICON = "EsoUI/Art/Progression/addpoints_up.dds"
 
 local SearchList = ZO_Object:Subclass()
 AwesomeGuildStore.SearchList = SearchList
@@ -12,9 +30,33 @@ end
 function SearchList:Initialize(searchManager)
     self.searchManager = searchManager
 
-    -- scroll list with drag and drop sort
-    -- each entry is a button with tri-state logic
-    -- last entry "new search" appends new entries to list
+    ZO_Dialogs_RegisterCustomDialog(RENAME_DIALOG, {
+        title = {
+            text = gettext("Rename Search"),
+        },
+        mainText = {
+            text = gettext("Enter the new name for your search."),
+        },
+        editBox = {
+            selectAll = true
+        },
+        buttons = {
+            {
+                requiresTextInput = true,
+                text =      gettext("Save"),
+                callback =  function(dialog)
+                    local label = ZO_Dialogs_GetEditBoxText(dialog)
+                    dialog.data:SetLabel(label)
+                    self.list:RefreshVisible()
+                end,
+            },
+            {
+                text =       SI_DIALOG_CANCEL,
+                callback =  function(dialog) end,
+            },
+        }
+    })
+
     local container = AwesomeGuildStoreSearchListContainer
     container:SetParent(ZO_TradingHouse)
     local list = ZO_SortFilterList:New(container)
@@ -25,62 +67,63 @@ function SearchList:Initialize(searchManager)
     self.list = list
     self.container = container
 
-    local newSearchIndex = 1
-    local SEARCH_ENTRY = 1
-    local function SetupRow(control, data)
-        list:SetupRow(control, data)
-
-        local isSelected = data.id == searchManager:GetActiveSearch():GetId()
-
-        local iconControl = control:GetNamedChild("Icon")
-        iconControl:SetTexture(data.icon:format(isSelected and "down" or "up"))
-
-        local nameControl = control:GetNamedChild("Name")
-        nameControl:SetText(data.label)
-        local color = isSelected and ZO_SELECTED_TEXT or ZO_NORMAL_TEXT
-        nameControl:SetColor(color:UnpackRGBA())
-
-        -- TODO: find a better way to show the highlight (check how inventory works)
+    local function SetupHighlight(control)
         local highlight = control:GetNamedChild("Highlight")
-        if not highlight.animation then
-            highlight.animation = ANIMATION_MANAGER:CreateTimelineFromVirtual("ShowOnMouseOverLabelAnimation", highlight)
-        end
+        highlight.animation = ANIMATION_MANAGER:CreateTimelineFromVirtual("ShowOnMouseOverLabelAnimation", highlight)
 
-        local function FadeIn()
+        control:SetHandler("OnMouseEnter", function()
             highlight.animation:PlayForward()
-            if(data.state) then
-                self.toolTip:Show(control, data, AwesomeGuildStore.main.searchTab.searchLibrary.filterByType) -- TODO
-            end
-        end
+        end)
 
-        local function FadeOut()
+        control:SetHandler("OnMouseExit", function()
             highlight.animation:PlayBackward()
-            self.toolTip:Hide()
-        end
+        end)
+    end
 
-        control:SetHandler("OnMouseEnter", FadeIn)
-        control:SetHandler("OnMouseExit", FadeOut)
+    local function SetupSearchRow(control)
+        control.icon = control:GetNamedChild("Icon")
+        control.name = control:GetNamedChild("Name")
+
+        SetupHighlight(control)
+
         control:SetHandler("OnMouseUp", function(control, button, isInside)
-            if(button == MOUSE_BUTTON_INDEX_LEFT and isInside) then
-                local id = data.id
-                if(not id) then
-                    id = searchManager:AddSearch():GetId()
-                    self.list:RefreshFilters()
-                    ZO_ScrollList_ScrollDataIntoView(self.list.list, newSearchIndex, nil, true)
-                end
-                searchManager:SetActiveSearch(id)
-                self.list:RefreshVisible()
-                PlaySound("Click")
-            elseif(button == MOUSE_BUTTON_INDEX_MIDDLE and isInside) then
-                if(data.id) then
-                    searchManager:RemoveSearch(data.id)
-                    self.list:RefreshFilters()
-                    PlaySound("Click") -- TODO: select a different search, or clear results if none are left
-                end
+            if(isInside) then
+                self:HandleClickSearchEntry(control, button, control.search)
             end
         end)
     end
-    ZO_ScrollList_AddDataType(list.list, SEARCH_ENTRY, "AwesomeGuildStoreSearchListEntry", 38, SetupRow)
+
+    ZO_ScrollList_AddDataType(list.list, SEARCH_ENTRY, "AwesomeGuildStoreSearchListEntry", ROW_HEIGHT, function(control, search)
+        list:SetupRow(control, search)
+
+        if(not control.icon) then
+            SetupSearchRow(control)
+        end
+
+        local isSelected = (search == searchManager:GetActiveSearch())
+        local texture = search:GetIcon():format(isSelected and "down" or "up")
+        local color = isSelected and ZO_SELECTED_TEXT or ZO_NORMAL_TEXT
+
+        control.icon:SetTexture(texture)
+        control.name:SetText(search:GetLabel())
+        control.name:SetColor(color:UnpackRGBA())
+        control.search = search
+    end)
+
+    ZO_ScrollList_AddDataType(list.list, ADD_NEW_ENTRY, "AwesomeGuildStoreSearchListEntry", ROW_HEIGHT, function(control, data)
+        list:SetupRow(control, data)
+        SetupHighlight(control)
+
+        control:GetNamedChild("Icon"):SetTexture(ADD_NEW_ICON)
+        control:GetNamedChild("Name"):SetText(ADD_NEW_LABEL)
+        control:SetHandler("OnMouseUp", function(control, button, isInside)
+            if(isInside and button == MOUSE_BUTTON_INDEX_LEFT) then
+                self:HandleAddNewSearch()
+            end
+        end)
+    end)
+
+    local newSearchEntry = ZO_ScrollList_CreateDataEntry(ADD_NEW_ENTRY, {})
 
     function list:FilterScrollList()
         local scrollData = ZO_ScrollList_GetDataList(self.list)
@@ -88,25 +131,103 @@ function SearchList:Initialize(searchManager)
 
         local searches = searchManager:GetSearches()
         for i = 1, #searches do
-            scrollData[#scrollData + 1] = ZO_ScrollList_CreateDataEntry(SEARCH_ENTRY, searches[i]:CreateDataEntry())
+            scrollData[#scrollData + 1] = searches[i]:GetDataEntry(SEARCH_ENTRY)
         end
 
-        -- TODO: add outside of the scrolling?
-        scrollData[#scrollData + 1] = ZO_ScrollList_CreateDataEntry(SEARCH_ENTRY, {
-            label = "New Search",
-            icon = "EsoUI/Art/Progression/addpoints_up.dds"
-        })
-        newSearchIndex = #scrollData
+        scrollData[#scrollData + 1] = newSearchEntry
     end
 
     list:RefreshFilters()
 
     AwesomeGuildStore:RegisterCallback(AwesomeGuildStore.callback.FILTER_VALUE_CHANGED, function(id)
         if(id ~= FILTER_ID.CATEGORY_FILTER) then return end
-        list:RefreshFilters() -- TODO: use RefreshVisible instead, since we just need to adjust label and icon
+        list:RefreshVisible()
     end)
 
     self.toolTip = AwesomeGuildStore.SavedSearchTooltip:New()
+end
+
+function SearchList:HandleClickSearchEntry(control, button, search)
+    if(button == MOUSE_BUTTON_INDEX_LEFT) then
+        self:HandleSetSearchActive(search)
+    elseif(button == MOUSE_BUTTON_INDEX_MIDDLE) then
+        self:HandleRemoveSearch(search)
+    elseif(button == MOUSE_BUTTON_INDEX_RIGHT) then
+        self:ShowContextMenu(control, search)
+    end
+end
+
+function SearchList:HandleAddNewSearch()
+    if(self.searchManager:SetActiveSearch(self.searchManager:AddSearch())) then
+        self.list:RefreshFilters()
+        local scrollData = ZO_ScrollList_GetDataList(self.list.list)
+        ZO_ScrollList_ScrollDataIntoView(self.list.list, #scrollData, nil, true)
+        PlaySound("Click")
+    end
+end
+
+function SearchList:HandleSetSearchActive(search)
+    if(self.searchManager:SetActiveSearch(search)) then
+        self.list:RefreshVisible()
+        PlaySound("Click")
+    end
+end
+
+function SearchList:HandleRenameRequest(search)
+    ZO_Dialogs_ShowDialog(RENAME_DIALOG, search, {
+        initialEditText = search:GetLabel(),
+    })
+end
+
+function SearchList:HandleResetLabel(search)
+    search:ResetLabel()
+    self.list:RefreshVisible()
+    PlaySound("Click")
+end
+
+function SearchList:HandleMoveSearchToIndex(search, newIndex)
+    if(self.searchManager:MoveSearch(search, newIndex)) then
+        self.list:RefreshFilters()
+        PlaySound("Click")
+    end
+end
+
+function SearchList:HandleRemoveSearch(search)
+    if(search:IsEnabled() and self.searchManager:RemoveSearch(search)) then
+        self.list:RefreshFilters()
+        PlaySound("Click")
+    end
+end
+
+function SearchList:ShowContextMenu(control, search)
+    local index = search:GetIndex()
+    local searches = self.searchManager:GetSearches()
+
+    ClearMenu()
+
+    if(search ~= self.searchManager:GetActiveSearch()) then
+        AddCustomMenuItem(MENU_LABEL_SELECT, function() return self:HandleSetSearchActive(search) end)
+    end
+
+    AddCustomMenuItem(MENU_LABEL_RENAME, function() return self:HandleRenameRequest(search) end)
+
+    if(search:HasCustomLabel()) then
+        AddCustomMenuItem(MENU_LABEL_RESET, function() return self:HandleResetLabel(search) end)
+    end
+
+    if(index > 1) then
+        AddCustomMenuItem(MENU_LABEL_MOVE_UP, function() return self:HandleMoveSearchToIndex(search, index - 1) end)
+    end
+
+    if(index < #searches) then
+        AddCustomMenuItem(MENU_LABEL_MOVE_DOWN, function() return self:HandleMoveSearchToIndex(search, index + 1) end)
+    end
+
+    if(search:IsEnabled()) then
+        AddCustomMenuItem(MENU_LABEL_REMOVE, function() return self:HandleRemoveSearch(search) end)
+    end
+
+    ShowMenu(control)
 end
 
 function SearchList:Refresh()
