@@ -90,6 +90,12 @@ function TradingHouseWrapper:Initialize(saveData)
         AGS:FireCallbacks(AGS.callback.STORE_TAB_CHANGED, oldTab, currentTab)
     end)
 
+    self:Wrap("UpdateFragments", function(originalUpdateFragments, tradingHouse)
+        -- TODO: remove once we have our own history feature
+        originalUpdateFragments(tradingHouse)
+        SCENE_MANAGER:RemoveFragment(TRADING_HOUSE_SEARCH_HISTORY_KEYBOARD_FRAGMENT)
+    end)
+
     RegisterForEvent(EVENT_CLOSE_TRADING_HOUSE, function()
         if(not ranInitialSetup) then return end
         self:HideLoadingIndicator()
