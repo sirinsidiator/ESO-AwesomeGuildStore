@@ -5,8 +5,9 @@ local gettext = AGS.internal.gettext
 local logger = AGS.internal.logger
 
 local MENU_LABEL_SELECT = gettext("Set Active")
-local MENU_LABEL_RENAME = gettext("Change Label")
-local MENU_LABEL_RESET = gettext("Reset Label")
+local MENU_LABEL_RENAME = gettext("Rename")
+local MENU_LABEL_RESET_NAME = gettext("Reset Label")
+local MENU_LABEL_RESET_STATE = gettext("Reset All")
 local MENU_LABEL_ENABLE = gettext("Unlock")
 local MENU_LABEL_DISABLE = gettext("Lock")
 local MENU_LABEL_DUPLICATE = gettext("Duplicate")
@@ -193,6 +194,12 @@ function SearchList:HandleResetLabel(search)
     PlaySound("Click")
 end
 
+function SearchList:HandleResetState(search)
+    search:Reset()
+    self.list:RefreshVisible()
+    PlaySound("Click")
+end
+
 function SearchList:HandleSetSearchEnabled(search, enabled)
     search:SetEnabled(enabled)
     self.list:RefreshVisible()
@@ -245,10 +252,11 @@ function SearchList:ShowContextMenu(control, search)
     AddCustomMenuItem(MENU_LABEL_RENAME, function() return self:HandleRenameRequest(search) end)
 
     if(search:HasCustomLabel()) then
-        AddCustomMenuItem(MENU_LABEL_RESET, function() return self:HandleResetLabel(search) end)
+        AddCustomMenuItem(MENU_LABEL_RESET_NAME, function() return self:HandleResetLabel(search) end)
     end
 
     if(search:IsEnabled()) then
+        AddCustomMenuItem(MENU_LABEL_RESET_STATE, function() return self:HandleResetState(search) end)
         AddCustomMenuItem(MENU_LABEL_DISABLE, function() return self:HandleSetSearchEnabled(search, false) end)
     else
         AddCustomMenuItem(MENU_LABEL_ENABLE, function() return self:HandleSetSearchEnabled(search, true) end)
