@@ -46,10 +46,15 @@ end
 
 function TextFilterFragment:OnAttach(filterArea)
     local editGroup = filterArea:GetEditGroup()
-    editGroup:InsertControl(self.input:GetEditControl())
+    editGroup:InsertControl(self.input)
 end
 
 function TextFilterFragment:OnDetach(filterArea)
     local editGroup = filterArea:GetEditGroup()
-    editGroup:RemoveControl(self.input:GetEditControl())
+    editGroup:RemoveControl(self.input)
+end
+
+function TextFilterFragment:SetEnabled(enabled)
+    FilterFragment.SetEnabled(self, enabled)
+    self.input:SetEnabled(enabled)
 end

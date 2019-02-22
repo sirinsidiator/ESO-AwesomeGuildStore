@@ -85,3 +85,11 @@ function MultiButtonFilterFragment:InitializeHandlers()
 
     self.OnValueChanged = OnFilterChanged
 end
+
+function MultiButtonFilterFragment:SetEnabled(enabled)
+    FilterFragment.SetEnabled(self, enabled)
+    local buttons = self.buttons
+    for i = 1, #buttons do
+        buttons[i]:SetEnabled(enabled)
+    end
+end

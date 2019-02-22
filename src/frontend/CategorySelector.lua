@@ -73,6 +73,14 @@ function CategorySelector:Initialize(parent, searchManager)
         if(id ~= FILTER_ID.CATEGORY_FILTER) then return end
         self:Update(category, subcategory)
     end)
+
+    AwesomeGuildStore:RegisterCallback(AwesomeGuildStore.callback.SEARCH_LOCK_STATE_CHANGED, function(search, isActiveSearch)
+        if(not isActiveSearch) then return end
+        self:SetEnabled(search:IsEnabled())
+    end)
+    AwesomeGuildStore:RegisterCallback(AwesomeGuildStore.callback.SELECTED_SEARCH_CHANGED, function(search)
+        self:SetEnabled(search:IsEnabled())
+    end)
 end
 
 function CategorySelector:GetControl()
@@ -125,5 +133,18 @@ function CategorySelector:Update(category, subcategory)
         self.subcategoryRow:SetHidden(false)
     else
         self.subcategoryRow:SetHidden(true)
+    end
+end
+
+function CategorySelector:SetEnabled(enabled)
+    local categoryButtons = self.categoryButtons
+    local subcategoryButtons = self.subcategoryButtons
+
+    for i = 1, #categoryButtons do
+        categoryButtons[i]:SetEnabled(enabled)
+    end
+
+    for i = 1, #subcategoryButtons do
+        subcategoryButtons[i]:SetEnabled(enabled)
     end
 end

@@ -4,6 +4,8 @@ local gettext = AwesomeGuildStore.internal.gettext
 local MENU_LABEL_SELECT = gettext("Set Active")
 local MENU_LABEL_RENAME = gettext("Change Label")
 local MENU_LABEL_RESET = gettext("Reset Label")
+local MENU_LABEL_ENABLE = gettext("Unlock")
+local MENU_LABEL_DISABLE = gettext("Lock")
 local MENU_LABEL_MOVE_UP = gettext("Move Up")
 local MENU_LABEL_MOVE_DOWN = gettext("Move Down")
 local MENU_LABEL_REMOVE = gettext("Delete")
@@ -82,6 +84,7 @@ function SearchList:Initialize(searchManager)
 
     local function SetupSearchRow(control)
         control.icon = control:GetNamedChild("Icon")
+        control.lock = control:GetNamedChild("Lock")
         control.name = control:GetNamedChild("Name")
 
         SetupHighlight(control)
@@ -105,6 +108,7 @@ function SearchList:Initialize(searchManager)
         local color = isSelected and ZO_SELECTED_TEXT or ZO_NORMAL_TEXT
 
         control.icon:SetTexture(texture)
+        control.lock:SetHidden(search:IsEnabled())
         control.name:SetText(search:GetLabel())
         control.name:SetColor(color:UnpackRGBA())
         control.search = search
@@ -185,6 +189,13 @@ function SearchList:HandleResetLabel(search)
     PlaySound("Click")
 end
 
+function SearchList:HandleSetSearchEnabled(search, enabled)
+    search:SetEnabled(enabled)
+    self.list:RefreshVisible()
+    PlaySound("Click")
+    AwesomeGuildStore:FireCallbacks(AwesomeGuildStore.callback.SEARCH_LOCK_STATE_CHANGED, search, search == self.searchManager:GetActiveSearch())
+end
+
 function SearchList:HandleMoveSearchToIndex(search, newIndex)
     if(self.searchManager:MoveSearch(search, newIndex)) then
         self.list:RefreshFilters()
@@ -213,6 +224,12 @@ function SearchList:ShowContextMenu(control, search)
 
     if(search:HasCustomLabel()) then
         AddCustomMenuItem(MENU_LABEL_RESET, function() return self:HandleResetLabel(search) end)
+    end
+
+    if(search:IsEnabled()) then
+        AddCustomMenuItem(MENU_LABEL_DISABLE, function() return self:HandleSetSearchEnabled(search, false) end)
+    else
+        AddCustomMenuItem(MENU_LABEL_ENABLE, function() return self:HandleSetSearchEnabled(search, true) end)
     end
 
     if(index > 1) then

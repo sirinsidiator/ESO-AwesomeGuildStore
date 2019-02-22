@@ -51,3 +51,8 @@ function ValueRangeFilterFragmentBase:OnValueChanged(min, max)
     self.slider:SetRangeValue(min, max)
     self.fromFilter = false
 end
+
+function ValueRangeFilterFragmentBase:SetEnabled(enabled)
+    FilterFragment.SetEnabled(self, enabled)
+    self.slider:SetEnabled(enabled)
+end

@@ -12,19 +12,29 @@ function EditControlGroup:Initialize()
 end
 
 function EditControlGroup:OnTabPressed(control)
-    local index = control.editControlGroupIndex
-    local newIndex = index + (IsShiftKeyDown() and -1 or 1)
-    if newIndex < 1 then
-        newIndex = #self.controls
-    elseif newIndex > #self.controls then
-        newIndex = 1
+    local index = control.editControlGroupIndex -- the tab handler receives the actual control
+    local newIndex = index
+
+    local direction = (IsShiftKeyDown() and -1 or 1)
+    local lastIndex = #self.controls
+    while true do
+        newIndex = newIndex + direction
+        if newIndex < 1 then
+            newIndex = lastIndex
+        elseif newIndex > lastIndex then
+            newIndex = 1
+        end
+
+        if(newIndex == index or self.controls[newIndex]:IsEnabled()) then
+            break
+        end
     end
 
     self.controls[newIndex]:TakeFocus()
 end
 
 function EditControlGroup:InsertControl(control, position)
-    if(control.editControlGroupIndex) then return false end
+    if(control:GetEditControlGroupIndex()) then return false end
 
     if(not position) then position = #self.controls + 1 end
     table.insert(self.controls, position, control)
@@ -36,10 +46,11 @@ function EditControlGroup:InsertControl(control, position)
 end
 
 function EditControlGroup:RemoveControl(control)
-    if(self.controls[control.editControlGroupIndex] ~= control) then return false end
+    local groupIndex = control:GetEditControlGroupIndex()
+    if(self.controls[groupIndex] ~= control) then return false end
 
-    table.remove(self.controls, control.editControlGroupIndex)
-    control.editControlGroupIndex = nil
+    table.remove(self.controls, groupIndex)
+    control:SetEditControlGroupIndex(nil)
     control:SetHandler("OnTab", nil)
     self:UpdateIndices()
     return true
@@ -48,7 +59,7 @@ end
 function EditControlGroup:Clear()
     for i = 1, #self.controls do
         local control = self.controls[i]
-        control.editControlGroupIndex = nil
+        control:SetEditControlGroupIndex(nil)
         control:SetHandler("OnTab", nil)
         self.controls[i] = nil
     end
@@ -56,6 +67,6 @@ end
 
 function EditControlGroup:UpdateIndices()
     for i = 1, #self.controls do
-        self.controls[i].editControlGroupIndex = i
+        self.controls[i]:SetEditControlGroupIndex(i)
     end
 end

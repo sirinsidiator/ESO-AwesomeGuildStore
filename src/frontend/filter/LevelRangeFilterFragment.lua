@@ -219,12 +219,21 @@ end
 
 function LevelRangeFilterFragment:OnAttach(filterArea)
     local editGroup = filterArea:GetEditGroup()
-    editGroup:InsertControl(self.minLevel:GetEditControl())
-    editGroup:InsertControl(self.maxLevel:GetEditControl())
+    editGroup:InsertControl(self.minLevel)
+    editGroup:InsertControl(self.maxLevel)
 end
 
 function LevelRangeFilterFragment:OnDetach(filterArea)
     local editGroup = filterArea:GetEditGroup()
-    editGroup:RemoveControl(self.minLevel:GetEditControl())
-    editGroup:RemoveControl(self.maxLevel:GetEditControl())
+    editGroup:RemoveControl(self.minLevel)
+    editGroup:RemoveControl(self.maxLevel)
+end
+
+function LevelRangeFilterFragment:SetEnabled(enabled)
+    ValueRangeFilterFragmentBase.SetEnabled(self, enabled)
+    self.minLevel:SetEnabled(enabled)
+    self.maxLevel:SetEnabled(enabled)
+    self.minLevelToggle:SetEnabled(enabled)
+    self.maxLevelToggle:SetEnabled(enabled)
+    self.currentLevelButton:SetEnabled(enabled)
 end

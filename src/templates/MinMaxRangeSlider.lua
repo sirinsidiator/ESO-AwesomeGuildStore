@@ -9,6 +9,8 @@ local MOUSE_BUTTON_INDEX_LEFT = MOUSE_BUTTON_INDEX_LEFT
 local FULL_RANGE_UPDATE_DELAY = 0.15 -- seconds
 local MIN_SLIDER_HORIZONTAL_OFFSET = -4
 local MAX_SLIDER_HORIZONTAL_OFFSET = 4
+local ENABLED_DESATURATION = 0
+local DISABLED_DESATURATION = 1
 
 local MinMaxRangeSlider = ZO_Object:Subclass()
 AwesomeGuildStore.MinMaxRangeSlider = MinMaxRangeSlider
@@ -72,6 +74,8 @@ function MinMaxRangeSlider:Initialize(name, parent)
     fullRange:SetHandler("OnMouseUp", function(...) return self:OnFullRangeMouseUp(...) end)
     fullRange:SetHandler("OnUpdate", function(...) return self:OnFullRangeUpdate(...) end)
     self.fullRange = fullRange
+
+    self.glow = control:GetNamedChild("Glow")
 
     self:UpdateVisuals()
     self:SetRangeValue(self:GetMinMax())
@@ -287,11 +291,18 @@ function MinMaxRangeSlider:GetStepSize()
     return self.step
 end
 
-function MinMaxRangeSlider:SetEnabled(enable)
-    self.enabled = enable
-    self.minSlider:SetEnabled(enable)
-    self.maxSlider:SetEnabled(enable)
-    self.rangeSlider:SetEnabled(enable)
+function MinMaxRangeSlider:SetEnabled(enabled)
+    self.enabled = enabled
+    self.minSlider:SetEnabled(enabled)
+    self.maxSlider:SetEnabled(enabled)
+    self.rangeSlider:SetEnabled(enabled)
+    self.fullRange:SetEnabled(enabled)
+
+    local desaturation = enabled and ENABLED_DESATURATION or DISABLED_DESATURATION
+    self.glow:SetDesaturation(desaturation)
+    self.minSlider:SetDesaturation(desaturation)
+    self.maxSlider:SetDesaturation(desaturation)
+    self.rangeSlider:SetDesaturation(desaturation)
 end
 
 function MinMaxRangeSlider:IsEnabled()

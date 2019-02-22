@@ -2,6 +2,8 @@ local BSTATE_NORMAL = BSTATE_NORMAL
 local BSTATE_PRESSED = BSTATE_PRESSED
 local BSTATE_DISABLED = BSTATE_DISABLED
 local BSTATE_DISABLED_PRESSED = BSTATE_DISABLED_PRESSED
+local ENABLED_DESATURATION = 0
+local DISABLED_DESATURATION = 1
 
 local SimpleIconButton = ZO_Object:Subclass()
 AwesomeGuildStore.class.SimpleIconButton = SimpleIconButton
@@ -127,4 +129,17 @@ function SimpleIconButton:SetState(pressed, disabled)
         state = pressed and BSTATE_PRESSED or BSTATE_NORMAL
     end
     self.control:SetState(state, state ~= BSTATE_NORMAL)
+    self.state = pressed
+    self.disabled = disabled
+end
+
+function SimpleIconButton:SetEnabled(enabled)
+    self.control:SetMouseEnabled(enabled)
+    if(enabled) then
+        self:SetState(self.state, self.disabled)
+        self.control:SetDesaturation(ENABLED_DESATURATION)
+    else
+        self:SetState(self.state, enabled)
+        self.control:SetDesaturation(DISABLED_DESATURATION)
+    end
 end

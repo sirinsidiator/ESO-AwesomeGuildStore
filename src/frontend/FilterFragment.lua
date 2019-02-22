@@ -1,5 +1,8 @@
 local gettext = LibStub("LibGetText")("AwesomeGuildStore").gettext
 
+local ENABLED_DESATURATION = 0
+local DISABLED_DESATURATION = 1
+
 local FilterFragment = ZO_SimpleSceneFragment:Subclass()
 AwesomeGuildStore.class.FilterFragment = FilterFragment
 
@@ -113,4 +116,11 @@ function FilterFragment:ShowMenu()
         end
         ShowMenu()
     end
+end
+
+function FilterFragment:SetEnabled(enabled)
+    local color = enabled and ZO_DEFAULT_ENABLED_COLOR or ZO_DEFAULT_DISABLED_COLOR
+    self.label:SetColor(color:UnpackRGBA())
+    self.reset:SetMouseEnabled(enabled)
+    self.reset:SetDesaturation(enabled and ENABLED_DESATURATION or DISABLED_DESATURATION)
 end

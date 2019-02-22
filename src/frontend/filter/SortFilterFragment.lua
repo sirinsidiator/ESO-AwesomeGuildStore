@@ -92,10 +92,15 @@ end
 
 function SortFilterFragment:OnAttach(filterArea)
 --    local editGroup = filterArea:GetEditGroup()
---    editGroup:InsertControl(self.input:GetEditControl()) -- TODO: make it tab-able and use arrow keys to quickly switch selection
+--    editGroup:InsertControl(self.input) -- TODO: make it tab-able and use arrow keys to quickly switch selection
 end
 
 function SortFilterFragment:OnDetach(filterArea)
 --    local editGroup = filterArea:GetEditGroup()
---    editGroup:RemoveControl(self.input:GetEditControl())
+--    editGroup:RemoveControl(self.input)
+end
+
+function SortFilterFragment:SetEnabled(enabled)
+    FilterFragment.SetEnabled(self, enabled)
+    self.dropdown:SetEnabled(enabled)
 end

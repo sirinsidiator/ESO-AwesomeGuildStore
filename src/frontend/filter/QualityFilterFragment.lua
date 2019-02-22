@@ -64,3 +64,11 @@ function QualityFilterFragment:CreateButton(container, i, data)
     button.value = data.id
     return button
 end
+
+function QualityFilterFragment:SetEnabled(enabled)
+    ValueRangeFilterFragmentBase.SetEnabled(self, enabled)
+    local buttons = self.buttons
+    for i = 1, #buttons do
+        buttons[i]:SetEnabled(enabled)
+    end
+end

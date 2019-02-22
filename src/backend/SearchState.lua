@@ -22,6 +22,7 @@ function SearchState:Initialize(searchManager, saveData)
             label = nil,
             state = FilterState.DEFAULT_STATE:GetState(),
             history = {}, -- TODO implement
+            enabled = true
         }
     end
 
@@ -39,6 +40,7 @@ end
 function SearchState:Reset()
     local saveData = self.saveData
     saveData.label = nil
+    saveData.enabled = true
     self.customLabel = false
 
     ZO_ClearTable(self.filterActive)
@@ -52,6 +54,14 @@ end
 
 function SearchState:GetIndex()
     return self.sortIndex -- sort index is managed by the sort filter list
+end
+
+function SearchState:SetEnabled(enabled)
+    self.saveData.enabled = enabled
+end
+
+function SearchState:IsEnabled()
+    return self.saveData.enabled
 end
 
 function SearchState:GetSaveData()

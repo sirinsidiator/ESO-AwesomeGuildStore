@@ -5,6 +5,8 @@ local DATA_TYPE_ID = 1
 local ROW_TEMPLATE = "AwesomeGuildStoreMultiCategoryFilterRowTemplate"
 local ROW_HEIGHT = 24
 local MAX_LIST_ROWS = 5
+local ENABLED_DESATURATION = 0
+local DISABLED_DESATURATION = 1
 
 -- TRANSLATORS: tooltip text for removing entries in the list of a multi category filter on the search tab
 local REMOVE_TOOLTIP_TEXT = gettext("Click to remove")
@@ -34,6 +36,7 @@ end
 function MultiCategoryFilterFragment:Initialize(filter)
     FilterFragment.Initialize(self, filter)
 
+    self.enabled = true
     self.entryCache = {}
     self.menuCache = {}
     self:InitializeControls()
@@ -82,6 +85,10 @@ function MultiCategoryFilterFragment:InitializeRow(rowControl, entry)
             PlaySound("Click")
         end
     end)
+
+    local enabled = self.enabled
+    rowControl:SetMouseEnabled(enabled)
+    label:SetDesaturation(enabled and ENABLED_DESATURATION or DISABLED_DESATURATION)
 end
 
 function MultiCategoryFilterFragment:DestroyRow(rowControl)
@@ -157,4 +164,12 @@ function MultiCategoryFilterFragment:GetDataEntry(value)
         })
     end
     return self.entryCache[value]
+end
+
+function MultiCategoryFilterFragment:SetEnabled(enabled)
+    FilterFragment.SetEnabled(self, enabled)
+    self.enabled = enabled
+    self.addButton:SetEnabled(enabled)
+    self.addButton:SetMouseEnabled(enabled)
+    ZO_ScrollList_RefreshVisible(self.selectionList)
 end

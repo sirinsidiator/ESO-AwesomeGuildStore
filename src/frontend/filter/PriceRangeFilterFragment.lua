@@ -4,6 +4,8 @@ local MinMaxRangeSlider = AGS.MinMaxRangeSlider -- TODO: move to class table
 local ValueRangeFilterFragmentBase = AGS.class.ValueRangeFilterFragmentBase
 local SimpleInputBox = AGS.class.SimpleInputBox
 
+local ENABLED_DESATURATION = 0
+local DISABLED_DESATURATION = 1
 
 local PriceRangeFilterFragment = ValueRangeFilterFragmentBase:Subclass()
 AGS.class.PriceRangeFilterFragment = PriceRangeFilterFragment
@@ -39,8 +41,10 @@ function PriceRangeFilterFragment:Initialize(filter)
     maxPrice.OnValueChanged = OnInputChanged
 
     local currencyIcon = ZO_Currency_GetKeyboardCurrencyIcon(config.currency)
-    inputContainer:GetNamedChild("MinPriceCurrency"):SetTexture(currencyIcon)
-    inputContainer:GetNamedChild("MaxPriceCurrency"):SetTexture(currencyIcon)
+    self.minPriceCurrency = inputContainer:GetNamedChild("MinPriceCurrency")
+    self.maxPriceCurrency = inputContainer:GetNamedChild("MaxPriceCurrency")
+    self.minPriceCurrency:SetTexture(currencyIcon)
+    self.maxPriceCurrency:SetTexture(currencyIcon)
 
     self.minPrice = minPrice
     self.maxPrice = maxPrice
@@ -97,12 +101,21 @@ end
 
 function PriceRangeFilterFragment:OnAttach(filterArea)
     local editGroup = filterArea:GetEditGroup()
-    editGroup:InsertControl(self.minPrice:GetEditControl())
-    editGroup:InsertControl(self.maxPrice:GetEditControl())
+    editGroup:InsertControl(self.minPrice)
+    editGroup:InsertControl(self.maxPrice)
 end
 
 function PriceRangeFilterFragment:OnDetach(filterArea)
     local editGroup = filterArea:GetEditGroup()
-    editGroup:RemoveControl(self.minPrice:GetEditControl())
-    editGroup:RemoveControl(self.maxPrice:GetEditControl())
+    editGroup:RemoveControl(self.minPrice)
+    editGroup:RemoveControl(self.maxPrice)
+end
+
+function PriceRangeFilterFragment:SetEnabled(enabled)
+    ValueRangeFilterFragmentBase.SetEnabled(self, enabled)
+    self.minPrice:SetEnabled(enabled)
+    self.maxPrice:SetEnabled(enabled)
+    local desaturation = enabled and ENABLED_DESATURATION or DISABLED_DESATURATION
+    self.minPriceCurrency:SetDesaturation(desaturation)
+    self.maxPriceCurrency:SetDesaturation(desaturation)
 end

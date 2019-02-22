@@ -198,6 +198,7 @@ function SimpleInputBox:Initialize(control, currencies)
     self.precision = 0
     self.min = nil
     self.max = nil
+    self.enabled = true
     self:SetType(INPUT_TYPE_ALL)
     self:SetTextAlign(TEXT_ALIGN_LEFT)
 
@@ -205,6 +206,11 @@ function SimpleInputBox:Initialize(control, currencies)
     local revert = false
 
     input:SetHandler("OnFocusGained", function()
+        if(not self.enabled) then
+            input:LoseFocus()
+            return
+        end
+
         self:SetText(self:GetRawText(self.value))
         self.oldText = input:GetText()
 
@@ -323,6 +329,34 @@ function SimpleInputBox:GetValue()
     return self.value
 end
 
-function SimpleInputBox:GetEditControl()
-    return self.input
+function SimpleInputBox:GetEditControlGroupIndex()
+    return self.input.editControlGroupIndex
+end
+
+function SimpleInputBox:SetEditControlGroupIndex(index)
+    self.input.editControlGroupIndex = index
+end
+
+function SimpleInputBox:SetHandler(name, callback)
+    return self.input:SetHandler(name, callback)
+end
+
+function SimpleInputBox:TakeFocus()
+    return self.input:TakeFocus()
+end
+
+function SimpleInputBox:SetEnabled(enabled)
+    self.enabled = enabled
+    local input = self.input
+    input:SetEditEnabled(enabled)
+    input:SetMouseEnabled(enabled)
+    local color = enabled and ZO_DEFAULT_ENABLED_COLOR or ZO_DEFAULT_DISABLED_MOUSEOVER_COLOR
+    input:SetColor(color:UnpackRGBA())
+    if(not enabled) then
+        input:LoseFocus()
+    end
+end
+
+function SimpleInputBox:IsEnabled()
+    return self.enabled
 end

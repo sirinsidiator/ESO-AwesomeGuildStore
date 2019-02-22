@@ -51,6 +51,13 @@ function FilterArea:OnFiltersInitialized()
     AwesomeGuildStore:RegisterCallback(AwesomeGuildStore.callback.FILTER_ACTIVE_CHANGED, function(filter)
         self:UpdateDisplayedFilters()
     end)
+    AwesomeGuildStore:RegisterCallback(AwesomeGuildStore.callback.SEARCH_LOCK_STATE_CHANGED, function(search, isActiveSearch)
+        if(not isActiveSearch) then return end
+        self:UpdateDisplayedFilters()
+    end)
+    AwesomeGuildStore:RegisterCallback(AwesomeGuildStore.callback.SELECTED_SEARCH_CHANGED, function(search)
+        self:UpdateDisplayedFilters()
+    end)
     self:UpdateDisplayedFilters()
 end
 
@@ -167,6 +174,7 @@ function FilterArea:ShowFilterSelection()
 end
 
 function FilterArea:UpdateDisplayedFilters()
+    local enabled = self.searchManager:GetActiveSearch():IsEnabled()
     for id, fragment in pairs(self.availableFragments) do
         local filter = self.searchManager:GetFilter(id)
         if(filter) then
@@ -176,6 +184,10 @@ function FilterArea:UpdateDisplayedFilters()
                 self:AttachFilterFragment(fragment)
             elseif(not filterAttached and fragementAttached) then
                 self:DetachFilterFragment(fragment)
+            end
+
+            if(filterAttached) then
+                fragment:SetEnabled(enabled)
             end
         end
     end

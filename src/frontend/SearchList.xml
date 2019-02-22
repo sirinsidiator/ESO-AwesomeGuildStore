@@ -19,6 +19,11 @@
                     <Anchor point="LEFT" />
                 </Texture>
 
+                <Texture name="$(parent)Lock" textureFile="EsoUI/Art/Miscellaneous/status_locked.dds" hidden="true" level="1" color="BC4B1A">
+                    <Dimensions x="24" y="24" />
+                    <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)Icon" relativePoint="BOTTOMRIGHT" />
+                </Texture>
+
                 <Label name="$(parent)Name" font="ZoFontGameShadow" wrapMode="ELLIPSIS" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_NORMAL">
                     <Dimensions y="24" />
                     <Anchor point="LEFT" offsetX="50" />
