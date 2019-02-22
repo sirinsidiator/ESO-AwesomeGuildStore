@@ -1,11 +1,15 @@
-local FILTER_ID = AwesomeGuildStore.data.FILTER_ID
-local gettext = AwesomeGuildStore.internal.gettext
+local AGS = AwesomeGuildStore
+
+local FILTER_ID = AGS.data.FILTER_ID
+local gettext = AGS.internal.gettext
+local logger = AGS.internal.logger
 
 local MENU_LABEL_SELECT = gettext("Set Active")
 local MENU_LABEL_RENAME = gettext("Change Label")
 local MENU_LABEL_RESET = gettext("Reset Label")
 local MENU_LABEL_ENABLE = gettext("Unlock")
 local MENU_LABEL_DISABLE = gettext("Lock")
+local MENU_LABEL_DUPLICATE = gettext("Duplicate")
 local MENU_LABEL_MOVE_UP = gettext("Move Up")
 local MENU_LABEL_MOVE_DOWN = gettext("Move Down")
 local MENU_LABEL_REMOVE = gettext("Delete")
@@ -21,7 +25,7 @@ local ADD_NEW_LABEL = gettext("New Search")
 local ADD_NEW_ICON = "EsoUI/Art/Progression/addpoints_up.dds"
 
 local SearchList = ZO_Object:Subclass()
-AwesomeGuildStore.SearchList = SearchList
+AGS.SearchList = SearchList
 
 function SearchList:New(...)
     local object = ZO_Object.New(self)
@@ -143,12 +147,12 @@ function SearchList:Initialize(searchManager)
 
     list:RefreshFilters()
 
-    AwesomeGuildStore:RegisterCallback(AwesomeGuildStore.callback.FILTER_VALUE_CHANGED, function(id)
+    AGS:RegisterCallback(AGS.callback.FILTER_VALUE_CHANGED, function(id)
         if(id ~= FILTER_ID.CATEGORY_FILTER) then return end
         list:RefreshVisible()
     end)
 
-    self.toolTip = AwesomeGuildStore.SavedSearchTooltip:New()
+    self.toolTip = AGS.SavedSearchTooltip:New()
 end
 
 function SearchList:HandleClickSearchEntry(control, button, search)
@@ -193,7 +197,25 @@ function SearchList:HandleSetSearchEnabled(search, enabled)
     search:SetEnabled(enabled)
     self.list:RefreshVisible()
     PlaySound("Click")
-    AwesomeGuildStore:FireCallbacks(AwesomeGuildStore.callback.SEARCH_LOCK_STATE_CHANGED, search, search == self.searchManager:GetActiveSearch())
+    AGS:FireCallbacks(AGS.callback.SEARCH_LOCK_STATE_CHANGED, search, search == self.searchManager:GetActiveSearch())
+end
+
+function SearchList:HandleDuplicateSearch(search)
+    local saveData = ZO_ShallowTableCopy(search:GetSaveData())
+    saveData.enabled = true
+    local newSearch = self.searchManager:AddSearch(saveData)
+
+    if(not self.searchManager:SetActiveSearch(newSearch)) then
+        logger:Warn("Could not set duplicated search active")
+    end
+
+    local targetIndex = search:GetIndex() + 1
+    if(newSearch:GetIndex() ~= targetIndex and not self.searchManager:MoveSearch(newSearch, targetIndex)) then
+        logger:Warn("Could not move duplicated search")
+    end
+
+    self.list:RefreshFilters()
+    PlaySound("Click")
 end
 
 function SearchList:HandleMoveSearchToIndex(search, newIndex)
@@ -231,6 +253,8 @@ function SearchList:ShowContextMenu(control, search)
     else
         AddCustomMenuItem(MENU_LABEL_ENABLE, function() return self:HandleSetSearchEnabled(search, true) end)
     end
+
+    AddCustomMenuItem(MENU_LABEL_DUPLICATE, function() return self:HandleDuplicateSearch(search) end)
 
     if(index > 1) then
         AddCustomMenuItem(MENU_LABEL_MOVE_UP, function() return self:HandleMoveSearchToIndex(search, index - 1) end)

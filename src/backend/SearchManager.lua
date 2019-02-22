@@ -242,8 +242,8 @@ function SearchManager:GetSearches()
     return self.searches
 end
 
-function SearchManager:AddSearch()
-    local search = SearchState:New(self)
+function SearchManager:AddSearch(saveData)
+    local search = SearchState:New(self, saveData)
     local newIndex = #self.searches + 1
     search.sortIndex = newIndex -- this is so we do not have to refresh the list twice
     self.searches[newIndex] = search
