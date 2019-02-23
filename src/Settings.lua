@@ -1,5 +1,13 @@
 local function LoadSettings()
     local gettext = LibStub("LibGetText")("AwesomeGuildStore").gettext
+
+    local info = {
+        fullVersion = "@FULL_VERSION_NUMBER@",
+        version = "@VERSION_NUMBER@",
+        build = "@BUILD_NUMBER@",
+    }
+    AwesomeGuildStore.info = info
+
     local defaultData = {
         version = 23,
         lastGuildName = "",
@@ -64,7 +72,7 @@ local function LoadSettings()
             type = "panel",
             name = "Awesome Guild Store",
             author = "sirinsidiator",
-            version = "@VERSION_NUMBER@",
+            version = info.fullVersion,
             website = "http://www.esoui.com/downloads/info695-AwesomeGuildStore.html",
             registerForRefresh = true,
             registerForDefaults = true

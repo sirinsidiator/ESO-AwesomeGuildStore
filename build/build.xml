@@ -1,67 +1,94 @@
 <?xml version="1.0"?>
 <project name="AwesomeGuildStore" default="copyToAddonFolder" basedir=".">
-	<property name="version" value="0" />
-
 	<property name="addonhome" location="${user.home}/Documents/Elder Scrolls Online/live/AddOns" />
 	<property name="addondir" location="${addonhome}/${ant.project.name}" />
 	<property name="srcdir" location="${basedir}/../src" />
 	<property name="tempdir" location="${basedir}/../temp" />
 	<property name="targetdir" location="${basedir}/../target" />
 
+	<target name="hasBuildProperties">
+		<available file="build.properties" property="buildPropertiesAvailable">
+		</available>
+	</target>
+
+	<target name="createBuildProperties" depends="hasBuildProperties" unless="buildPropertiesAvailable">
+		<propertyfile file="build.properties">
+			<entry key="major" type="int" default="1" />
+			<entry key="minor" type="int" default="0" />
+			<entry key="patch" type="int" default="0" />
+			<entry key="api" value="$${eso.api}" />
+		</propertyfile>
+	</target>
+
+	<target name="loadBuildProperties" depends="createBuildProperties">
+		<loadproperties srcfile="build.properties" />
+		<buildnumber file="build.number" />
+	</target>
+
 	<target name="getIsCustomVersion">
-		<input addproperty="buildcustom" validargs="y,n" defaultvalue="n" message="Build with custom version number?" />
+		<input addproperty="buildcustom" validargs="y,n" defaultvalue="y" message="Do you want to build ${ant.project.name} version ${major}.${minor}.${patch}?" />
 		<condition property="isCustomVersion">
-			<equals arg1="y" arg2="${buildcustom}" />
+			<equals arg1="n" arg2="${buildcustom}" />
 		</condition>
 	</target>
 
 	<target name="getCustomVersion" if="isCustomVersion">
-		<loadproperties srcFile="build.number" />
+		<input addproperty="customVersion" defaultvalue="${major}.${minor}.${patch}" message="Please enter a custom version number:" />
 		<script language="javascript">
 			<![CDATA[
-			var buildNumber = project.getProperty("build.number");
-			project.setProperty("build.number", parseInt(buildNumber) - 1);
-			]]>
+				var custom = project.getProperty("customVersion");
+				var parts = custom.split(".");
+				project.setProperty("major", parts[0]);
+				project.setProperty("minor", parts[1]);
+				project.setProperty("patch", parts[2]);
+				]]>
 		</script>
-		<input addproperty="finalVersion" defaultvalue="${version}.${build.number}" message="Please enter custom version number:" />
-		<script language="javascript">
-			<![CDATA[
-			var before = project.getProperty("finalVersion");
-			project.setProperty("fileVersion", before.replaceAll("\\.", "_"));
-			]]>
-		</script>
+		<propertyfile file="build.properties">
+			<entry key="major" type="int" value="${major}" />
+			<entry key="minor" type="int" value="${minor}" />
+			<entry key="patch" type="int" value="${patch}" />
+		</propertyfile>
 	</target>
 
-	<target name="getVersion" unless="isCustomVersion">
-		<buildnumber file="build.number" />
-		<property name="finalVersion" value="${version}.${build.number}" />
-		<property name="fileVersion" value="${version}_${build.number}" />
-	</target>
-
-	<target name="copyToAddonFolder">
+	<target name="clearAddonFolder">
 		<delete dir="${addondir}" />
+	</target>
+
+	<target name="copyToAddonFolder" depends="loadBuildProperties">
+		<echo>build v${major}.${minor}.${patch}.${build.number}-dev</echo>
 		<copy todir="${addondir}">
 			<fileset dir="${srcdir}" />
 		</copy>
-		<replace file="${addondir}/${ant.project.name}.txt" token="@VERSION_NUMBER@" value="development" />
-		<replace file="${addondir}/${ant.project.name}.txt" token="@API_VERSION@" value="${eso.api}" />
-		<replace file="${addondir}/Settings.lua" token="@VERSION_NUMBER@" value="development" />
+		<replace file="${addondir}/${ant.project.name}.txt" token="@VERSION_NUMBER@" value="${major}.${minor}.${patch}-dev" encoding="UTF-8" />
+		<replace file="${addondir}/${ant.project.name}.txt" token="@API_VERSION@" value="${api}" encoding="UTF-8" />
+		<replace file="${addondir}/${ant.project.name}.txt" token="@BUILD_NUMBER@" value="${build.number}" encoding="UTF-8" />
+		<replace file="${addondir}/Settings.lua" token="@FULL_VERSION_NUMBER@" value="${major}.${minor}.${patch}.${build.number}-dev" encoding="UTF-8" />
+		<replace file="${addondir}/Settings.lua" token="@VERSION_NUMBER@" value="${major}.${minor}.${patch}-dev" encoding="UTF-8" />
+		<replace file="${addondir}/Settings.lua" token="@BUILD_NUMBER@" value="${build.number}" encoding="UTF-8" />
 	</target>
 
-	<target name="createArchive" depends="getIsCustomVersion,getCustomVersion,getVersion">
+	<target name="createArchive" depends="loadBuildProperties,getIsCustomVersion,getCustomVersion">
+		<echo>build v${major}.${minor}.${patch}.${build.number}</echo>
 		<delete includeemptydirs="true" dir="${tempdir}" />
 
 		<copy todir="${tempdir}/${ant.project.name}">
 			<fileset dir="${srcdir}" />
 		</copy>
 
-		<replace file="${tempdir}/${ant.project.name}/${ant.project.name}.txt" token="@VERSION_NUMBER@" value="${finalVersion}" />
-		<replace file="${tempdir}/${ant.project.name}/${ant.project.name}.txt" token="@API_VERSION@" value="${eso.api}" />
-		<replace file="${tempdir}/${ant.project.name}/Settings.lua" token="@VERSION_NUMBER@" value="${finalVersion}" />
+		<replace file="${tempdir}/${ant.project.name}/${ant.project.name}.txt" token="@VERSION_NUMBER@" value="${major}.${minor}.${patch}" encoding="UTF-8" />
+		<replace file="${tempdir}/${ant.project.name}/${ant.project.name}.txt" token="@API_VERSION@" value="${api}" encoding="UTF-8" />
+		<replace file="${tempdir}/${ant.project.name}/${ant.project.name}.txt" token="@BUILD_NUMBER@" value="${build.number}" encoding="UTF-8" />
+		<replace file="${tempdir}/${ant.project.name}/Settings.lua" token="@FULL_VERSION_NUMBER@" value="${major}.${minor}.${patch}.${build.number}-dev" encoding="UTF-8" />
+		<replace file="${tempdir}/${ant.project.name}/Settings.lua" token="@VERSION_NUMBER@" value="${major}.${minor}.${patch}" encoding="UTF-8" />
+		<replace file="${tempdir}/${ant.project.name}/Settings.lua" token="@BUILD_NUMBER@" value="${build.number}" encoding="UTF-8" />
 
 		<zip destfile="${targetdir}/${ant.project.name}v${fileVersion}.zip">
 			<fileset dir="${tempdir}" />
 		</zip>
 		<delete includeemptydirs="true" dir="${tempdir}" />
+
+		<propertyfile file="build.properties">
+			<entry key="patch" type="int" value="1" operation="+" />
+		</propertyfile>
 	</target>
 </project>
