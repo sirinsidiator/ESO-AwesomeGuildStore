@@ -26,8 +26,8 @@ ActivityBase.STATE_CANCELLED = 6 -- this is for when a queued request is cancell
 
 ActivityBase.ERROR_GUILD_SELECTION_FAILED = -1
 ActivityBase.ERROR_OPERATION_TIMEOUT = -2
-ActivityBase.ERROR_PAGE_ALREADY_LOADED = -3
-ActivityBase.ERROR_USER_CANCELLED = -4 -- this is for when a user stops an already running request
+ActivityBase.ERROR_USER_CANCELLED = -3 -- this is for when a user stops an already running request
+ActivityBase.RESULT_PAGE_ALREADY_LOADED = -100
 
 ActivityBase.TOOLTIP_LINE_TEMPLATE = "%s: |cFFFFFF%s|r"
 
@@ -80,8 +80,8 @@ local RESULT_TO_STRING = {
     [TRADING_HOUSE_RESULT_TOO_MANY_POSTS] = "TRADING_HOUSE_RESULT_TOO_MANY_POSTS",
     [ActivityBase.ERROR_GUILD_SELECTION_FAILED] = "ERROR_GUILD_SELECTION_FAILED",
     [ActivityBase.ERROR_OPERATION_TIMEOUT] = "ERROR_OPERATION_TIMEOUT",
-    [ActivityBase.ERROR_PAGE_ALREADY_LOADED] = "ERROR_PAGE_ALREADY_LOADED",
     [ActivityBase.ERROR_USER_CANCELLED] = "ERROR_USER_CANCELLED",
+    [ActivityBase.RESULT_PAGE_ALREADY_LOADED] = "RESULT_PAGE_ALREADY_LOADED",
 }
 ActivityBase.RESULT_TO_STRING = RESULT_TO_STRING
 

@@ -50,8 +50,9 @@ function RequestSearchActivity:RequestSearch()
 
             ExecuteTradingHouseSearch(page, SortOrderBase.SORT_FIELD_TIME_LEFT, SortOrderBase.SORT_ORDER_DOWN) -- TODO
         else
-            self.result = ActivityBase.ERROR_PAGE_ALREADY_LOADED
-            self.responsePromise:Reject(self)
+            self.state = ActivityBase.STATE_SUCCEEDED
+            self.result = ActivityBase.RESULT_PAGE_ALREADY_LOADED
+            self.responsePromise:Resolve(self)
         end
     end
     return self.responsePromise
