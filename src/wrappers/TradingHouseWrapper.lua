@@ -1,6 +1,7 @@
 local AGS = AwesomeGuildStore
 
 local logger = AGS.internal.logger
+local gettext = AGS.internal.gettext
 
 local RegisterForEvent = AwesomeGuildStore.RegisterForEvent
 local ItemDatabase = AwesomeGuildStore.ItemDatabase
@@ -70,6 +71,7 @@ function TradingHouseWrapper:Initialize(saveData)
 
         self:InitializeGuildSelector()
         self:InitializeKeybindStripWrapper()
+        self:InitializeFooter()
         AwesomeGuildStore:FireCallbacks(AGS.callback.AFTER_INITIAL_SETUP, self)
 
         ranInitialSetup = true
@@ -136,6 +138,17 @@ end
 
 function TradingHouseWrapper:InitializeKeybindStripWrapper()
     self.keybindStrip = AwesomeGuildStore.KeybindStripWrapper:New(self)
+end
+
+function TradingHouseWrapper:InitializeFooter()
+    local parent = self.tradingHouse.control
+    local footer = CreateControlFromVirtual("AwesomeGuildStoreFooter", parent, "AwesomeGuildStoreFooterTemplate")
+    footer:SetAnchor(BOTTOMRIGHT, parent, BOTTOMRIGHT, -20, 32)
+    self.footer = footer
+
+    local versionLabel = AwesomeGuildStore.info.fullVersion
+    local labelControl = footer:GetNamedChild("Version")
+    labelControl:SetText(gettext("AwesomeGuildStore - Version: <<1>>", versionLabel))
 end
 
 function TradingHouseWrapper:ResetSalesCategoryFilter()

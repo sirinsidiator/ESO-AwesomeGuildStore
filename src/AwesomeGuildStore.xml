@@ -71,5 +71,13 @@
                 </Label>
             </Controls>
         </Control>
+
+        <Control name="AwesomeGuildStoreFooterTemplate" virtual="true" resizeToFitDescendents="true">
+            <Controls>
+                <Label name="$(parent)Version" font="ZoFontGameSmall" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_DISABLED">
+                    <Anchor point="RIGHT" />
+                </Label>
+            </Controls>
+        </Control>
     </Controls>
 </GuiXml>
