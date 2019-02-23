@@ -372,19 +372,16 @@ function SearchTabWrapper:InitializeUnitPriceDisplay(tradingHouseWrapper)
         local sellPriceControl = rowControl:GetNamedChild("SellPrice")
         local perItemPrice = rowControl:GetNamedChild("SellPricePerUnit")
         local shouldShow = false
-        if(saveData.displayPerUnitPrice) then
-            -- TODO is it showing by default?
-            if(not perItemPrice.__AGS_INIT) then
-                sellPriceControl:ClearAnchors()
-                perItemPrice:ClearAnchors()
-                perItemPrice:SetAnchor(TOPRIGHT, sellPriceControl, BOTTOMRIGHT, 0, 0)
-                perItemPrice.__AGS_INIT = true
-            end
+        if(not perItemPrice.__AGS_INIT) then
+            sellPriceControl:ClearAnchors()
+            perItemPrice:ClearAnchors()
+            perItemPrice:SetAnchor(TOPRIGHT, sellPriceControl, BOTTOMRIGHT, 0, 0)
+            perItemPrice.__AGS_INIT = true
+        end
 
-            if(result:GetStackCount() > 1) then
-                SetUnitPrice(tradingHouse, rowControl, sellPriceControl, perItemPrice, result, result.purchasePricePerUnit)
-                shouldShow = true
-            end
+        if(result:GetStackCount() > 1) then
+            SetUnitPrice(tradingHouse, rowControl, sellPriceControl, perItemPrice, result, result.purchasePricePerUnit)
+            shouldShow = true
         end
 
         if(not shouldShow) then
@@ -521,9 +518,9 @@ function SearchTabWrapper:InitializeSearchResultMasterList(tradingHouseWrapper) 
     AwesomeGuildStore:RegisterCallback(AwesomeGuildStore.callback.ITEM_PURCHASED, function(itemData)
         if(saveData.purchaseNotification) then
             self:PrintPurchaseMessageForEntry(itemData)
-    end
-    itemData.purchased = true
-    self.searchResultList:RefreshVisible()
+        end
+        itemData.purchased = true
+        self.searchResultList:RefreshVisible()
     end)
 
     tradingHouseWrapper:Wrap("CanBuyItem", function(originalCanBuyItem, tradingHouse, inventorySlot)

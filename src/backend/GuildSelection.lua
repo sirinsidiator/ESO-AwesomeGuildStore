@@ -97,7 +97,7 @@ end
 
 function GuildSelection:TryReselectLastGuildId()
     self.selectedGuildId = nil
-    local lastGuild = self.guildByName[self.saveData.lastGuildName]
+    local lastGuild = self.guildByName[self.saveData.lastGuildName or ""]
     if(lastGuild) then
         self:SetSelectedGuildId(lastGuild.guildId)
     else

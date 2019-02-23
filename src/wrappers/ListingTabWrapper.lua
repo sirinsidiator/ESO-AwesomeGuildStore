@@ -118,7 +118,6 @@ function ListingTabWrapper:InitializeUnitPriceDisplay(tradingHouseWrapper)
     local UNIT_PRICE_FONT = "/esoui/common/fonts/univers67.otf|14|soft-shadow-thin"
     local ITEM_LISTINGS_DATA_TYPE = 2
 
-    local saveData = self.saveData
     local tradingHouse = tradingHouseWrapper.tradingHouse
     local dataType = tradingHouse.postedItemsList.dataTypes[ITEM_LISTINGS_DATA_TYPE]
     local originalSetupCallback = dataType.setupCallback
@@ -128,22 +127,20 @@ function ListingTabWrapper:InitializeUnitPriceDisplay(tradingHouseWrapper)
 
         local sellPriceControl = rowControl:GetNamedChild("SellPrice")
         local perItemPrice = rowControl:GetNamedChild("SellPricePerItem")
-        if(saveData.displayPerUnitPrice) then
-            if(not perItemPrice) then
-                local controlName = rowControl:GetName() .. "SellPricePerItem"
-                perItemPrice = rowControl:CreateControl(controlName, CT_LABEL)
-                perItemPrice:SetAnchor(TOPRIGHT, sellPriceControl, BOTTOMRIGHT, 0, 0)
-                perItemPrice:SetFont(UNIT_PRICE_FONT)
-            end
+        if(not perItemPrice) then
+            local controlName = rowControl:GetName() .. "SellPricePerItem"
+            perItemPrice = rowControl:CreateControl(controlName, CT_LABEL)
+            perItemPrice:SetAnchor(TOPRIGHT, sellPriceControl, BOTTOMRIGHT, 0, 0)
+            perItemPrice:SetFont(UNIT_PRICE_FONT)
+        end
 
-            if(postedItem.stackCount > 1) then
-                ZO_CurrencyControl_SetSimpleCurrency(perItemPrice, postedItem.currencyType, postedItem.purchasePricePerUnit, PER_UNIT_PRICE_CURRENCY_OPTIONS, nil, false)
-                perItemPrice:SetText("@" .. perItemPrice:GetText():gsub("|t.-:.-:", "|t12:12:"))
-                perItemPrice:SetHidden(false)
-                sellPriceControl:ClearAnchors()
-                sellPriceControl:SetAnchor(RIGHT, rowControl, RIGHT, -140, -8)
-                perItemPrice = nil
-            end
+        if(postedItem.stackCount > 1) then
+            ZO_CurrencyControl_SetSimpleCurrency(perItemPrice, postedItem.currencyType, postedItem.purchasePricePerUnit, PER_UNIT_PRICE_CURRENCY_OPTIONS, nil, false)
+            perItemPrice:SetText("@" .. perItemPrice:GetText():gsub("|t.-:.-:", "|t12:12:"))
+            perItemPrice:SetHidden(false)
+            sellPriceControl:ClearAnchors()
+            sellPriceControl:SetAnchor(RIGHT, rowControl, RIGHT, -140, -8)
+            perItemPrice = nil
         end
 
         if(perItemPrice) then
@@ -171,7 +168,8 @@ function ListingTabWrapper:InitializeCancelSaleOperation(tradingHouseWrapper)
         end
     end)
 
-    ZO_PreHook("ZO_Dialogs_RegisterCustomDialog", function(name, info) -- TODO remove this hack in favor of a better solution
+    -- TODO remove this hack in favor of a better solution
+    ZO_PreHook("ZO_Dialogs_RegisterCustomDialog", function(name, info)
         if(name == "CONFIRM_TRADING_HOUSE_CANCEL_LISTING") then
             info.buttons[1].callback = function(dialog)
                 DoCancelSale(dialog.listingIndex)
