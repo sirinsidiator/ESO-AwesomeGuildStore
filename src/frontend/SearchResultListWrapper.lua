@@ -10,13 +10,38 @@ local gettext = AGS.internal.gettext
 
 local SILENT = true
 local NO_RESELCT = true
-local SEARCH_RESULTS_DATA_TYPE = 1
-local GUILD_SPECIFIC_ITEM_DATA_TYPE = 3
-local CAN_UPDATE_RESULT = {
-    [SEARCH_RESULTS_DATA_TYPE] = true,
-}
 local ENABLED_DESATURATION = 0
 local DISABLED_DESATURATION = 1
+
+local SEARCH_RESULTS_DATA_TYPE = 1
+local GUILD_SPECIFIC_ITEM_DATA_TYPE = 3
+local SHOW_MORE_DATA_TYPE = 4 -- watch out for changes in the vanilla UI
+
+local SHOW_MORE_ROW_COLOR = ZO_ColorDef:New("50D35D")
+local SHOW_MORE_DEFAULT_ALPHA = 0.5
+local SHOW_MORE_HIGHLIGHT_ALPHA = 1
+local IGNORE_RESULT_COUNT = true
+
+local PURCHASED_BG_TEXTURE = "EsoUI/Art/Miscellaneous/listItem_highlight.dds"
+local PURCHASED_VERTEX_COORDS = {0, 1, 0, 0.625}
+local DEFAULT_BG_TEXTURE = "EsoUI/Art/Miscellaneous/listItem_backdrop.dds"
+local DEFAULT_VERTEX_COORDS = {0, 1, 0, 0.8125}
+local PURCHASED_TEXTURE = "EsoUI/Art/hud/gamepad/gp_radialicon_accept_down.dds"
+local SOLDOUT_TEXTURE = "EsoUI/Art/hud/gamepad/gp_radialicon_cancel_down.dds"
+
+local PER_UNIT_PRICE_CURRENCY_OPTIONS = {
+    showTooltips = false,
+    iconSide = RIGHT,
+}
+
+-- TRANSLATORS: Label for the row at the end of the search result list which triggers the search for more results
+local SHOW_MORE_READY_LABEL = gettext("Show More Results")
+-- TRANSLATORS: Label for the row at the end of the search result list when a search is already pending, but cannot start yet due to the request cooldown
+local SHOW_MORE_COOLDOWN_LABEL = gettext("Waiting For Cooldown ...")
+-- TRANSLATORS: Label for the row at the end of the search result list when a search is currently in progress
+local SHOW_MORE_LOADING_LABEL = gettext("Requesting Results ...")
+-- TRANSLATORS: Label for the result count below the search result list. First number indicates the visible results, second number the overall number of locally stored items for the current guild
+local ITEM_COUNT_TEMPLATE = gettext("Items:|cffffff %d / %d")
 
 local SearchResultListWrapper = ZO_Object:Subclass()
 AGS.class.SearchResultListWrapper = SearchResultListWrapper
@@ -42,15 +67,225 @@ local function CreateProxyControl(resultList)
     }
 end
 
--- TODO: split up code and make into proper class
 function SearchResultListWrapper:Initialize(tradingHouseWrapper, searchManager)
-    local itemDatabase = tradingHouseWrapper.itemDatabase
+    self.activityManager = tradingHouseWrapper.activityManager
+
+    self:InitializeResultList(tradingHouseWrapper, searchManager)
+    self:InitializeShowMoreRow(tradingHouseWrapper, searchManager)
+    self:InitializeSortHeaders(tradingHouseWrapper, searchManager)
+
+
+    local function UpdateResultTimes(rowControl, result) -- TODO move into tooltip
+        local lastSeenDelta = GetTimeStamp() - result.lastSeen
+        ZO_FormatDurationAgo(lastSeenDelta)
+    end
+end
+
+function SearchResultListWrapper:InitializeResultList(tradingHouseWrapper, searchManager)
     local tradingHouse = tradingHouseWrapper.tradingHouse
-    local resultCount = tradingHouse.resultCount
+    local itemDatabase = tradingHouseWrapper.itemDatabase
     local sortFilter = searchManager:GetSortFilter()
+    local resultCount = tradingHouse.resultCount
 
     local list = ZO_SortFilterList:New(CreateProxyControl(tradingHouse.searchResultsList))
     list.emptyRow = tradingHouse.noSearchItemsContainer
+
+    function list:FilterScrollList()
+        local scrollData = ZO_ScrollList_GetDataList(self.list)
+        ZO_ClearNumericallyIndexedTable(scrollData)
+
+        local searchResults = searchManager:GetSearchResults()
+        for i = 1, #searchResults do
+            scrollData[i] = searchResults[i]:GetDataEntry()
+        end
+
+        if(#searchResults > 0 and searchManager:HasMorePages()) then
+            scrollData[#scrollData + 1] = ZO_ScrollList_CreateDataEntry(SHOW_MORE_DATA_TYPE, {})
+        end
+
+        local guildName = select(2, GetCurrentTradingHouseGuildDetails())
+        local items = itemDatabase:GetItemView(guildName):GetItems()
+        resultCount:SetHidden(false)
+        resultCount:SetText(ITEM_COUNT_TEMPLATE:format(#searchResults, #items))
+    end
+
+    function list:SortScrollList() -- TODO should this also happen in the database?
+        local scrollData = ZO_ScrollList_GetDataList(self.list)
+        sortFilter:SortLocalResults(scrollData)
+    end
+
+    local function Noop()
+    -- do nothing
+    end
+
+    tradingHouse.RebuildSearchResultsPage = Noop
+    tradingHouse.ClearSearchResults = Noop
+
+    self.list = list
+
+    AGS:RegisterCallback(AGS.callback.SEARCH_RESULT_UPDATE, function(searchResults, hasMore)
+        list:RefreshFilters()
+    end)
+
+    local function AdjustRowLayout(rowControl)
+        local sellPriceControl = rowControl:GetNamedChild("SellPrice")
+        sellPriceControl:ClearAnchors()
+
+        local perItemPrice = rowControl:GetNamedChild("SellPricePerUnit")
+        perItemPrice:ClearAnchors()
+        perItemPrice:SetAnchor(TOPRIGHT, sellPriceControl, BOTTOMRIGHT, 0, 0)
+
+        local nameControl = rowControl:GetNamedChild("Name")
+        nameControl:SetWidth(310)
+        nameControl:SetMaxLineCount(1)
+        nameControl:ClearAnchors()
+        nameControl:SetAnchor(LEFT, nil, LEFT, ZO_TRADING_HOUSE_SEARCH_RESULT_ITEM_ICON_MAX_WIDTH, -10)
+
+        rowControl:GetNamedChild("TraitInfo"):SetAnchor(LEFT, nameControl, RIGHT, 0, 10)
+
+        local sellerName = rowControl:CreateControl("$(parent)SellerName", CT_LABEL)
+        sellerName:SetAnchor(TOPLEFT, nameControl, BOTTOMLEFT, 10, 0)
+        sellerName:SetFont("ZoFontWinT2")
+        sellerName:SetColor(ZO_NORMAL_TEXT:UnpackRGBA())
+
+        local timeRemaining = rowControl:GetNamedChild("TimeRemaining")
+        timeRemaining:SetAnchor(LEFT, nil, LEFT, 410, 0)
+
+        rowControl.sellPriceControl = sellPriceControl
+        rowControl.perItemPrice = perItemPrice
+        rowControl.sellerName = sellerName
+    end
+
+    local function SetSellerName(rowControl, result)
+        -- TRANSLATORS: Seller name label in the search result list
+        rowControl.sellerName:SetText(gettext("Seller:|cffffff <<1>>", result.sellerName))
+    end
+
+    local searchResultDataType = ZO_ScrollList_GetDataTypeTable(list.list, SEARCH_RESULTS_DATA_TYPE)
+    local originalSearchResultSetupCallback = searchResultDataType.setupCallback
+    searchResultDataType.setupCallback = function(rowControl, result)
+        originalSearchResultSetupCallback(rowControl, result)
+        if(not rowControl.__AGS_INIT) then
+            AdjustRowLayout(rowControl)
+            rowControl.__AGS_INIT = true
+        end
+
+        SetSellerName(rowControl, result)
+
+        local perItemPrice = rowControl.perItemPrice
+        local sellPriceControl = rowControl.sellPriceControl
+        sellPriceControl:ClearAnchors()
+        local offset = 0
+        local hidden = true
+        if(result:GetStackCount() > 1) then
+            ZO_CurrencyControl_SetSimpleCurrency(rowControl.perItemPrice, result.currencyType, result.purchasePricePerUnit, PER_UNIT_PRICE_CURRENCY_OPTIONS, nil, tradingHouse.playerMoney[result.currencyType] < result.purchasePrice)
+            perItemPrice:SetText("@" .. perItemPrice:GetText():gsub("|t.-:.-:", "|t14:14:"))
+            perItemPrice:SetFont("ZoFontWinT2")
+            perItemPrice:SetHidden(false)
+            offset = -10
+            hidden = false
+        end
+        perItemPrice:SetHidden(hidden)
+        sellPriceControl:SetAnchor(RIGHT, rowControl, RIGHT, -5, offset)
+
+        local background = rowControl:GetNamedChild("Bg")
+        local timeRemaining = rowControl:GetNamedChild("TimeRemaining")
+        if(result.purchased) then
+            background:SetTexture(PURCHASED_BG_TEXTURE)
+            background:SetTextureCoords(unpack(PURCHASED_VERTEX_COORDS))
+            background:SetColor(ZO_ColorDef:New("aa00ff00"):UnpackRGBA())
+            timeRemaining:SetText("|c00ff00" .. zo_iconFormatInheritColor(PURCHASED_TEXTURE, 40, 40))
+        elseif(result.soldout) then
+            background:SetTexture(PURCHASED_BG_TEXTURE)
+            background:SetTextureCoords(unpack(PURCHASED_VERTEX_COORDS))
+            background:SetColor(ZO_ColorDef:New("aaff0000"):UnpackRGBA())
+            timeRemaining:SetText("|cff0000" .. zo_iconFormatInheritColor(SOLDOUT_TEXTURE, 40, 40))
+        else
+            background:SetColor(1,1,1,1)
+            background:SetTexture(DEFAULT_BG_TEXTURE)
+            background:SetTextureCoords(unpack(DEFAULT_VERTEX_COORDS))
+        end
+    end
+
+    local guildItemDataType = ZO_ScrollList_GetDataTypeTable(list.list, GUILD_SPECIFIC_ITEM_DATA_TYPE)
+    local originalGuildItemSetupCallback = guildItemDataType.setupCallback
+    guildItemDataType.setupCallback = function(rowControl, result)
+        originalGuildItemSetupCallback(rowControl, result)
+        if(not rowControl.__AGS_INIT) then
+            AdjustRowLayout(rowControl)
+            rowControl.perItemPrice:SetHidden(true)
+            rowControl.sellPriceControl:SetAnchor(RIGHT, rowControl, RIGHT, -5, 0)
+            rowControl.__AGS_INIT = true
+        end
+
+        SetSellerName(rowControl, result)
+    end
+end
+
+function SearchResultListWrapper:InitializeShowMoreRow(tradingHouseWrapper, searchManager)
+    local tradingHouse = tradingHouseWrapper.tradingHouse
+
+    local function SetupShowMoreRow(rowControl, entry)
+        local highlight = rowControl:GetNamedChild("Highlight")
+        highlight:SetColor(SHOW_MORE_ROW_COLOR:UnpackRGB())
+        highlight:SetAlpha(SHOW_MORE_DEFAULT_ALPHA)
+
+        highlight.animation = ANIMATION_MANAGER:CreateTimelineFromVirtual("ShowOnMouseOverLabelAnimation", highlight)
+        local alphaAnimation = highlight.animation:GetFirstAnimation()
+        alphaAnimation:SetAlphaValues(SHOW_MORE_DEFAULT_ALPHA, SHOW_MORE_HIGHLIGHT_ALPHA)
+
+        rowControl:SetHandler("OnMouseEnter", function()
+            highlight.animation:PlayForward()
+        end)
+
+        rowControl:SetHandler("OnMouseExit", function()
+            highlight.animation:PlayBackward()
+        end)
+
+        rowControl:SetHandler("OnMouseUp", function(control, button, isInside)
+            if(rowControl.enabled and button == MOUSE_BUTTON_INDEX_LEFT and isInside) then
+                PlaySound("Click")
+                if(searchManager:RequestSearch(IGNORE_RESULT_COUNT)) then
+                    self:UpdateShowMoreRowState()
+                end
+            end
+        end)
+
+        local label = rowControl:GetNamedChild("Text")
+        rowControl.label = label
+
+        rowControl.SetEnabled = function(self, enabled)
+            rowControl.enabled = enabled
+            highlight.animation:GetFirstAnimation():SetAlphaValues(SHOW_MORE_DEFAULT_ALPHA, enabled and SHOW_MORE_HIGHLIGHT_ALPHA or SHOW_MORE_DEFAULT_ALPHA)
+            label:SetColor((enabled and ZO_NORMAL_TEXT or ZO_DEFAULT_DISABLED_COLOR):UnpackRGBA())
+        end
+    end
+
+    ZO_ScrollList_AddDataType(tradingHouse.searchResultsList, SHOW_MORE_DATA_TYPE, "AwesomeGuildStoreShowMoreRowTemplate", 32, function(rowControl, entry)
+        if(not rowControl.label) then
+            SetupShowMoreRow(rowControl, entry)
+        end
+        rowControl.entry = entry
+        entry.rowControl = rowControl
+        self.showMoreEntry = rowControl
+        self:UpdateShowMoreRowState()
+    end, nil, nil, function(rowControl)
+        self.showMoreEntry = nil
+        rowControl.entry.rowControl = nil
+        rowControl.entry = nil
+        ZO_ObjectPool_DefaultResetControl(rowControl)
+    end)
+
+    AGS:RegisterCallback(AGS.callback.CURRENT_ACTIVITY_CHANGED, function(activity)
+        if(self.showMoreEntry) then
+            self:UpdateShowMoreRowState()
+        end
+    end)
+end
+
+function SearchResultListWrapper:InitializeSortHeaders(tradingHouseWrapper, searchManager)
+    local tradingHouse = tradingHouseWrapper.tradingHouse
+    local sortFilter = searchManager:GetSortFilter()
 
     local sortHeaderGroup = tradingHouse.searchSortHeaders
     sortHeaderGroup:UnregisterAllCallbacks(ZO_SortHeaderGroup.HEADER_CLICKED)
@@ -108,7 +343,9 @@ function SearchResultListWrapper:Initialize(tradingHouseWrapper, searchManager)
         sortFilter:SetCurrentSortOrder(sortOrderId, direction)
     end)
 
-    list.sortHeaderGroup = sortHeaderGroup
+    self.list.sortHeaderGroup = sortHeaderGroup
+    self.customHeader = customHeader
+    self.customHeaderIcon = customHeaderIcon
 
     AGS:RegisterCallback(AGS.callback.FILTER_VALUE_CHANGED, function(id, sortOrder)
         if(id ~= sortFilter:GetId()) then return end
@@ -124,176 +361,46 @@ function SearchResultListWrapper:Initialize(tradingHouseWrapper, searchManager)
         sortHeaderGroup:OnHeaderClicked(header, SILENT, NO_RESELCT, sortOrder:GetDirection())
     end)
 
-    local function SetHeaderEnabled(enabled)
-        sortHeaderGroup:SetEnabled(enabled)
-        customHeader:SetMouseEnabled(enabled)
-        customHeaderIcon:SetDesaturation(enabled and ENABLED_DESATURATION or DISABLED_DESATURATION)
-    end
-
-    AwesomeGuildStore:RegisterCallback(AwesomeGuildStore.callback.SEARCH_LOCK_STATE_CHANGED, function(search, isActiveSearch)
+    AGS:RegisterCallback(AGS.callback.SEARCH_LOCK_STATE_CHANGED, function(search, isActiveSearch)
         if(not isActiveSearch) then return end
-        SetHeaderEnabled(search:IsEnabled())
-    end)
-    AwesomeGuildStore:RegisterCallback(AwesomeGuildStore.callback.SELECTED_SEARCH_CHANGED, function(search)
-        SetHeaderEnabled(search:IsEnabled())
+        self:SetHeaderEnabled(search:IsEnabled())
     end)
 
-    local function UpdateResultTimes(rowControl, result) -- TODO remove
-        if(not CAN_UPDATE_RESULT[result.dataEntry.typeId] or result.purchased or result.soldout) then return end
+    AGS:RegisterCallback(AGS.callback.SELECTED_SEARCH_CHANGED, function(search)
+        self:SetHeaderEnabled(search:IsEnabled())
+    end)
+end
 
-        local lastSeenDelta = GetTimeStamp() - result.lastSeen
-
-        local timeRemaining = rowControl:GetNamedChild("TimeRemaining")
-        timeRemaining:SetText(zo_strformat(SI_TRADING_HOUSE_BROWSE_ITEM_REMAINING_TIME, ZO_FormatTime(math.max(0, result.timeRemaining - lastSeenDelta), TIME_FORMAT_STYLE_SHOW_LARGEST_UNIT_DESCRIPTIVE, TIME_FORMAT_PRECISION_SECONDS, TIME_FORMAT_DIRECTION_DESCENDING)))
-
-        --        local lastSeen = rowControl:GetNamedChild("LastSeen")
-        --        lastSeen:SetText(ZO_FormatDurationAgo(lastSeenDelta))
-    end
-
-    --    function list:RefreshVisible()
-    --        ZO_ScrollList_RefreshVisible(self.list, nil, UpdateResultTimes)
-    --    end
-    --
-    --    list:SetUpdateInterval(10) -- seconds
-
-    -- TODO move
-    local showMoreEntry
-    local inProgress = false
-    local searchManager = tradingHouseWrapper.searchTab.searchManager
-    local activityManager = tradingHouseWrapper.activityManager
-    local SHOW_MORE_DATA_TYPE = 4 -- watch out for changes in tradinghouse.lua
-
-    local SHOW_MORE_ROW_COLOR = ZO_ColorDef:New("50D35D")
-    local SHOW_MORE_DEFAULT_ALPHA = 0.5
-    local SHOW_MORE_HIGHLIGHT_ALPHA = 1
-    local IGNORE_RESULT_COUNT = true
-
-    -- TRANSLATORS: Label for the row at the end of the search result list which triggers the search for more results
-    local SHOW_MORE_READY_LABEL = gettext("Show More Results")
-    -- TRANSLATORS: Label for the row at the end of the search result list when a search is already pending, but cannot start yet due to the request cooldown
-    local SHOW_MORE_COOLDOWN_LABEL = gettext("Waiting For Cooldown ...")
-    -- TRANSLATORS: Label for the row at the end of the search result list when a search is currently in progress
-    local SHOW_MORE_LOADING_LABEL = gettext("Requesting Results ...")
-    -- TRANSLATORS: Label for the result count below the search result list. First number indicates the visible results, second number the overall number of locally stored items for the current guild
-    local ITEM_COUNT_TEMPLATE = gettext("Items:|cffffff %d / %d")
-
-    local function UpdateShowMoreRowState()
-        local label = showMoreEntry.label
-        local activity = activityManager:GetCurrentActivity()
-        local text
-        if(activity and activity:GetType() == ActivityBase.ACTIVITY_TYPE_REQUEST_SEARCH) then
-            text = SHOW_MORE_LOADING_LABEL
-            inProgress = true
+function SearchResultListWrapper:UpdateShowMoreRowState()
+    if(not self.showMoreEntry) then return end
+    local showMoreEntry = self.showMoreEntry
+    local activityManager = self.activityManager
+    -- TODO consolidate into one function together with the keybind strip handler
+    local label = showMoreEntry.label
+    local activity = activityManager:GetCurrentActivity()
+    local text
+    local inProgress = true
+    if(activity and activity:GetType() == ActivityBase.ACTIVITY_TYPE_REQUEST_SEARCH) then
+        text = SHOW_MORE_LOADING_LABEL
+    else
+        local searchActivities = activityManager:GetActivitiesByType(ActivityBase.ACTIVITY_TYPE_REQUEST_SEARCH)
+        if(#searchActivities > 0) then
+            text = SHOW_MORE_COOLDOWN_LABEL
         else
-            local searchActivities = activityManager:GetActivitiesByType(ActivityBase.ACTIVITY_TYPE_REQUEST_SEARCH)
-            if(#searchActivities > 0) then
-                text = SHOW_MORE_COOLDOWN_LABEL
-                inProgress = true
-            else
-                text = SHOW_MORE_READY_LABEL
-                inProgress = false
-            end
-        end
-        label:SetText(text)
-        showMoreEntry:SetEnabled(not inProgress)
-    end
-
-    local function SetupShowMoreRow(rowControl, entry)
-        local highlight = rowControl:GetNamedChild("Highlight")
-        highlight:SetColor(SHOW_MORE_ROW_COLOR:UnpackRGB())
-        highlight:SetAlpha(SHOW_MORE_DEFAULT_ALPHA)
-
-        highlight.animation = ANIMATION_MANAGER:CreateTimelineFromVirtual("ShowOnMouseOverLabelAnimation", highlight)
-        local alphaAnimation = highlight.animation:GetFirstAnimation()
-        alphaAnimation:SetAlphaValues(SHOW_MORE_DEFAULT_ALPHA, SHOW_MORE_HIGHLIGHT_ALPHA)
-
-        rowControl:SetHandler("OnMouseEnter", function()
-            highlight.animation:PlayForward()
-        end)
-
-        rowControl:SetHandler("OnMouseExit", function()
-            highlight.animation:PlayBackward()
-        end)
-
-        rowControl:SetHandler("OnMouseUp", function(control, button, isInside)
-            if(rowControl.enabled and button == MOUSE_BUTTON_INDEX_LEFT and isInside) then
-                PlaySound("Click")
-                if(searchManager:RequestSearch(IGNORE_RESULT_COUNT)) then
-                    UpdateShowMoreRowState()
-                end
-            end
-        end)
-
-        local label = rowControl:GetNamedChild("Text")
-        rowControl.label = label
-
-        rowControl.SetEnabled = function(self, enabled)
-            rowControl.enabled = enabled
-            highlight.animation:GetFirstAnimation():SetAlphaValues(0.5, enabled and 1 or 0.5)
-            label:SetColor((enabled and ZO_NORMAL_TEXT or ZO_DEFAULT_DISABLED_COLOR):UnpackRGBA()) -- TODO disabled color is not visible enough
+            text = SHOW_MORE_READY_LABEL
+            inProgress = false
         end
     end
-
-    ZO_ScrollList_AddDataType(tradingHouse.searchResultsList, SHOW_MORE_DATA_TYPE, "AwesomeGuildStoreShowMoreRowTemplate", 32, function(rowControl, entry)
-        if(not rowControl.label) then
-            SetupShowMoreRow(rowControl, entry)
-        end
-        rowControl.entry = entry
-        entry.rowControl = rowControl
-        showMoreEntry = rowControl
-        UpdateShowMoreRowState()
-    end, nil, nil, function(rowControl)
-        showMoreEntry = nil
-        rowControl.entry.rowControl = nil
-        rowControl.entry = nil
-        ZO_ObjectPool_DefaultResetControl(rowControl)
-    end)
-
-    AGS:RegisterCallback(AGS.callback.CURRENT_ACTIVITY_CHANGED, function(activity)
-        if(showMoreEntry) then
-            UpdateShowMoreRowState()
-        end
-    end)
-
-    function list:FilterScrollList()
-        local scrollData = ZO_ScrollList_GetDataList(self.list)
-        ZO_ClearNumericallyIndexedTable(scrollData)
-
-        local searchResults = searchManager:GetSearchResults()
-        for i = 1, #searchResults do
-            scrollData[i] = searchResults[i]:GetDataEntry(SEARCH_RESULTS_DATA_TYPE)
-        end
-
-        if(#searchResults > 0 and searchManager:HasMorePages()) then
-            scrollData[#scrollData + 1] = ZO_ScrollList_CreateDataEntry(SHOW_MORE_DATA_TYPE, {})
-        end
-
-        local guildName = select(2, GetCurrentTradingHouseGuildDetails())
-        local items = itemDatabase:GetItemView(guildName):GetItems()
-        resultCount:SetHidden(false)
-        resultCount:SetText(ITEM_COUNT_TEMPLATE:format(#searchResults, #items))
-    end
-
-    function list:SortScrollList() -- TODO should this also happen in the database?
-        local scrollData = ZO_ScrollList_GetDataList(self.list)
-        sortFilter:SortLocalResults(scrollData)
-    end
-
-    local function DoRefreshResults()
-    --list:RefreshFilters()
-    end
-
-    tradingHouse.RebuildSearchResultsPage = DoRefreshResults -- TODO noop
-    tradingHouse.ClearSearchResults = DoRefreshResults -- TODO noop
-    --    AGS:RegisterCallback(AGS.callback.FILTER_UPDATE, DoRefreshResults)
-    --    AGS:RegisterCallback(AGS.callback.ITEM_DATABASE_UPDATE, DoRefreshResults)
-    AGS:RegisterCallback(AGS.callback.SEARCH_RESULT_UPDATE, function(searchResults, hasMore)
-        list:RefreshFilters()
-    end)
-
-    self.list = list
+    label:SetText(text)
+    showMoreEntry:SetEnabled(not inProgress)
 end
 
 function SearchResultListWrapper:RefreshVisible()
     ZO_ScrollList_RefreshVisible(self.list.list)
+end
+
+function SearchResultListWrapper:SetHeaderEnabled(enabled)
+    self.list.sortHeaderGroup:SetEnabled(enabled)
+    self.customHeader:SetMouseEnabled(enabled)
+    self.customHeaderIcon:SetDesaturation(enabled and ENABLED_DESATURATION or DISABLED_DESATURATION)
 end

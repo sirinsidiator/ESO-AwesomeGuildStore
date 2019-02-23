@@ -10,14 +10,6 @@ local SearchTabWrapper = ZO_Object:Subclass()
 AwesomeGuildStore.SearchTabWrapper = SearchTabWrapper
 
 local ACTION_LAYER_NAME = "AwesomeGuildStore"
-local FILTER_PANEL_WIDTH = 220
-local MISSING_ICON = "/esoui/art/icons/icon_missing.dds"
-local PURCHASED_BG_TEXTURE = "EsoUI/Art/Miscellaneous/listItem_highlight.dds"
-local PURCHASED_VERTEX_COORDS = {0, 1, 0, 0.625}
-local DEFAULT_BG_TEXTURE = "EsoUI/Art/Miscellaneous/listItem_backdrop.dds"
-local DEFAULT_VERTEX_COORDS = {0, 1, 0, 0.8125}
-local PURCHASED_TEXTURE = "EsoUI/Art/hud/gamepad/gp_radialicon_accept_down.dds"
-local SOLDOUT_TEXTURE = "EsoUI/Art/hud/gamepad/gp_radialicon_cancel_down.dds"
 
 function SearchTabWrapper:New(saveData)
     local wrapper = ZO_Object.New(self)
@@ -25,7 +17,6 @@ function SearchTabWrapper:New(saveData)
     return wrapper
 end
 
-local iconMarkup = string.format("|t%u:%u:%s|t", 16, 16, "EsoUI/Art/currency/currency_gold.dds")
 function SearchTabWrapper:RunInitialSetup(tradingHouseWrapper)
     self:PrepareIngameControls(tradingHouseWrapper)
     self:InitializeFilters(tradingHouseWrapper)
@@ -34,10 +25,6 @@ function SearchTabWrapper:RunInitialSetup(tradingHouseWrapper)
     self:InitializeUnitPriceDisplay(tradingHouseWrapper)
     self:InitializeSearchResultMasterList(tradingHouseWrapper)
     self:InitializeKeybinds(tradingHouseWrapper)
-    zo_callLater(function()
-        self:RefreshFilterDimensions() -- call this after the layout has been updated
-        --TODO: self.categoryFilter:UpdateSubfilterVisibility() -- fix inpage filters not working on first visit
-    end, 1)
     self.tradingHouseWrapper = tradingHouseWrapper
 end
 
@@ -93,9 +80,6 @@ function SearchTabWrapper:DetachFilter(filter) -- TODO: remove
 
         self:RequestUpdateFilterAnchors()
 end
-end
-
-function SearchTabWrapper:RefreshFilterDimensions() -- TODO remove
 end
 
 function SearchTabWrapper:PrepareIngameControls(tradingHouseWrapper)
@@ -343,96 +327,7 @@ end
 function SearchTabWrapper:InitializeNavigation(tradingHouseWrapper) -- TODO: remove
 end
 
-local PER_UNIT_PRICE_CURRENCY_OPTIONS = {
-    showTooltips = false,
-    iconSide = RIGHT,
-}
-local UNIT_PRICE_FONT = "/esoui/common/fonts/univers67.otf|14|soft-shadow-thin"
-local SEARCH_RESULTS_DATA_TYPE = 1
-local GUILD_SPECIFIC_ITEM_DATA_TYPE = 3
-
-local function SetUnitPrice(tradingHouse, rowControl, sellPriceControl, perItemPrice, result, unitPrice)
-    ZO_CurrencyControl_SetSimpleCurrency(perItemPrice, result.currencyType, unitPrice, PER_UNIT_PRICE_CURRENCY_OPTIONS, nil, tradingHouse.playerMoney[result.currencyType] < result.purchasePrice)
-    perItemPrice:SetFont(UNIT_PRICE_FONT)
-    perItemPrice:SetText("@" .. perItemPrice:GetText():gsub("|t.-:.-:", "|t12:12:"))
-    perItemPrice:SetHidden(false)
-    sellPriceControl:ClearAnchors()
-    sellPriceControl:SetAnchor(RIGHT, rowControl, RIGHT, -5, -8)
-end
-
-function SearchTabWrapper:InitializeUnitPriceDisplay(tradingHouseWrapper)
-    local saveData = self.saveData
-    local tradingHouse = tradingHouseWrapper.tradingHouse
-    local dataType = tradingHouse.searchResultsList.dataTypes[SEARCH_RESULTS_DATA_TYPE] -- TODO use ZO_ScrollList_GetDataTypeTable(self, typeId)
-    local originalSetupCallback = dataType.setupCallback
-
-    dataType.setupCallback = function(rowControl, result) -- TODO move into search result list wrapper
-        originalSetupCallback(rowControl, result)
-
-        local sellPriceControl = rowControl:GetNamedChild("SellPrice")
-        local perItemPrice = rowControl:GetNamedChild("SellPricePerUnit")
-        local shouldShow = false
-        if(not perItemPrice.__AGS_INIT) then
-            sellPriceControl:ClearAnchors()
-            perItemPrice:ClearAnchors()
-            perItemPrice:SetAnchor(TOPRIGHT, sellPriceControl, BOTTOMRIGHT, 0, 0)
-            perItemPrice.__AGS_INIT = true
-        end
-
-        if(result:GetStackCount() > 1) then
-            SetUnitPrice(tradingHouse, rowControl, sellPriceControl, perItemPrice, result, result.purchasePricePerUnit)
-            shouldShow = true
-        end
-
-        if(not shouldShow) then
-            perItemPrice:SetHidden(true)
-            sellPriceControl:ClearAnchors()
-            sellPriceControl:SetAnchor(RIGHT, rowControl, RIGHT, -5, 0)
-        end
-
-        -- TODO
-        local nameControl = rowControl:GetNamedChild("Name")
-        nameControl:SetWidth(310)
-        nameControl:SetMaxLineCount(1)
-
-        nameControl:ClearAnchors() -- TODO should probably check if anchor really needs to change -> test performance impact
-        local offsetY = 0
-        local sellerName = rowControl:GetNamedChild("SellerName")
-        if(saveData.displaySellerName or true) then -- TODO or sortOrder == sellerName
-            offsetY = -8
-            if(not sellerName) then
-                sellerName = rowControl:CreateControl("$(parent)SellerName", CT_LABEL)
-                sellerName:SetAnchor(TOPLEFT, nameControl, BOTTOMLEFT, 10, 0)
-                sellerName:SetFont(UNIT_PRICE_FONT)
-                sellerName:SetColor(ZO_NORMAL_TEXT:UnpackRGBA())
-            end
-            sellerName:SetText(gettext("Seller:|cffffff %s"):format(result.sellerName))
-        elseif(sellerName) then
-            sellerName:SetHidden(true)
-            sellerName:SetText("")
-        end
-        nameControl:SetAnchor(LEFT, nil, LEFT, ZO_TRADING_HOUSE_SEARCH_RESULT_ITEM_ICON_MAX_WIDTH, offsetY)
-
-        if(math.abs(result.purchasePrice / result:GetStackCount() - result.purchasePricePerUnitRaw) > 0.01) then -- TODO remove
-            sellerName:SetColor(1, 0, 0, 1)
-            sellerName:SetText("mismatch: ".. tostring(result.purchasePrice / result:GetStackCount() - result.purchasePricePerUnitRaw))
-        else
-            sellerName:SetColor(ZO_NORMAL_TEXT:UnpackRGBA())
-        end
-
-        local timeRemaining = rowControl:GetNamedChild("TimeRemaining")
-        timeRemaining:SetAnchor(LEFT, nil, LEFT, 410, 0)
-
-        local traitInfo = rowControl:GetNamedChild("TraitInfo")
-        traitInfo:SetAnchor(LEFT, nil, LEFT, 380, 0)
-        --        local lastSeen = rowControl:GetNamedChild("LastSeen")
-        --        if(not lastSeen) then
-        --            lastSeen = rowControl:CreateControl("$(parent)LastSeen", CT_LABEL)
-        --            lastSeen:SetAnchor(TOPRIGHT, timeRemaining, BOTTOMRIGHT, 0, 0) -- TODO move timeRemaining up so everything is centered
-        --            lastSeen:SetFont(UNIT_PRICE_FONT)
-        --        end
-        --        lastSeen:SetText(ZO_FormatDurationAgo(GetTimeStamp() - result.lastSeen))
-    end
+function SearchTabWrapper:InitializeUnitPriceDisplay(tradingHouseWrapper) -- TODO remove
 end
 
 function SearchTabWrapper:PrintPurchaseMessageForEntry(entry)
@@ -535,32 +430,6 @@ function SearchTabWrapper:InitializeSearchResultMasterList(tradingHouseWrapper) 
 
         return true
     end)
-
-    local dataType = tradingHouse.searchResultsList.dataTypes[SEARCH_RESULTS_DATA_TYPE]
-    local originalSetupCallback = dataType.setupCallback
-    dataType.setupCallback = function(rowControl, result) -- TODO consolidate all of these hooks
-        originalSetupCallback(rowControl, result)
-
-        local background = rowControl:GetNamedChild("Bg")
-        local timeRemaining = rowControl:GetNamedChild("TimeRemaining")
-        --        local lastSeen = rowControl:GetNamedChild("LastSeen")
-        if(result.purchased) then
-            background:SetTexture(PURCHASED_BG_TEXTURE)
-            background:SetTextureCoords(unpack(PURCHASED_VERTEX_COORDS))
-            background:SetColor(ZO_ColorDef:New("aa00ff00"):UnpackRGBA())
-            timeRemaining:SetText("|c00ff00" .. zo_iconFormatInheritColor(PURCHASED_TEXTURE, 40, 40))
-        elseif(result.soldout) then
-            background:SetTexture(PURCHASED_BG_TEXTURE)
-            background:SetTextureCoords(unpack(PURCHASED_VERTEX_COORDS))
-            background:SetColor(ZO_ColorDef:New("aaff0000"):UnpackRGBA())
-            timeRemaining:SetText("|cff0000" .. zo_iconFormatInheritColor(SOLDOUT_TEXTURE, 40, 40))
-        else
-            background:SetColor(1,1,1,1)
-            background:SetTexture(DEFAULT_BG_TEXTURE)
-            background:SetTextureCoords(unpack(DEFAULT_VERTEX_COORDS))
-        end
-        --        lastSeen:SetHidden(result.purchased or result.soldout)
-    end
 end
 
 function SearchTabWrapper:InitializeKeybinds(tradingHouseWrapper) -- TODO: remove

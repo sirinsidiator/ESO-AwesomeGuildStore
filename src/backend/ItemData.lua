@@ -2,6 +2,9 @@ local AGS = AwesomeGuildStore
 
 local GetItemLinkWritVoucherCount = AGS.internal.GetItemLinkWritVoucherCount
 
+local SEARCH_RESULTS_DATA_TYPE = 1
+local GUILD_SPECIFIC_ITEM_DATA_TYPE = 3
+
 local ItemData = ZO_Object:Subclass()
 AwesomeGuildStore.ItemData = ItemData
 
@@ -90,14 +93,13 @@ function ItemData:GetSetInfo()
     return self.hasSet, self.setName
 end
 
-function ItemData:GetDataEntry(type)
+function ItemData:GetDataEntry()
     if(self.name == "" or self.stackCount == 0) then return end
     if(not self.dataEntry) then
+        local type = self.isGuildSpecificItem and GUILD_SPECIFIC_ITEM_DATA_TYPE or SEARCH_RESULTS_DATA_TYPE
         ZO_ScrollList_CreateDataEntry(type, self)
         self:GetStackCount()
         self:GetSetInfo()
-    else
-        self.dataEntry.typeId = type
     end
     return self.dataEntry
 end
