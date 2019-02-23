@@ -18,6 +18,7 @@ function ItemDatabase:Initialize(tradingHouseWrapper)
     self.PENDING_PURCHASE_SLOT_INDEX = PENDING_PURCHASE_SLOT_INDEX
     self.tradingHouseWrapper = tradingHouseWrapper
     self.data = {}
+    self.guildItemData = {}
     self.viewCache = {}
     self.dirty = true
 
@@ -112,6 +113,26 @@ function ItemDatabase:Update(guildName, numItems)
     return hasAnyResultAlreadyStored
 end
 
+function ItemDatabase:UpdateGuildSpecificItems(guildId, guildName)
+    if(guildId and guildId > 0) then
+        local data = self:GetOrCreateGuildItemDataForGuild(guildName)
+
+        local count = GetNumGuildSpecificItems()
+        if(count > 0) then
+            for i = 1, count do
+                local item = ItemData:New(i, guildName)
+                item:UpdateFromGuildSpecificItem(i)
+                data[i] = item
+            end
+            self:GetItemView(guildName):MarkDirty()
+        end
+
+        AwesomeGuildStore:FireCallbacks(AwesomeGuildStore.callback.ITEM_DATABASE_UPDATE, self, guildName)
+        return true, TRADING_HOUSE_RESULT_SUCCESS
+    end
+    return false, TRADING_HOUSE_RESULT_NOT_A_MEMBER
+end
+
 function ItemDatabase:GetItemUniqueIdForSlotIndex(slotIndex)
     local itemUniqueId = select(9, self.originalGetTradingHouseSearchResultItemInfo(slotIndex))
     return itemUniqueId
@@ -122,6 +143,17 @@ function ItemDatabase:GetOrCreateDataForGuild(guildName)
     local data = self.data[guildName] or {}
     self.data[guildName] = data
     return data
+end
+
+function ItemDatabase:GetOrCreateGuildItemDataForGuild(guildName)
+    if(not guildName) then return {} end
+    local data = self.guildItemData[guildName] or {}
+    self.guildItemData[guildName] = data
+    return data
+end
+
+function ItemDatabase:HasGuildSpecificItems(guildName)
+    return self.guildItemData[guildName] ~= nil
 end
 
 function ItemDatabase:TryGetItemDataInCurrentGuildByUniqueId(itemUniqueId)

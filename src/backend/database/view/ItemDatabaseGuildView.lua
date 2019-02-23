@@ -16,12 +16,20 @@ function ItemDatabaseGuildView:Initialize(itemDatabase, guildName)
 end
 
 function ItemDatabaseGuildView:UpdateItems()
+    local itemDatabase = self.itemDatabase
+    local guildName = self.guildName
     local items = self.items
     ZO_ClearNumericallyIndexedTable(items)
 
-    local data = self.itemDatabase:GetOrCreateDataForGuild(self.guildName)
+    if(itemDatabase:HasGuildSpecificItems(guildName)) then
+        local guildItemData = itemDatabase:GetOrCreateGuildItemDataForGuild(guildName)
+        for i = 1, #guildItemData do
+            items[i] = guildItemData[i]
+        end
+    end
+
+    local data = itemDatabase:GetOrCreateDataForGuild(guildName)
     for _, item in pairs(data) do
         items[#items + 1] = item
     end
-    -- TODO: add guild specific items -> maybe in the database itself?
 end

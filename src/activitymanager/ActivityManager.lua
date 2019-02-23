@@ -1,6 +1,7 @@
 local AGS = AwesomeGuildStore
 
 local logger = AGS.internal.logger
+local gettext = AGS.internal.gettext
 
 local ActivityManager = ZO_Object:Subclass()
 AwesomeGuildStore.ActivityManager = ActivityManager
@@ -13,6 +14,7 @@ local RequestListingsActivity = AwesomeGuildStore.class.RequestListingsActivity
 local PurchaseItemActivity = AwesomeGuildStore.class.PurchaseItemActivity
 local PostItemActivity = AwesomeGuildStore.class.PostItemActivity
 local CancelItemActivity = AwesomeGuildStore.class.CancelItemActivity
+local FetchGuildItemsActivity = AwesomeGuildStore.class.FetchGuildItemsActivity
 local ActivityPanel = AwesomeGuildStore.class.ActivityPanel
 
 local ByPriority = ActivityBase.ByPriority
@@ -343,6 +345,15 @@ function ActivityManager:CancelItem(guildId, listingIndex)
     if(not self:CanQueue(key)) then return end
 
     local activity = CancelItemActivity:New(self.tradingHouseWrapper, guildId, listingIndex, uniqueId, price)
+    self:QueueActivity(activity)
+    return activity
+end
+
+function ActivityManager:FetchGuildItems(guildId)
+    local key = FetchGuildItemsActivity.CreateKey(guildId)
+    if(not self:CanQueue(key)) then return end
+
+    local activity = FetchGuildItemsActivity:New(self.tradingHouseWrapper, guildId)
     self:QueueActivity(activity)
     return activity
 end

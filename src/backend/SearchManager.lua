@@ -68,7 +68,19 @@ function SearchManager:Initialize(tradingHouseWrapper, saveData)
     end
 
     AGS:RegisterCallback(AGS.callback.FILTER_UPDATE, RequestRefreshResults)
-    AGS:RegisterCallback(AGS.callback.GUILD_SELECTION_CHANGED, RequestRefreshResults)
+    AGS:RegisterCallback(AGS.callback.GUILD_SELECTION_CHANGED, function(guildData)
+        local guildId = guildData.guildId
+        if(guildId and guildId > 0 and not self.itemDatabase:HasGuildSpecificItems(guildData.guildName)) then
+            self.activityManager:FetchGuildItems(guildId)
+        else
+            RequestRefreshResults()
+        end
+    end)
+    AGS:RegisterCallback(AGS.callback.ITEM_DATABASE_UPDATE, function(itemDatabase, guildName, hasAnyResultAlreadyStored)
+        if(hasAnyResultAlreadyStored == nil) then
+            RequestRefreshResults()
+        end
+    end)
     AGS:RegisterCallback(AGS.callback.CURRENT_ACTIVITY_CHANGED, function(currentActivity, previousActivity)
         if(not currentActivity) then
             local type = previousActivity:GetType()

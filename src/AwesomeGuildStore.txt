@@ -67,6 +67,7 @@ activityManager/RequestListingsActivity.lua
 activityManager/PostItemActivity.lua
 activityManager/PurchaseItemActivity.lua
 activityManager/CancelItemActivity.lua
+activityManager/FetchGuildItemsActivity.lua
 frontend/ActivityPanel.xml
 frontend/ActivityPanel.lua
 activityManager/ActivityManager.lua
