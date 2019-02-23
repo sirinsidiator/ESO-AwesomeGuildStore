@@ -83,6 +83,7 @@ local RESULT_TO_STRING = {
     [ActivityBase.ERROR_PAGE_ALREADY_LOADED] = "ERROR_PAGE_ALREADY_LOADED",
     [ActivityBase.ERROR_USER_CANCELLED] = "ERROR_USER_CANCELLED",
 }
+ActivityBase.RESULT_TO_STRING = RESULT_TO_STRING
 
 function ActivityBase:New(...)
     local selector = ZO_Object.New(self)
@@ -118,6 +119,10 @@ end
 
 function ActivityBase:GetType()
 -- needs to be overwritten
+end
+
+function ActivityBase:GetState()
+    return self.state
 end
 
 function ActivityBase:CanExecute()

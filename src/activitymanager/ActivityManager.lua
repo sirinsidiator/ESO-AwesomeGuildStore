@@ -269,13 +269,16 @@ function ActivityManager:OnSuccess(activity)
 end
 
 function ActivityManager:OnFailure(activity)
+    local message
     if(type(activity) == "string") then
+        -- TRANSLATORS: Alert text when an activity fails unexpectedly
+        message = gettext("Unknown Error")
         logger:Error(activity)
-        return
+    else
+        message = activity:GetErrorMessage()
+        logger:Warn(message)
     end
-    -- TODO we should log real activity information too
 
-    local message = activity:GetErrorMessage()
     ZO_Alert(UI_ALERT_CATEGORY_ERROR, SOUNDS.NEGATIVE_CLICK, message)
     self.panel:SetStatusText(message)
 

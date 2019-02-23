@@ -82,7 +82,7 @@ function SearchManager:Initialize(tradingHouseWrapper, saveData)
         end
     end)
     AGS:RegisterCallback(AGS.callback.CURRENT_ACTIVITY_CHANGED, function(currentActivity, previousActivity)
-        if(not currentActivity) then
+        if(not currentActivity and previousActivity:GetState() == ActivityBase.STATE_SUCCEEDED) then
             local type = previousActivity:GetType()
             if(type == ActivityBase.ACTIVITY_TYPE_REQUEST_SEARCH) then
                 RequestRefreshResults()
