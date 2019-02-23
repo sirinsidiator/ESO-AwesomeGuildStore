@@ -2,8 +2,8 @@
 ## Author: sirinsidiator
 ## Version: @VERSION_NUMBER@
 ## APIVersion: @API_VERSION@
-## DependsOn: LibStub LibCustomMenu LibDebugLogger LibDateTime
-## OptionalDependsOn: LibAddonMenu-2.0 LibFilters-2.0 libCommonInventoryFilters LibTextFilter LibCustomTitles LibMapPing LibGPS LibDateTime LibPromises LibGetText LibAnnyoingUpdateNotificationInGame
+## DependsOn: LibCustomMenu LibDebugLogger LibDateTime LibAddonMenu-2.0 LibMapPing LibGPS LibPromises LibTextFilter LibGetText libCommonInventoryFilters
+## OptionalDependsOn: LibStub LibFilters-2.0 LibCustomTitles LibAnnyoingUpdateNotificationInGame
 ## SavedVariables: AwesomeGuildStore_Data
 ##
 ## This Add-on is not created by, affiliated with or sponsored by ZeniMax Media Inc. or its affiliates. 
@@ -12,28 +12,9 @@
 ##
 ## You can read the full terms at https://account.elderscrollsonline.com/add-on-terms
 
-lib/LibAddonMenu-2.0/LibAddonMenu-2.0.lua
-lib/LibAddonMenu-2.0/controls/panel.lua
-lib/LibAddonMenu-2.0/controls/submenu.lua
-lib/LibAddonMenu-2.0/controls/button.lua
-lib/LibAddonMenu-2.0/controls/checkbox.lua
-lib/LibAddonMenu-2.0/controls/colorpicker.lua
-lib/LibAddonMenu-2.0/controls/custom.lua
-lib/LibAddonMenu-2.0/controls/description.lua
-lib/LibAddonMenu-2.0/controls/dropdown.lua
-lib/LibAddonMenu-2.0/controls/editbox.lua
-lib/LibAddonMenu-2.0/controls/header.lua
-lib/LibAddonMenu-2.0/controls/slider.lua
-lib/LibAddonMenu-2.0/controls/texture.lua
-lib/LibAddonMenu-2.0/controls/iconpicker.lua
-lib/LibAddonMenu-2.0/controls/divider.lua
-lib/LibTextFilter/LibTextFilter.lua
+lib/LibStub/LibStub.lua
 lib/LibCustomTitles/LibCustomTitles.lua
 lib/LibAnnyoingUpdateNotificationInGame/LibAnnyoingUpdateNotificationInGame.lua
-lib/LibMapPing/LibMapPing.lua
-lib/LibGPS/LibGPS.lua
-lib/LibPromises/LibPromises.lua
-lib/LibGetText/LibGetText.lua
 StartUp.lua
 CallbackNames.lua
 i18n/en.lua
