@@ -1,5 +1,15 @@
+local AGS = AwesomeGuildStore
+
+local ActivityBase = AGS.class.ActivityBase
+local gettext = AGS.internal.gettext
+
+local DO_SEARCH_SHORTCUT_INDEX = 1
+local SWITCH_GUILD_SHORTCUT_INDEX = 2
+local RESET_SEARCH_SHORTCUT_INDEX = 3
+local IGNORE_RESULT_COUNT = true
+
 local KeybindStripWrapper = ZO_Object:Subclass()
-AwesomeGuildStore.KeybindStripWrapper = KeybindStripWrapper
+AGS.KeybindStripWrapper = KeybindStripWrapper
 
 function KeybindStripWrapper:New(...)
     local wrapper = ZO_Object.New(self)
@@ -7,50 +17,41 @@ function KeybindStripWrapper:New(...)
     return wrapper
 end
 
-function KeybindStripWrapper:Initialize(tradingHouseWrapper) -- TODO redo
---    local tradingHouse = tradingHouseWrapper.tradingHouse
---    local searchManager = tradingHouseWrapper.searchTab.searchManager
---    local keybindStripDescriptor = tradingHouse.keybindStripDescriptor
---
---    local secondaryDescriptor = keybindStripDescriptor[1]
---    assert(secondaryDescriptor.keybind == "UI_SHORTCUT_SECONDARY")
---    local originalEnabled = secondaryDescriptor.enabled
---    secondaryDescriptor.enabled = function()
---        if(tradingHouse:IsInSearchMode()) then
---            return not self.isSearchDisabled
---        else
---            return originalEnabled()
---        end
---    end
---
---    secondaryDescriptor.callback = function()
---        if(tradingHouse:IsInSearchMode()) then
---            searchManager:RequestSearch()
---        elseif(tradingHouse:CanPostWithMoneyCheck()) then
---            tradingHouse:PostPendingItem()
---        end
---    end
---
---    local tertiaryDescriptor = keybindStripDescriptor[2]
---    assert(tertiaryDescriptor.keybind == "UI_SHORTCUT_TERTIARY")
---    tertiaryDescriptor.enabled = function()
---        return not self.isSearchDisabled
---    end
---
---    self.keybindStripDescriptor = keybindStripDescriptor
---    self.keybindStrip = KEYBIND_STRIP
-end
+function KeybindStripWrapper:Initialize(tradingHouseWrapper)
+    local tradingHouse = tradingHouseWrapper.tradingHouse
+    local searchManager = tradingHouseWrapper.searchTab.searchManager
+    local activityManager = tradingHouseWrapper.activityManager
 
-function KeybindStripWrapper:DisableSearch()
---    self.isSearchDisabled = true
---    self:UpdateKeybindStrip()
-end
+    local browseKeybindStripDescriptor = tradingHouse.browseKeybindStripDescriptor
+    local doSearchDescriptor = browseKeybindStripDescriptor[DO_SEARCH_SHORTCUT_INDEX]
+    doSearchDescriptor.enabled = function()
+        -- TODO consolidate into one function together with the show more row state
+        local activity = activityManager:GetCurrentActivity()
+        if(activity and activity:GetType() == ActivityBase.ACTIVITY_TYPE_REQUEST_SEARCH) then
+            return false
+        else
+            local searchActivities = activityManager:GetActivitiesByType(ActivityBase.ACTIVITY_TYPE_REQUEST_SEARCH)
+            return (#searchActivities == 0)
+        end
+        return true
+    end
 
-function KeybindStripWrapper:EnableSearch()
---    self.isSearchDisabled = false
---    self:UpdateKeybindStrip()
-end
+    doSearchDescriptor.callback = function()
+        searchManager:RequestSearch(IGNORE_RESULT_COUNT)
+    end
 
-function KeybindStripWrapper:UpdateKeybindStrip()
---    self.keybindStrip:UpdateKeybindButtonGroup(self.keybindButtonDescriptor)
+    -- TRANSLATORS: Label for the keybind to show more results
+    doSearchDescriptor.name = gettext("Show More Results")
+
+    local switchGuildDescriptor = browseKeybindStripDescriptor[SWITCH_GUILD_SHORTCUT_INDEX]
+    switchGuildDescriptor.enabled = true
+
+    local resetSearchDescriptor = browseKeybindStripDescriptor[RESET_SEARCH_SHORTCUT_INDEX]
+    resetSearchDescriptor.callback = function()
+        searchManager:GetActiveSearch():Reset()
+    end
+
+    AGS:RegisterCallback(AGS.callback.CURRENT_ACTIVITY_CHANGED, function(currentActivity, previousActivity)
+        KEYBIND_STRIP:UpdateKeybindButtonGroup(tradingHouse.keybindStripDescriptor)
+    end)
 end
