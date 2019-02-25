@@ -39,7 +39,7 @@ end
 
 function CancelItemActivity:FinalizeCancellation()
     local promise = Promise:New()
-    AGS:FireCallbacks(AGS.callback.ITEM_CANCELLED, self.guildId, self.itemLink, self.price)
+    AGS:FireCallbacks(AGS.callback.ITEM_CANCELLED, self.guildId, self.itemLink, self.price, self.stackCount)
     promise:Resolve(self)
     return promise
 end

@@ -1,3 +1,5 @@
+local AGS = AwesomeGuildStore
+
 local gettext = LibStub("LibGetText")("AwesomeGuildStore").gettext
 local RegisterForEvent = AwesomeGuildStore.RegisterForEvent
 local UnregisterForEvent = AwesomeGuildStore.UnregisterForEvent
@@ -660,27 +662,13 @@ end
 
 function SellTabWrapper:InitializeListedNotification(tradingHouseWrapper)
     local saveData = self.saveData
-    local listedMessage = ""
-    tradingHouseWrapper:Wrap("PostPendingItem", function(originalPostPendingItem, self)
-        if(self.pendingItemSlot and self.pendingSaleIsValid) then
-            local count = ZO_InventorySlot_GetStackCount(self.pendingItem)
-            local price = ZO_Currency_FormatPlatform(CURT_MONEY, self.invoiceSellPrice.sellPrice or 0, ZO_CURRENCY_FORMAT_AMOUNT_ICON)
-            local _, guildName = GetCurrentTradingHouseGuildDetails()
-            local itemLink = GetItemLink(BAG_BACKPACK, self.pendingItemSlot)
-
+    AGS:RegisterCallback(AGS.callback.ITEM_POSTED, function(guildId, itemLink, price, stackCount)
+        if(saveData.listedNotification) then
+            local guildName = GetGuildName(guildId)
+            price = ZO_Currency_FormatPlatform(CURT_MONEY, price or 0, ZO_CURRENCY_FORMAT_AMOUNT_ICON)
             -- TRANSLATORS: chat message when a item is listed on a store. <<1>> is replaced with the item count, <<t:2>> with the item link, <<3>> with the price and <<4>> with the guild store name. e.g. You have listed 1x [Rosin] for 5000g in Imperial Trading Company
-            listedMessage = gettext("You have listed <<1>>x <<t:2>> for <<3>> in <<4>>", count, itemLink, price, guildName)
-        end
-        originalPostPendingItem(self)
-    end)
-
-    RegisterForEvent(EVENT_TRADING_HOUSE_RESPONSE_RECEIVED, function(_, responseType, result)
-        if(responseType == TRADING_HOUSE_RESULT_POST_PENDING and result == TRADING_HOUSE_RESULT_SUCCESS) then
-            self.tradingHouse:OnPendingPostItemUpdated(0, false)
-            if(saveData.listedNotification and listedMessage ~= "") then
-                Print(listedMessage)
-                listedMessage = ""
-            end
+            local listedMessage = gettext("You have listed <<1>>x <<t:2>> for <<3>> in <<4>>", stackCount, itemLink, price, guildName)
+            Print(listedMessage)
         end
     end)
 end

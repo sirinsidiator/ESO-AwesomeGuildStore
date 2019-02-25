@@ -1,3 +1,5 @@
+local AGS = AwesomeGuildStore
+
 local gettext = LibStub("LibGetText")("AwesomeGuildStore").gettext
 local RegisterForEvent = AwesomeGuildStore.RegisterForEvent
 local Print = AwesomeGuildStore.Print
@@ -245,25 +247,14 @@ end
 
 function ListingTabWrapper:InitializeCancelNotification(tradingHouseWrapper)
     local saveData = self.saveData
-    local cancelMessage = ""
-    tradingHouseWrapper:Wrap("ShowCancelListingConfirmation", function(originalShowCancelListingConfirmation, self, listingIndex)
-        local _, _, _, count, _, _, price = GetTradingHouseListingItemInfo(listingIndex)
+
+    AGS:RegisterCallback(AGS.callback.ITEM_CANCELLED, function(guildId, itemLink, price, stackCount)
+        local guildName = GetGuildName(guildId)
         price = ZO_Currency_FormatPlatform(CURT_MONEY, price, ZO_CURRENCY_FORMAT_AMOUNT_ICON)
-        local itemLink = GetTradingHouseListingItemLink(listingIndex)
-        local _, guildName = GetCurrentTradingHouseGuildDetails()
+
         -- TRANSLATORS: chat message when an item listing is cancelled on the listing tab. <<1>> is replaced with the item count, <<t:2>> with the item link, <<3>> with the price and <<4>> with the guild store name. e.g. You have cancelled your listing of 1x [Rosin] for 5000g in Imperial Trading Company
-        cancelMessage = gettext("You have cancelled your listing of <<1>>x <<t:2>> for <<3>> in <<4>>", count, itemLink, price, guildName)
-
-        originalShowCancelListingConfirmation(self, listingIndex)
-    end)
-
-    RegisterForEvent(EVENT_TRADING_HOUSE_RESPONSE_RECEIVED, function(_, responseType, result)
-        if(responseType == TRADING_HOUSE_RESULT_CANCEL_SALE_PENDING and result == TRADING_HOUSE_RESULT_SUCCESS) then
-            if(saveData.cancelNotification and cancelMessage ~= "") then
-                Print(cancelMessage)
-                cancelMessage = ""
-            end
-        end
+        local cancelMessage = gettext("You have cancelled your listing of <<1>>x <<t:2>> for <<3>> in <<4>>", stackCount, itemLink, price, guildName)
+        Print(cancelMessage)
     end)
 end
 
