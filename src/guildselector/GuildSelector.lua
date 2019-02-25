@@ -33,7 +33,7 @@ function GuildSelector:Initialize(tradingHouseWrapper)
     AwesomeGuildStore:RegisterCallback(AwesomeGuildStore.callback.AVAILABLE_GUILDS_CHANGED, function(guilds) -- TODO: test what happens when we fire this callback outside a trading house
         self:SetupGuildList(guilds)
 
-        local hasGuilds = (#guilds > 0)
+        local hasGuilds = (#guilds > 1)
         self.guildSelector:SetHidden(not hasGuilds)
         self.titleLabel:SetHidden(hasGuilds)
     end)
