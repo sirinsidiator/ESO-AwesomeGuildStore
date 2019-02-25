@@ -12,8 +12,8 @@ local DEFAULT_SUB_CATEGORY_ID = AGS.data.DEFAULT_SUB_CATEGORY_ID
 
 local gettext = AGS.internal.gettext
 local logger = AGS.internal.logger
-local EncodeValue = AGS.EncodeValue
-local DecodeValue = AGS.DecodeValue
+local EncodeValue = AGS.internal.EncodeValue
+local DecodeValue = AGS.internal.DecodeValue
 
 
 local ITEMFILTERTYPE_LOCAL = "itemFilterType"
@@ -606,7 +606,7 @@ local filterFunctions = {
 }
 
 local ItemCategoryFilter = FilterBase:Subclass()
-AwesomeGuildStore.class.ItemCategoryFilter = ItemCategoryFilter
+AGS.class.ItemCategoryFilter = ItemCategoryFilter
 
 function ItemCategoryFilter:New(...)
     return FilterBase.New(self, ...)

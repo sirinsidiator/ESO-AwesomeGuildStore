@@ -1,15 +1,15 @@
 local AGS = AwesomeGuildStore
 
-local gettext = LibStub("LibGetText")("AwesomeGuildStore").gettext
-local RegisterForEvent = AwesomeGuildStore.RegisterForEvent
-local Print = AwesomeGuildStore.Print
+local gettext = AGS.internal.gettext
+local RegisterForEvent = AGS.internal.RegisterForEvent
+local Print = AGS.internal.Print
 
 local TRADING_HOUSE_SORT_LISTING_NAME = 1
 local TRADING_HOUSE_SORT_LISTING_PRICE = 2
 local TRADING_HOUSE_SORT_LISTING_TIME = 3
-AwesomeGuildStore.TRADING_HOUSE_SORT_LISTING_NAME = TRADING_HOUSE_SORT_LISTING_NAME
-AwesomeGuildStore.TRADING_HOUSE_SORT_LISTING_PRICE = TRADING_HOUSE_SORT_LISTING_PRICE
-AwesomeGuildStore.TRADING_HOUSE_SORT_LISTING_TIME = TRADING_HOUSE_SORT_LISTING_TIME
+AGS.internal.TRADING_HOUSE_SORT_LISTING_NAME = TRADING_HOUSE_SORT_LISTING_NAME
+AGS.internal.TRADING_HOUSE_SORT_LISTING_PRICE = TRADING_HOUSE_SORT_LISTING_PRICE
+AGS.internal.TRADING_HOUSE_SORT_LISTING_TIME = TRADING_HOUSE_SORT_LISTING_TIME
 
 local ascSortFunctions = {
     [TRADING_HOUSE_SORT_LISTING_NAME] = function(a, b) return a.data.name < b.data.name end,
@@ -24,7 +24,7 @@ local descSortFunctions = {
 }
 
 local ListingTabWrapper = ZO_Object:Subclass()
-AwesomeGuildStore.ListingTabWrapper = ListingTabWrapper
+AGS.class.ListingTabWrapper = ListingTabWrapper
 
 function ListingTabWrapper:New(saveData)
     local wrapper = ZO_Object.New(self)
@@ -180,7 +180,7 @@ function ListingTabWrapper:InitializeCancelSaleOperation(tradingHouseWrapper)
         end
     end)
 
-    local ActivityBase = AwesomeGuildStore.class.ActivityBase
+    local ActivityBase = AGS.class.ActivityBase
     local originalZO_TradingHouse_CreateListingItemData = ZO_TradingHouse_CreateListingItemData
     ZO_TradingHouse_CreateListingItemData = function(index)
         local result = originalZO_TradingHouse_CreateListingItemData(index)
@@ -195,7 +195,7 @@ function ListingTabWrapper:InitializeCancelSaleOperation(tradingHouseWrapper)
         end
     end
 
-    local AquireLoadingIcon = AwesomeGuildStore.LoadingIcon.Aquire
+    local AquireLoadingIcon = AGS.class.LoadingIcon.Aquire
     local function SetCancelPending(rowControl, pending)
         local cancelButton = GetControl(rowControl, "CancelSale")
         cancelButton:SetHidden(false)

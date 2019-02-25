@@ -1,6 +1,8 @@
-local gettext = LibStub("LibGetText")("AwesomeGuildStore").gettext
-local SUB_CATEGORY_ID = AwesomeGuildStore.data.SUB_CATEGORY_ID
-local FILTER_ID = AwesomeGuildStore.data.FILTER_ID
+local AGS = AwesomeGuildStore
+
+local gettext = AGS.internal.gettext
+local SUB_CATEGORY_ID = AGS.data.SUB_CATEGORY_ID
+local FILTER_ID = AGS.data.FILTER_ID
 
 local function UnpackTrait(filter, itemData) -- TODO: collect all unpack functions in utils
     local id = GetItemLinkTraitInfo(itemData.itemLink)
@@ -220,6 +222,6 @@ local JEWELRY_TRAIT_FILTER = {
     }
 }
 
-AwesomeGuildStore.data.WEAPON_TRAIT_FILTER = WEAPON_TRAIT_FILTER
-AwesomeGuildStore.data.ARMOR_TRAIT_FILTER = ARMOR_TRAIT_FILTER
-AwesomeGuildStore.data.JEWELRY_TRAIT_FILTER = JEWELRY_TRAIT_FILTER
+AGS.data.WEAPON_TRAIT_FILTER = WEAPON_TRAIT_FILTER
+AGS.data.ARMOR_TRAIT_FILTER = ARMOR_TRAIT_FILTER
+AGS.data.JEWELRY_TRAIT_FILTER = JEWELRY_TRAIT_FILTER

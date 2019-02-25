@@ -1,13 +1,13 @@
 local AGS = AwesomeGuildStore
 
-local MinMaxRangeSlider = AGS.MinMaxRangeSlider -- TODO: move to class table
+local MinMaxRangeSlider = AGS.class.MinMaxRangeSlider
 local FilterFragment = AGS.class.FilterFragment
 
 local gettext = AGS.internal.gettext
 
 
 local ValueRangeFilterFragmentBase = FilterFragment:Subclass()
-AwesomeGuildStore.class.ValueRangeFilterFragmentBase = ValueRangeFilterFragmentBase
+AGS.class.ValueRangeFilterFragmentBase = ValueRangeFilterFragmentBase
 
 function ValueRangeFilterFragmentBase:New(...)
     return FilterFragment.New(self, ...)

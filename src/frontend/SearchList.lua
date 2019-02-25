@@ -32,7 +32,7 @@ local r, g, b = ZO_TOOLTIP_DEFAULT_COLOR:UnpackRGB()
 local LINE_FORMAT = "%s: |cFFFFFF%s"
 
 local SearchList = ZO_Object:Subclass()
-AGS.SearchList = SearchList
+AGS.class.SearchList = SearchList
 
 function SearchList:New(...)
     local object = ZO_Object.New(self)
@@ -249,7 +249,7 @@ function SearchList:HandleSetSearchEnabled(search, enabled)
     search:SetEnabled(enabled)
     self.list:RefreshVisible()
     PlaySound("Click")
-    AGS:FireCallbacks(AGS.callback.SEARCH_LOCK_STATE_CHANGED, search, search == self.searchManager:GetActiveSearch())
+    AGS.internal:FireCallbacks(AGS.callback.SEARCH_LOCK_STATE_CHANGED, search, search == self.searchManager:GetActiveSearch())
 end
 
 function SearchList:HandleDuplicateSearch(search)

@@ -1,11 +1,13 @@
-local FilterBase = AwesomeGuildStore.class.FilterBase
-local EncodeValue = AwesomeGuildStore.EncodeValue
-local DecodeValue = AwesomeGuildStore.DecodeValue
+local AGS = AwesomeGuildStore
+
+local FilterBase = AGS.class.FilterBase
+local EncodeValue = AGS.internal.EncodeValue
+local DecodeValue = AGS.internal.DecodeValue
 
 local SILENT = true
 
 local MultiChoiceFilterBase = FilterBase:Subclass()
-AwesomeGuildStore.class.MultiChoiceFilterBase = MultiChoiceFilterBase
+AGS.class.MultiChoiceFilterBase = MultiChoiceFilterBase
 
 function MultiChoiceFilterBase:New(...)
     return FilterBase.New(self, ...)

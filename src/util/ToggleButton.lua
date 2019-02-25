@@ -1,5 +1,5 @@
 local ToggleButton = ZO_Object:Subclass()
-AwesomeGuildStore.ToggleButton = ToggleButton
+AwesomeGuildStore.class.ToggleButton = ToggleButton
 
 function ToggleButton:New(parent, name, textureName, x, y, width, height, tooltipText, sound)
 	local button = ZO_Object.New(self)

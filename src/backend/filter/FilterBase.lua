@@ -1,8 +1,5 @@
 local AGS = AwesomeGuildStore
 
-local SimpleIconButton = AGS.SimpleIconButton -- TODO move into .class
-
-local ClearCallLater = AGS.ClearCallLater -- TODO move into .internal
 local gettext = AGS.internal.gettext
 
 
@@ -96,7 +93,7 @@ end
 
 function FilterBase:HandleChange(...)
     self.dirty = true
-    AGS:FireCallbacks(AGS.callback.FILTER_VALUE_CHANGED, self.id, ...)
+    AGS.internal:FireCallbacks(AGS.callback.FILTER_VALUE_CHANGED, self.id, ...)
     if(self.searchManager) then
         self.searchManager:RequestFilterUpdate()
     end

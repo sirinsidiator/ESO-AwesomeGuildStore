@@ -9,7 +9,7 @@ local RESET_SEARCH_SHORTCUT_INDEX = 3
 local IGNORE_RESULT_COUNT = true
 
 local KeybindStripWrapper = ZO_Object:Subclass()
-AGS.KeybindStripWrapper = KeybindStripWrapper
+AGS.class.KeybindStripWrapper = KeybindStripWrapper
 
 function KeybindStripWrapper:New(...)
     local wrapper = ZO_Object.New(self)

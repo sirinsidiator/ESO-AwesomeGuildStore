@@ -1,13 +1,15 @@
-local gettext = LibStub("LibGetText")("AwesomeGuildStore").gettext
-local RegisterForEvent = AwesomeGuildStore.RegisterForEvent
-local ToggleButton = AwesomeGuildStore.ToggleButton
-local ClearCallLater = AwesomeGuildStore.ClearCallLater
-local GetItemLinkWritCount = AwesomeGuildStore.GetItemLinkWritCount
-local Print = AwesomeGuildStore.Print
-local AdjustLinkStyle = AwesomeGuildStore.AdjustLinkStyle
+local AGS = AwesomeGuildStore
+
+local gettext = AGS.internal.gettext
+local RegisterForEvent = AGS.internal.RegisterForEvent
+local ToggleButton = AGS.class.ToggleButton
+local ClearCallLater = AGS.internal.ClearCallLater
+local GetItemLinkWritCount = AGS.internal.GetItemLinkWritCount
+local Print = AGS.internal.Print
+local AdjustLinkStyle = AGS.internal.AdjustLinkStyle
 
 local SearchTabWrapper = ZO_Object:Subclass()
-AwesomeGuildStore.SearchTabWrapper = SearchTabWrapper
+AGS.class.SearchTabWrapper = SearchTabWrapper
 
 local ACTION_LAYER_NAME = "AwesomeGuildStore"
 
@@ -115,202 +117,202 @@ function SearchTabWrapper:InitializeFilters(tradingHouseWrapper)
     local saveData = self.saveData
     local tradingHouse = tradingHouseWrapper.tradingHouse
 
-    local searchManager = AwesomeGuildStore.SearchManager:New(tradingHouseWrapper, saveData.searchManager) -- TODO
+    local searchManager = AGS.class.SearchManager:New(tradingHouseWrapper, saveData.searchManager)
     saveData.searchManager = searchManager:GetSaveData()
     self.searchManager = searchManager -- TODO: move to tradinghouse wrapper
-    self.categorySelector = AwesomeGuildStore.class.CategorySelector:New(tradingHouse.itemPane, searchManager) -- TODO pass the category filter to it
+    self.categorySelector = AGS.class.CategorySelector:New(tradingHouse.itemPane, searchManager) -- TODO pass the category filter to it
     tradingHouse.searchSortHeadersControl:SetAnchor(TOPRIGHT, self.categorySelector:GetControl(), BOTTOMRIGHT)
     TRADING_HOUSE_SCENE:AddFragment(self.categorySelector) -- TODO is this the right place?
 
-    self.filterArea = AwesomeGuildStore.FilterArea:New(tradingHouse.browseItemsLeftPane, searchManager)
+    self.filterArea = AGS.class.FilterArea:New(tradingHouse.browseItemsLeftPane, searchManager)
 
-    searchManager:RegisterFilter(AwesomeGuildStore.class.ItemCategoryFilter:New())
+    searchManager:RegisterFilter(AGS.class.ItemCategoryFilter:New())
     local category, subcategory = searchManager:GetCurrentCategories()
     self.categorySelector:Update(category, subcategory) -- TODO do this inside the selector
 
-    local sortFilter = AwesomeGuildStore.class.SortFilter:New()
-    sortFilter:RegisterSortOrder(AwesomeGuildStore.class.SortOrderTimeLeft:New(), true)
-    sortFilter:RegisterSortOrder(AwesomeGuildStore.class.SortOrderLastSeen:New())
-    sortFilter:RegisterSortOrder(AwesomeGuildStore.class.SortOrderPurchasePrice:New())
-    sortFilter:RegisterSortOrder(AwesomeGuildStore.class.SortOrderUnitPrice:New())
-    sortFilter:RegisterSortOrder(AwesomeGuildStore.class.SortOrderItemName:New())
-    sortFilter:RegisterSortOrder(AwesomeGuildStore.class.SortOrderSellerName:New())
-    sortFilter:RegisterSortOrder(AwesomeGuildStore.class.SortOrderSetName:New())
-    sortFilter:RegisterSortOrder(AwesomeGuildStore.class.SortOrderItemQuality:New())
-    self.filterArea:RegisterFilterFragment(AwesomeGuildStore.class.SortFilterFragment:New(sortFilter))
+    local sortFilter = AGS.class.SortFilter:New()
+    sortFilter:RegisterSortOrder(AGS.class.SortOrderTimeLeft:New(), true)
+    sortFilter:RegisterSortOrder(AGS.class.SortOrderLastSeen:New())
+    sortFilter:RegisterSortOrder(AGS.class.SortOrderPurchasePrice:New())
+    sortFilter:RegisterSortOrder(AGS.class.SortOrderUnitPrice:New())
+    sortFilter:RegisterSortOrder(AGS.class.SortOrderItemName:New())
+    sortFilter:RegisterSortOrder(AGS.class.SortOrderSellerName:New())
+    sortFilter:RegisterSortOrder(AGS.class.SortOrderSetName:New())
+    sortFilter:RegisterSortOrder(AGS.class.SortOrderItemQuality:New())
+    self.filterArea:RegisterFilterFragment(AGS.class.SortFilterFragment:New(sortFilter))
     searchManager:RegisterFilter(sortFilter)
 
-    local priceFilter = AwesomeGuildStore.class.PriceFilter:New()
-    self.filterArea:RegisterFilterFragment(AwesomeGuildStore.class.PriceRangeFilterFragment:New(priceFilter))
+    local priceFilter = AGS.class.PriceFilter:New()
+    self.filterArea:RegisterFilterFragment(AGS.class.PriceRangeFilterFragment:New(priceFilter))
     searchManager:RegisterFilter(priceFilter)
 
-    local levelFilter = AwesomeGuildStore.class.LevelFilter:New()
-    self.filterArea:RegisterFilterFragment(AwesomeGuildStore.class.LevelRangeFilterFragment:New(levelFilter))
+    local levelFilter = AGS.class.LevelFilter:New()
+    self.filterArea:RegisterFilterFragment(AGS.class.LevelRangeFilterFragment:New(levelFilter))
     searchManager:RegisterFilter(levelFilter)
 
-    local unitPriceFilter = AwesomeGuildStore.class.UnitPriceFilter:New()
-    self.filterArea:RegisterFilterFragment(AwesomeGuildStore.class.PriceRangeFilterFragment:New(unitPriceFilter))
+    local unitPriceFilter = AGS.class.UnitPriceFilter:New()
+    self.filterArea:RegisterFilterFragment(AGS.class.PriceRangeFilterFragment:New(unitPriceFilter))
     searchManager:RegisterFilter(unitPriceFilter)
 
-    local qualityFilter = AwesomeGuildStore.class.QualityFilter:New()
-    self.filterArea:RegisterFilterFragment(AwesomeGuildStore.class.QualityFilterFragment:New(qualityFilter))
+    local qualityFilter = AGS.class.QualityFilter:New()
+    self.filterArea:RegisterFilterFragment(AGS.class.QualityFilterFragment:New(qualityFilter))
     searchManager:RegisterFilter(qualityFilter)
 
-    local textFilter = AwesomeGuildStore.class.TextFilter:New()
-    self.filterArea:RegisterFilterFragment(AwesomeGuildStore.class.TextFilterFragment:New(textFilter))
+    local textFilter = AGS.class.TextFilter:New()
+    self.filterArea:RegisterFilterFragment(AGS.class.TextFilterFragment:New(textFilter))
     searchManager:RegisterFilter(textFilter)
 
-    local itemStyleFilter = AwesomeGuildStore.class.ItemStyleFilter:New()
-    self.filterArea:RegisterFilterFragment(AwesomeGuildStore.class.MultiCategoryFilterFragment:New(itemStyleFilter))
+    local itemStyleFilter = AGS.class.ItemStyleFilter:New()
+    self.filterArea:RegisterFilterFragment(AGS.class.MultiCategoryFilterFragment:New(itemStyleFilter))
     searchManager:RegisterFilter(itemStyleFilter)
 
-    local weaponTraitFilter = AwesomeGuildStore.class.GenericTradingHouseFilter:New(AwesomeGuildStore.data.WEAPON_TRAIT_FILTER)
-    self.filterArea:RegisterFilterFragment(AwesomeGuildStore.class.MultiButtonFilterFragment:New(weaponTraitFilter))
+    local weaponTraitFilter = AGS.class.GenericTradingHouseFilter:New(AGS.data.WEAPON_TRAIT_FILTER)
+    self.filterArea:RegisterFilterFragment(AGS.class.MultiButtonFilterFragment:New(weaponTraitFilter))
     searchManager:RegisterFilter(weaponTraitFilter)
 
-    local armorTraitFilter = AwesomeGuildStore.class.GenericTradingHouseFilter:New(AwesomeGuildStore.data.ARMOR_TRAIT_FILTER)
-    self.filterArea:RegisterFilterFragment(AwesomeGuildStore.class.MultiButtonFilterFragment:New(armorTraitFilter))
+    local armorTraitFilter = AGS.class.GenericTradingHouseFilter:New(AGS.data.ARMOR_TRAIT_FILTER)
+    self.filterArea:RegisterFilterFragment(AGS.class.MultiButtonFilterFragment:New(armorTraitFilter))
     searchManager:RegisterFilter(armorTraitFilter)
 
-    local jewelryTraitFilter = AwesomeGuildStore.class.GenericTradingHouseFilter:New(AwesomeGuildStore.data.JEWELRY_TRAIT_FILTER)
-    self.filterArea:RegisterFilterFragment(AwesomeGuildStore.class.MultiButtonFilterFragment:New(jewelryTraitFilter))
+    local jewelryTraitFilter = AGS.class.GenericTradingHouseFilter:New(AGS.data.JEWELRY_TRAIT_FILTER)
+    self.filterArea:RegisterFilterFragment(AGS.class.MultiButtonFilterFragment:New(jewelryTraitFilter))
     searchManager:RegisterFilter(jewelryTraitFilter)
 
-    local weaponEnchantmentFilter = AwesomeGuildStore.class.GenericTradingHouseFilter:New(AwesomeGuildStore.data.WEAPON_ENCHANTMENT_FILTER)
-    self.filterArea:RegisterFilterFragment(AwesomeGuildStore.class.MultiButtonFilterFragment:New(weaponEnchantmentFilter))
+    local weaponEnchantmentFilter = AGS.class.GenericTradingHouseFilter:New(AGS.data.WEAPON_ENCHANTMENT_FILTER)
+    self.filterArea:RegisterFilterFragment(AGS.class.MultiButtonFilterFragment:New(weaponEnchantmentFilter))
     searchManager:RegisterFilter(weaponEnchantmentFilter)
 
-    local armorEnchantmentFilter = AwesomeGuildStore.class.GenericTradingHouseFilter:New(AwesomeGuildStore.data.ARMOR_ENCHANTMENT_FILTER)
-    self.filterArea:RegisterFilterFragment(AwesomeGuildStore.class.MultiButtonFilterFragment:New(armorEnchantmentFilter))
+    local armorEnchantmentFilter = AGS.class.GenericTradingHouseFilter:New(AGS.data.ARMOR_ENCHANTMENT_FILTER)
+    self.filterArea:RegisterFilterFragment(AGS.class.MultiButtonFilterFragment:New(armorEnchantmentFilter))
     searchManager:RegisterFilter(armorEnchantmentFilter)
 
-    local jewelryEnchantmentFilter = AwesomeGuildStore.class.GenericTradingHouseFilter:New(AwesomeGuildStore.data.JEWELRY_ENCHANTMENT_FILTER)
-    self.filterArea:RegisterFilterFragment(AwesomeGuildStore.class.MultiButtonFilterFragment:New(jewelryEnchantmentFilter))
+    local jewelryEnchantmentFilter = AGS.class.GenericTradingHouseFilter:New(AGS.data.JEWELRY_ENCHANTMENT_FILTER)
+    self.filterArea:RegisterFilterFragment(AGS.class.MultiButtonFilterFragment:New(jewelryEnchantmentFilter))
     searchManager:RegisterFilter(jewelryEnchantmentFilter)
 
-    local oneHandedFilter = AwesomeGuildStore.class.GenericTradingHouseFilter:New(AwesomeGuildStore.data.ONE_HANDED_WEAPON_TYPE_FILTER)
-    self.filterArea:RegisterFilterFragment(AwesomeGuildStore.class.MultiButtonFilterFragment:New(oneHandedFilter))
+    local oneHandedFilter = AGS.class.GenericTradingHouseFilter:New(AGS.data.ONE_HANDED_WEAPON_TYPE_FILTER)
+    self.filterArea:RegisterFilterFragment(AGS.class.MultiButtonFilterFragment:New(oneHandedFilter))
     searchManager:RegisterFilter(oneHandedFilter)
 
-    local twoHandedFilter = AwesomeGuildStore.class.GenericTradingHouseFilter:New(AwesomeGuildStore.data.TWO_HANDED_WEAPON_TYPE_FILTER)
-    self.filterArea:RegisterFilterFragment(AwesomeGuildStore.class.MultiButtonFilterFragment:New(twoHandedFilter))
+    local twoHandedFilter = AGS.class.GenericTradingHouseFilter:New(AGS.data.TWO_HANDED_WEAPON_TYPE_FILTER)
+    self.filterArea:RegisterFilterFragment(AGS.class.MultiButtonFilterFragment:New(twoHandedFilter))
     searchManager:RegisterFilter(twoHandedFilter)
 
-    local staffFilter = AwesomeGuildStore.class.GenericTradingHouseFilter:New(AwesomeGuildStore.data.STAFF_WEAPON_TYPE_FILTER)
-    self.filterArea:RegisterFilterFragment(AwesomeGuildStore.class.MultiButtonFilterFragment:New(staffFilter))
+    local staffFilter = AGS.class.GenericTradingHouseFilter:New(AGS.data.STAFF_WEAPON_TYPE_FILTER)
+    self.filterArea:RegisterFilterFragment(AGS.class.MultiButtonFilterFragment:New(staffFilter))
     searchManager:RegisterFilter(staffFilter)
 
-    local armorTypeFilter = AwesomeGuildStore.class.GenericTradingHouseFilter:New(AwesomeGuildStore.data.ARMOR_EQUIP_TYPE_FILTER)
-    self.filterArea:RegisterFilterFragment(AwesomeGuildStore.class.MultiButtonFilterFragment:New(armorTypeFilter))
+    local armorTypeFilter = AGS.class.GenericTradingHouseFilter:New(AGS.data.ARMOR_EQUIP_TYPE_FILTER)
+    self.filterArea:RegisterFilterFragment(AGS.class.MultiButtonFilterFragment:New(armorTypeFilter))
     searchManager:RegisterFilter(armorTypeFilter)
 
-    local blacksmithingMaterialTypeFilter = AwesomeGuildStore.class.GenericTradingHouseFilter:New(AwesomeGuildStore.data.BLACKSMITHING_MATERIAL_TYPE_FILTER)
-    self.filterArea:RegisterFilterFragment(AwesomeGuildStore.class.MultiButtonFilterFragment:New(blacksmithingMaterialTypeFilter))
+    local blacksmithingMaterialTypeFilter = AGS.class.GenericTradingHouseFilter:New(AGS.data.BLACKSMITHING_MATERIAL_TYPE_FILTER)
+    self.filterArea:RegisterFilterFragment(AGS.class.MultiButtonFilterFragment:New(blacksmithingMaterialTypeFilter))
     searchManager:RegisterFilter(blacksmithingMaterialTypeFilter)
 
-    local clothingMaterialTypeFilter = AwesomeGuildStore.class.GenericTradingHouseFilter:New(AwesomeGuildStore.data.CLOTHING_MATERIAL_TYPE_FILTER)
-    self.filterArea:RegisterFilterFragment(AwesomeGuildStore.class.MultiButtonFilterFragment:New(clothingMaterialTypeFilter))
+    local clothingMaterialTypeFilter = AGS.class.GenericTradingHouseFilter:New(AGS.data.CLOTHING_MATERIAL_TYPE_FILTER)
+    self.filterArea:RegisterFilterFragment(AGS.class.MultiButtonFilterFragment:New(clothingMaterialTypeFilter))
     searchManager:RegisterFilter(clothingMaterialTypeFilter)
 
-    local woodworkingMaterialTypeFilter = AwesomeGuildStore.class.GenericTradingHouseFilter:New(AwesomeGuildStore.data.WOODWORKING_MATERIAL_TYPE_FILTER)
-    self.filterArea:RegisterFilterFragment(AwesomeGuildStore.class.MultiButtonFilterFragment:New(woodworkingMaterialTypeFilter))
+    local woodworkingMaterialTypeFilter = AGS.class.GenericTradingHouseFilter:New(AGS.data.WOODWORKING_MATERIAL_TYPE_FILTER)
+    self.filterArea:RegisterFilterFragment(AGS.class.MultiButtonFilterFragment:New(woodworkingMaterialTypeFilter))
     searchManager:RegisterFilter(woodworkingMaterialTypeFilter)
 
-    local styleMaterialTypeFilter = AwesomeGuildStore.class.GenericTradingHouseFilter:New(AwesomeGuildStore.data.STYLE_MATERIAL_TYPE_FILTER)
-    self.filterArea:RegisterFilterFragment(AwesomeGuildStore.class.MultiButtonFilterFragment:New(styleMaterialTypeFilter))
+    local styleMaterialTypeFilter = AGS.class.GenericTradingHouseFilter:New(AGS.data.STYLE_MATERIAL_TYPE_FILTER)
+    self.filterArea:RegisterFilterFragment(AGS.class.MultiButtonFilterFragment:New(styleMaterialTypeFilter))
     searchManager:RegisterFilter(styleMaterialTypeFilter)
 
-    local alchemyMaterialTypeFilter = AwesomeGuildStore.class.GenericTradingHouseFilter:New(AwesomeGuildStore.data.ALCHEMY_MATERIAL_TYPE_FILTER)
-    self.filterArea:RegisterFilterFragment(AwesomeGuildStore.class.MultiButtonFilterFragment:New(alchemyMaterialTypeFilter))
+    local alchemyMaterialTypeFilter = AGS.class.GenericTradingHouseFilter:New(AGS.data.ALCHEMY_MATERIAL_TYPE_FILTER)
+    self.filterArea:RegisterFilterFragment(AGS.class.MultiButtonFilterFragment:New(alchemyMaterialTypeFilter))
     searchManager:RegisterFilter(alchemyMaterialTypeFilter)
 
-    local enchantingMaterialTypeFilter = AwesomeGuildStore.class.GenericTradingHouseFilter:New(AwesomeGuildStore.data.ENCHANTING_MATERIAL_TYPE_FILTER)
-    self.filterArea:RegisterFilterFragment(AwesomeGuildStore.class.MultiButtonFilterFragment:New(enchantingMaterialTypeFilter))
+    local enchantingMaterialTypeFilter = AGS.class.GenericTradingHouseFilter:New(AGS.data.ENCHANTING_MATERIAL_TYPE_FILTER)
+    self.filterArea:RegisterFilterFragment(AGS.class.MultiButtonFilterFragment:New(enchantingMaterialTypeFilter))
     searchManager:RegisterFilter(enchantingMaterialTypeFilter)
 
-    local provisioningMaterialTypeFilter = AwesomeGuildStore.class.GenericTradingHouseFilter:New(AwesomeGuildStore.data.PROVISIONING_MATERIAL_TYPE_FILTER)
-    self.filterArea:RegisterFilterFragment(AwesomeGuildStore.class.MultiButtonFilterFragment:New(provisioningMaterialTypeFilter))
+    local provisioningMaterialTypeFilter = AGS.class.GenericTradingHouseFilter:New(AGS.data.PROVISIONING_MATERIAL_TYPE_FILTER)
+    self.filterArea:RegisterFilterFragment(AGS.class.MultiButtonFilterFragment:New(provisioningMaterialTypeFilter))
     searchManager:RegisterFilter(provisioningMaterialTypeFilter)
 
-    local furnishingMaterialTypeFilter = AwesomeGuildStore.class.GenericTradingHouseFilter:New(AwesomeGuildStore.data.FURNISHING_MATERIAL_TYPE_FILTER)
-    self.filterArea:RegisterFilterFragment(AwesomeGuildStore.class.MultiButtonFilterFragment:New(furnishingMaterialTypeFilter))
+    local furnishingMaterialTypeFilter = AGS.class.GenericTradingHouseFilter:New(AGS.data.FURNISHING_MATERIAL_TYPE_FILTER)
+    self.filterArea:RegisterFilterFragment(AGS.class.MultiButtonFilterFragment:New(furnishingMaterialTypeFilter))
     searchManager:RegisterFilter(furnishingMaterialTypeFilter)
 
-    local traitMaterialTypeFilter = AwesomeGuildStore.class.GenericTradingHouseFilter:New(AwesomeGuildStore.data.TRAIT_MATERIAL_TYPE_FILTER)
-    self.filterArea:RegisterFilterFragment(AwesomeGuildStore.class.MultiButtonFilterFragment:New(traitMaterialTypeFilter))
+    local traitMaterialTypeFilter = AGS.class.GenericTradingHouseFilter:New(AGS.data.TRAIT_MATERIAL_TYPE_FILTER)
+    self.filterArea:RegisterFilterFragment(AGS.class.MultiButtonFilterFragment:New(traitMaterialTypeFilter))
     searchManager:RegisterFilter(traitMaterialTypeFilter)
 
-    local jewelryMaterialTypeFilter = AwesomeGuildStore.class.GenericTradingHouseFilter:New(AwesomeGuildStore.data.JEWELRY_MATERIAL_TYPE_FILTER)
-    self.filterArea:RegisterFilterFragment(AwesomeGuildStore.class.MultiButtonFilterFragment:New(jewelryMaterialTypeFilter))
+    local jewelryMaterialTypeFilter = AGS.class.GenericTradingHouseFilter:New(AGS.data.JEWELRY_MATERIAL_TYPE_FILTER)
+    self.filterArea:RegisterFilterFragment(AGS.class.MultiButtonFilterFragment:New(jewelryMaterialTypeFilter))
     searchManager:RegisterFilter(jewelryMaterialTypeFilter)
 
-    local glyphTypeFilter = AwesomeGuildStore.class.GenericTradingHouseFilter:New(AwesomeGuildStore.data.GLYPH_TYPE_FILTER)
-    self.filterArea:RegisterFilterFragment(AwesomeGuildStore.class.MultiButtonFilterFragment:New(glyphTypeFilter))
+    local glyphTypeFilter = AGS.class.GenericTradingHouseFilter:New(AGS.data.GLYPH_TYPE_FILTER)
+    self.filterArea:RegisterFilterFragment(AGS.class.MultiButtonFilterFragment:New(glyphTypeFilter))
     searchManager:RegisterFilter(glyphTypeFilter)
 
-    local recipeTypeFilter = AwesomeGuildStore.class.GenericTradingHouseFilter:New(AwesomeGuildStore.data.RECIPE_TYPE_FILTER)
-    self.filterArea:RegisterFilterFragment(AwesomeGuildStore.class.MultiButtonFilterFragment:New(recipeTypeFilter))
+    local recipeTypeFilter = AGS.class.GenericTradingHouseFilter:New(AGS.data.RECIPE_TYPE_FILTER)
+    self.filterArea:RegisterFilterFragment(AGS.class.MultiButtonFilterFragment:New(recipeTypeFilter))
     searchManager:RegisterFilter(recipeTypeFilter)
 
-    local drinkTypeFilter = AwesomeGuildStore.class.GenericTradingHouseFilter:New(AwesomeGuildStore.data.DRINK_TYPE_FILTER)
-    self.filterArea:RegisterFilterFragment(AwesomeGuildStore.class.MultiButtonFilterFragment:New(drinkTypeFilter))
+    local drinkTypeFilter = AGS.class.GenericTradingHouseFilter:New(AGS.data.DRINK_TYPE_FILTER)
+    self.filterArea:RegisterFilterFragment(AGS.class.MultiButtonFilterFragment:New(drinkTypeFilter))
     searchManager:RegisterFilter(drinkTypeFilter)
 
-    local foodTypeFilter = AwesomeGuildStore.class.GenericTradingHouseFilter:New(AwesomeGuildStore.data.FOOD_TYPE_FILTER)
-    self.filterArea:RegisterFilterFragment(AwesomeGuildStore.class.MultiButtonFilterFragment:New(foodTypeFilter))
+    local foodTypeFilter = AGS.class.GenericTradingHouseFilter:New(AGS.data.FOOD_TYPE_FILTER)
+    self.filterArea:RegisterFilterFragment(AGS.class.MultiButtonFilterFragment:New(foodTypeFilter))
     searchManager:RegisterFilter(foodTypeFilter)
 
-    local siegeTypeFilter = AwesomeGuildStore.class.GenericTradingHouseFilter:New(AwesomeGuildStore.data.SIEGE_TYPE_FILTER)
-    self.filterArea:RegisterFilterFragment(AwesomeGuildStore.class.MultiButtonFilterFragment:New(siegeTypeFilter))
+    local siegeTypeFilter = AGS.class.GenericTradingHouseFilter:New(AGS.data.SIEGE_TYPE_FILTER)
+    self.filterArea:RegisterFilterFragment(AGS.class.MultiButtonFilterFragment:New(siegeTypeFilter))
     searchManager:RegisterFilter(siegeTypeFilter)
 
-    local trophyTypeFilter = AwesomeGuildStore.class.GenericTradingHouseFilter:New(AwesomeGuildStore.data.TROPHY_TYPE_FILTER)
-    self.filterArea:RegisterFilterFragment(AwesomeGuildStore.class.MultiButtonFilterFragment:New(trophyTypeFilter))
+    local trophyTypeFilter = AGS.class.GenericTradingHouseFilter:New(AGS.data.TROPHY_TYPE_FILTER)
+    self.filterArea:RegisterFilterFragment(AGS.class.MultiButtonFilterFragment:New(trophyTypeFilter))
     searchManager:RegisterFilter(trophyTypeFilter)
 
-    local recipeKnowledgeFilter = AwesomeGuildStore.class.RecipeKnowledgeFilter:New()
-    self.filterArea:RegisterFilterFragment(AwesomeGuildStore.class.MultiButtonFilterFragment:New(recipeKnowledgeFilter))
+    local recipeKnowledgeFilter = AGS.class.RecipeKnowledgeFilter:New()
+    self.filterArea:RegisterFilterFragment(AGS.class.MultiButtonFilterFragment:New(recipeKnowledgeFilter))
     searchManager:RegisterFilter(recipeKnowledgeFilter)
 
-    local motifKnowledgeFilter = AwesomeGuildStore.class.MotifKnowledgeFilter:New()
-    self.filterArea:RegisterFilterFragment(AwesomeGuildStore.class.MultiButtonFilterFragment:New(motifKnowledgeFilter))
+    local motifKnowledgeFilter = AGS.class.MotifKnowledgeFilter:New()
+    self.filterArea:RegisterFilterFragment(AGS.class.MultiButtonFilterFragment:New(motifKnowledgeFilter))
     searchManager:RegisterFilter(motifKnowledgeFilter)
 
-    local traitKnowledgeFilter = AwesomeGuildStore.class.TraitKnowledgeFilter:New()
-    self.filterArea:RegisterFilterFragment(AwesomeGuildStore.class.MultiButtonFilterFragment:New(traitKnowledgeFilter))
+    local traitKnowledgeFilter = AGS.class.TraitKnowledgeFilter:New()
+    self.filterArea:RegisterFilterFragment(AGS.class.MultiButtonFilterFragment:New(traitKnowledgeFilter))
     searchManager:RegisterFilter(traitKnowledgeFilter)
 
-    local runeKnowledgeFilter = AwesomeGuildStore.class.RuneKnowledgeFilter:New()
-    self.filterArea:RegisterFilterFragment(AwesomeGuildStore.class.MultiButtonFilterFragment:New(runeKnowledgeFilter))
+    local runeKnowledgeFilter = AGS.class.RuneKnowledgeFilter:New()
+    self.filterArea:RegisterFilterFragment(AGS.class.MultiButtonFilterFragment:New(runeKnowledgeFilter))
     searchManager:RegisterFilter(runeKnowledgeFilter)
 
-    local itemSetFilter = AwesomeGuildStore.class.ItemSetFilter:New()
-    self.filterArea:RegisterFilterFragment(AwesomeGuildStore.class.MultiButtonFilterFragment:New(itemSetFilter))
+    local itemSetFilter = AGS.class.ItemSetFilter:New()
+    self.filterArea:RegisterFilterFragment(AGS.class.MultiButtonFilterFragment:New(itemSetFilter))
     searchManager:RegisterFilter(itemSetFilter)
 
-    local craftedItemFilter = AwesomeGuildStore.class.CraftedItemFilter:New()
-    self.filterArea:RegisterFilterFragment(AwesomeGuildStore.class.MultiButtonFilterFragment:New(craftedItemFilter))
+    local craftedItemFilter = AGS.class.CraftedItemFilter:New()
+    self.filterArea:RegisterFilterFragment(AGS.class.MultiButtonFilterFragment:New(craftedItemFilter))
     searchManager:RegisterFilter(craftedItemFilter)
 
-    local skillRequirementsFilter = AwesomeGuildStore.class.SkillRequirementsFilter:New()
-    self.filterArea:RegisterFilterFragment(AwesomeGuildStore.class.MultiButtonFilterFragment:New(skillRequirementsFilter))
+    local skillRequirementsFilter = AGS.class.SkillRequirementsFilter:New()
+    self.filterArea:RegisterFilterFragment(AGS.class.MultiButtonFilterFragment:New(skillRequirementsFilter))
     searchManager:RegisterFilter(skillRequirementsFilter)
 
-    local writTypeFilter = AwesomeGuildStore.class.GenericTradingHouseFilter:New(AwesomeGuildStore.data.MASTER_WRIT_TYPE_FILTER)
-    self.filterArea:RegisterFilterFragment(AwesomeGuildStore.class.MultiButtonFilterFragment:New(writTypeFilter))
+    local writTypeFilter = AGS.class.GenericTradingHouseFilter:New(AGS.data.MASTER_WRIT_TYPE_FILTER)
+    self.filterArea:RegisterFilterFragment(AGS.class.MultiButtonFilterFragment:New(writTypeFilter))
     searchManager:RegisterFilter(writTypeFilter)
 
-    local writVoucherFilter = AwesomeGuildStore.class.WritVoucherFilter:New()
-    self.filterArea:RegisterFilterFragment(AwesomeGuildStore.class.PriceRangeFilterFragment:New(writVoucherFilter))
+    local writVoucherFilter = AGS.class.WritVoucherFilter:New()
+    self.filterArea:RegisterFilterFragment(AGS.class.PriceRangeFilterFragment:New(writVoucherFilter))
     searchManager:RegisterFilter(writVoucherFilter)
 
-    local furnitureCategoryFilter = AwesomeGuildStore.class.FurnitureCategoryFilter:New()
-    self.filterArea:RegisterFilterFragment(AwesomeGuildStore.class.MultiCategoryFilterFragment:New(furnitureCategoryFilter))
+    local furnitureCategoryFilter = AGS.class.FurnitureCategoryFilter:New()
+    self.filterArea:RegisterFilterFragment(AGS.class.MultiCategoryFilterFragment:New(furnitureCategoryFilter))
     searchManager:RegisterFilter(furnitureCategoryFilter)
 
-    AwesomeGuildStore:FireCallbacks(AwesomeGuildStore.callback.AFTER_FILTER_SETUP, tradingHouseWrapper)
+    AGS.internal:FireCallbacks(AGS.callback.AFTER_FILTER_SETUP, tradingHouseWrapper)
 
-    self.searchResultList = AwesomeGuildStore.class.SearchResultListWrapper:New(tradingHouseWrapper, searchManager)
+    self.searchResultList = AGS.class.SearchResultListWrapper:New(tradingHouseWrapper, searchManager)
     searchManager:OnFiltersInitialized()
     self.filterArea:OnFiltersInitialized()
 end
@@ -361,8 +363,7 @@ function SearchTabWrapper:GetTradingHouseSearchResultItemLinkAfterPurchase(slotI
 end
 
 function SearchTabWrapper:InitializeSearchResultMasterList(tradingHouseWrapper) -- TODO: rename
-    local test = AwesomeGuildStore.class.SearchHandler:New()
-    self.searchList = AwesomeGuildStore.SearchList:New(self.searchManager) -- TODO
+    self.searchList = AGS.class.SearchList:New(self.searchManager) -- TODO
     self.masterList = {}
     self.numItemsOnPage = 0
     self.returnPurchasedEntries = false
@@ -410,7 +411,7 @@ function SearchTabWrapper:InitializeSearchResultMasterList(tradingHouseWrapper) 
         tradingHouse.ConfirmPendingPurchase = originalConfirmPendingPurchase
     end)
 
-    AwesomeGuildStore:RegisterCallback(AwesomeGuildStore.callback.ITEM_PURCHASED, function(itemData)
+    AGS:RegisterCallback(AGS.callback.ITEM_PURCHASED, function(itemData)
         if(saveData.purchaseNotification) then
             self:PrintPurchaseMessageForEntry(itemData)
         end
@@ -433,10 +434,6 @@ function SearchTabWrapper:InitializeSearchResultMasterList(tradingHouseWrapper) 
 end
 
 function SearchTabWrapper:InitializeKeybinds(tradingHouseWrapper) -- TODO: remove
-    function AwesomeGuildStore.SuppressLocalFilters(pressed)
-        self.suppressLocalFilters = pressed
-        TRADING_HOUSE:RebuildSearchResultsPage()
-    end
 end
 
 function SearchTabWrapper:OnOpen(tradingHouseWrapper)

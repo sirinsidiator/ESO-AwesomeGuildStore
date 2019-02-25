@@ -1,7 +1,6 @@
 local AGS = AwesomeGuildStore
 
-local ItemData = AwesomeGuildStore.ItemData
-local ActivityBase = AwesomeGuildStore.class.ActivityBase
+local ActivityBase = AGS.class.ActivityBase
 
 local SORT_ORDER_ID = AGS.data.SORT_ORDER_ID
 

@@ -13,7 +13,7 @@ local CanItemLinkBeTraitResearched = CanItemLinkBeTraitResearched
 
 
 local TraitKnowledgeFilter = MultiChoiceFilterBase:Subclass()
-AwesomeGuildStore.class.TraitKnowledgeFilter = TraitKnowledgeFilter
+AGS.class.TraitKnowledgeFilter = TraitKnowledgeFilter
 
 function TraitKnowledgeFilter:New(...)
     return MultiChoiceFilterBase.New(self, ...)

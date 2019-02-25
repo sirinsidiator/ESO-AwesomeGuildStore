@@ -1,5 +1,5 @@
 local HiredTraderTooltip = ZO_Object:Subclass()
-AwesomeGuildStore.HiredTraderTooltip = HiredTraderTooltip
+AwesomeGuildStore.class.HiredTraderTooltip = HiredTraderTooltip
 
 function HiredTraderTooltip:New(...)
 	local tooltip = ZO_Object.New(self)

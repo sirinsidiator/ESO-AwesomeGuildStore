@@ -1,5 +1,5 @@
 local LoadingIcon = ZO_Object:Subclass()
-AwesomeGuildStore.LoadingIcon = LoadingIcon
+AwesomeGuildStore.class.LoadingIcon = LoadingIcon
 
 local function IconFactory(pool)
 	return LoadingIcon:New("AwesomeGuildStoreLoadingIcon" .. pool:GetNextControlId())
@@ -65,7 +65,7 @@ function LoadingIcon:Hide()
 end
 
 local LoadingOverlay = ZO_Object:Subclass()
-AwesomeGuildStore.LoadingOverlay = LoadingOverlay
+AwesomeGuildStore.class.LoadingOverlay = LoadingOverlay
 
 function LoadingOverlay:New(name)
 	local overlay = ZO_Object.New(self)

@@ -1,5 +1,7 @@
-local EncodeData = AwesomeGuildStore.EncodeData
-local DecodeData = AwesomeGuildStore.DecodeData
+local AGS = AwesomeGuildStore
+
+local EncodeData = AGS.internal.EncodeData
+local DecodeData = AGS.internal.DecodeData
 
 local COORD_MULTIPLICATOR = 100000
 local DATA_FORMAT = {
@@ -15,7 +17,7 @@ local VERSION = 1
 local CURRENT_DATA_FORMAT = DATA_FORMAT[VERSION]
 
 local KioskData = ZO_Object:Subclass()
-AwesomeGuildStore.KioskData = KioskData
+AGS.class.KioskData = KioskData
 
 function KioskData:New(...)
     local object = ZO_Object.New(self)

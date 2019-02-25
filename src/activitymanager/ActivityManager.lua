@@ -4,18 +4,18 @@ local logger = AGS.internal.logger
 local gettext = AGS.internal.gettext
 
 local ActivityManager = ZO_Object:Subclass()
-AwesomeGuildStore.ActivityManager = ActivityManager
+AGS.class.ActivityManager = ActivityManager
 
-local RegisterForEvent = AwesomeGuildStore.RegisterForEvent
-local ActivityBase = AwesomeGuildStore.class.ActivityBase
-local RequestSearchActivity = AwesomeGuildStore.class.RequestSearchActivity
-local RequestNewestActivity = AwesomeGuildStore.class.RequestNewestActivity
-local RequestListingsActivity = AwesomeGuildStore.class.RequestListingsActivity
-local PurchaseItemActivity = AwesomeGuildStore.class.PurchaseItemActivity
-local PostItemActivity = AwesomeGuildStore.class.PostItemActivity
-local CancelItemActivity = AwesomeGuildStore.class.CancelItemActivity
-local FetchGuildItemsActivity = AwesomeGuildStore.class.FetchGuildItemsActivity
-local ActivityPanel = AwesomeGuildStore.class.ActivityPanel
+local RegisterForEvent = AGS.internal.RegisterForEvent
+local ActivityBase = AGS.class.ActivityBase
+local RequestSearchActivity = AGS.class.RequestSearchActivity
+local RequestNewestActivity = AGS.class.RequestNewestActivity
+local RequestListingsActivity = AGS.class.RequestListingsActivity
+local PurchaseItemActivity = AGS.class.PurchaseItemActivity
+local PostItemActivity = AGS.class.PostItemActivity
+local CancelItemActivity = AGS.class.CancelItemActivity
+local FetchGuildItemsActivity = AGS.class.FetchGuildItemsActivity
+local ActivityPanel = AGS.class.ActivityPanel
 
 local ByPriority = ActivityBase.ByPriority
 
@@ -176,7 +176,7 @@ function ActivityManager:RemoveCurrentActivity()
         self.lookup[self.currentActivity:GetKey()] = nil
         local oldActivity = self.currentActivity
         self.currentActivity = nil
-        AGS:FireCallbacks(AGS.callback.CURRENT_ACTIVITY_CHANGED, nil, oldActivity)
+        AGS.internal:FireCallbacks(AGS.callback.CURRENT_ACTIVITY_CHANGED, nil, oldActivity)
         self.panel:Refresh()
     end
 end
@@ -245,7 +245,7 @@ function ActivityManager:ExecuteNext()
         table.remove(queue, 1)
 
         self.currentActivity = activity
-        AGS:FireCallbacks(AGS.callback.CURRENT_ACTIVITY_CHANGED, activity)
+        AGS.internal:FireCallbacks(AGS.callback.CURRENT_ACTIVITY_CHANGED, activity)
         self.panel:SetStatusText("Execute next activity") -- TODO
         self.panel:ShowLoading()
 

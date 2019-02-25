@@ -1,4 +1,6 @@
-local gettext = LibStub("LibGetText")("AwesomeGuildStore").gettext
+local AGS = AwesomeGuildStore
+
+local gettext = AGS.internal.gettext
 
 local TRADER_DATA = 1
 local TRADER_ROW_HEIGHT = 30
@@ -30,32 +32,8 @@ local SORT_ORDER_DOWN = {
 local LTF = LibStub("LibTextFilter")
 local LDT = LibDateTime
 
-local function GetZoneLabel(store)
-    local zoneIndex = GetZoneIndex(store.zoneId)
-    return zo_strformat("<<1>>", GetZoneNameByIndex(zoneIndex))
-end
-
-local function GetPoiLabel(store)
-    local location = store.mapName
-    if(store.onZoneMap) then
-        local zoneIndex = GetZoneIndex(store.zoneId)
-        location = GetPOIInfo(zoneIndex, store.wayshrineIndex)
-    end
-    return zo_strformat("<<t:1>>", location)
-end
-
-local function GetLastVisited(kiosk)
-    if(not kiosk) then
-        return
-    elseif(kiosk.isMember) then
-        return kiosk.lastVisited * 10, kiosk.lastVisited -- small hack to get the entry to the top when sorting by time
-    elseif(kiosk.lastVisited and kiosk.lastVisited > 0) then
-        return kiosk.lastVisited
-    end
-end
-
 local GuildListControl = ZO_SortFilterList:Subclass()
-AwesomeGuildStore.GuildListControl = GuildListControl
+AGS.class.GuildListControl = GuildListControl
 
 function GuildListControl:New(...)
     return ZO_SortFilterList.New(self, ...)

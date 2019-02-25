@@ -1,5 +1,7 @@
+local AGS = AwesomeGuildStore
+
 local SortOrderBase = ZO_Object:Subclass()
-AwesomeGuildStore.class.SortOrderBase = SortOrderBase
+AGS.class.SortOrderBase = SortOrderBase
 
 SortOrderBase.SORT_FIELD_TIME_LEFT = TRADING_HOUSE_SORT_EXPIRY_TIME
 SortOrderBase.SORT_FIELD_PURCHASE_PRICE = TRADING_HOUSE_SORT_SALE_PRICE

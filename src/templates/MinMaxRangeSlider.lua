@@ -13,7 +13,7 @@ local ENABLED_DESATURATION = 0
 local DISABLED_DESATURATION = 1
 
 local MinMaxRangeSlider = ZO_Object:Subclass()
-AwesomeGuildStore.MinMaxRangeSlider = MinMaxRangeSlider
+AwesomeGuildStore.class.MinMaxRangeSlider = MinMaxRangeSlider
 
 function MinMaxRangeSlider:New(...)
     local object = ZO_Object.New(self)

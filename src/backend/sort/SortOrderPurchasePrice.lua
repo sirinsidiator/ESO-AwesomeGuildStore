@@ -1,6 +1,6 @@
 local AGS = AwesomeGuildStore
 
-local SortOrderBase = AwesomeGuildStore.class.SortOrderBase
+local SortOrderBase = AGS.class.SortOrderBase
 local SORT_ORDER_ID = AGS.data.SORT_ORDER_ID
 
 local gettext = AGS.internal.gettext

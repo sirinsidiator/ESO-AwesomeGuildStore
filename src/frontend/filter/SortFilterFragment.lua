@@ -1,7 +1,9 @@
-local FilterFragment = AwesomeGuildStore.class.FilterFragment
+local AGS = AwesomeGuildStore
+
+local FilterFragment = AGS.class.FilterFragment
 
 local SortFilterFragment = FilterFragment:Subclass()
-AwesomeGuildStore.class.SortFilterFragment = SortFilterFragment
+AGS.class.SortFilterFragment = SortFilterFragment
 
 function SortFilterFragment:New(...)
     return FilterFragment.New(self, ...)

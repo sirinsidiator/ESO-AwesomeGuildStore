@@ -1,7 +1,9 @@
-local FILTER_ID = AwesomeGuildStore.data.FILTER_ID
+local AGS = AwesomeGuildStore
+
+local FILTER_ID = AGS.data.FILTER_ID
 
 local FilterArea = ZO_Object:Subclass()
-AwesomeGuildStore.FilterArea = FilterArea
+AGS.class.FilterArea = FilterArea
 
 function FilterArea:New(...)
     local object = ZO_Object.New(self)
@@ -40,22 +42,22 @@ function FilterArea:Initialize(container, searchManager)
     addFilterButton.__AGS_NO_REANCHOR = true -- TODO: this is a hack and should be cleaned up
     self.addFilterButton = addFilterButton
 
-    self.editControlGroup = AwesomeGuildStore.class.EditControlGroup:New()
+    self.editControlGroup = AGS.class.EditControlGroup:New()
 end
 
 function FilterArea:OnFiltersInitialized()
-    AwesomeGuildStore:RegisterCallback(AwesomeGuildStore.callback.FILTER_VALUE_CHANGED, function(id)
+    AGS:RegisterCallback(AGS.callback.FILTER_VALUE_CHANGED, function(id)
         if(id ~= FILTER_ID.CATEGORY_FILTER) then return end
         self:UpdateDisplayedFilters()
     end)
-    AwesomeGuildStore:RegisterCallback(AwesomeGuildStore.callback.FILTER_ACTIVE_CHANGED, function(filter)
+    AGS:RegisterCallback(AGS.callback.FILTER_ACTIVE_CHANGED, function(filter)
         self:UpdateDisplayedFilters()
     end)
-    AwesomeGuildStore:RegisterCallback(AwesomeGuildStore.callback.SEARCH_LOCK_STATE_CHANGED, function(search, isActiveSearch)
+    AGS:RegisterCallback(AGS.callback.SEARCH_LOCK_STATE_CHANGED, function(search, isActiveSearch)
         if(not isActiveSearch) then return end
         self:UpdateDisplayedFilters()
     end)
-    AwesomeGuildStore:RegisterCallback(AwesomeGuildStore.callback.SELECTED_SEARCH_CHANGED, function(search)
+    AGS:RegisterCallback(AGS.callback.SELECTED_SEARCH_CHANGED, function(search)
         self:UpdateDisplayedFilters()
     end)
     self:UpdateDisplayedFilters()

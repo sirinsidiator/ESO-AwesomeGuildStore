@@ -1,9 +1,11 @@
-local RegisterForEvent = AwesomeGuildStore.RegisterForEvent
+local AGS = AwesomeGuildStore
 
-local logger = AwesomeGuildStore.internal.logger
+local RegisterForEvent = AGS.internal.RegisterForEvent
+
+local logger = AGS.internal.logger
 
 local GuildSelection = ZO_Object:Subclass()
-AwesomeGuildStore.class.GuildSelection = GuildSelection
+AGS.class.GuildSelection = GuildSelection
 
 function GuildSelection:New(...)
     local object = ZO_Object.New(self)
@@ -92,7 +94,7 @@ function GuildSelection:UpdateGuildData()
         guilds[guildCount].next = guilds[1]
     end
 
-    AwesomeGuildStore:FireCallbacks(AwesomeGuildStore.callback.AVAILABLE_GUILDS_CHANGED, guilds)
+    AGS.internal:FireCallbacks(AGS.callback.AVAILABLE_GUILDS_CHANGED, guilds)
 end
 
 function GuildSelection:TryReselectLastGuildId()
@@ -114,7 +116,7 @@ function GuildSelection:SetSelectedGuildId(guildId)
     if(guildData) then
         self.selectedGuildId = guildId
         self.saveData.lastGuildName = guildData.guildName
-        AwesomeGuildStore:FireCallbacks(AwesomeGuildStore.callback.GUILD_SELECTION_CHANGED, guildData)
+        AGS.internal:FireCallbacks(AGS.callback.GUILD_SELECTION_CHANGED, guildData)
         return true
     end
 end

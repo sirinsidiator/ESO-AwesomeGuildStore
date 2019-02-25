@@ -5,12 +5,12 @@ local FilterBase = AGS.class.FilterBase
 local FILTER_ID = AGS.data.FILTER_ID
 
 local gettext = AGS.internal.gettext
-local EncodeValue = AGS.EncodeValue
-local DecodeValue = AGS.DecodeValue
+local EncodeValue = AGS.internal.EncodeValue
+local DecodeValue = AGS.internal.DecodeValue
 
 
 local TextFilter = FilterBase:Subclass()
-AwesomeGuildStore.class.TextFilter = TextFilter
+AGS.class.TextFilter = TextFilter
 
 function TextFilter:New(...)
     return FilterBase.New(self, ...)

@@ -1,5 +1,7 @@
-local Print = AwesomeGuildStore.Print
-local gettext = LibStub("LibGetText")("AwesomeGuildStore").gettext
+local AGS = AwesomeGuildStore
+
+local Print = AGS.internal.Print
+local gettext = AGS.internal.gettext
 local guildKioskWithoutNameCaption = GetString(SI_GUILD_TRADER_OWNERSHIP_HEADER)
 
 local function IsUnitGuildKiosk(unitTag)
@@ -10,7 +12,7 @@ local function IsUnitGuildKiosk(unitTag)
     return false
 end
 
-AwesomeGuildStore.IsUnitGuildKiosk = IsUnitGuildKiosk
+AGS.internal.IsUnitGuildKiosk = IsUnitGuildKiosk
 
 
 local guildKioskWithNamePattern = GetString(SI_GUILD_KIOSK_DISPLAY_CAPTION_WITH_OWNER):gsub("%(<<1>>%)", "%%((.+)%%)")
@@ -22,7 +24,7 @@ local function GetUnitGuildKioskOwner(unitTag)
     end
 end
 
-AwesomeGuildStore.GetUnitGuildKioskOwner = GetUnitGuildKioskOwner
+AGS.internal.GetUnitGuildKioskOwner = GetUnitGuildKioskOwner
 
 
 local function IsLocationVisible(locationIndex)
@@ -32,14 +34,14 @@ local function IsLocationVisible(locationIndex)
     return true
 end
 
-AwesomeGuildStore.IsLocationVisible = IsLocationVisible
+AGS.internal.IsLocationVisible = IsLocationVisible
 
 
 local function IsCurrentMapZoneMap()
     return GetMapType() == MAPTYPE_ZONE and GetMapContentType() ~= MAP_CONTENT_DUNGEON
 end
 
-AwesomeGuildStore.IsCurrentMapZoneMap = IsCurrentMapZoneMap
+AGS.internal.IsCurrentMapZoneMap = IsCurrentMapZoneMap
 
 
 local function GetKioskName(guildId)
@@ -56,14 +58,14 @@ local function GetKioskName(guildId)
     end
 end
 
-AwesomeGuildStore.GetKioskName = GetKioskName
+AGS.internal.GetKioskName = GetKioskName
 
 
 local function ClearCallLater(id)
     EVENT_MANAGER:UnregisterForUpdate("CallLaterFunction"..id)
 end
 
-AwesomeGuildStore.ClearCallLater = ClearCallLater
+AGS.internal.ClearCallLater = ClearCallLater
 
 
 local function GetItemLinkWritCount(itemLink)
@@ -72,14 +74,14 @@ local function GetItemLinkWritCount(itemLink)
     return tonumber(string.format("%.0f", (writCount / 10000)))
 end
 
-AwesomeGuildStore.GetItemLinkWritCount = GetItemLinkWritCount
+AGS.internal.GetItemLinkWritCount = GetItemLinkWritCount
 
 
 local function AdjustLinkStyle(link, linkStyle)
     link = link:gsub("^|H%d", "|H" .. (linkStyle or LINK_STYLE_DEFAULT))
     return link
 end
-AwesomeGuildStore.AdjustLinkStyle = AdjustLinkStyle
+AGS.internal.AdjustLinkStyle = AdjustLinkStyle
 
 
 local function ClampValue(value, min, max)
@@ -90,4 +92,4 @@ local function ClampValue(value, min, max)
     end
     return value
 end
-AwesomeGuildStore.internal.ClampValue = ClampValue
+AGS.internal.ClampValue = ClampValue

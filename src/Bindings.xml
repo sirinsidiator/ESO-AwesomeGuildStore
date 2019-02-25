@@ -1,10 +1,6 @@
 <Bindings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sir.insidi.at/or/schema/esobindings.xsd">
 	<Layer name="AwesomeGuildStore">
 		<Category>
-			<Action name="AGS_SUPPRESS_LOCAL_FILTERS">
-				<Down>AwesomeGuildStore.SuppressLocalFilters(true)</Down>
-				<Up>AwesomeGuildStore.SuppressLocalFilters(false)</Up>
-			</Action>
 		</Category>
 	</Layer>
 </Bindings>

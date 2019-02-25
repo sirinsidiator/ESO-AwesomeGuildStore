@@ -1,7 +1,9 @@
-local KioskData = AwesomeGuildStore.KioskData
+local AGS = AwesomeGuildStore
+
+local KioskData = AGS.class.KioskData
 
 local KioskList = ZO_Object:Subclass()
-AwesomeGuildStore.KioskList = KioskList
+AGS.class.KioskList = KioskList
 
 function KioskList.UpdateStoreIds(saveData)
     for kioskName, serializedData in pairs(saveData) do

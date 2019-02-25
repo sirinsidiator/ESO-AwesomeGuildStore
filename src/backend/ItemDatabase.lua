@@ -1,12 +1,13 @@
-local RegisterForEvent = AwesomeGuildStore.RegisterForEvent
-local ItemData = AwesomeGuildStore.ItemData
-local AdjustLinkStyle = AwesomeGuildStore.AdjustLinkStyle
-local ItemDatabaseGuildView = AwesomeGuildStore.class.ItemDatabaseGuildView
-local FilterBase = AwesomeGuildStore.class.FilterBase
+local AGS = AwesomeGuildStore
 
-local PENDING_PURCHASE_SLOT_INDEX = -1
+local RegisterForEvent = AGS.internal.RegisterForEvent
+local ItemData = AGS.class.ItemData
+local AdjustLinkStyle = AGS.internal.AdjustLinkStyle
+local ItemDatabaseGuildView = AGS.class.ItemDatabaseGuildView
+local FilterBase = AGS.class.FilterBase
+
 local ItemDatabase = ZO_Object:Subclass()
-AwesomeGuildStore.ItemDatabase = ItemDatabase
+AGS.class.ItemDatabase = ItemDatabase
 
 function ItemDatabase:New(...)
     local object = ZO_Object.New(self)
@@ -15,7 +16,6 @@ function ItemDatabase:New(...)
 end
 
 function ItemDatabase:Initialize(tradingHouseWrapper)
-    self.PENDING_PURCHASE_SLOT_INDEX = PENDING_PURCHASE_SLOT_INDEX
     self.tradingHouseWrapper = tradingHouseWrapper
     self.data = {}
     self.guildItemData = {}
@@ -55,41 +55,9 @@ function ItemDatabase:Initialize(tradingHouseWrapper)
         self:GetItemView(guildName):MarkDirty()
     end
 
-    AwesomeGuildStore:RegisterCallback(AwesomeGuildStore.callback.FILTER_VALUE_CHANGED, SetDirty)
-    AwesomeGuildStore:RegisterCallback(AwesomeGuildStore.callback.FILTER_ACTIVE_CHANGED, SetDirty)
+    AGS:RegisterCallback(AGS.callback.FILTER_VALUE_CHANGED, SetDirty)
+    AGS:RegisterCallback(AGS.callback.FILTER_ACTIVE_CHANGED, SetDirty)
 end
-
--- next steps:
-
--- always get newest first and offer a get more results button? but sorting by price would still be nice for motifs...
-
--- filter local database
--- give filter a "cost" property and apply cheap filters first to reduce the workload
-
--- remove hidden data entry "AwesomeGuildStoreHasHiddenRowTemplate"
-
--- how do we handle pages going forward?
--- still want to be able to find out how many items a store has by loading specific pages
--- analyze store procedure -> can we calculate how many items to expect based on how fast new items come in?
-
--- filter out items that have disappeared
--- check local search results against returned results
--- remove items that haven't been seen in x days
--- remove items that could not be bought
--- remove items that have been bought
-
--- automatically load more results in background
--- requires that we finish the queue system
--- offer a stop button
--- after all pages have been scanned, refresh the latest results every x minutes -> user can manually load more often
--- don't automatically load pages that have been scanned in the past x minutes
-
--- change "items on page" label to "search results" or similar
-
--- show price comparison
--- min/avg/max/stddev for local guild/location/tamriel
--- show in search results and also for new and existing listings
--- check pricetracker featureset
 
 function ItemDatabase:Update(guildName, numItems)
     local data = self:GetOrCreateDataForGuild(guildName)
@@ -109,7 +77,7 @@ function ItemDatabase:Update(guildName, numItems)
 
     self:GetItemView(guildName):MarkDirty()
 
-    AwesomeGuildStore:FireCallbacks(AwesomeGuildStore.callback.ITEM_DATABASE_UPDATE, self, guildName, hasAnyResultAlreadyStored)
+    AGS.internal:FireCallbacks(AGS.callback.ITEM_DATABASE_UPDATE, self, guildName, hasAnyResultAlreadyStored)
     return hasAnyResultAlreadyStored
 end
 
@@ -127,7 +95,7 @@ function ItemDatabase:UpdateGuildSpecificItems(guildId, guildName)
             self:GetItemView(guildName):MarkDirty()
         end
 
-        AwesomeGuildStore:FireCallbacks(AwesomeGuildStore.callback.ITEM_DATABASE_UPDATE, self, guildName)
+        AGS.internal:FireCallbacks(AGS.callback.ITEM_DATABASE_UPDATE, self, guildName)
         return true, TRADING_HOUSE_RESULT_SUCCESS
     end
     return false, TRADING_HOUSE_RESULT_NOT_A_MEMBER

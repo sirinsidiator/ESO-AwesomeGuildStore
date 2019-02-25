@@ -73,7 +73,7 @@ function RequestSearchActivity:OnResponse(responseType, result, panel)
 
             self:HandleSearchResultsReceived(hasAnyResultAlreadyStored)
 
-            AGS:FireCallbacks(AGS.callback.SEARCH_RESULTS_RECEIVED, self.pendingGuildName, self.numItems, self.page, self.hasMore)
+            AGS.internal:FireCallbacks(AGS.callback.SEARCH_RESULTS_RECEIVED, self.pendingGuildName, self.numItems, self.page, self.hasMore)
 
             panel:SetStatusText("Request finished") -- TODO translate
             panel:Refresh()

@@ -1,8 +1,10 @@
-AwesomeGuildStore.InitializeAugmentedMails = function(saveData)
+local AGS = AwesomeGuildStore
+
+AGS.internal.InitializeAugmentedMails = function(saveData)
 	if(not saveData.augementMails) then return end
-	local RegisterForEvent = AwesomeGuildStore.RegisterForEvent
-	local WrapFunction = AwesomeGuildStore.WrapFunction
-	local gettext = LibStub("LibGetText")("AwesomeGuildStore").gettext
+	local RegisterForEvent = AGS.internal.RegisterForEvent
+	local WrapFunction = AGS.internal.WrapFunction
+	local gettext = AGS.internal.gettext
 
 	local iconMarkup = string.format("|t%u:%u:%s|t", 16, 16, "EsoUI/Art/currency/currency_gold.dds")
 	local positiveColor = ZO_ColorDef:New("00FF00")
@@ -12,7 +14,7 @@ AwesomeGuildStore.InitializeAugmentedMails = function(saveData)
 	local nextId = 1
 	local hasData = false
 	local currentMailTime = 0
-	local activityLog = AwesomeGuildStore.ActivityLogWrapper:New()
+	local activityLog = AGS.class.ActivityLogWrapper:New()
 	local transactionDataByMailIdString = {}
 	local button
 

@@ -1,6 +1,8 @@
-local gettext = LibStub("LibGetText")("AwesomeGuildStore").gettext
-local SUB_CATEGORY_ID = AwesomeGuildStore.data.SUB_CATEGORY_ID
-local FILTER_ID = AwesomeGuildStore.data.FILTER_ID
+local AGS = AwesomeGuildStore
+
+local gettext = AGS.internal.gettext
+local SUB_CATEGORY_ID = AGS.data.SUB_CATEGORY_ID
+local FILTER_ID = AGS.data.FILTER_ID
 
 local function UnpackWeaponType(filter, itemData) -- TODO: collect all unpack functions in utils
     local id = GetItemLinkWeaponType(itemData.itemLink)
@@ -96,6 +98,6 @@ local STAFF_WEAPON_TYPE_FILTER = {
     }
 }
 
-AwesomeGuildStore.data.ONE_HANDED_WEAPON_TYPE_FILTER = ONE_HANDED_WEAPON_TYPE_FILTER
-AwesomeGuildStore.data.TWO_HANDED_WEAPON_TYPE_FILTER = TWO_HANDED_WEAPON_TYPE_FILTER
-AwesomeGuildStore.data.STAFF_WEAPON_TYPE_FILTER = STAFF_WEAPON_TYPE_FILTER
+AGS.data.ONE_HANDED_WEAPON_TYPE_FILTER = ONE_HANDED_WEAPON_TYPE_FILTER
+AGS.data.TWO_HANDED_WEAPON_TYPE_FILTER = TWO_HANDED_WEAPON_TYPE_FILTER
+AGS.data.STAFF_WEAPON_TYPE_FILTER = STAFF_WEAPON_TYPE_FILTER

@@ -520,12 +520,14 @@ local RESET_BUTTON_SIZE = 18
 local RESET_BUTTON_TEXTURE = "EsoUI/Art/Buttons/decline_%s.dds"
 local DEFAULT_LAYOUT = BACKPACK_TRADING_HOUSE_LAYOUT_FRAGMENT.layoutData
 
-local RegisterForEvent = AwesomeGuildStore.RegisterForEvent
-local ButtonGroup = AwesomeGuildStore.ButtonGroup
-local ToggleButton = AwesomeGuildStore.ToggleButton
+local AGS = AwesomeGuildStore
+
+local RegisterForEvent = AGS.internal.RegisterForEvent
+local ButtonGroup = AGS.class.ButtonGroup
+local ToggleButton = AGS.class.ToggleButton
 
 local SalesCategorySelector = ZO_Object:Subclass()
-AwesomeGuildStore.SalesCategorySelector = SalesCategorySelector
+AGS.class.SalesCategorySelector = SalesCategorySelector
 
 local ALL_CRAFTING_FILTERS = {
     [TRADING_HOUSE_FILTER_TYPE_ITEM] = {

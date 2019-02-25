@@ -1,6 +1,8 @@
-local gettext = LibStub("LibGetText")("AwesomeGuildStore").gettext
-local SUB_CATEGORY_ID = AwesomeGuildStore.data.SUB_CATEGORY_ID
-local FILTER_ID = AwesomeGuildStore.data.FILTER_ID
+local AGS = AwesomeGuildStore
+
+local gettext = AGS.internal.gettext
+local SUB_CATEGORY_ID = AGS.data.SUB_CATEGORY_ID
+local FILTER_ID = AGS.data.FILTER_ID
 
 local MASTER_WRIT_TYPE = {
     BLACKSMITHING = 1,
@@ -80,5 +82,5 @@ local MASTER_WRIT_TYPE_FILTER = {
     }
 }
 
-AwesomeGuildStore.data.MASTER_WRIT_TYPE = MASTER_WRIT_TYPE
-AwesomeGuildStore.data.MASTER_WRIT_TYPE_FILTER = MASTER_WRIT_TYPE_FILTER
+AGS.data.MASTER_WRIT_TYPE = MASTER_WRIT_TYPE
+AGS.data.MASTER_WRIT_TYPE_FILTER = MASTER_WRIT_TYPE_FILTER

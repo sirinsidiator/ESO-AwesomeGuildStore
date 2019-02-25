@@ -3,7 +3,7 @@ local LDT = LibDateTime
 local function SortDesc(a, b) return a > b end
 
 local OwnerList = ZO_Object:Subclass()
-AwesomeGuildStore.OwnerList = OwnerList
+AwesomeGuildStore.class.OwnerList = OwnerList
 
 function OwnerList:New(...)
     local object = ZO_Object.New(self)

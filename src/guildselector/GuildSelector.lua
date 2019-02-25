@@ -1,7 +1,9 @@
-local HiredTraderTooltip = AwesomeGuildStore.HiredTraderTooltip
+local AGS = AwesomeGuildStore
+
+local HiredTraderTooltip = AGS.class.HiredTraderTooltip
 
 local GuildSelector = ZO_Object:Subclass()
-AwesomeGuildStore.GuildSelector = GuildSelector
+AGS.class.GuildSelector = GuildSelector
 
 function GuildSelector:New(...)
     local selector = ZO_Object.New(self)
@@ -30,7 +32,7 @@ function GuildSelector:Initialize(tradingHouseWrapper)
     self:InitializeComboBox(comboBoxControl, self.comboBox)
     self:InitializeHiredTraderTooltip(comboBoxControl, self.comboBox)
 
-    AwesomeGuildStore:RegisterCallback(AwesomeGuildStore.callback.AVAILABLE_GUILDS_CHANGED, function(guilds) -- TODO: test what happens when we fire this callback outside a trading house
+    AGS:RegisterCallback(AGS.callback.AVAILABLE_GUILDS_CHANGED, function(guilds) -- TODO: test what happens when we fire this callback outside a trading house
         self:SetupGuildList(guilds)
 
         local hasGuilds = (#guilds > 1)
@@ -38,7 +40,7 @@ function GuildSelector:Initialize(tradingHouseWrapper)
         self.titleLabel:SetHidden(hasGuilds)
     end)
 
-    AwesomeGuildStore:RegisterCallback(AwesomeGuildStore.callback.GUILD_SELECTION_CHANGED, function(guildData)
+    AGS:RegisterCallback(AGS.callback.GUILD_SELECTION_CHANGED, function(guildData)
         local focused = WINDOW_MANAGER:GetFocusControl()
         if(focused) then focused:LoseFocus() end
 

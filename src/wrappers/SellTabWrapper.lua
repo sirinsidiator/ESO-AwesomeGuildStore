@@ -1,15 +1,15 @@
 local AGS = AwesomeGuildStore
 
-local gettext = LibStub("LibGetText")("AwesomeGuildStore").gettext
-local RegisterForEvent = AwesomeGuildStore.RegisterForEvent
-local UnregisterForEvent = AwesomeGuildStore.UnregisterForEvent
-local Print = AwesomeGuildStore.Print
-local ToggleButton = AwesomeGuildStore.ToggleButton
-local ClearCallLater = AwesomeGuildStore.ClearCallLater
-local GetItemLinkWritCount = AwesomeGuildStore.GetItemLinkWritCount
+local gettext = AGS.internal.gettext
+local RegisterForEvent = AGS.internal.RegisterForEvent
+local UnregisterForEvent = AGS.internal.UnregisterForEvent
+local Print = AGS.internal.Print
+local ToggleButton = AGS.class.ToggleButton
+local ClearCallLater = AGS.internal.ClearCallLater
+local GetItemLinkWritCount = AGS.internal.GetItemLinkWritCount
 
 local SellTabWrapper = ZO_Object:Subclass()
-AwesomeGuildStore.SellTabWrapper = SellTabWrapper
+AGS.class.SellTabWrapper = SellTabWrapper
 
 local POST_ITEM_PENDING_UPDATE_NAMESPACE = "AwesomeGuildStorePostPendingItemPendingUpdate"
 local SUPPRESS_PRICE_PER_PIECE_UPDATE = true
@@ -340,7 +340,7 @@ end
 
 function SellTabWrapper:InitializeCategoryFilter(tradingHouseWrapper)
     local postItems = tradingHouseWrapper.tradingHouse.postItemPane
-    self.salesCategoryFilter = AwesomeGuildStore.SalesCategorySelector:New(postItems, "AwesomeGuildStoreSalesItemCategory")
+    self.salesCategoryFilter = AGS.class.SalesCategorySelector:New(postItems, "AwesomeGuildStoreSalesItemCategory")
 end
 
 function SellTabWrapper:InitializeCraftingBag(tradingHouseWrapper)

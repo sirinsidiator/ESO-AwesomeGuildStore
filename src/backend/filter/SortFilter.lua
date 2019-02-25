@@ -16,7 +16,7 @@ local SORT_ORDER_TO_LABEL = {
 }
 
 local SortFilter = FilterBase:Subclass()
-AwesomeGuildStore.class.SortFilter = SortFilter
+AGS.class.SortFilter = SortFilter
 
 -- it's not really a filter, but since we want to save the order together with
 -- the other filter states and add a fragment to the filter area, we use it like one

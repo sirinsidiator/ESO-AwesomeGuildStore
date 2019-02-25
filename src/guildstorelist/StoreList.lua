@@ -1,7 +1,9 @@
-local StoreData = AwesomeGuildStore.StoreData
+local AGS = AwesomeGuildStore
+
+local StoreData = AGS.class.StoreData
 
 local StoreList = ZO_Object:Subclass()
-AwesomeGuildStore.StoreList = StoreList
+AGS.class.StoreList = StoreList
 
 function StoreList:New(...)
     local object = ZO_Object.New(self)

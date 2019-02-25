@@ -11,7 +11,7 @@ local IsItemLinkCraftedAllTypes = AGS.internal.IsItemLinkCraftedAllTypes
 
 
 local RuneKnowledgeFilter = MultiChoiceFilterBase:Subclass()
-AwesomeGuildStore.class.RuneKnowledgeFilter = RuneKnowledgeFilter
+AGS.class.RuneKnowledgeFilter = RuneKnowledgeFilter
 
 function RuneKnowledgeFilter:New(...)
     return MultiChoiceFilterBase.New(self, ...)

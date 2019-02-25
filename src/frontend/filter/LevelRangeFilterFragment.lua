@@ -21,7 +21,7 @@ local MAX_LEVEL = ITEM_REQUIREMENT_RANGE.MAX_LEVEL
 local MIN_CHAMPION_POINTS = ITEM_REQUIREMENT_RANGE.MIN_CHAMPION_POINTS
 
 local LevelRangeFilterFragment = ValueRangeFilterFragmentBase:Subclass()
-AwesomeGuildStore.class.LevelRangeFilterFragment = LevelRangeFilterFragment
+AGS.class.LevelRangeFilterFragment = LevelRangeFilterFragment
 
 function LevelRangeFilterFragment:New(...)
     return ValueRangeFilterFragmentBase.New(self, ...)

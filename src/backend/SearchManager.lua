@@ -1,18 +1,18 @@
 local AGS = AwesomeGuildStore
 
 local logger = AGS.internal.logger
-local RegisterForEvent = AGS.RegisterForEvent
+local RegisterForEvent = AGS.internal.RegisterForEvent
 
 local ActivityBase = AGS.class.ActivityBase
-local SearchState = AGS.SearchState
-local ClearCallLater = AGS.ClearCallLater
+local SearchState = AGS.class.SearchState
+local ClearCallLater = AGS.internal.ClearCallLater
 
 local FILTER_UPDATE_DELAY = 0 -- TODO do we even need this? check with profiler
 local AUTO_SEARCH_RESULT_COUNT_THRESHOLD = 50 -- TODO: global
 local SILENT = true
 
 local SearchManager = ZO_Object:Subclass()
-AGS.SearchManager = SearchManager
+AGS.class.SearchManager = SearchManager
 
 function SearchManager:New(...)
     local object = ZO_Object.New(self)
@@ -145,7 +145,7 @@ function SearchManager:OnFiltersInitialized()
 
     self.activeSearch:Apply()
 
-    AwesomeGuildStore:RegisterCallback(AGS.callback.FILTER_VALUE_CHANGED, function(id)
+    AGS:RegisterCallback(AGS.callback.FILTER_VALUE_CHANGED, function(id)
         local filter = self.availableFilters[id]
         if(filter == self.categoryFilter) then
             self:UpdateAttachedFilters(SILENT)
@@ -153,7 +153,7 @@ function SearchManager:OnFiltersInitialized()
         self.activeSearch:HandleFilterChanged(self.availableFilters[id])
     end)
 
-    AwesomeGuildStore:RegisterCallback(AGS.callback.FILTER_ACTIVE_CHANGED, function(filter)
+    AGS:RegisterCallback(AGS.callback.FILTER_ACTIVE_CHANGED, function(filter)
         self.activeSearch:HandleFilterChanged(filter)
     end)
 end
@@ -194,7 +194,7 @@ function SearchManager:UpdateAttachedFilters(silent)
                 self:DetachFilter(filterId)
             end
             if(not silent) then
-                AwesomeGuildStore:FireCallbacks(AGS.callback.FILTER_ACTIVE_CHANGED, filter)
+                AGS.internal:FireCallbacks(AGS.callback.FILTER_ACTIVE_CHANGED, filter)
             end
         end
     end
@@ -324,7 +324,7 @@ function SearchManager:UpdateSearchResults()
 
     local page = self.searchPageHistory:GetNextPage(guildName, filterState)
     self.hasMorePages = (page ~= false)
-    AwesomeGuildStore:FireCallbacks(AGS.callback.SEARCH_RESULT_UPDATE, self.searchResults, self.hasMorePages)
+    AGS.internal:FireCallbacks(AGS.callback.SEARCH_RESULT_UPDATE, self.searchResults, self.hasMorePages)
 end
 
 function SearchManager:RequestResultUpdate()
@@ -343,7 +343,7 @@ function SearchManager:RequestFilterUpdate()
     end
     self.updateCallback = zo_callLater(function()
         self.updateCallback = nil
-        AwesomeGuildStore:FireCallbacks(AGS.callback.FILTER_UPDATE, self.activeFilters)
+        AGS.internal:FireCallbacks(AGS.callback.FILTER_UPDATE, self.activeFilters)
     end, FILTER_UPDATE_DELAY)
 end
 

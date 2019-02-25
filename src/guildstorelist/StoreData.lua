@@ -1,7 +1,9 @@
-local EncodeValue = AwesomeGuildStore.EncodeValue
-local DecodeValue = AwesomeGuildStore.DecodeValue
-local EncodeData = AwesomeGuildStore.EncodeData
-local DecodeData = AwesomeGuildStore.DecodeData
+local AGS = AwesomeGuildStore
+
+local EncodeValue = AGS.internal.EncodeValue
+local DecodeValue = AGS.internal.DecodeValue
+local EncodeData = AGS.internal.EncodeData
+local DecodeData = AGS.internal.DecodeData
 
 local ARRAY_SEPARATOR = ";"
 local COORD_MULTIPLICATOR = 100000
@@ -25,7 +27,7 @@ local VERSION = 1
 local CURRENT_DATA_FORMAT = DATA_FORMAT[VERSION]
 
 local StoreData = ZO_Object:Subclass()
-AwesomeGuildStore.StoreData = StoreData
+AGS.class.StoreData = StoreData
 
 function StoreData:New(...)
     local object = ZO_Object.New(self)

@@ -35,7 +35,6 @@ templates/SimpleInputBox.xml
 templates/SimpleInputBox.lua
 util/ButtonGroup.lua
 util/ToggleButton.lua
-util/SimpleIconButton.lua
 util/LoadingOverlay.lua
 history/MailBox.lua
 guildselector/HiredTraderTooltip.lua
@@ -103,7 +102,6 @@ backend/filter/FurnitureCategoryFilter.lua
 backend/SearchState.lua
 backend/SearchPageHistory.lua
 backend/SearchManager.lua
-backend/SearchHandler.lua
 backend/GuildSelection.lua
 frontend/SearchList.xml
 frontend/SearchList.lua

@@ -11,7 +11,7 @@ local CanItemLinkBeCraftedByPlayer = AGS.internal.CanItemLinkBeCraftedByPlayer
 
 
 local SkillRequirementsFilter = MultiChoiceFilterBase:Subclass()
-AwesomeGuildStore.class.SkillRequirementsFilter = SkillRequirementsFilter
+AGS.class.SkillRequirementsFilter = SkillRequirementsFilter
 
 function SkillRequirementsFilter:New(...)
     return MultiChoiceFilterBase.New(self, ...)

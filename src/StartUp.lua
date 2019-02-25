@@ -1,13 +1,25 @@
 local ADDON_NAME = "AwesomeGuildStore"
 
-AwesomeGuildStore = ZO_CallbackObject:New()
-AwesomeGuildStore.class = {}
-AwesomeGuildStore.data = {}
-AwesomeGuildStore.callback = {}
-AwesomeGuildStore.internal = {
-    logger = LibDebugLogger.Create(ADDON_NAME),
-    gettext = LibStub("LibGetText")(ADDON_NAME).gettext
+local callbackObject = ZO_CallbackObject:New()
+local AGS = {
+    class = {},
+    data = {},
+    callback = {},
+    internal = {
+        callbackObject = callbackObject,
+        logger = LibDebugLogger.Create(ADDON_NAME),
+        gettext = LibStub("LibGetText")(ADDON_NAME).gettext
+    }
 }
+_G[ADDON_NAME] = AGS
+
+function AGS.internal:FireCallbacks(...)
+    return callbackObject:FireCallbacks(...)
+end
+
+function AGS:RegisterCallback(...)
+    return callbackObject:RegisterCallback(...)
+end
 
 local nextEventHandleIndex = 1
 
@@ -41,12 +53,12 @@ local function OnAddonLoaded(callback)
     end)
 end
 
-AwesomeGuildStore.UnregisterForEvent = UnregisterForEvent
-AwesomeGuildStore.RegisterForEvent = RegisterForEvent
-AwesomeGuildStore.WrapFunction = WrapFunction
+AGS.internal.UnregisterForEvent = UnregisterForEvent
+AGS.internal.RegisterForEvent = RegisterForEvent
+AGS.internal.WrapFunction = WrapFunction
 -----------------------------------------------------------------------------------------
 
-AwesomeGuildStore.GetAPIVersion = function() return 4 end
+AGS.GetAPIVersion = function() return 4 end
 
 do
     local LONG_PREFIX = "AwesomeGuildStore"
@@ -64,8 +76,8 @@ do
         df("[%s] %s", prefix, message)
     end
 
-    AwesomeGuildStore.Print = Print
-    AwesomeGuildStore.SetMessagePrefix = SetMessagePrefix
+    AGS.internal.Print = Print
+    AGS.internal.SetMessagePrefix = SetMessagePrefix
 end
 
 local function IsSameAction(actionName, layerIndex, categoryIndex, actionIndex)
@@ -95,60 +107,58 @@ local function IntegrityCheck()
     assert(LibStub("LibGPS2", true))
     assert(LibStub("LibPromises", true))
     assert(LibStub("LibGetText", true))
-    assert(AwesomeGuildStore.LoadSettings)
-    assert(AwesomeGuildStore.IsUnitGuildKiosk)
-    assert(AwesomeGuildStore.MinMaxRangeSlider)
-    assert(AwesomeGuildStore.ButtonGroup)
-    assert(AwesomeGuildStore.ToggleButton)
-    assert(AwesomeGuildStore.SimpleIconButton)
-    assert(AwesomeGuildStore.LoadingIcon)
-    assert(AwesomeGuildStore.InitializeAugmentedMails)
-    assert(AwesomeGuildStore.HiredTraderTooltip)
-    assert(AwesomeGuildStore.GuildSelector)
-    assert(AwesomeGuildStore.class.ActivityBase)
-    assert(AwesomeGuildStore.class.RequestSearchActivity)
-    assert(AwesomeGuildStore.class.RequestNewestActivity)
-    assert(AwesomeGuildStore.class.RequestListingsActivity)
-    assert(AwesomeGuildStore.class.PurchaseItemActivity)
-    assert(AwesomeGuildStore.class.PostItemActivity)
-    assert(AwesomeGuildStore.class.CancelItemActivity)
-    assert(AwesomeGuildStore.ActivityManager)
-    assert(AwesomeGuildStore.TradingHouseWrapper)
-    assert(AwesomeGuildStore.SearchTabWrapper)
-    assert(AwesomeGuildStore.SellTabWrapper)
-    assert(AwesomeGuildStore.ListingTabWrapper)
-    assert(AwesomeGuildStore.KeybindStripWrapper)
-    assert(AwesomeGuildStore.ActivityLogWrapper)
-    assert(AwesomeGuildStore.KioskData)
-    assert(AwesomeGuildStore.StoreData)
-    assert(AwesomeGuildStore.KioskList)
-    assert(AwesomeGuildStore.StoreList)
-    assert(AwesomeGuildStore.OwnerList)
+    assert(AGS.internal.LoadSettings)
+    assert(AGS.internal.IsUnitGuildKiosk)
+    assert(AGS.class.MinMaxRangeSlider)
+    assert(AGS.class.ButtonGroup)
+    assert(AGS.class.ToggleButton)
+    assert(AGS.class.SimpleIconButton)
+    assert(AGS.class.LoadingIcon)
+    assert(AGS.internal.InitializeAugmentedMails)
+    assert(AGS.class.HiredTraderTooltip)
+    assert(AGS.class.GuildSelector)
+    assert(AGS.class.ActivityBase)
+    assert(AGS.class.RequestSearchActivity)
+    assert(AGS.class.RequestNewestActivity)
+    assert(AGS.class.RequestListingsActivity)
+    assert(AGS.class.PurchaseItemActivity)
+    assert(AGS.class.PostItemActivity)
+    assert(AGS.class.CancelItemActivity)
+    assert(AGS.class.ActivityManager)
+    assert(AGS.class.TradingHouseWrapper)
+    assert(AGS.class.SearchTabWrapper)
+    assert(AGS.class.SellTabWrapper)
+    assert(AGS.class.ListingTabWrapper)
+    assert(AGS.class.KeybindStripWrapper)
+    assert(AGS.class.ActivityLogWrapper)
+    assert(AGS.class.KioskData)
+    assert(AGS.class.StoreData)
+    assert(AGS.class.KioskList)
+    assert(AGS.class.StoreList)
+    assert(AGS.class.OwnerList)
     assert(AwesomeGuildStoreGuildTraders)
     assert(AwesomeGuildStoreGuilds)
-    assert(AwesomeGuildStore.TraderListControl)
-    assert(AwesomeGuildStore.GuildListControl)
-    assert(AwesomeGuildStore.OwnerHistoryControl)
-    assert(AwesomeGuildStore.KioskHistoryControl)
-    assert(AwesomeGuildStore.InitializeGuildList)
-    assert(AwesomeGuildStore.InitializeGuildStoreList)
-    assert(AwesomeGuildStore.SalesCategorySelector)
+    assert(AGS.class.TraderListControl)
+    assert(AGS.class.GuildListControl)
+    assert(AGS.class.OwnerHistoryControl)
+    assert(AGS.class.KioskHistoryControl)
+    assert(AGS.internal.InitializeGuildList)
+    assert(AGS.internal.InitializeGuildStoreList)
+    assert(AGS.class.SalesCategorySelector)
 end
 
 OnAddonLoaded(function()
     IntegrityCheck()
 
-    local saveData = AwesomeGuildStore.LoadSettings()
-    AwesomeGuildStore.SetMessagePrefix(saveData.shortMessagePrefix)
+    local saveData = AGS.internal.LoadSettings()
+    AGS.internal.SetMessagePrefix(saveData.shortMessagePrefix)
     if(saveData.guildTraderListEnabled) then
-        AwesomeGuildStore.InitializeGuildStoreList(saveData)
+        AGS.internal.InitializeGuildStoreList(saveData)
     end
-    if(GetAPIVersion() >= 100026) then -- TODO
-        AwesomeGuildStore.main = AwesomeGuildStore.TradingHouseWrapper:New(saveData)
-    end
-    AwesomeGuildStore.InitializeAugmentedMails(saveData)
+    AGS.internal.tradingHouse = AGS.class.TradingHouseWrapper:New(saveData)
+    AGS.internal.InitializeAugmentedMails(saveData)
 
-    local gettext = LibStub("LibGetText")("AwesomeGuildStore").gettext
+    local gettext = AGS.internal.gettext
 
     local actionName, defaultKey = "AGS_SUPPRESS_LOCAL_FILTERS", KEY_CTRL
     -- TRANSLATORS: keybind label in the controls menu

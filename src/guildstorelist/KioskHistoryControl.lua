@@ -1,4 +1,6 @@
-local gettext = LibStub("LibGetText")("AwesomeGuildStore").gettext
+local AGS = AwesomeGuildStore
+
+local gettext = AGS.internal.gettext
 local LDT = LibDateTime
 local osdate = os.date
 
@@ -11,7 +13,7 @@ local SORT_KEY_TRADER = "trader"
 local SORT_KEY_LOCATION = "location"
 
 local KioskHistoryControl = ZO_SortFilterList:Subclass()
-AwesomeGuildStore.KioskHistoryControl = KioskHistoryControl
+AGS.class.KioskHistoryControl = KioskHistoryControl
 
 function KioskHistoryControl:New(...)
     return ZO_SortFilterList.New(self, ...)
@@ -98,8 +100,8 @@ function KioskHistoryControl:BuildMasterList()
     local kioskList = self.kioskList
     local storeList = self.storeList
     local guildName = self.selectedGuildName
-    local GetZoneLabel = AwesomeGuildStore.GetZoneLabel
-    local GetPoiLabel = AwesomeGuildStore.GetPoiLabel
+    local GetZoneLabel = AGS.internal.GetZoneLabel
+    local GetPoiLabel = AGS.internal.GetPoiLabel
 
     local guild = ownerList:GetGuildData(guildName)
     local minWeek, maxWeek = 300099, 0

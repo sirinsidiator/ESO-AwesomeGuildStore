@@ -1,6 +1,6 @@
 local AGS = AwesomeGuildStore
 
-local MinMaxRangeSlider = AGS.MinMaxRangeSlider -- TODO: move to class table
+local MinMaxRangeSlider = AGS.class.MinMaxRangeSlider
 local ValueRangeFilterFragmentBase = AGS.class.ValueRangeFilterFragmentBase
 local SimpleInputBox = AGS.class.SimpleInputBox
 

@@ -50,7 +50,7 @@ end
 
 function PurchaseItemActivity:FinalizePurchase()
     local promise = Promise:New()
-    AGS:FireCallbacks(AGS.callback.ITEM_PURCHASED, self.itemData)
+    AGS.internal:FireCallbacks(AGS.callback.ITEM_PURCHASED, self.itemData)
     promise:Resolve(self)
     return promise
 end

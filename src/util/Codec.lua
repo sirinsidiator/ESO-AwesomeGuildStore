@@ -190,9 +190,11 @@ local function ReadFromSavedVariable(t, key, defaultValue)
     return value
 end
 
-AwesomeGuildStore.EncodeValue = EncodeValue
-AwesomeGuildStore.DecodeValue = DecodeValue
-AwesomeGuildStore.EncodeData = EncodeData
-AwesomeGuildStore.DecodeData = DecodeData
-AwesomeGuildStore.internal.WriteToSavedVariable = WriteToSavedVariable
-AwesomeGuildStore.internal.ReadFromSavedVariable = ReadFromSavedVariable
+local AGS = AwesomeGuildStore
+
+AGS.internal.EncodeValue = EncodeValue
+AGS.internal.DecodeValue = DecodeValue
+AGS.internal.EncodeData = EncodeData
+AGS.internal.DecodeData = DecodeData
+AGS.internal.WriteToSavedVariable = WriteToSavedVariable
+AGS.internal.ReadFromSavedVariable = ReadFromSavedVariable

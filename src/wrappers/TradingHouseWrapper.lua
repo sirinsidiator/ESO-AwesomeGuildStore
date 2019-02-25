@@ -3,11 +3,11 @@ local AGS = AwesomeGuildStore
 local logger = AGS.internal.logger
 local gettext = AGS.internal.gettext
 
-local RegisterForEvent = AwesomeGuildStore.RegisterForEvent
-local ItemDatabase = AwesomeGuildStore.ItemDatabase
+local RegisterForEvent = AGS.internal.RegisterForEvent
+local ItemDatabase = AGS.class.ItemDatabase
 
 local TradingHouseWrapper = ZO_Object:Subclass()
-AwesomeGuildStore.TradingHouseWrapper = TradingHouseWrapper
+AGS.class.TradingHouseWrapper = TradingHouseWrapper
 
 function TradingHouseWrapper:New(...)
     local wrapper = ZO_Object.New(self)
@@ -21,20 +21,20 @@ function TradingHouseWrapper:Initialize(saveData)
     self.tradingHouse = tradingHouse
     self.search = TRADING_HOUSE_SEARCH
 
-    self.loadingOverlay = AwesomeGuildStore.LoadingOverlay:New("AwesomeGuildStoreLoadingOverlay")
-    self.loadingIndicator = AwesomeGuildStore.LoadingIcon:New("AwesomeGuildStoreLoadingIndicator")
+    self.loadingOverlay = AGS.class.LoadingOverlay:New("AwesomeGuildStoreLoadingOverlay")
+    self.loadingIndicator = AGS.class.LoadingIcon:New("AwesomeGuildStoreLoadingIndicator")
     self.loadingIndicator:SetParent(tradingHouse.control)
     self.loadingIndicator:ClearAnchors()
     self.loadingIndicator:SetAnchor(BOTTOMLEFT, tradingHouse.control, BOTTOMLEFT, 15, 20)
     local itemDatabase = ItemDatabase:New(self)
     self.itemDatabase = itemDatabase
-    local searchTab = AwesomeGuildStore.SearchTabWrapper:New(saveData)
+    local searchTab = AGS.class.SearchTabWrapper:New(saveData)
     self.searchTab = searchTab
-    local sellTab = AwesomeGuildStore.SellTabWrapper:New(saveData)
+    local sellTab = AGS.class.SellTabWrapper:New(saveData)
     self.sellTab = sellTab
-    local listingTab = AwesomeGuildStore.ListingTabWrapper:New(saveData)
+    local listingTab = AGS.class.ListingTabWrapper:New(saveData)
     self.listingTab = listingTab
-    local activityManager = AwesomeGuildStore.ActivityManager:New(self, self.loadingIndicator, self.loadingOverlay)
+    local activityManager = AGS.class.ActivityManager:New(self, self.loadingIndicator, self.loadingOverlay)
     self.activityManager = activityManager
 
     self.modeToTab =
@@ -47,7 +47,7 @@ function TradingHouseWrapper:Initialize(saveData)
     -- we cannot wrap TRADING_HOUSE.OpenTradingHouse or RunInitialSetup as it would taint the call stack down the line
     -- e.g. when using inventory items or withdrawing from the bank
     -- instead we use the EVENT_OPEN_TRADING_HOUSE and hook into the first method after RunInitialSetup is called
-    local CollectGuildKiosk = AwesomeGuildStore.CollectGuildKiosk
+    local CollectGuildKiosk = AGS.internal.CollectGuildKiosk
     RegisterForEvent(EVENT_OPEN_TRADING_HOUSE, function()
         self:ResetSalesCategoryFilter()
         if(CollectGuildKiosk) then
@@ -60,7 +60,7 @@ function TradingHouseWrapper:Initialize(saveData)
     self:PreHook("SetCurrentMode", function()
         if(ranInitialSetup) then return end
 
-        AwesomeGuildStore:FireCallbacks(AGS.callback.BEFORE_INITIAL_SETUP, self)
+        AGS.internal:FireCallbacks(AGS.callback.BEFORE_INITIAL_SETUP, self)
         for mode, tab in next, self.modeToTab do
             tab:RunInitialSetup(self)
         end
@@ -72,7 +72,7 @@ function TradingHouseWrapper:Initialize(saveData)
         self:InitializeGuildSelector()
         self:InitializeKeybindStripWrapper()
         self:InitializeFooter()
-        AwesomeGuildStore:FireCallbacks(AGS.callback.AFTER_INITIAL_SETUP, self)
+        AGS.internal:FireCallbacks(AGS.callback.AFTER_INITIAL_SETUP, self)
 
         ranInitialSetup = true
     end)
@@ -89,7 +89,7 @@ function TradingHouseWrapper:Initialize(saveData)
         if currentTab then
             currentTab:OnOpen(self)
         end
-        AGS:FireCallbacks(AGS.callback.STORE_TAB_CHANGED, oldTab, currentTab)
+        AGS.internal:FireCallbacks(AGS.callback.STORE_TAB_CHANGED, oldTab, currentTab)
     end)
 
     self:Wrap("UpdateFragments", function(originalUpdateFragments, tradingHouse)
@@ -137,12 +137,12 @@ function TradingHouseWrapper:RegisterTabWrapper(mode, tab)
 end
 
 function TradingHouseWrapper:InitializeGuildSelector()
-    self.guildSelection = AwesomeGuildStore.class.GuildSelection:New(self)
-    self.guildSelector = AwesomeGuildStore.GuildSelector:New(self)
+    self.guildSelection = AGS.class.GuildSelection:New(self)
+    self.guildSelector = AGS.class.GuildSelector:New(self)
 end
 
 function TradingHouseWrapper:InitializeKeybindStripWrapper()
-    self.keybindStrip = AwesomeGuildStore.KeybindStripWrapper:New(self)
+    self.keybindStrip = AGS.class.KeybindStripWrapper:New(self)
 end
 
 function TradingHouseWrapper:InitializeFooter()
@@ -151,7 +151,7 @@ function TradingHouseWrapper:InitializeFooter()
     footer:SetAnchor(BOTTOMRIGHT, parent, BOTTOMRIGHT, -20, 32)
     self.footer = footer
 
-    local versionLabel = AwesomeGuildStore.info.fullVersion
+    local versionLabel = AGS.info.fullVersion
     local labelControl = footer:GetNamedChild("Version")
     labelControl:SetText(gettext("AwesomeGuildStore - Version: <<1>>", versionLabel))
 end

@@ -1,14 +1,16 @@
-local FilterState = AwesomeGuildStore.class.FilterState
-local FILTER_ID = AwesomeGuildStore.data.FILTER_ID
-local CATEGORY_DEFINITION = AwesomeGuildStore.data.CATEGORY_DEFINITION
-local SUB_CATEGORY_DEFINITION = AwesomeGuildStore.data.SUB_CATEGORY_DEFINITION
-local DEFAULT_CATEGORY_ID = AwesomeGuildStore.data.DEFAULT_CATEGORY_ID
-local DEFAULT_SUB_CATEGORY_ID = AwesomeGuildStore.data.DEFAULT_SUB_CATEGORY_ID
-local WriteToSavedVariable = AwesomeGuildStore.internal.WriteToSavedVariable
-local ReadFromSavedVariable = AwesomeGuildStore.internal.ReadFromSavedVariable
+local AGS = AwesomeGuildStore
+
+local FilterState = AGS.class.FilterState
+local FILTER_ID = AGS.data.FILTER_ID
+local CATEGORY_DEFINITION = AGS.data.CATEGORY_DEFINITION
+local SUB_CATEGORY_DEFINITION = AGS.data.SUB_CATEGORY_DEFINITION
+local DEFAULT_CATEGORY_ID = AGS.data.DEFAULT_CATEGORY_ID
+local DEFAULT_SUB_CATEGORY_ID = AGS.data.DEFAULT_SUB_CATEGORY_ID
+local WriteToSavedVariable = AGS.internal.WriteToSavedVariable
+local ReadFromSavedVariable = AGS.internal.ReadFromSavedVariable
 
 local SearchState = ZO_Object:Subclass()
-AwesomeGuildStore.SearchState = SearchState
+AGS.class.SearchState = SearchState
 
 function SearchState:New(...)
     local object = ZO_Object.New(self)
@@ -114,7 +116,7 @@ function SearchState:Apply()
     end
     self.applying = false
 
-    AwesomeGuildStore:FireCallbacks(AwesomeGuildStore.callback.SELECTED_SEARCH_CHANGED, self)
+    AGS.internal:FireCallbacks(AGS.callback.SELECTED_SEARCH_CHANGED, self)
 end
 
 function SearchState:IsApplying()

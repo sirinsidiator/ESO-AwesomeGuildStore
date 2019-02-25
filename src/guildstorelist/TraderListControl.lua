@@ -1,4 +1,6 @@
-local gettext = LibStub("LibGetText")("AwesomeGuildStore").gettext
+local AGS = AwesomeGuildStore
+
+local gettext = AGS.internal.gettext
 
 local TRADER_DATA = 1
 local TRADER_ROW_HEIGHT = 30
@@ -38,13 +40,13 @@ local function GetLastVisitLabel(lastVisited)
         return "-"
     end
 end
-AwesomeGuildStore.GetLastVisitLabel = GetLastVisitLabel
+AGS.internal.GetLastVisitLabel = GetLastVisitLabel
 
 local function GetZoneLabel(store)
     local zoneIndex = GetZoneIndex(store.zoneId)
     return zo_strformat("<<1>>", GetZoneNameByIndex(zoneIndex))
 end
-AwesomeGuildStore.GetZoneLabel = GetZoneLabel
+AGS.internal.GetZoneLabel = GetZoneLabel
 
 local function GetPoiLabel(store)
     local location = store.mapName
@@ -54,7 +56,7 @@ local function GetPoiLabel(store)
     end
     return zo_strformat("<<t:1>>", location)
 end
-AwesomeGuildStore.GetPoiLabel = GetPoiLabel
+AGS.internal.GetPoiLabel = GetPoiLabel
 
 local function GetLastVisited(kiosk)
     if(not kiosk) then
@@ -65,10 +67,10 @@ local function GetLastVisited(kiosk)
         return kiosk.lastVisited
     end
 end
-AwesomeGuildStore.GetLastVisited = GetLastVisited
+AGS.internal.GetLastVisited = GetLastVisited
 
 local TraderListControl = ZO_SortFilterList:Subclass()
-AwesomeGuildStore.TraderListControl = TraderListControl
+AGS.class.TraderListControl = TraderListControl
 
 function TraderListControl:New(...)
     return ZO_SortFilterList.New(self, ...)

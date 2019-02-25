@@ -1,5 +1,7 @@
-local gettext = LibStub("LibGetText")("AwesomeGuildStore").gettext
-local logger = AwesomeGuildStore.internal.logger
+local AGS = AwesomeGuildStore
+
+local gettext = AGS.internal.gettext
+local logger = AGS.internal.logger
 
 local NEXT_UNASSIGNED_STYLE_ID = 82
 local ICON_SIZE = "100%"

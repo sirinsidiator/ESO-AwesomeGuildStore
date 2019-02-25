@@ -1,16 +1,18 @@
-local SimpleIconButton = AwesomeGuildStore.class.SimpleIconButton
+local AGS = AwesomeGuildStore
 
-local FILTER_ID = AwesomeGuildStore.data.FILTER_ID
-local CATEGORY_MAPPING = AwesomeGuildStore.data.CATEGORY_MAPPING
-local CATEGORY_DEFINITION = AwesomeGuildStore.data.CATEGORY_DEFINITION
-local SUB_CATEGORY_DEFINITION = AwesomeGuildStore.data.SUB_CATEGORY_DEFINITION
+local SimpleIconButton = AGS.class.SimpleIconButton
+
+local FILTER_ID = AGS.data.FILTER_ID
+local CATEGORY_MAPPING = AGS.data.CATEGORY_MAPPING
+local CATEGORY_DEFINITION = AGS.data.CATEGORY_DEFINITION
+local SUB_CATEGORY_DEFINITION = AGS.data.SUB_CATEGORY_DEFINITION
 local CATEGORY_BUTTON_SIZE = 46
 local SUB_CATEGORY_BUTTON_SIZE = 32
 local PRESSED = true
 local DISABLED = true
 
 local CategorySelector = ZO_SimpleSceneFragment:Subclass()
-AwesomeGuildStore.class.CategorySelector = CategorySelector
+AGS.class.CategorySelector = CategorySelector
 
 function CategorySelector:New(...)
     return ZO_SimpleSceneFragment.New(self, ...)
@@ -69,16 +71,16 @@ function CategorySelector:Initialize(parent, searchManager)
         end
     end
 
-    AwesomeGuildStore:RegisterCallback(AwesomeGuildStore.callback.FILTER_VALUE_CHANGED, function(id, category, subcategory)
+    AGS:RegisterCallback(AGS.callback.FILTER_VALUE_CHANGED, function(id, category, subcategory)
         if(id ~= FILTER_ID.CATEGORY_FILTER) then return end
         self:Update(category, subcategory)
     end)
 
-    AwesomeGuildStore:RegisterCallback(AwesomeGuildStore.callback.SEARCH_LOCK_STATE_CHANGED, function(search, isActiveSearch)
+    AGS:RegisterCallback(AGS.callback.SEARCH_LOCK_STATE_CHANGED, function(search, isActiveSearch)
         if(not isActiveSearch) then return end
         self:SetEnabled(search:IsEnabled())
     end)
-    AwesomeGuildStore:RegisterCallback(AwesomeGuildStore.callback.SELECTED_SEARCH_CHANGED, function(search)
+    AGS:RegisterCallback(AGS.callback.SELECTED_SEARCH_CHANGED, function(search)
         self:SetEnabled(search:IsEnabled())
     end)
 end

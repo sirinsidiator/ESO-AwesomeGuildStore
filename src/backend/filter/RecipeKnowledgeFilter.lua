@@ -10,7 +10,7 @@ local gettext = AGS.internal.gettext
 
 
 local RecipeKnowledgeFilter = MultiChoiceFilterBase:Subclass()
-AwesomeGuildStore.class.RecipeKnowledgeFilter = RecipeKnowledgeFilter
+AGS.class.RecipeKnowledgeFilter = RecipeKnowledgeFilter
 
 function RecipeKnowledgeFilter:New(...)
     return MultiChoiceFilterBase.New(self, ...)

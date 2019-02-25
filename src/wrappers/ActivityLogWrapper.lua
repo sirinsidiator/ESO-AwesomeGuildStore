@@ -1,8 +1,10 @@
-local WrapFunction = AwesomeGuildStore.WrapFunction
-local RegisterForEvent = AwesomeGuildStore.RegisterForEvent
-local Print = AwesomeGuildStore.Print
+local AGS = AwesomeGuildStore
+
+local WrapFunction = AGS.internal.WrapFunction
+local RegisterForEvent = AGS.internal.RegisterForEvent
+local Print = AGS.internal.Print
 local ActivityLogWrapper = ZO_Object:Subclass()
-AwesomeGuildStore.ActivityLogWrapper = ActivityLogWrapper
+AGS.class.ActivityLogWrapper = ActivityLogWrapper
 
 function ActivityLogWrapper:New(...)
 	local wrapper = ZO_Object.New(self)

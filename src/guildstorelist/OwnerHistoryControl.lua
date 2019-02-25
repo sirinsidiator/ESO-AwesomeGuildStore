@@ -1,4 +1,6 @@
-local gettext = LibStub("LibGetText")("AwesomeGuildStore").gettext
+local AGS = AwesomeGuildStore
+
+local gettext = AGS.internal.gettext
 local LDT = LibDateTime
 local osdate = os.date
 
@@ -10,7 +12,7 @@ local SORT_KEY_WEEK = "week"
 local SORT_KEY_OWNER = "owner"
 
 local OwnerHistoryControl = ZO_SortFilterList:Subclass()
-AwesomeGuildStore.OwnerHistoryControl = OwnerHistoryControl
+AGS.class.OwnerHistoryControl = OwnerHistoryControl
 
 function OwnerHistoryControl:New(...)
     return ZO_SortFilterList.New(self, ...)

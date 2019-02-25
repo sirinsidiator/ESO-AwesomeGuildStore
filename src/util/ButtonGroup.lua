@@ -1,5 +1,5 @@
 local ButtonGroup = ZO_Object:Subclass()
-AwesomeGuildStore.ButtonGroup = ButtonGroup
+AwesomeGuildStore.class.ButtonGroup = ButtonGroup
 
 function ButtonGroup:New(parent, name, x, y)
 	local group = ZO_Object.New(self)

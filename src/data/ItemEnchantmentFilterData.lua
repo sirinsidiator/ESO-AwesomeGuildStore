@@ -1,9 +1,11 @@
-local gettext = AwesomeGuildStore.internal.gettext
-local SUB_CATEGORY_ID = AwesomeGuildStore.data.SUB_CATEGORY_ID
-local FILTER_ID = AwesomeGuildStore.data.FILTER_ID
+local AGS = AwesomeGuildStore
+
+local gettext = AGS.internal.gettext
+local SUB_CATEGORY_ID = AGS.data.SUB_CATEGORY_ID
+local FILTER_ID = AGS.data.FILTER_ID
 
 local function UnpackEnchantSearchCategory(filter, itemData)
-    local id = AwesomeGuildStore.internal.GetItemLinkEnchantSearchCategory(itemData.itemLink) -- TODO: replace with the api function once it is available
+    local id = AGS.internal.GetItemLinkEnchantSearchCategory(itemData.itemLink) -- TODO: replace with the api function once it is available
     return id
 end
 
@@ -237,6 +239,6 @@ local JEWELRY_ENCHANTMENT_FILTER = {
     }
 }
 
-AwesomeGuildStore.data.WEAPON_ENCHANTMENT_FILTER = WEAPON_ENCHANTMENT_FILTER
-AwesomeGuildStore.data.ARMOR_ENCHANTMENT_FILTER = ARMOR_ENCHANTMENT_FILTER
-AwesomeGuildStore.data.JEWELRY_ENCHANTMENT_FILTER = JEWELRY_ENCHANTMENT_FILTER
+AGS.data.WEAPON_ENCHANTMENT_FILTER = WEAPON_ENCHANTMENT_FILTER
+AGS.data.ARMOR_ENCHANTMENT_FILTER = ARMOR_ENCHANTMENT_FILTER
+AGS.data.JEWELRY_ENCHANTMENT_FILTER = JEWELRY_ENCHANTMENT_FILTER

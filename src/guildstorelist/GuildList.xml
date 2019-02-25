@@ -18,13 +18,13 @@
         <Control name="AwesomeGuildStoreGuildRow" mouseEnabled="true" virtual="true">
             <Dimensions y="30"/>
             <OnMouseEnter>
-                AwesomeGuildStore.GuildRow_OnMouseEnter(self)
+                AwesomeGuildStore.internal.GuildRow_OnMouseEnter(self)
             </OnMouseEnter>
             <OnMouseExit>
-                AwesomeGuildStore.GuildRow_OnMouseExit(self)
+                AwesomeGuildStore.internal.GuildRow_OnMouseExit(self)
             </OnMouseExit>
             <OnMouseUp>
-                AwesomeGuildStore.GuildRow_OnMouseUp(self, button, upInside)
+                AwesomeGuildStore.internal.GuildRow_OnMouseUp(self, button, upInside)
             </OnMouseUp>
             <Controls>
                 <Texture name="$(parent)BG" inherits="ZO_ThinListBgStrip" />
@@ -33,13 +33,13 @@
                     <Anchor point="LEFT"/>
                     <Dimensions x="200" y="30"/>
                     <OnMouseEnter>
-                        AwesomeGuildStore.GuildRowField_OnMouseEnter(self)
+                        AwesomeGuildStore.internal.GuildRowField_OnMouseEnter(self)
                     </OnMouseEnter>
                     <OnMouseExit>
-                        AwesomeGuildStore.GuildRowField_OnMouseExit(self)
+                        AwesomeGuildStore.internal.GuildRowField_OnMouseExit(self)
                     </OnMouseExit>
                     <OnMouseUp>
-                        AwesomeGuildStore.GuildRow_OnMouseUp(self:GetParent(), button, upInside)
+                        AwesomeGuildStore.internal.GuildRow_OnMouseUp(self:GetParent(), button, upInside)
                     </OnMouseUp>
                 </Label>
             </Controls>
@@ -48,13 +48,13 @@
         <Control name="AwesomeGuildStoreKioskHistoryRow" mouseEnabled="true" virtual="true">
             <Dimensions y="30"/>
             <OnMouseEnter>
-                AwesomeGuildStore.GuildKioskHistoryRow_OnMouseEnter(self)
+                AwesomeGuildStore.internal.GuildKioskHistoryRow_OnMouseEnter(self)
             </OnMouseEnter>
             <OnMouseExit>
-                AwesomeGuildStore.GuildKioskHistoryRow_OnMouseExit(self)
+                AwesomeGuildStore.internal.GuildKioskHistoryRow_OnMouseExit(self)
             </OnMouseExit>
             <OnMouseUp>
-                AwesomeGuildStore.GuildKioskHistoryRow_OnMouseUp(self, button, upInside)
+                AwesomeGuildStore.internal.GuildKioskHistoryRow_OnMouseUp(self, button, upInside)
             </OnMouseUp>
             <Controls>
                 <Texture name="$(parent)BG" inherits="ZO_ThinListBgStrip" />
@@ -63,39 +63,39 @@
                     <Anchor point="LEFT"/>
                     <Dimensions x="100" y="30"/>
                     <OnMouseEnter>
-                        AwesomeGuildStore.GuildKioskHistoryRowWeek_OnMouseEnter(self)
+                        AwesomeGuildStore.internal.GuildKioskHistoryRowWeek_OnMouseEnter(self)
                     </OnMouseEnter>
                     <OnMouseExit>
-                        AwesomeGuildStore.GuildKioskHistoryRowWeek_OnMouseExit(self)
+                        AwesomeGuildStore.internal.GuildKioskHistoryRowWeek_OnMouseExit(self)
                     </OnMouseExit>
                     <OnMouseUp>
-                        AwesomeGuildStore.GuildKioskHistoryRow_OnMouseUp(self:GetParent(), button, upInside)
+                        AwesomeGuildStore.internal.GuildKioskHistoryRow_OnMouseUp(self:GetParent(), button, upInside)
                     </OnMouseUp>
                 </Label>
                 <Label name="$(parent)Trader" inherits="AwesomeGuildStoreTraderRowLabel" verticalAlignment="CENTER" mouseEnabled="true">
                     <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)Week" offsetX="18"/>
                     <Dimensions x="160" y="30"/>
                     <OnMouseEnter>
-                        AwesomeGuildStore.GuildKioskHistoryRowTrader_OnMouseEnter(self)
+                        AwesomeGuildStore.internal.GuildKioskHistoryRowTrader_OnMouseEnter(self)
                     </OnMouseEnter>
                     <OnMouseExit>
-                        AwesomeGuildStore.GuildKioskHistoryRowTrader_OnMouseExit(self)
+                        AwesomeGuildStore.internal.GuildKioskHistoryRowTrader_OnMouseExit(self)
                     </OnMouseExit>
                     <OnMouseUp>
-                        AwesomeGuildStore.GuildKioskHistoryRow_OnMouseUp(self:GetParent(), button, upInside)
+                        AwesomeGuildStore.internal.GuildKioskHistoryRow_OnMouseUp(self:GetParent(), button, upInside)
                     </OnMouseUp>
                 </Label>
                 <Label name="$(parent)Location" inherits="AwesomeGuildStoreTraderRowLabel" verticalAlignment="CENTER" mouseEnabled="true">
                     <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)Trader" offsetX="18"/>
                     <Dimensions x="230" y="30"/>
                     <OnMouseEnter>
-                        AwesomeGuildStore.GuildKioskHistoryRowLocation_OnMouseEnter(self)
+                        AwesomeGuildStore.internal.GuildKioskHistoryRowLocation_OnMouseEnter(self)
                     </OnMouseEnter>
                     <OnMouseExit>
-                        AwesomeGuildStore.GuildKioskHistoryRowLocation_OnMouseExit(self)
+                        AwesomeGuildStore.internal.GuildKioskHistoryRowLocation_OnMouseExit(self)
                     </OnMouseExit>
                     <OnMouseUp>
-                        AwesomeGuildStore.GuildKioskHistoryRow_OnMouseUp(self:GetParent(), button, upInside)
+                        AwesomeGuildStore.internal.GuildKioskHistoryRow_OnMouseUp(self:GetParent(), button, upInside)
                     </OnMouseUp>
                 </Label>
             </Controls>
@@ -111,55 +111,55 @@
                         <Label name="$(parent)UpToDateLabel" font="ZoFontGameLargeBold" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_NORMAL" mouseEnabled="true">
                             <Anchor point="TOPLEFT"/>
                             <OnMouseEnter>
-                                AwesomeGuildStore.GuildKioskHistoryStatUpToDate_OnMouseEnter(self)
+                                AwesomeGuildStore.internal.GuildKioskHistoryStatUpToDate_OnMouseEnter(self)
                             </OnMouseEnter>
                             <OnMouseExit>
-                                AwesomeGuildStore.GuildKioskHistoryStat_OnMouseExit(self)
+                                AwesomeGuildStore.internal.GuildKioskHistoryStat_OnMouseExit(self)
                             </OnMouseExit>
                         </Label>
                         <Label name="$(parent)UpToDateValue" wrapMode="ELLIPSIS" font="ZoFontGameShadow" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_SELECTED" mouseEnabled="true">
                             <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)UpToDateLabel" offsetX="5"/>
                             <OnMouseEnter>
-                                AwesomeGuildStore.GuildKioskHistoryStatUpToDate_OnMouseEnter(self)
+                                AwesomeGuildStore.internal.GuildKioskHistoryStatUpToDate_OnMouseEnter(self)
                             </OnMouseEnter>
                             <OnMouseExit>
-                                AwesomeGuildStore.GuildKioskHistoryStat_OnMouseExit(self)
+                                AwesomeGuildStore.internal.GuildKioskHistoryStat_OnMouseExit(self)
                             </OnMouseExit>
                         </Label>
                         <Label name="$(parent)VisitedLabel" font="ZoFontGameLargeBold" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_NORMAL" mouseEnabled="true">
                             <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)UpToDateValue" offsetX="25"/>
                             <OnMouseEnter>
-                                AwesomeGuildStore.GuildKioskHistoryStatVisited_OnMouseEnter(self)
+                                AwesomeGuildStore.internal.GuildKioskHistoryStatVisited_OnMouseEnter(self)
                             </OnMouseEnter>
                             <OnMouseExit>
-                                AwesomeGuildStore.GuildKioskHistoryStat_OnMouseExit(self)
+                                AwesomeGuildStore.internal.GuildKioskHistoryStat_OnMouseExit(self)
                             </OnMouseExit>
                         </Label>
                         <Label name="$(parent)VisitedValue" wrapMode="ELLIPSIS" font="ZoFontGameShadow" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_SELECTED" mouseEnabled="true">
                             <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)VisitedLabel" offsetX="5"/>
                             <OnMouseEnter>
-                                AwesomeGuildStore.GuildKioskHistoryStatVisited_OnMouseEnter(self)
+                                AwesomeGuildStore.internal.GuildKioskHistoryStatVisited_OnMouseEnter(self)
                             </OnMouseEnter>
                             <OnMouseExit>
-                                AwesomeGuildStore.GuildKioskHistoryStat_OnMouseExit(self)
+                                AwesomeGuildStore.internal.GuildKioskHistoryStat_OnMouseExit(self)
                             </OnMouseExit>
                         </Label>
                         <Label name="$(parent)OverallLabel" font="ZoFontGameLargeBold" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_NORMAL" mouseEnabled="true">
                             <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)VisitedValue" offsetX="25"/>
                             <OnMouseEnter>
-                                AwesomeGuildStore.GuildKioskHistoryStatOverall_OnMouseEnter(self)
+                                AwesomeGuildStore.internal.GuildKioskHistoryStatOverall_OnMouseEnter(self)
                             </OnMouseEnter>
                             <OnMouseExit>
-                                AwesomeGuildStore.GuildKioskHistoryStat_OnMouseExit(self)
+                                AwesomeGuildStore.internal.GuildKioskHistoryStat_OnMouseExit(self)
                             </OnMouseExit>
                         </Label>
                         <Label name="$(parent)OverallValue" wrapMode="ELLIPSIS" font="ZoFontGameShadow" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_SELECTED" mouseEnabled="true">
                             <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)OverallLabel" offsetX="5"/>
                             <OnMouseEnter>
-                                AwesomeGuildStore.GuildKioskHistoryStatOverall_OnMouseEnter(self)
+                                AwesomeGuildStore.internal.GuildKioskHistoryStatOverall_OnMouseEnter(self)
                             </OnMouseEnter>
                             <OnMouseExit>
-                                AwesomeGuildStore.GuildKioskHistoryStat_OnMouseExit(self)
+                                AwesomeGuildStore.internal.GuildKioskHistoryStat_OnMouseExit(self)
                             </OnMouseExit>
                         </Label>
 
@@ -217,10 +217,10 @@
                             <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)LastVisitedLabel" offsetX="5"/>
                             <Dimensions x="260"/>
                             <OnMouseEnter>
-                                AwesomeGuildStore.GuildTraderDetailsLastVisited_OnMouseEnter(self)
+                                AwesomeGuildStore.internal.GuildTraderDetailsLastVisited_OnMouseEnter(self)
                             </OnMouseEnter>
                             <OnMouseExit>
-                                AwesomeGuildStore.GuildTraderDetailsLastVisited_OnMouseExit(self)
+                                AwesomeGuildStore.internal.GuildTraderDetailsLastVisited_OnMouseExit(self)
                             </OnMouseExit>
                         </Label>
                         <Label name="$(parent)ZoneLabel" font="ZoFontGameLargeBold" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_NORMAL">

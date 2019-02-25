@@ -4,8 +4,8 @@ local FilterBase = AGS.class.FilterBase
 
 local ClampValue = AGS.internal.ClampValue
 local gettext = AGS.internal.gettext
-local EncodeValue = AGS.EncodeValue
-local DecodeValue = AGS.DecodeValue
+local EncodeValue = AGS.internal.EncodeValue
+local DecodeValue = AGS.internal.DecodeValue
 
 local DONT_USE_SHORT_FORMAT = false
 

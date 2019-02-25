@@ -1,6 +1,8 @@
-local gettext = LibStub("LibGetText")("AwesomeGuildStore").gettext
-local SUB_CATEGORY_ID = AwesomeGuildStore.data.SUB_CATEGORY_ID
-local FILTER_ID = AwesomeGuildStore.data.FILTER_ID
+local AGS = AwesomeGuildStore
+
+local gettext = AGS.internal.gettext
+local SUB_CATEGORY_ID = AGS.data.SUB_CATEGORY_ID
+local FILTER_ID = AGS.data.FILTER_ID
 
 local function UnpackItemType(filter, itemData) -- TODO: collect all unpack functions in utils
     local id = GetItemLinkItemType(itemData.itemLink)
@@ -285,9 +287,9 @@ local TROPHY_TYPE_FILTER = { -- TODO: split up for consumable and misc trophies
     }
 }
 
-AwesomeGuildStore.data.GLYPH_TYPE_FILTER = GLYPH_TYPE_FILTER
-AwesomeGuildStore.data.RECIPE_TYPE_FILTER = RECIPE_TYPE_FILTER
-AwesomeGuildStore.data.DRINK_TYPE_FILTER = DRINK_TYPE_FILTER
-AwesomeGuildStore.data.FOOD_TYPE_FILTER = FOOD_TYPE_FILTER
-AwesomeGuildStore.data.SIEGE_TYPE_FILTER = SIEGE_TYPE_FILTER
-AwesomeGuildStore.data.TROPHY_TYPE_FILTER = TROPHY_TYPE_FILTER
+AGS.data.GLYPH_TYPE_FILTER = GLYPH_TYPE_FILTER
+AGS.data.RECIPE_TYPE_FILTER = RECIPE_TYPE_FILTER
+AGS.data.DRINK_TYPE_FILTER = DRINK_TYPE_FILTER
+AGS.data.FOOD_TYPE_FILTER = FOOD_TYPE_FILTER
+AGS.data.SIEGE_TYPE_FILTER = SIEGE_TYPE_FILTER
+AGS.data.TROPHY_TYPE_FILTER = TROPHY_TYPE_FILTER

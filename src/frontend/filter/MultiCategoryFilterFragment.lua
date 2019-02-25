@@ -1,5 +1,7 @@
-local FilterFragment = AwesomeGuildStore.class.FilterFragment
-local gettext = AwesomeGuildStore.internal.gettext
+local AGS = AwesomeGuildStore
+
+local FilterFragment = AGS.class.FilterFragment
+local gettext = AGS.internal.gettext
 
 local DATA_TYPE_ID = 1
 local ROW_TEMPLATE = "AwesomeGuildStoreMultiCategoryFilterRowTemplate"
@@ -27,7 +29,7 @@ local function FadeOut(rowControl)
 end
 
 local MultiCategoryFilterFragment = FilterFragment:Subclass()
-AwesomeGuildStore.class.MultiCategoryFilterFragment = MultiCategoryFilterFragment
+AGS.class.MultiCategoryFilterFragment = MultiCategoryFilterFragment
 
 function MultiCategoryFilterFragment:New(...)
     return FilterFragment.New(self, ...)

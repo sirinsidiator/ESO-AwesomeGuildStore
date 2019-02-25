@@ -1,5 +1,7 @@
-local FilterFragment = AwesomeGuildStore.class.FilterFragment
-local SimpleIconButton = AwesomeGuildStore.class.SimpleIconButton
+local AGS = AwesomeGuildStore
+
+local FilterFragment = AGS.class.FilterFragment
+local SimpleIconButton = AGS.class.SimpleIconButton
 
 local BUTTON_SIZE = 32
 local BUTTONS_PER_ROW = 7
@@ -8,7 +10,7 @@ local DISABLED = true
 local SILENT = true
 
 local MultiButtonFilterFragment = FilterFragment:Subclass()
-AwesomeGuildStore.class.MultiButtonFilterFragment = MultiButtonFilterFragment
+AGS.class.MultiButtonFilterFragment = MultiButtonFilterFragment
 
 function MultiButtonFilterFragment:New(...)
     return FilterFragment.New(self, ...)

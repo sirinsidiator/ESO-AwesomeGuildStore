@@ -1,10 +1,12 @@
-local gettext = LibStub("LibGetText")("AwesomeGuildStore").gettext
+local AGS = AwesomeGuildStore
+
+local gettext = AGS.internal.gettext
 
 local ENABLED_DESATURATION = 0
 local DISABLED_DESATURATION = 1
 
 local FilterFragment = ZO_SimpleSceneFragment:Subclass()
-AwesomeGuildStore.class.FilterFragment = FilterFragment
+AGS.class.FilterFragment = FilterFragment
 
 function FilterFragment:New(...)
     return ZO_SimpleSceneFragment.New(self, ...)
@@ -22,7 +24,7 @@ function FilterFragment:Initialize(filter)
 
     self:SetLabelText(filter:GetLabel())
 
-    AwesomeGuildStore:RegisterCallback(AwesomeGuildStore.callback.FILTER_VALUE_CHANGED, function(id, ...)
+    AGS:RegisterCallback(AGS.callback.FILTER_VALUE_CHANGED, function(id, ...)
         if(id ~= self.filter:GetId()) then return end
         self:OnValueChanged(...)
         self.reset:SetHidden(self.filter:IsDefault())

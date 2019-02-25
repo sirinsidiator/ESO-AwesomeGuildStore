@@ -4,8 +4,8 @@ local ActivityBase = AGS.class.ActivityBase
 
 local logger = AGS.internal.logger
 local gettext = AGS.internal.gettext
-local RegisterForEvent = AGS.RegisterForEvent
-local UnregisterForEvent = AGS.UnregisterForEvent
+local RegisterForEvent = AGS.internal.RegisterForEvent
+local UnregisterForEvent = AGS.internal.UnregisterForEvent
 
 local Promise = LibStub("LibPromises")
 local sformat = string.format
@@ -107,7 +107,7 @@ function PostItemActivity:FinalizePosting()
     local promise = Promise:New()
     self.step = STEP_FINALIZE_POSTING
 
-    AGS:FireCallbacks(AGS.callback.ITEM_POSTED, self.guildId, self.itemLink, self.price, self.stackCount)
+    AGS.internal:FireCallbacks(AGS.callback.ITEM_POSTED, self.guildId, self.itemLink, self.price, self.stackCount)
     promise:Resolve(self)
 
     return promise

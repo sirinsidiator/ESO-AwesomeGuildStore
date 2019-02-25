@@ -1,11 +1,13 @@
-local IsUnitGuildKiosk = AwesomeGuildStore.IsUnitGuildKiosk
-local GetUnitGuildKioskOwner = AwesomeGuildStore.GetUnitGuildKioskOwner
-local IsLocationVisible = AwesomeGuildStore.IsLocationVisible
-local IsCurrentMapZoneMap = AwesomeGuildStore.IsCurrentMapZoneMap
-local GetKioskName = AwesomeGuildStore.GetKioskName
-local RegisterForEvent = AwesomeGuildStore.RegisterForEvent
-local Print = AwesomeGuildStore.Print
-local gettext = LibStub("LibGetText")("AwesomeGuildStore").gettext
+local AGS = AwesomeGuildStore
+
+local IsUnitGuildKiosk = AGS.internal.IsUnitGuildKiosk
+local GetUnitGuildKioskOwner = AGS.internal.GetUnitGuildKioskOwner
+local IsLocationVisible = AGS.internal.IsLocationVisible
+local IsCurrentMapZoneMap = AGS.internal.IsCurrentMapZoneMap
+local GetKioskName = AGS.internal.GetKioskName
+local RegisterForEvent = AGS.internal.RegisterForEvent
+local Print = AGS.internal.Print
+local gettext = AGS.internal.gettext
 local osdate = os.date
 
 local KIOSK_ICON = "/esoui/art/icons/servicemappins/servicepin_guildkiosk.dds"
@@ -118,8 +120,8 @@ end
 
 local function UpdateSaveData(saveData)
     if(saveData.version == 1) then
-        saveData.stores = AwesomeGuildStore.StoreList.UpdateStoreIds(saveData.stores)
-        saveData.kiosks = AwesomeGuildStore.KioskList.UpdateStoreIds(saveData.kiosks)
+        saveData.stores = AGS.class.StoreList.UpdateStoreIds(saveData.stores)
+        saveData.kiosks = AGS.class.KioskList.UpdateStoreIds(saveData.kiosks)
         saveData.version = 2
     end
     if(saveData.version < 5) then
@@ -192,8 +194,10 @@ local function GetKioskNamesFromLocationTooltip(locationIndex)
 end
 
 local function InitializeStoreListWindow(saveData, kioskList, storeList, ownerList)
-    local GetLastVisitLabel = AwesomeGuildStore.GetLastVisitLabel
-    local guildTradersFragment = ZO_FadeSceneFragment:New(AwesomeGuildStoreGuildTraders, nil, 0)
+    local window = AwesomeGuildStoreGuildTraders
+
+    local GetLastVisitLabel = AGS.internal.GetLastVisitLabel
+    local guildTradersFragment = ZO_FadeSceneFragment:New(window, nil, 0)
     local guildTradersScene = ZO_Scene:New(sceneName, SCENE_MANAGER)
     -- we use the title fragment for the separator line and show the actual title via the guild scene tab system
     -- in order to prevent titles from other scenes to show up, we clear it with an empty string
@@ -211,8 +215,6 @@ local function InitializeStoreListWindow(saveData, kioskList, storeList, ownerLi
     InjectGuildMenuTab(sceneName, SI_GUILD_TRADER_OWNERSHIP_HEADER, "EsoUI/Art/Guild/guildHistory_indexIcon_guildStore_%s.dds")
     --    "\esoui\art\guild\guildhistory_indexicon_combat_up.dds"
 
-    local window = AwesomeGuildStoreGuildTraders
-
     local headers = window:GetNamedChild("Headers")
     -- TRANSLATORS: sort header label for the list on the guild kiosk tab
     ZO_SortHeader_Initialize(headers:GetNamedChild("TraderName"), gettext("Trader"), "traderName", ZO_SORT_ORDER_UP, TEXT_ALIGN_LEFT, "ZoFontGameLargeBold")
@@ -223,7 +225,7 @@ local function InitializeStoreListWindow(saveData, kioskList, storeList, ownerLi
     -- TRANSLATORS: sort header label for the list on the guild kiosk tab
     ZO_SortHeader_Initialize(headers:GetNamedChild("LastVisited"), gettext("Last Visited"), "lastVisited", ZO_SORT_ORDER_UP, TEXT_ALIGN_LEFT, "ZoFontGameLargeBold")
 
-    local traderList = AwesomeGuildStore.TraderListControl:New(window, storeList, kioskList, ownerList)
+    local traderList = AGS.class.TraderListControl:New(window, storeList, kioskList, ownerList)
     window.traderList = traderList
 
     local r, g, b = ZO_TOOLTIP_DEFAULT_COLOR:UnpackRGB()
@@ -252,7 +254,7 @@ local function InitializeStoreListWindow(saveData, kioskList, storeList, ownerLi
     ZO_SortHeader_Initialize(historyHeaders:GetNamedChild("Week"), gettext("Week"), "week", ZO_SORT_ORDER_UP, TEXT_ALIGN_LEFT, "ZoFontGameLargeBold")
     ZO_SortHeader_Initialize(historyHeaders:GetNamedChild("Owner"), gettext("Guild"), "owner", ZO_SORT_ORDER_UP, TEXT_ALIGN_LEFT, "ZoFontGameLargeBold")
 
-    local historyList = AwesomeGuildStore.OwnerHistoryControl:New(detailOwnerHistory, storeList, kioskList, ownerList)
+    local historyList = AGS.class.OwnerHistoryControl:New(detailOwnerHistory, storeList, kioskList, ownerList)
     window.historyList = historyList
 
     local selectedTraderData, keybindStripDescriptor
@@ -352,7 +354,7 @@ local function InitializeStoreListWindow(saveData, kioskList, storeList, ownerLi
         end
         MAIN_MENU_KEYBOARD:ShowScene(sceneName)
     end
-    AwesomeGuildStore.OpenTraderListOnKiosk = OpenListOnKiosk
+    AGS.internal.OpenTraderListOnKiosk = OpenListOnKiosk
 
     local function RegisterListUpdate()
         EVENT_MANAGER:RegisterForUpdate(REFRESH_HANDLE, REFRESH_INTERVAL, RefreshTraderList)
@@ -436,20 +438,20 @@ local function InitializeStoreListWindow(saveData, kioskList, storeList, ownerLi
         SetTooltipText(InformationTooltip, text)
     end
 
-    AwesomeGuildStore.GuildTraderRow_OnMouseUp = OnMouseUp
-    AwesomeGuildStore.GuildTraderRow_OnMouseEnter = OnRowEnter
-    AwesomeGuildStore.GuildTraderRow_OnMouseExit = OnRowExit
-    AwesomeGuildStore.GuildTraderRowField_OnMouseEnter = OnRowFieldEnter
-    AwesomeGuildStore.GuildTraderRowField_OnMouseExit = OnRowFieldExit
-    AwesomeGuildStore.GuildTraderRowLastVisited_OnMouseEnter = OnLastVisitedEnter
-    AwesomeGuildStore.GuildTraderRowLastVisited_OnMouseExit = OnRowFieldExit
+    AGS.internal.GuildTraderRow_OnMouseUp = OnMouseUp
+    AGS.internal.GuildTraderRow_OnMouseEnter = OnRowEnter
+    AGS.internal.GuildTraderRow_OnMouseExit = OnRowExit
+    AGS.internal.GuildTraderRowField_OnMouseEnter = OnRowFieldEnter
+    AGS.internal.GuildTraderRowField_OnMouseExit = OnRowFieldExit
+    AGS.internal.GuildTraderRowLastVisited_OnMouseEnter = OnLastVisitedEnter
+    AGS.internal.GuildTraderRowLastVisited_OnMouseExit = OnRowFieldExit
 
     -- mouse handlers for the trader history
 
     local function OnHistoryMouseUp(control, button, upInside)
         if(upInside) then
             local data = ZO_ScrollList_GetData(control)
-            AwesomeGuildStore.OpenGuildListOnGuild(data.owner)
+            AGS.internal.OpenGuildListOnGuild(data.owner)
         end
     end
 
@@ -479,13 +481,13 @@ local function InitializeStoreListWindow(saveData, kioskList, storeList, ownerLi
         OnHistoryRowEnter(control:GetParent())
     end
 
-    AwesomeGuildStore.GuildTraderHistoryRow_OnMouseUp = OnHistoryMouseUp
-    AwesomeGuildStore.GuildTraderHistoryRow_OnMouseEnter = OnHistoryRowEnter
-    AwesomeGuildStore.GuildTraderHistoryRow_OnMouseExit = OnHistoryRowExit
-    AwesomeGuildStore.GuildTraderHistoryRowWeek_OnMouseEnter = OnHistoryWeekEnter
-    AwesomeGuildStore.GuildTraderHistoryRowWeek_OnMouseExit = OnHistoryRowFieldExit
-    AwesomeGuildStore.GuildTraderHistoryRowOwner_OnMouseEnter = OnHistoryOwnerEnter
-    AwesomeGuildStore.GuildTraderHistoryRowOwner_OnMouseExit = OnHistoryRowFieldExit
+    AGS.internal.GuildTraderHistoryRow_OnMouseUp = OnHistoryMouseUp
+    AGS.internal.GuildTraderHistoryRow_OnMouseEnter = OnHistoryRowEnter
+    AGS.internal.GuildTraderHistoryRow_OnMouseExit = OnHistoryRowExit
+    AGS.internal.GuildTraderHistoryRowWeek_OnMouseEnter = OnHistoryWeekEnter
+    AGS.internal.GuildTraderHistoryRowWeek_OnMouseExit = OnHistoryRowFieldExit
+    AGS.internal.GuildTraderHistoryRowOwner_OnMouseEnter = OnHistoryOwnerEnter
+    AGS.internal.GuildTraderHistoryRowOwner_OnMouseExit = OnHistoryRowFieldExit
 
     -- mouse handlers for the stats
     local function OnUpToDateStatEnter(control)
@@ -510,10 +512,10 @@ local function InitializeStoreListWindow(saveData, kioskList, storeList, ownerLi
         ClearTooltip(InformationTooltip)
     end
 
-    AwesomeGuildStore.GuildTraderHistoryStatUpToDate_OnMouseEnter = OnUpToDateStatEnter
-    AwesomeGuildStore.GuildTraderHistoryStatVisited_OnMouseEnter = OnVisitedStatEnter
-    AwesomeGuildStore.GuildTraderHistoryStatOverall_OnMouseEnter = OnOverallStatEnter
-    AwesomeGuildStore.GuildTraderHistoryStat_OnMouseExit = OnStatExit
+    AGS.internal.GuildTraderHistoryStatUpToDate_OnMouseEnter = OnUpToDateStatEnter
+    AGS.internal.GuildTraderHistoryStatVisited_OnMouseEnter = OnVisitedStatEnter
+    AGS.internal.GuildTraderHistoryStatOverall_OnMouseEnter = OnOverallStatEnter
+    AGS.internal.GuildTraderHistoryStat_OnMouseExit = OnStatExit
     
     -- mouse handler for the details
     local function OnDetailsLastVisitedEnter(control)
@@ -528,8 +530,8 @@ local function InitializeStoreListWindow(saveData, kioskList, storeList, ownerLi
         ClearTooltip(InformationTooltip)
     end
 
-    AwesomeGuildStore.GuildTraderDetailsLastVisited_OnMouseEnter = OnDetailsLastVisitedEnter
-    AwesomeGuildStore.GuildTraderDetailsLastVisited_OnMouseExit = OnDetailsLastVisitedExit
+    AGS.internal.GuildTraderDetailsLastVisited_OnMouseEnter = OnDetailsLastVisitedEnter
+    AGS.internal.GuildTraderDetailsLastVisited_OnMouseExit = OnDetailsLastVisitedExit
 
     return guildTradersScene
 end
@@ -567,8 +569,8 @@ local function IsTraderLocationIcon(icon)
 end
 
 local function InitializeGuildStoreList(globalSaveData)
-    local KioskData = AwesomeGuildStore.KioskData
-    local StoreData = AwesomeGuildStore.StoreData
+    local KioskData = AGS.class.KioskData
+    local StoreData = AGS.class.StoreData
 
     local saveData = InitializeSaveData(globalSaveData)
     local lang = GetCVar("Language.2")
@@ -580,12 +582,12 @@ local function InitializeGuildStoreList(globalSaveData)
         return
     end
 
-    local ownerList = AwesomeGuildStore.OwnerList:New(saveData.owners)
-    local storeList = AwesomeGuildStore.StoreList:New(saveData.stores)
-    local kioskList = AwesomeGuildStore.KioskList:New(saveData.kiosks)
+    local ownerList = AGS.class.OwnerList:New(saveData.owners)
+    local storeList = AGS.class.StoreList:New(saveData.stores)
+    local kioskList = AGS.class.KioskList:New(saveData.kiosks)
     local guildTradersScene = InitializeStoreListWindow(saveData, kioskList, storeList, ownerList)
-    local guildList = AwesomeGuildStore.InitializeGuildList(saveData, kioskList, storeList, ownerList)
-    AwesomeGuildStore.gsl = {
+    local guildList = AGS.internal.InitializeGuildList(saveData, kioskList, storeList, ownerList)
+    AGS.internal.storeList = { -- we inject it there for now so we can debug it - until we find a better place
         ownerList = ownerList,
         storeList = storeList,
         kioskList = kioskList,
@@ -793,7 +795,7 @@ local function InitializeGuildStoreList(globalSaveData)
             ownerList:SetCurrentOwner(kioskName, guildName)
         end
     end
-    AwesomeGuildStore.CollectGuildKiosk = CollectGuildKiosk
+    AGS.internal.CollectGuildKiosk = CollectGuildKiosk
 
     local REFRESH_TRESHOLD = 1 -- seconds
     local lastCheck = {}
@@ -854,4 +856,4 @@ local function InitializeGuildStoreList(globalSaveData)
     RegisterForEvent(EVENT_GUILD_SELF_LEFT_GUILD, UpdateAllKioskMemberFlags)
     RegisterForEvent(EVENT_GUILD_TRADER_HIRED_UPDATED, UpdateAllKioskMemberFlags)
 end
-AwesomeGuildStore.InitializeGuildStoreList = InitializeGuildStoreList
+AGS.internal.InitializeGuildStoreList = InitializeGuildStoreList

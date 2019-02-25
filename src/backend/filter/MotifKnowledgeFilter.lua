@@ -12,7 +12,7 @@ local IsItemLinkBookKnown = IsItemLinkBookKnown
 
 
 local MotifKnowledgeFilter = MultiChoiceFilterBase:Subclass()
-AwesomeGuildStore.class.MotifKnowledgeFilter = MotifKnowledgeFilter
+AGS.class.MotifKnowledgeFilter = MotifKnowledgeFilter
 
 function MotifKnowledgeFilter:New(...)
     return MultiChoiceFilterBase.New(self, ...)

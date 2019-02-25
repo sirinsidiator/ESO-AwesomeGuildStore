@@ -1,12 +1,15 @@
+local AGS = AwesomeGuildStore
+
 local function LoadSettings()
-    local gettext = LibStub("LibGetText")("AwesomeGuildStore").gettext
+
+    local gettext = AGS.internal.gettext
 
     local info = {
         fullVersion = "@FULL_VERSION_NUMBER@",
         version = "@VERSION_NUMBER@",
         build = "@BUILD_NUMBER@",
     }
-    AwesomeGuildStore.info = info
+    AGS.info = info
 
     local defaultData = {
         version = 24,
@@ -17,7 +20,7 @@ local function LoadSettings()
         purchaseNotification = true,
         cancelNotification = true,
         listedNotification = false,
-        listingSortField = AwesomeGuildStore.TRADING_HOUSE_SORT_LISTING_TIME,
+        listingSortField = AGS.internal.TRADING_HOUSE_SORT_LISTING_TIME,
         listingSortOrder = ZO_SORT_ORDER_DOWN,
         disableCustomSellTabFilter = false,
         skipGuildKioskDialog = true,
@@ -57,7 +60,7 @@ local function LoadSettings()
             getFunc = function() return saveData.shortMessagePrefix end,
             setFunc = function(value)
                 saveData.shortMessagePrefix = value
-                AwesomeGuildStore.SetMessagePrefix(value)
+                AGS.internal.SetMessagePrefix(value)
             end,
             default = defaultData.shortMessagePrefix,
         }
@@ -219,7 +222,7 @@ local function LoadSettings()
         }
         LAM:RegisterOptionControls("AwesomeGuildStoreOptions", optionsData)
 
-        AwesomeGuildStore.OpenSettingsPanel = function()
+        AGS.OpenSettingsPanel = function()
             LAM:OpenToPanel(panel)
         end
     end
@@ -297,7 +300,7 @@ local function LoadSettings()
 
     local saveData = AwesomeGuildStore_Data[key] or ZO_DeepTableCopy(defaultData)
     AwesomeGuildStore_Data[key] = saveData
-    AwesomeGuildStore.defaultData = defaultData
+    AGS.data.DEFAULT_SETTINGS = defaultData
 
     UpgradeSettings(saveData)
     RepairSaveData(saveData)
@@ -307,4 +310,4 @@ local function LoadSettings()
     return saveData
 end
 
-AwesomeGuildStore.LoadSettings = LoadSettings
+AGS.internal.LoadSettings = LoadSettings

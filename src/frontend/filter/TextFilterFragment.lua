@@ -1,8 +1,10 @@
-local FilterFragment = AwesomeGuildStore.class.FilterFragment
-local SimpleInputBox = AwesomeGuildStore.class.SimpleInputBox
+local AGS = AwesomeGuildStore
+
+local FilterFragment = AGS.class.FilterFragment
+local SimpleInputBox = AGS.class.SimpleInputBox
 
 local TextFilterFragment = FilterFragment:Subclass()
-AwesomeGuildStore.class.TextFilterFragment = TextFilterFragment
+AGS.class.TextFilterFragment = TextFilterFragment
 
 function TextFilterFragment:New(...)
     return FilterFragment.New(self, ...)

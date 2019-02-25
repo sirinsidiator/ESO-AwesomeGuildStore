@@ -28,13 +28,13 @@
         <Control name="AwesomeGuildStoreTraderRow" mouseEnabled="true" virtual="true">
             <Dimensions y="30"/>
             <OnMouseEnter>
-                AwesomeGuildStore.GuildTraderRow_OnMouseEnter(self)
+                AwesomeGuildStore.internal.GuildTraderRow_OnMouseEnter(self)
             </OnMouseEnter>
             <OnMouseExit>
-                AwesomeGuildStore.GuildTraderRow_OnMouseExit(self)
+                AwesomeGuildStore.internal.GuildTraderRow_OnMouseExit(self)
             </OnMouseExit>
             <OnMouseUp>
-                AwesomeGuildStore.GuildTraderRow_OnMouseUp(self, button, upInside)
+                AwesomeGuildStore.internal.GuildTraderRow_OnMouseUp(self, button, upInside)
             </OnMouseUp>
             <Controls>
                 <Texture name="$(parent)BG" inherits="ZO_ThinListBgStrip" />
@@ -43,52 +43,52 @@
                     <Anchor point="LEFT"/>
                     <Dimensions x="160" y="30"/>
                     <OnMouseEnter>
-                        AwesomeGuildStore.GuildTraderRowField_OnMouseEnter(self)
+                        AwesomeGuildStore.internal.GuildTraderRowField_OnMouseEnter(self)
                     </OnMouseEnter>
                     <OnMouseExit>
-                        AwesomeGuildStore.GuildTraderRowField_OnMouseExit(self)
+                        AwesomeGuildStore.internal.GuildTraderRowField_OnMouseExit(self)
                     </OnMouseExit>
                     <OnMouseUp>
-                        AwesomeGuildStore.GuildTraderRow_OnMouseUp(self:GetParent(), button, upInside)
+                        AwesomeGuildStore.internal.GuildTraderRow_OnMouseUp(self:GetParent(), button, upInside)
                     </OnMouseUp>
                 </Label>
                 <Label name="$(parent)Location" inherits="AwesomeGuildStoreTraderRowLabel" verticalAlignment="CENTER" mouseEnabled="true">
                     <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)TraderName" offsetX="18"/>
                     <Dimensions x="300" y="30"/>
                     <OnMouseEnter>
-                        AwesomeGuildStore.GuildTraderRowField_OnMouseEnter(self)
+                        AwesomeGuildStore.internal.GuildTraderRowField_OnMouseEnter(self)
                     </OnMouseEnter>
                     <OnMouseExit>
-                        AwesomeGuildStore.GuildTraderRowField_OnMouseExit(self)
+                        AwesomeGuildStore.internal.GuildTraderRowField_OnMouseExit(self)
                     </OnMouseExit>
                     <OnMouseUp>
-                        AwesomeGuildStore.GuildTraderRow_OnMouseUp(self:GetParent(), button, upInside)
+                        AwesomeGuildStore.internal.GuildTraderRow_OnMouseUp(self:GetParent(), button, upInside)
                     </OnMouseUp>
                 </Label>
                 <Label name="$(parent)Owner" inherits="AwesomeGuildStoreTraderRowLabel" verticalAlignment="CENTER" mouseEnabled="true">
                     <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)Location" offsetX="18"/>
                     <Dimensions x="215" y="30"/>
                     <OnMouseEnter>
-                        AwesomeGuildStore.GuildTraderRowField_OnMouseEnter(self)
+                        AwesomeGuildStore.internal.GuildTraderRowField_OnMouseEnter(self)
                     </OnMouseEnter>
                     <OnMouseExit>
-                        AwesomeGuildStore.GuildTraderRowField_OnMouseExit(self)
+                        AwesomeGuildStore.internal.GuildTraderRowField_OnMouseExit(self)
                     </OnMouseExit>
                     <OnMouseUp>
-                        AwesomeGuildStore.GuildTraderRow_OnMouseUp(self:GetParent(), button, upInside)
+                        AwesomeGuildStore.internal.GuildTraderRow_OnMouseUp(self:GetParent(), button, upInside)
                     </OnMouseUp>
                 </Label>
                 <Label name="$(parent)LastVisited" inherits="AwesomeGuildStoreTraderRowLabel" verticalAlignment="CENTER" mouseEnabled="true">
                     <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)Owner" offsetX="18"/>
                     <Dimensions x="150" y="30"/>
                     <OnMouseEnter>
-                        AwesomeGuildStore.GuildTraderRowLastVisited_OnMouseEnter(self)
+                        AwesomeGuildStore.internal.GuildTraderRowLastVisited_OnMouseEnter(self)
                     </OnMouseEnter>
                     <OnMouseExit>
-                        AwesomeGuildStore.GuildTraderRowLastVisited_OnMouseExit(self)
+                        AwesomeGuildStore.internal.GuildTraderRowLastVisited_OnMouseExit(self)
                     </OnMouseExit>
                     <OnMouseUp>
-                        AwesomeGuildStore.GuildTraderRow_OnMouseUp(self:GetParent(), button, upInside)
+                        AwesomeGuildStore.internal.GuildTraderRow_OnMouseUp(self:GetParent(), button, upInside)
                     </OnMouseUp>
                 </Label>
             </Controls>
@@ -97,13 +97,13 @@
         <Control name="AwesomeGuildStoreTraderHistoryRow" mouseEnabled="true" virtual="true">
             <Dimensions y="30"/>
             <OnMouseEnter>
-                AwesomeGuildStore.GuildTraderHistoryRow_OnMouseEnter(self)
+                AwesomeGuildStore.internal.GuildTraderHistoryRow_OnMouseEnter(self)
             </OnMouseEnter>
             <OnMouseExit>
-                AwesomeGuildStore.GuildTraderHistoryRow_OnMouseExit(self)
+                AwesomeGuildStore.internal.GuildTraderHistoryRow_OnMouseExit(self)
             </OnMouseExit>
             <OnMouseUp>
-                AwesomeGuildStore.GuildTraderHistoryRow_OnMouseUp(self, button, upInside)
+                AwesomeGuildStore.internal.GuildTraderHistoryRow_OnMouseUp(self, button, upInside)
             </OnMouseUp>
             <Controls>
                 <Texture name="$(parent)BG" inherits="ZO_ThinListBgStrip" />
@@ -112,26 +112,26 @@
                     <Anchor point="LEFT"/>
                     <Dimensions x="100" y="30"/>
                     <OnMouseEnter>
-                        AwesomeGuildStore.GuildTraderHistoryRowWeek_OnMouseEnter(self)
+                        AwesomeGuildStore.internal.GuildTraderHistoryRowWeek_OnMouseEnter(self)
                     </OnMouseEnter>
                     <OnMouseExit>
-                        AwesomeGuildStore.GuildTraderHistoryRowWeek_OnMouseExit(self)
+                        AwesomeGuildStore.internal.GuildTraderHistoryRowWeek_OnMouseExit(self)
                     </OnMouseExit>
                     <OnMouseUp>
-                        AwesomeGuildStore.GuildTraderHistoryRow_OnMouseUp(self:GetParent(), button, upInside)
+                        AwesomeGuildStore.internal.GuildTraderHistoryRow_OnMouseUp(self:GetParent(), button, upInside)
                     </OnMouseUp>
                 </Label>
                 <Label name="$(parent)Owner" inherits="AwesomeGuildStoreTraderRowLabel" verticalAlignment="CENTER" mouseEnabled="true">
                     <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)Week" offsetX="18"/>
                     <Dimensions x="300" y="30"/>
                     <OnMouseEnter>
-                        AwesomeGuildStore.GuildTraderHistoryRowOwner_OnMouseEnter(self)
+                        AwesomeGuildStore.internal.GuildTraderHistoryRowOwner_OnMouseEnter(self)
                     </OnMouseEnter>
                     <OnMouseExit>
-                        AwesomeGuildStore.GuildTraderHistoryRowOwner_OnMouseExit(self)
+                        AwesomeGuildStore.internal.GuildTraderHistoryRowOwner_OnMouseExit(self)
                     </OnMouseExit>
                     <OnMouseUp>
-                        AwesomeGuildStore.GuildTraderHistoryRow_OnMouseUp(self:GetParent(), button, upInside)
+                        AwesomeGuildStore.internal.GuildTraderHistoryRow_OnMouseUp(self:GetParent(), button, upInside)
                     </OnMouseUp>
                 </Label>
             </Controls>
@@ -147,55 +147,55 @@
                         <Label name="$(parent)UpToDateLabel" font="ZoFontGameLargeBold" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_NORMAL" mouseEnabled="true">
                             <Anchor point="TOPLEFT"/>
                             <OnMouseEnter>
-                                AwesomeGuildStore.GuildTraderHistoryStatUpToDate_OnMouseEnter(self)
+                                AwesomeGuildStore.internal.GuildTraderHistoryStatUpToDate_OnMouseEnter(self)
                             </OnMouseEnter>
                             <OnMouseExit>
-                                AwesomeGuildStore.GuildTraderHistoryStat_OnMouseExit(self)
+                                AwesomeGuildStore.internal.GuildTraderHistoryStat_OnMouseExit(self)
                             </OnMouseExit>
                         </Label>
                         <Label name="$(parent)UpToDateValue" wrapMode="ELLIPSIS" font="ZoFontGameShadow" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_SELECTED" mouseEnabled="true">
                             <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)UpToDateLabel" offsetX="5"/>
                             <OnMouseEnter>
-                                AwesomeGuildStore.GuildTraderHistoryStatUpToDate_OnMouseEnter(self)
+                                AwesomeGuildStore.internal.GuildTraderHistoryStatUpToDate_OnMouseEnter(self)
                             </OnMouseEnter>
                             <OnMouseExit>
-                                AwesomeGuildStore.GuildTraderHistoryStat_OnMouseExit(self)
+                                AwesomeGuildStore.internal.GuildTraderHistoryStat_OnMouseExit(self)
                             </OnMouseExit>
                         </Label>
                         <Label name="$(parent)VisitedLabel" font="ZoFontGameLargeBold" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_NORMAL" mouseEnabled="true">
                             <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)UpToDateValue" offsetX="25"/>
                             <OnMouseEnter>
-                                AwesomeGuildStore.GuildTraderHistoryStatVisited_OnMouseEnter(self)
+                                AwesomeGuildStore.internal.GuildTraderHistoryStatVisited_OnMouseEnter(self)
                             </OnMouseEnter>
                             <OnMouseExit>
-                                AwesomeGuildStore.GuildTraderHistoryStat_OnMouseExit(self)
+                                AwesomeGuildStore.internal.GuildTraderHistoryStat_OnMouseExit(self)
                             </OnMouseExit>
                         </Label>
                         <Label name="$(parent)VisitedValue" wrapMode="ELLIPSIS" font="ZoFontGameShadow" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_SELECTED" mouseEnabled="true">
                             <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)VisitedLabel" offsetX="5"/>
                             <OnMouseEnter>
-                                AwesomeGuildStore.GuildTraderHistoryStatVisited_OnMouseEnter(self)
+                                AwesomeGuildStore.internal.GuildTraderHistoryStatVisited_OnMouseEnter(self)
                             </OnMouseEnter>
                             <OnMouseExit>
-                                AwesomeGuildStore.GuildTraderHistoryStat_OnMouseExit(self)
+                                AwesomeGuildStore.internal.GuildTraderHistoryStat_OnMouseExit(self)
                             </OnMouseExit>
                         </Label>
                         <Label name="$(parent)OverallLabel" font="ZoFontGameLargeBold" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_NORMAL" mouseEnabled="true">
                             <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)VisitedValue" offsetX="25"/>
                             <OnMouseEnter>
-                                AwesomeGuildStore.GuildTraderHistoryStatOverall_OnMouseEnter(self)
+                                AwesomeGuildStore.internal.GuildTraderHistoryStatOverall_OnMouseEnter(self)
                             </OnMouseEnter>
                             <OnMouseExit>
-                                AwesomeGuildStore.GuildTraderHistoryStat_OnMouseExit(self)
+                                AwesomeGuildStore.internal.GuildTraderHistoryStat_OnMouseExit(self)
                             </OnMouseExit>
                         </Label>
                         <Label name="$(parent)OverallValue" wrapMode="ELLIPSIS" font="ZoFontGameShadow" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_SELECTED" mouseEnabled="true">
                             <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)OverallLabel" offsetX="5"/>
                             <OnMouseEnter>
-                                AwesomeGuildStore.GuildTraderHistoryStatOverall_OnMouseEnter(self)
+                                AwesomeGuildStore.internal.GuildTraderHistoryStatOverall_OnMouseEnter(self)
                             </OnMouseEnter>
                             <OnMouseExit>
-                                AwesomeGuildStore.GuildTraderHistoryStat_OnMouseExit(self)
+                                AwesomeGuildStore.internal.GuildTraderHistoryStat_OnMouseExit(self)
                             </OnMouseExit>
                         </Label>
 
@@ -257,10 +257,10 @@
                             <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)LastVisitedLabel" offsetX="5"/>
                             <Dimensions x="260"/>
                             <OnMouseEnter>
-                                AwesomeGuildStore.GuildTraderDetailsLastVisited_OnMouseEnter(self)
+                                AwesomeGuildStore.internal.GuildTraderDetailsLastVisited_OnMouseEnter(self)
                             </OnMouseEnter>
                             <OnMouseExit>
-                                AwesomeGuildStore.GuildTraderDetailsLastVisited_OnMouseExit(self)
+                                AwesomeGuildStore.internal.GuildTraderDetailsLastVisited_OnMouseExit(self)
                             </OnMouseExit>
                         </Label>
                         <Label name="$(parent)ZoneLabel" font="ZoFontGameLargeBold" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_NORMAL">

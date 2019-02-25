@@ -6,7 +6,7 @@ local SEARCH_RESULTS_DATA_TYPE = 1
 local GUILD_SPECIFIC_ITEM_DATA_TYPE = 3
 
 local ItemData = ZO_Object:Subclass()
-AwesomeGuildStore.ItemData = ItemData
+AGS.class.ItemData = ItemData
 
 local MISSING_ICON = "/esoui/art/icons/icon_missing.dds"
     local UNIT_PRICE_PRECISION = .01
