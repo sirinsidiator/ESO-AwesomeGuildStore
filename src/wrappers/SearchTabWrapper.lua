@@ -131,7 +131,6 @@ function SearchTabWrapper:InitializeFilters(tradingHouseWrapper)
 
     local sortFilter = AGS.class.SortFilter:New()
     sortFilter:RegisterSortOrder(AGS.class.SortOrderTimeLeft:New(), true)
-    sortFilter:RegisterSortOrder(AGS.class.SortOrderLastSeen:New())
     sortFilter:RegisterSortOrder(AGS.class.SortOrderPurchasePrice:New())
     sortFilter:RegisterSortOrder(AGS.class.SortOrderUnitPrice:New())
     sortFilter:RegisterSortOrder(AGS.class.SortOrderItemName:New())

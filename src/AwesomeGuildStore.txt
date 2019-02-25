@@ -72,7 +72,6 @@ backend/database/view/ItemDatabaseGuildView.lua
 backend/database/view/ItemDatabaseFilterView.lua
 backend/database/ItemDatabase.lua
 backend/sort/SortOrderTimeLeft.lua
-backend/sort/SortOrderLastSeen.lua
 backend/sort/SortOrderPurchasePrice.lua
 backend/sort/SortOrderUnitPrice.lua
 backend/sort/SortOrderItemName.lua
