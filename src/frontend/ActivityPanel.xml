@@ -26,34 +26,48 @@
             </Controls>
         </Control>
 
-        <Control name="AwesomeGuildStoreActivityPanelTemplate" virtual="true">
-            <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" offsetY="10" />
-            <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" />
+        <Control name="AwesomeGuildStoreActivityStatusLineTemplate" virtual="true" mouseEnabled="true">
+            <Dimensions y="32" />
             <Controls>
-                <Button name="$(parent)Toggle" inherits="ZO_DefaultButton">
-                    <Dimensions x="32" y="32" />
-                    <Anchor point="LEFT" />
-                </Button>
                 <Texture name="$(parent)Loading" textureFile="EsoUI/Art/Miscellaneous/wait_icon.dds">
-                    <Anchor point="LEFT" relativeTo="$(parent)Toggle" relativePoint="RIGHT" offsetX="5" />
+                    <Anchor point="LEFT" />
                     <Dimensions x="32" y="32" />
                 </Texture>
-                <Label name="$(parent)Status" font="ZoFontGameLargeBold" verticalAlignment="CENTER" wrapMode="ELLIPSIS" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_SELECTED">
+                <Label name="$(parent)Status" font="ZoFontGameLarge" verticalAlignment="CENTER" wrapMode="ELLIPSIS" maxLineCount="1" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_SELECTED">
                     <Anchor point="LEFT" relativeTo="$(parent)Loading" relativePoint="RIGHT" offsetX="5" />
                     <Anchor point="RIGHT" />
                 </Label>
-                <Control name="$(parent)ActivityList" hidden="true" tier="MEDIUM">
-                    <Anchor point="TOPLEFT" offsetX="10" offsetY="-300" />
-                    <Anchor point="BOTTOMRIGHT" offsetX="-150" offsetY="-20" />
-                    <Controls>
-                        <Backdrop name="$(parent)BG" inherits="ZO_DefaultBackdrop" />
+            </Controls>
+        </Control>
 
+        <TopLevelControl name="AwesomeGuildStoreActivityWindow" clampedToScreen="true" mouseEnabled="true" movable="true" hidden="true" tier="HIGH" level="ZO_HIGH_TIER_UI_ERRORS">
+            <Dimensions x="930" y="500" />
+            <DimensionConstraints minX="600" minY="300" />
+            <Anchor point="LEFT" offsetX="200" />
+
+            <Controls>
+                <Label name="$(parent)Title" inherits="ZO_WindowTitle" text="Activities" />
+
+                <Backdrop name="$(parent)BG" inherits="ZO_DefaultBackdrop" />
+
+                <Button name="$(parent)Close" inherits="ZO_CloseButton">
+                    <Anchor point="TOPRIGHT" offsetY="3" />
+                    <OnClicked>
+                        AwesomeGuildStore.internal.CloseActivityWindow()
+                    </OnClicked>
+                </Button>
+
+                <Control name="$(parent)Container">
+                    <Anchor point="TOPLEFT" offsetX="10" offsetY="40" />
+                    <Anchor point="BOTTOMRIGHT" offsetX="-10" offsetY="-10" />
+
+                    <Controls>
                         <Control name="$(parent)List" inherits="ZO_ScrollList">
                             <AnchorFill />
                         </Control>
                     </Controls>
                 </Control>
             </Controls>
-        </Control>
+        </TopLevelControl>
     </Controls>
 </GuiXml>

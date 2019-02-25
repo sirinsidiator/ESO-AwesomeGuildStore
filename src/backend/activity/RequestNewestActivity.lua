@@ -47,8 +47,9 @@ end
 
 function RequestNewestActivity:GetLogEntry()
     if(not self.logEntry) then
+        local prefix = ActivityBase.GetLogEntry(self)
         -- TRANSLATORS: log text shown to the user for each request of the newest search results. Placeholder is for the guild name
-        self.logEntry = zo_strformat(gettext("Request newest results in <<1>>"), self.pendingGuildName)
+        self.logEntry = prefix .. zo_strformat(gettext("Request newest results in <<1>>"), self.pendingGuildName)
     end
     return self.logEntry
 end

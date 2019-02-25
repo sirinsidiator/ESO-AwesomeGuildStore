@@ -31,22 +31,22 @@ function RequestListingsActivity:RequestListings()
         if(not HasTradingHouseListings()) then
             RequestTradingHouseListings()
         else
-            self.state = ActivityBase.STATE_SUCCEEDED
-            self.result = TRADING_HOUSE_RESULT_SUCCESS
+            self:SetState(ActivityBase.STATE_SUCCEEDED, ActivityBase.RESULT_LISTINGS_ALREADY_LOADED)
             self.responsePromise:Resolve(self)
         end
     end
     return self.responsePromise
 end
 
-function RequestListingsActivity:DoExecute(panel)
-    return self:ApplyGuildId(panel):Then(self.RequestListings)
+function RequestListingsActivity:DoExecute()
+    return self:ApplyGuildId():Then(self.RequestListings)
 end
 
 function RequestListingsActivity:GetLogEntry()
     if(not self.logEntry) then
+        local prefix = ActivityBase.GetLogEntry(self)
         -- TRANSLATORS: log text shown to the user for each listings request. Placeholder is for the guild name
-        self.logEntry = zo_strformat(gettext("Request listings in <<1>>"), GetGuildName(self.guildId))
+        self.logEntry = prefix .. zo_strformat(gettext("Request listings in <<1>>"), GetGuildName(self.guildId))
     end
     return self.logEntry
 end

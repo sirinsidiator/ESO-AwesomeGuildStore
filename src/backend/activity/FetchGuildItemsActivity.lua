@@ -32,19 +32,18 @@ function FetchGuildItemsActivity:FetchGuildItems()
     local promise = Promise:New()
 
     local success, result = self.itemDatabase:UpdateGuildSpecificItems(self.guildId, self.pendingGuildName)
-    self.result = result
     if(success) then
-        self.state = ActivityBase.STATE_SUCCEEDED
+        self:SetState(ActivityBase.STATE_SUCCEEDED, result)
         promise:Resolve(self)
     else
-        self.state = ActivityBase.STATE_FAILED
+        self:SetState(ActivityBase.STATE_FAILED, result)
         promise:Reject(self)
     end
     return promise
 end
 
-function FetchGuildItemsActivity:DoExecute(panel)
-    return self:ApplyGuildId(panel):Then(self.FetchGuildItems)
+function FetchGuildItemsActivity:DoExecute()
+    return self:ApplyGuildId():Then(self.FetchGuildItems)
 end
 
 function FetchGuildItemsActivity:GetErrorMessage()
@@ -54,8 +53,9 @@ end
 
 function FetchGuildItemsActivity:GetLogEntry()
     if(not self.logEntry) then -- TODO: show filter state too
+        local prefix = ActivityBase.GetLogEntry(self)
         -- TRANSLATORS: log text shown to the user for each time the guild items are fetched. Placeholder is for the guild name
-        self.logEntry = zo_strformat(gettext("Fetch guild items in <<1>>"), self.pendingGuildName)
+        self.logEntry = prefix .. zo_strformat(gettext("Fetch guild items in <<1>>"), self.pendingGuildName)
     end
     return self.logEntry
 end

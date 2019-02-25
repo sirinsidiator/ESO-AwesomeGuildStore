@@ -55,8 +55,8 @@ function PurchaseItemActivity:FinalizePurchase()
     return promise
 end
 
-function PurchaseItemActivity:DoExecute(panel)
-    return self:ApplyGuildId(panel):Then(self.SetPendingItem):Then(self.ConfirmPurchase):Then(self.FinalizePurchase)
+function PurchaseItemActivity:DoExecute()
+    return self:ApplyGuildId():Then(self.SetPendingItem):Then(self.ConfirmPurchase):Then(self.FinalizePurchase)
 end
 
 function PurchaseItemActivity:GetErrorMessage()
@@ -66,9 +66,10 @@ end
 
 function PurchaseItemActivity:GetLogEntry()
     if(not self.logEntry) then
+        local prefix = ActivityBase.GetLogEntry(self)
         local itemData = self.itemData
         -- TRANSLATORS: log text shown to the user for each purchase item request. Placeholders are for the stackCount, itemLink, price, seller and guild name respectively
-        self.logEntry = zo_strformat(gettext("Purchase <<1>>x <<2>> for <<3>> from <<4>> in <<5>>"), itemData.stackCount, itemData.itemLink, itemData.purchasePrice, itemData.sellerName, itemData.guildName)
+        self.logEntry = prefix .. zo_strformat(gettext("Purchase <<1>>x <<2>> for <<3>> from <<4>> in <<5>>"), itemData.stackCount, itemData.itemLink, itemData.purchasePrice, itemData.sellerName, itemData.guildName)
     end
     return self.logEntry
 end

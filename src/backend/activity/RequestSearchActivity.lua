@@ -50,38 +50,32 @@ function RequestSearchActivity:RequestSearch()
 
             ExecuteTradingHouseSearch(page, SortOrderBase.SORT_FIELD_TIME_LEFT, SortOrderBase.SORT_ORDER_DOWN) -- TODO
         else
-            self.state = ActivityBase.STATE_SUCCEEDED
-            self.result = ActivityBase.RESULT_PAGE_ALREADY_LOADED
+            self:SetState(ActivityBase.STATE_SUCCEEDED, ActivityBase.RESULT_PAGE_ALREADY_LOADED)
             self.responsePromise:Resolve(self)
         end
     end
     return self.responsePromise
 end
 
-function RequestSearchActivity:DoExecute(panel)
-    return self:ApplyGuildId(panel):Then(self.RequestSearch)
+function RequestSearchActivity:DoExecute()
+    return self:ApplyGuildId():Then(self.RequestSearch)
 end
 
 local AUTO_SEARCH_RESULT_COUNT_THRESHOLD = 50 -- TODO: tweak value
-function RequestSearchActivity:OnResponse(responseType, result, panel)
+function RequestSearchActivity:OnResponse(responseType, result)
     if(responseType == self.expectedResponseType) then
-        self.result = result
         if(result == TRADING_HOUSE_RESULT_SUCCESS and self.responsePromise) then
             self.numItems, self.page, self.hasMore = GetTradingHouseSearchResultsInfo()
-            self.state = ActivityBase.STATE_SUCCEEDED
+            self:SetState(ActivityBase.STATE_SUCCEEDED, result)
             local hasAnyResultAlreadyStored = self.itemDatabase:Update(self.pendingGuildName, self.numItems)
 
             self:HandleSearchResultsReceived(hasAnyResultAlreadyStored)
 
             AGS.internal:FireCallbacks(AGS.callback.SEARCH_RESULTS_RECEIVED, self.pendingGuildName, self.numItems, self.page, self.hasMore)
 
-            panel:SetStatusText("Request finished") -- TODO translate
-            panel:Refresh()
             self.responsePromise:Resolve(self)
         else
-            self.state = ActivityBase.STATE_FAILED
-            panel:SetStatusText("Request failed") -- TODO translate
-            panel:Refresh()
+            self:SetState(ActivityBase.STATE_FAILED, result)
             if(self.responsePromise) then self.responsePromise:Reject(self) end
         end
         return true
@@ -104,8 +98,9 @@ end
 
 function RequestSearchActivity:GetLogEntry()
     if(not self.logEntry) then -- TODO: show filter state too
+        local prefix = ActivityBase.GetLogEntry(self)
         -- TRANSLATORS: log text shown to the user for each request of the search results. Placeholder is for the guild name
-        self.logEntry = zo_strformat(gettext("Request search results in <<1>>"), self.pendingGuildName)
+        self.logEntry = prefix .. zo_strformat(gettext("Request search results in <<1>>"), self.pendingGuildName)
     end
     return self.logEntry
 end

@@ -28,6 +28,7 @@ ActivityBase.ERROR_GUILD_SELECTION_FAILED = -1
 ActivityBase.ERROR_OPERATION_TIMEOUT = -2
 ActivityBase.ERROR_USER_CANCELLED = -3 -- this is for when a user stops an already running request
 ActivityBase.RESULT_PAGE_ALREADY_LOADED = -100
+ActivityBase.RESULT_LISTINGS_ALREADY_LOADED = -101
 
 ActivityBase.TOOLTIP_LINE_TEMPLATE = "%s: |cFFFFFF%s|r"
 
@@ -77,6 +78,7 @@ local RESULT_TO_STRING = {
     [ActivityBase.ERROR_OPERATION_TIMEOUT] = "ERROR_OPERATION_TIMEOUT",
     [ActivityBase.ERROR_USER_CANCELLED] = "ERROR_USER_CANCELLED",
     [ActivityBase.RESULT_PAGE_ALREADY_LOADED] = "RESULT_PAGE_ALREADY_LOADED",
+    [ActivityBase.RESULT_LISTINGS_ALREADY_LOADED] = "RESULT_LISTINGS_ALREADY_LOADED",
 }
 ActivityBase.RESULT_TO_STRING = RESULT_TO_STRING
 
@@ -88,27 +90,36 @@ end
 
 function ActivityBase:Initialize(tradingHouseWrapper, key, priority, guildId)
     self.tradingHouseWrapper = tradingHouseWrapper
-    self.tradingHouse = self.tradingHouseWrapper.tradingHouse
-    self.guildSelection = self.tradingHouseWrapper.guildSelection
+    self.activityPanel = tradingHouseWrapper.activityPanel
+    self.tradingHouse = tradingHouseWrapper.tradingHouse
+    self.guildSelection = tradingHouseWrapper.guildSelection
     self.key = key
     self.priority = priority
     self.guildId = guildId or 0
     self.canExecute = false
     self.expectedResponseType = RESPONSE_TYPE_BY_ACTIVITY_TYPE[self:GetType()] -- TODO: handle response inside the requests?
     self.state = ActivityBase.STATE_QUEUED
+    self.creationTime = GetTimeStamp() * 1000 + GetGameTimeMilliseconds()
+    self.updateTime = self.creationTime
 end
 
-function ActivityBase:ApplyGuildId(panel)
+function ActivityBase:SetState(state, result)
+    self.state = state
+    self.result = result
+    self.updateTime = GetTimeStamp() * 1000 + GetGameTimeMilliseconds()
+    self.logEntry = nil -- force it to refresh
+    self.activityPanel:Refresh()
+end
+
+function ActivityBase:ApplyGuildId()
     local promise = Promise:New()
     if(self.guildSelection:ApplySelectedGuildId(self.guildId)) then
-        self.state = ActivityBase.STATE_PENDING
+        self:SetState(ActivityBase.STATE_PENDING)
         promise:Resolve(self)
     else
-        self.state = ActivityBase.STATE_FAILED
-        self.result = ActivityBase.ERROR_GUILD_SELECTION_FAILED
+        self:SetState(ActivityBase.STATE_FAILED, ActivityBase.ERROR_GUILD_SELECTION_FAILED)
         promise:Reject(self)
     end
-    panel:Refresh()
     return promise
 end
 
@@ -129,7 +140,7 @@ function ActivityBase:DoExecute()
 end
 
 function ActivityBase:GetLogEntry()
-    return ""
+    return os.date("[%T] ", math.floor(self.updateTime / 1000))
 end
 
 function ActivityBase:GetErrorMessage()
@@ -139,6 +150,9 @@ end
 function ActivityBase:AddTooltipText(output)
     output[#output + 1] = ActivityBase.TOOLTIP_LINE_TEMPLATE:format("Key", self.key) -- TODO translate
     output[#output + 1] = ActivityBase.TOOLTIP_LINE_TEMPLATE:format("State", STATE_TO_STRING[self.state] or tostring(self.state))
+    output[#output + 1] = ActivityBase.TOOLTIP_LINE_TEMPLATE:format("Created", os.date("%T", math.floor(self.creationTime / 1000)))
+    output[#output + 1] = ActivityBase.TOOLTIP_LINE_TEMPLATE:format("Updated", os.date("%T", math.floor(self.updateTime / 1000)))
+    output[#output + 1] = ActivityBase.TOOLTIP_LINE_TEMPLATE:format("Duration", string.format("%d ms", self.updateTime - self.creationTime))
     if(self.result) then
         output[#output + 1] = ActivityBase.TOOLTIP_LINE_TEMPLATE:format("Result", RESULT_TO_STRING[self.result] or tostring(self.result))
     end
@@ -156,40 +170,30 @@ function ActivityBase:OnPendingPurchaseChanged()
 -- overwrite if needed
 end
 
-function ActivityBase:OnAwaitingResponse(responseType, panel)
+function ActivityBase:OnAwaitingResponse(responseType)
     if(responseType == self.expectedResponseType) then
-        self.state = ActivityBase.STATE_AWAITING_RESPONSE
-        panel:SetStatusText("Waiting for response") -- TODO translate
-        panel:Refresh()
+        self:SetState(ActivityBase.STATE_AWAITING_RESPONSE)
         return true
     end
     return false
 end
 
-function ActivityBase:OnTimeout(responseType, panel)
+function ActivityBase:OnTimeout(responseType)
     if(responseType == self.expectedResponseType) then
-        self.state = ActivityBase.STATE_FAILED
-        self.result = ActivityBase.ERROR_OPERATION_TIMEOUT
-        panel:SetStatusText("Request timed out") -- TODO translate
-        panel:Refresh()
+        self:SetState(ActivityBase.STATE_FAILED, ActivityBase.ERROR_OPERATION_TIMEOUT)
         if(self.responsePromise) then self.responsePromise:Reject(self) end
         return true
     end
     return false
 end
 
-function ActivityBase:OnResponse(responseType, result, panel)
+function ActivityBase:OnResponse(responseType, result)
     if(responseType == self.expectedResponseType and responseType ~= result) then -- TODO: the second condition is a hack to ignore the error that occurs the first time we request listings during a session. for some reason it sends an error where the errorCode is TRADING_HOUSE_RESULT_LISTINGS_PENDING which happens to be the same as the requestType in our handler
-        self.result = result
         if(result == TRADING_HOUSE_RESULT_SUCCESS) then
-            self.state = ActivityBase.STATE_SUCCEEDED
-            panel:SetStatusText("Request finished") -- TODO translate
-            panel:Refresh()
+            self:SetState(ActivityBase.STATE_SUCCEEDED, result)
             if(self.responsePromise) then self.responsePromise:Resolve(self) end
         else
-            self.state = ActivityBase.STATE_FAILED
-            panel:SetStatusText("Request failed") -- TODO translate
-            panel:Refresh()
+            self:SetState(ActivityBase.STATE_FAILED, ActivityBase.ERROR_GUILD_SELECTION_FAILED)
             if(self.responsePromise) then self.responsePromise:Reject(self) end
         end
         return true

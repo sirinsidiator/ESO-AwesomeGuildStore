@@ -1,5 +1,7 @@
 local AGS = AwesomeGuildStore
 
+local gettext = AGS.internal.gettext
+
 local ActivityBase = AGS.class.ActivityBase
 local SimpleIconButton = AGS.class.SimpleIconButton
 
@@ -27,30 +29,56 @@ function ActivityPanel:New(...)
     return ZO_SimpleSceneFragment.New(self, ...)
 end
 
-function ActivityPanel:Initialize(activityManager)
-    local control = CreateControlFromVirtual("AwesomeGuildStoreActivityPanel", ZO_TradingHouse, "AwesomeGuildStoreActivityPanelTemplate")
+function ActivityPanel:Initialize(tradingHouseWrapper)
+    local activityManager = tradingHouseWrapper.activityManager
+    local tradingHouse = tradingHouseWrapper.tradingHouse
+
+    local window = AwesomeGuildStoreActivityWindow
+
+    local control = CreateControlFromVirtual("AwesomeGuildStoreActivityStatusLine", tradingHouse.control, "AwesomeGuildStoreActivityStatusLineTemplate")
     control.fragment = self
     ZO_SimpleSceneFragment.Initialize(self, control)
 
-    self.toggleButton = SimpleIconButton:New(control:GetNamedChild("Toggle"))
-    self.loadingSpinner = self.control:GetNamedChild("Loading")
-    self.statusText = self.control:GetNamedChild("Status")
-    self.activityList = self.control:GetNamedChild("ActivityList")
-
-    self.loadingAnimation = ANIMATION_MANAGER:CreateTimelineFromVirtual("LoadIconAnimation", self.loadingSpinner)
-
-    self.toggleButton:SetTextureTemplate("EsoUI/Art/TradingHouse/tradinghouse_listings_tabIcon_%s.dds")
-    self.toggleButton:SetClickHandler(MOUSE_BUTTON_INDEX_LEFT, function()
-        if(self.activityList:IsHidden()) then
-            self.activityList:SetHidden(false)
-            self.toggleButton:SetState(PRESSED, not DISABLED)
+    AGS:RegisterCallback(AGS.callback.STORE_TAB_CHANGED, function(oldTab, newTab)
+        if(newTab == tradingHouseWrapper.searchTab) then
+            control:SetAnchor(TOPLEFT, tradingHouse.resultCount, BOTTOMLEFT, -37, 0)
+            control:SetAnchor(RIGHT, tradingHouseWrapper.footer, LEFT, 0, 0, ANCHOR_CONSTRAINS_X)
+        elseif(newTab == tradingHouseWrapper.sellTab) then
+            control:SetAnchor(TOPLEFT, tradingHouse.control, BOTTOMLEFT, 0, -11)
+            control:SetAnchor(RIGHT, ZO_PlayerInventory, LEFT, 0, 0, ANCHOR_CONSTRAINS_X)
         else
-            self.activityList:SetHidden(true)
-            self.toggleButton:SetState(not PRESSED)
+            control:SetAnchor(TOPLEFT, tradingHouse.control, BOTTOMLEFT, 0, -11)
+            control:SetAnchor(RIGHT, tradingHouseWrapper.footer, LEFT, 0, 0, ANCHOR_CONSTRAINS_X)
         end
     end)
 
-    local list = ZO_SortFilterList:New(self.activityList)
+    self.loadingSpinner = self.control:GetNamedChild("Loading")
+    self.statusText = self.control:GetNamedChild("Status")
+
+    self.loadingAnimation = ANIMATION_MANAGER:CreateTimelineFromVirtual("LoadIconAnimation", self.loadingSpinner)
+
+    -- TRANSLATORS: Tooltip text when hovering over the activity status line
+    local MORE_INFO_TEXT = gettext("Click for more information")
+    control:SetHandler("OnMouseEnter", function()
+        InitializeTooltip(InformationTooltip, control, BOTTOM, 0, 0)
+        SetTooltipText(InformationTooltip, self.statusText:GetText())
+        SetTooltipText(InformationTooltip, MORE_INFO_TEXT)
+    end)
+
+    control:SetHandler("OnMouseExit", function()
+        ClearTooltip(InformationTooltip)
+    end)
+
+    control:SetHandler("OnMouseUp", function()
+        window:SetHidden(not window:IsHidden())
+    end)
+
+    AGS.internal.CloseActivityWindow = function()
+        window:SetHidden(true)
+    end
+
+    local container = window:GetNamedChild("Container")
+    local list = ZO_SortFilterList:New(container)
     list:SetAlternateRowBackgrounds(true)
     list:SetAutomaticallyColorRows(false)
     list:SetEmptyText("No activities queued") -- TODO translate
@@ -62,7 +90,7 @@ function ActivityPanel:Initialize(activityManager)
         data:AddTooltipText(output)
         local text = table.concat(output, "\n")
 
-        InitializeTooltip(InformationTooltip, control, RIGHT, -5, 0)
+        InitializeTooltip(InformationTooltip, control, LEFT, 0, 0)
         SetTooltipText(InformationTooltip, text)
         if(control.cancel) then
             control.cancel:SetHidden(false)

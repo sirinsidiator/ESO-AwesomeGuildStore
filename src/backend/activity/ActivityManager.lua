@@ -15,7 +15,6 @@ local PurchaseItemActivity = AGS.class.PurchaseItemActivity
 local PostItemActivity = AGS.class.PostItemActivity
 local CancelItemActivity = AGS.class.CancelItemActivity
 local FetchGuildItemsActivity = AGS.class.FetchGuildItemsActivity
-local ActivityPanel = AGS.class.ActivityPanel
 
 local ByPriority = ActivityBase.ByPriority
 
@@ -44,33 +43,30 @@ function ActivityManager:Initialize(tradingHouseWrapper, loadingIndicator, loadi
     self.tradingHouse = tradingHouseWrapper.tradingHouse
 
     RegisterForEvent(EVENT_TRADING_HOUSE_AWAITING_RESPONSE, function(_, responseType) -- TODO prehook?
-        logger:Debug(string.format("cooldown on awaiting response: %d", GetTradingHouseCooldownRemaining())) -- TODO cleanup
-        if(self.currentActivity) then
-            self.currentActivity:OnAwaitingResponse(responseType, self.panel) -- TODO do we need to pass the panel here? can we pass it to the activity when we create it?
+        if(self.currentActivity and self.currentActivity:OnAwaitingResponse(responseType)) then
+            -- TRANSLATORS: Status text when waiting for a server response
+            self.panel:SetStatusText(gettext("Waiting for response"))
         end
     end)
 
     RegisterForEvent(EVENT_TRADING_HOUSE_OPERATION_TIME_OUT, function(_, responseType) -- TODO prehook?
-        logger:Debug(string.format("cooldown on timeout: %d", GetTradingHouseCooldownRemaining())) -- TODO cleanup
-        if(self.currentActivity) then
-            self.currentActivity:OnTimeout(responseType, self.panel) -- TODO panel
+        if(self.currentActivity and self.currentActivity:OnTimeout(responseType)) then
+            -- TRANSLATORS: Status text when a server response timed out
+            self.panel:SetStatusText(gettext("Request timed out"))
         end
     end)
 
     RegisterForEvent(EVENT_TRADING_HOUSE_ERROR, function(_, errorCode) -- TODO prehook?
-        logger:Debug(string.format("cooldown on error: %d", GetTradingHouseCooldownRemaining()))
-        -- TODO: this is used for input errors. need to test
         if(self.currentActivity) then
             local responseType = self.currentActivity.expectedResponseType
-            self.currentActivity:OnResponse(responseType, errorCode, self.panel) -- TODO panel
+            self.currentActivity:OnResponse(responseType, errorCode)
         end
     end)
 
     -- need to prehook this in order to update the itemdatabase before anything else happens
     tradingHouseWrapper:PreHook("OnResponseReceived", function(_, responseType, result)
-        logger:Debug(string.format("cooldown on response: %d", GetTradingHouseCooldownRemaining()))
         if(self.currentActivity) then
-            self.currentActivity:OnResponse(responseType, result, self.panel) -- TODO panel
+            self.currentActivity:OnResponse(responseType, result)
         end
     end)
 
@@ -109,11 +105,7 @@ function ActivityManager:Initialize(tradingHouseWrapper, loadingIndicator, loadi
         self:ExecuteNext()
     end
 
-    -- TODO find a proper place for this
-    self.panel = ActivityPanel:New(self)
-    TRADING_HOUSE_SCENE:AddFragment(self.panel)
-
-    -- TODO handle this inside each tab?
+    -- TODO find a proper place for this. handle it inside each tab?
     AGS:RegisterCallback(AGS.callback.STORE_TAB_CHANGED, function(oldTab, newTab)
         if(oldTab == tradingHouseWrapper.searchTab) then
             self:CancelSearch()
@@ -135,6 +127,10 @@ function ActivityManager:Initialize(tradingHouseWrapper, loadingIndicator, loadi
             self:RequestListings(guildData.guildId)
         end
     end)
+end
+
+function ActivityManager:SetPanel(panel)
+    self.panel = panel
 end
 
 function ActivityManager:StartWatchdog()
@@ -249,7 +245,7 @@ function ActivityManager:ExecuteNext()
         self.panel:SetStatusText("Execute next activity") -- TODO
         self.panel:ShowLoading()
 
-        activity:DoExecute(self.panel):Then(function(activity)
+        activity:DoExecute():Then(function(activity)
             self:OnSuccess(activity)
         end, function(activity)
             self:OnFailure(activity)
@@ -263,6 +259,8 @@ function ActivityManager:ExecuteNext()
 end
 
 function ActivityManager:OnSuccess(activity)
+    -- TRANSLATORS: Status text when a server request was successfully completed
+    self.panel:SetStatusText(gettext("Request finished"))
     self.panel:HideLoading()
     self:RemoveCurrentActivity()
     self:ExecuteNext()
@@ -279,8 +277,9 @@ function ActivityManager:OnFailure(activity)
         logger:Warn(message)
     end
 
+    -- TRANSLATORS: Status text when a server request has failed. Placeholder is for an explanation text
+    self.panel:SetStatusText(gettext("Request failed: <<1>>", message))
     ZO_Alert(UI_ALERT_CATEGORY_ERROR, SOUNDS.NEGATIVE_CLICK, message)
-    self.panel:SetStatusText(message)
 
     self.panel:HideLoading()
     self:RemoveCurrentActivity()

@@ -113,9 +113,9 @@ function PostItemActivity:FinalizePosting()
     return promise
 end
 
-function PostItemActivity:DoExecute(panel)
+function PostItemActivity:DoExecute()
     self.step = STEP_BEGIN_EXECUTION
-    return self:ApplyGuildId(panel):Then(self.MoveItemIfNeeded):Then(self.SetPending):Then(self.PostItem):Then(self.FinalizePosting)
+    return self:ApplyGuildId():Then(self.MoveItemIfNeeded):Then(self.SetPending):Then(self.PostItem):Then(self.FinalizePosting)
 end
 
 function PostItemActivity:GetErrorMessage()
@@ -125,8 +125,9 @@ end
 
 function PostItemActivity:GetLogEntry()
     if(not self.logEntry) then
+        local prefix = ActivityBase.GetLogEntry(self)
         -- TRANSLATORS: log text shown to the user for each post item request. Placeholders are for the stackCount, itemLink, price and guild name respectively
-        self.logEntry = zo_strformat(gettext("Post <<1>>x <<2>> for <<3>> to <<4>>"), self.stackCount, GetItemLink(self.bagId, self.slotIndex), self.price, GetGuildName(self.guildId))
+        self.logEntry = prefix .. zo_strformat(gettext("Post <<1>>x <<2>> for <<3>> to <<4>>"), self.stackCount, GetItemLink(self.bagId, self.slotIndex), self.price, GetGuildName(self.guildId))
     end
     return self.logEntry
 end

@@ -73,9 +73,14 @@ function TradingHouseWrapper:Initialize(saveData)
             TRADING_HOUSE_SCENE:RemoveFragment(MINIMIZE_CHAT_FRAGMENT)
         end
 
+        self:InitializeFooter()
+
+        self.activityPanel = AGS.class.ActivityPanel:New(self)
+        TRADING_HOUSE_SCENE:AddFragment(self.activityPanel)
+        self.activityManager:SetPanel(self.activityPanel)
+
         self:InitializeGuildSelector()
         self:InitializeKeybindStripWrapper()
-        self:InitializeFooter()
         AGS.internal:FireCallbacks(AGS.callback.AFTER_INITIAL_SETUP, self)
 
         ranInitialSetup = true
