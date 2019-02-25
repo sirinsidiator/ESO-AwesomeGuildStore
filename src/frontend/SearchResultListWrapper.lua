@@ -88,7 +88,7 @@ function SearchResultListWrapper:InitializeResultList(tradingHouseWrapper, searc
     local resultCount = tradingHouse.resultCount
 
     local list = ZO_SortFilterList:New(CreateProxyControl(tradingHouse.searchResultsList))
-    list.emptyRow = tradingHouse.noSearchItemsContainer
+    list.emptyRow = tradingHouse.searchResultsMessageLabel
 
     function list:FilterScrollList()
         local scrollData = ZO_ScrollList_GetDataList(self.list)
