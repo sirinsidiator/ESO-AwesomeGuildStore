@@ -18,7 +18,7 @@ function SkillRequirementsFilter:New(...)
 end
 
 function SkillRequirementsFilter:Initialize()
-    MultiChoiceFilterBase.Initialize(self, FILTER_ID.SKILL_REQUIREMENTS_FITLER, FilterBase.GROUP_LOCAL, {
+    MultiChoiceFilterBase.Initialize(self, FILTER_ID.SKILL_REQUIREMENTS_FILTER, FilterBase.GROUP_LOCAL, {
         {
             id = true,
             -- TRANSLATORS: tooltip text for the recipe skill requirement filter
