@@ -39,6 +39,7 @@ function ItemData:UpdateFromStore(slotIndex, guildName)
     local icon, itemName, quality, stackCount, sellerName, timeRemaining, price, currencyType, itemUniqueId, purchasePricePerUnit = GetTradingHouseSearchResultItemInfo(slotIndex)
 
     self.slotIndex = itemUniqueId
+    self.originalSlotIndex = slotIndex
     self.icon = icon
     self.name = itemName
     self.quality = quality

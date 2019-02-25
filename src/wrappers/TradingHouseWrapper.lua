@@ -98,6 +98,14 @@ function TradingHouseWrapper:Initialize(saveData)
         SCENE_MANAGER:RemoveFragment(TRADING_HOUSE_SEARCH_HISTORY_KEYBOARD_FRAGMENT)
     end)
 
+    function ITEM_PREVIEW_KEYBOARD:PreviewTradingHouseSearchResultAsFurniture(tradingHouseIndex)
+        local item = itemDatabase:TryGetItemDataInCurrentGuildByUniqueId(tradingHouseIndex)
+        if(item and item.originalSlotIndex) then
+            tradingHouseIndex = item.originalSlotIndex
+        end
+        self:SharedPreviewSetup(ZO_ITEM_PREVIEW_TRADING_HOUSE_SEARCH_RESULT_AS_FURNITURE, tradingHouseIndex)
+    end
+
     RegisterForEvent(EVENT_CLOSE_TRADING_HOUSE, function()
         if(not ranInitialSetup) then return end
         self:HideLoadingIndicator()
