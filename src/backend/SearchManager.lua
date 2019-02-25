@@ -229,10 +229,6 @@ function SearchManager:DetachFilter(filterId)
     return false
 end
 
-function SearchManager:UpdateState() -- TODO is this used?
--- go through all activeFilters and store it
-end
-
 function SearchManager:SetActiveSearch(search)
     if(search == self.activeSearch) then return false end
 
@@ -377,7 +373,7 @@ function SearchManager:RequestSearch(ignoreResultCount)
     if(ignoreResultCount or self:GetNumVisibleResults(guildName) < AUTO_SEARCH_RESULT_COUNT_THRESHOLD) then
         local currentState = self.activeSearch:GetFilterState()
         local page = self.searchPageHistory:GetNextPage(guildName, currentState)
-        if(page) then -- TODO take into account if we already have enough results (+ an option to ignore that for the actual "search more" button)
+        if(page) then
             if(self.activityManager:RequestSearchResults(guildId, ignoreResultCount)) then
                 if(self.requestNewestInterval) then
                     ClearCallLater(self.requestNewestInterval)
@@ -385,17 +381,12 @@ function SearchManager:RequestSearch(ignoreResultCount)
 
                 logger:Debug("Queued request search results")
                 return true
-        else
-            logger:Debug("Could not queue request search results")
-        end
+            else
+                logger:Debug("Could not queue request search results")
+            end
         else
             logger:Debug("No more pages for current state") -- TODO user feedback
         end
     end
-    return false
-end
-
-function SearchManager:DoSearch() -- TODO remove / this is now handled by the activity
-    assert(false, "should not be called anymore")
     return false
 end
