@@ -21,7 +21,7 @@ end
 function RequestNewestActivity:Initialize(tradingHouseWrapper, guildId)
     local key = RequestNewestActivity.CreateKey(guildId)
     ActivityBase.Initialize(self, tradingHouseWrapper, key, ActivityBase.PRIORITY_LOW, guildId)
-    self.searchManager = tradingHouseWrapper.searchTab.searchManager -- TODO
+    self.searchManager = tradingHouseWrapper.searchManager
     self.itemDatabase = tradingHouseWrapper.itemDatabase
     self.pendingGuildName = tradingHouseWrapper:GetTradingGuildName(guildId)
 end

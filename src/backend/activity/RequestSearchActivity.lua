@@ -20,7 +20,7 @@ end
 function RequestSearchActivity:Initialize(tradingHouseWrapper, guildId)
     local key = RequestSearchActivity.CreateKey(guildId)
     ActivityBase.Initialize(self, tradingHouseWrapper, key, ActivityBase.PRIORITY_MEDIUM, guildId)
-    self.searchManager = tradingHouseWrapper.searchTab.searchManager -- TODO
+    self.searchManager = tradingHouseWrapper.searchManager
     self.itemDatabase = tradingHouseWrapper.itemDatabase
     self.pendingGuildName = tradingHouseWrapper:GetTradingGuildName(guildId)
 end

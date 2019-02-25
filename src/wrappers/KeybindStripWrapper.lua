@@ -19,7 +19,7 @@ end
 
 function KeybindStripWrapper:Initialize(tradingHouseWrapper)
     local tradingHouse = tradingHouseWrapper.tradingHouse
-    local searchManager = tradingHouseWrapper.searchTab.searchManager
+    local searchManager = tradingHouseWrapper.searchManager
     local activityManager = tradingHouseWrapper.activityManager
 
     local browseKeybindStripDescriptor = tradingHouse.browseKeybindStripDescriptor

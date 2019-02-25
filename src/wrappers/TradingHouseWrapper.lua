@@ -28,14 +28,17 @@ function TradingHouseWrapper:Initialize(saveData)
     self.loadingIndicator:SetAnchor(BOTTOMLEFT, tradingHouse.control, BOTTOMLEFT, 15, 20)
     local itemDatabase = ItemDatabase:New(self)
     self.itemDatabase = itemDatabase
+    local activityManager = AGS.class.ActivityManager:New(self, self.loadingIndicator, self.loadingOverlay)
+    self.activityManager = activityManager
+    local searchManager = AGS.class.SearchManager:New(self, saveData.searchManager)
+    saveData.searchManager = searchManager:GetSaveData()
+    self.searchManager = searchManager
     local searchTab = AGS.class.SearchTabWrapper:New(saveData)
     self.searchTab = searchTab
     local sellTab = AGS.class.SellTabWrapper:New(saveData)
     self.sellTab = sellTab
     local listingTab = AGS.class.ListingTabWrapper:New(saveData)
     self.listingTab = listingTab
-    local activityManager = AGS.class.ActivityManager:New(self, self.loadingIndicator, self.loadingOverlay)
-    self.activityManager = activityManager
 
     self.modeToTab =
         {
@@ -61,6 +64,7 @@ function TradingHouseWrapper:Initialize(saveData)
         if(ranInitialSetup) then return end
 
         AGS.internal:FireCallbacks(AGS.callback.BEFORE_INITIAL_SETUP, self)
+
         for mode, tab in next, self.modeToTab do
             tab:RunInitialSetup(self)
         end
@@ -181,7 +185,7 @@ function TradingHouseWrapper:HideLoadingIndicator()
 end
 
 function TradingHouseWrapper:RegisterFilter(filter)
-    self.searchTab.searchManager:RegisterFilter(filter)
+    self.searchManager:RegisterFilter(filter)
 end
 
 function TradingHouseWrapper:AttachFilter(filter)
@@ -225,5 +229,5 @@ function TradingHouseWrapper:GetTradingGuildName(guildId)
 end
 
 function TradingHouseWrapper:DoSearch() -- TODO
-    return self.searchTab.searchManager:DoSearch()
+    return self.searchManager:DoSearch()
 end

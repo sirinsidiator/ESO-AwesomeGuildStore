@@ -298,7 +298,7 @@ function ActivityManager:RequestSearchResults(guildId, ignoreResultCount)
 
     local AUTO_SEARCH_RESULT_COUNT_THRESHOLD = 50 -- TODO: tweak value, move into search manager?
     local guildName = self.tradingHouseWrapper:GetTradingGuildName(guildId)
-    if(ignoreResultCount or self.tradingHouseWrapper.searchTab.searchManager:GetNumVisibleResults(guildName) < AUTO_SEARCH_RESULT_COUNT_THRESHOLD) then
+    if(ignoreResultCount or self.tradingHouseWrapper.searchManager:GetNumVisibleResults(guildName) < AUTO_SEARCH_RESULT_COUNT_THRESHOLD) then
         local activity = RequestSearchActivity:New(self.tradingHouseWrapper, guildId)
         self:QueueActivity(activity)
         return activity

@@ -84,7 +84,7 @@ end
 
 function LevelFilter:ApplyToSearch()
     if(not self:IsAttached() or self:IsDefault()) then return end
-    local category = self.searchManager:GetCurrentCategories()
+    local category = self.searchManager:GetCurrentCategories() -- TODO pass the search manager to the function
     if(not CAN_SERVER_FILTER_IN_CATEGORY[category.id]) then return end
 
     local min = self.min

@@ -148,7 +148,7 @@ end
 function ItemDatabase:GetFilteredView(guildName, filterState)
     local view = self:GetItemView(guildName)
     local groups = filterState:GetGroups()
-    local searchManager = self.tradingHouseWrapper.searchTab.searchManager -- TODO
+    local searchManager = self.tradingHouseWrapper.searchManager
 
     for i = 1, #groups do
         if(groups[i] ~= FilterBase.GROUP_NONE) then

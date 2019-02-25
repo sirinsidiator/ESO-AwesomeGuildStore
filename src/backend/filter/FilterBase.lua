@@ -94,7 +94,7 @@ end
 function FilterBase:HandleChange(...)
     self.dirty = true
     AGS.internal:FireCallbacks(AGS.callback.FILTER_VALUE_CHANGED, self.id, ...)
-    if(self.searchManager) then
+    if(self.searchManager) then -- TODO use the callback and get rid of this dependency
         self.searchManager:RequestFilterUpdate()
     end
 end

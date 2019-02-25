@@ -116,10 +116,9 @@ end
 function SearchTabWrapper:InitializeFilters(tradingHouseWrapper)
     local saveData = self.saveData
     local tradingHouse = tradingHouseWrapper.tradingHouse
+    local searchManager = tradingHouseWrapper.searchManager
+    self.searchManager = searchManager
 
-    local searchManager = AGS.class.SearchManager:New(tradingHouseWrapper, saveData.searchManager)
-    saveData.searchManager = searchManager:GetSaveData()
-    self.searchManager = searchManager -- TODO: move to tradinghouse wrapper
     self.categorySelector = AGS.class.CategorySelector:New(tradingHouse.itemPane, searchManager) -- TODO pass the category filter to it
     tradingHouse.searchSortHeadersControl:SetAnchor(TOPRIGHT, self.categorySelector:GetControl(), BOTTOMRIGHT)
     TRADING_HOUSE_SCENE:AddFragment(self.categorySelector) -- TODO is this the right place?
