@@ -50,7 +50,7 @@ function QualityFilterFragment:Initialize(filter)
 end
 
 function QualityFilterFragment:ToNearestValue(value)
-    return self.steps[value]
+    return self.steps[value].id
 end
 
 function QualityFilterFragment:CreateButton(container, i, data)
