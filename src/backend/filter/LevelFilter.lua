@@ -119,5 +119,5 @@ end
 function LevelFilter:GetFormattedValue(value)
     local level, type = GetLevelAndType(value)
     local icon = RANGE_INFO[type].normal
-    return zo_strformat("<<1>> <<2>>", ZO_LocalizeDecimalNumber(value), zo_iconFormat(icon, ICON_SIZE, ICON_SIZE))
+    return zo_strformat("<<1>> <<2>>", ZO_LocalizeDecimalNumber(level), zo_iconFormat(icon, ICON_SIZE, ICON_SIZE))
 end
