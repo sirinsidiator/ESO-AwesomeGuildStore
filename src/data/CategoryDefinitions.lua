@@ -256,19 +256,19 @@ local SUB_CATEGORY_DEFINITION = {
     [SUB_CATEGORY_ID.ARMOR_HEAVY] = {
         id = SUB_CATEGORY_ID.ARMOR_HEAVY,
         category = CATEGORY_ID.ARMOR,
-        label = GetString(SI_TRADING_HOUSE_BROWSE_ARMOR_TYPE_HEAVY),
+        label = GetString("SI_ARMORTYPE_TRADINGHOUSECATEGORY", ARMORTYPE_HEAVY),
         icon = "EsoUI/Art/Inventory/inventory_tabIcon_armor_%s.dds",
     },
     [SUB_CATEGORY_ID.ARMOR_MEDIUM] = {
         id = SUB_CATEGORY_ID.ARMOR_MEDIUM,
         category = CATEGORY_ID.ARMOR,
-        label = GetString(SI_TRADING_HOUSE_BROWSE_ARMOR_TYPE_MEDIUM),
+        label = GetString("SI_ARMORTYPE_TRADINGHOUSECATEGORY", ARMORTYPE_MEDIUM),
         icon = "AwesomeGuildStore/images/armor/medium_%s.dds",
     },
     [SUB_CATEGORY_ID.ARMOR_LIGHT] = {
         id = SUB_CATEGORY_ID.ARMOR_LIGHT,
         category = CATEGORY_ID.ARMOR,
-        label = GetString(SI_TRADING_HOUSE_BROWSE_ARMOR_TYPE_LIGHT),
+        label = GetString("SI_ARMORTYPE_TRADINGHOUSECATEGORY", ARMORTYPE_LIGHT),
         icon = "AwesomeGuildStore/images/armor/light_%s.dds",
     },
     [SUB_CATEGORY_ID.ARMOR_SHIELD] = {
