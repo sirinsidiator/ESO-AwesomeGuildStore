@@ -9,10 +9,19 @@ local function UnpackTrait(filter, itemData) -- TODO: collect all unpack functio
     return id
 end
 
+local function SetFromItem(filter, itemLink)
+    local id = GetItemLinkTraitInfo(itemLink)
+    local value = filter:GetValue(id)
+    if(value) then
+        filter:SetSelected(value, true)
+    end
+end
+
 local WEAPON_TRAIT_FILTER = {
     id = FILTER_ID.WEAPON_TRAIT_FILTER,
     type = TRADING_HOUSE_FILTER_TYPE_TRAIT,
     unpack = UnpackTrait,
+    setFromItem = SetFromItem,
     label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_ITEMTYPE", ITEMTYPE_WEAPON_TRAIT)),
     enabled = {
         [SUB_CATEGORY_ID.WEAPONS_ALL] = true,
@@ -85,6 +94,7 @@ local ARMOR_TRAIT_FILTER = {
     id = FILTER_ID.ARMOR_TRAIT_FILTER,
     type = TRADING_HOUSE_FILTER_TYPE_TRAIT,
     unpack = UnpackTrait,
+    setFromItem = SetFromItem,
     label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_ITEMTYPE", ITEMTYPE_ARMOR_TRAIT)),
     enabled = {
         [SUB_CATEGORY_ID.ARMOR_ALL] = true,
@@ -156,6 +166,7 @@ local JEWELRY_TRAIT_FILTER = {
     id = FILTER_ID.JEWELRY_TRAIT_FILTER,
     type = TRADING_HOUSE_FILTER_TYPE_TRAIT,
     unpack = UnpackTrait,
+    setFromItem = SetFromItem,
     -- TRANSLATORS: title of the jewelry trait filter in the left panel on the search tab
     label = gettext("Jewelry Trait"),
     enabled = {

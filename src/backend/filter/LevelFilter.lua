@@ -101,6 +101,13 @@ function LevelFilter:ApplyToSearch()
     SetTradingHouseFilterRange(minType, min, max)
 end
 
+function LevelFilter:SetFromItem(itemLink)
+    local min, max = GetItemLinkRequirementLevelRange(itemLink)
+    if(min) then
+        self:SetValues(min, max)
+    end
+end
+
 function LevelFilter:FilterLocalResult(itemData)
     local itemMin, itemMax = GetItemLinkRequirementLevelRange(itemData.itemLink)
     if(itemMin) then

@@ -164,6 +164,14 @@ function SearchList:Initialize(searchManager)
         if(id ~= FILTER_ID.CATEGORY_FILTER) then return end
         list:RefreshVisible()
     end)
+
+    AGS:RegisterCallback(AGS.callback.SEARCH_LIST_CHANGED, function(requiresFullUpdate)
+        if(requiresFullUpdate) then
+            list:RefreshFilters()
+        else
+            list:RefreshVisible()
+        end
+    end)
 end
 
 function SearchList:ShowTooltip(control)
@@ -213,7 +221,6 @@ end
 
 function SearchList:HandleAddNewSearch()
     if(self.searchManager:SetActiveSearch(self.searchManager:AddSearch())) then
-        self.list:RefreshFilters()
         local scrollData = ZO_ScrollList_GetDataList(self.list.list)
         ZO_ScrollList_ScrollDataIntoView(self.list.list, #scrollData, nil, true)
         PlaySound("Click")
@@ -222,7 +229,6 @@ end
 
 function SearchList:HandleSetSearchActive(search)
     if(self.searchManager:SetActiveSearch(search)) then
-        self.list:RefreshVisible()
         PlaySound("Click")
     end
 end
@@ -235,19 +241,16 @@ end
 
 function SearchList:HandleResetLabel(search)
     search:ResetLabel()
-    self.list:RefreshVisible()
     PlaySound("Click")
 end
 
 function SearchList:HandleResetState(search)
     search:Reset()
-    self.list:RefreshVisible()
     PlaySound("Click")
 end
 
 function SearchList:HandleSetSearchEnabled(search, enabled)
     search:SetEnabled(enabled)
-    self.list:RefreshVisible()
     PlaySound("Click")
     AGS.internal:FireCallbacks(AGS.callback.SEARCH_LOCK_STATE_CHANGED, search, search == self.searchManager:GetActiveSearch())
 end
@@ -266,20 +269,17 @@ function SearchList:HandleDuplicateSearch(search)
         logger:Warn("Could not move duplicated search")
     end
 
-    self.list:RefreshFilters()
     PlaySound("Click")
 end
 
 function SearchList:HandleMoveSearchToIndex(search, newIndex)
     if(self.searchManager:MoveSearch(search, newIndex)) then
-        self.list:RefreshFilters()
         PlaySound("Click")
     end
 end
 
 function SearchList:HandleRemoveSearch(search)
     if(search:IsEnabled() and self.searchManager:RemoveSearch(search)) then
-        self.list:RefreshFilters()
         PlaySound("Click")
     end
 end

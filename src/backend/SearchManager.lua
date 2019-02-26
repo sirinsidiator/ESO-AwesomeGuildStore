@@ -10,6 +10,7 @@ local ClearCallLater = AGS.internal.ClearCallLater
 local FILTER_UPDATE_DELAY = 0 -- TODO do we even need this? check with profiler
 local AUTO_SEARCH_RESULT_COUNT_THRESHOLD = 50 -- TODO: global
 local SILENT = true
+local REQUIRES_FULL_UPDATE = true
 
 local SearchManager = ZO_Object:Subclass()
 AGS.class.SearchManager = SearchManager
@@ -45,6 +46,20 @@ function SearchManager:Initialize(tradingHouseWrapper, saveData)
     -- disable the internal filter system
     self.search:DisassociateWithSearchFeatures()
     self.search.features = {} -- TODO better way?
+
+    self.search.DoSearch = function()
+        self:RequestSearch()
+    end
+
+    ZO_PreHook(self.search, "LoadSearchItem", function(_, itemLink)
+        local search = self:AddSearch()
+        search:SetLabel(zo_strformat("<<C:1>>", GetItemLinkName(itemLink)))
+        self:SetActiveSearch(search)
+        for id, filter in pairs(self.availableFilters) do
+            filter:SetFromItem(itemLink)
+        end
+        return true
+    end)
 
     local function RequestRefreshResults()
         self:RequestResultUpdate()
@@ -138,11 +153,6 @@ function SearchManager:OnFiltersInitialized()
         saveData.activeIndex = 1
     end
     self.activeSearch = self.searches[saveData.activeIndex]
-
-    self.tradingHouseWrapper.tradingHouse.DoSearch = function() -- TODO
-        self:RequestSearch()
-    end
-
     self.activeSearch:Apply()
 
     AGS:RegisterCallback(AGS.callback.FILTER_VALUE_CHANGED, function(id)
@@ -256,6 +266,8 @@ function SearchManager:AddSearch(saveData)
     search.sortIndex = newIndex -- this is so we do not have to refresh the list twice
     self.searches[newIndex] = search
     self.saveData.searches[newIndex] = search:GetSaveData()
+
+    AGS.internal:FireCallbacks(AGS.callback.SEARCH_LIST_CHANGED, REQUIRES_FULL_UPDATE)
     return search
 end
 
@@ -282,6 +294,8 @@ function SearchManager:RemoveSearch(search)
     elseif(self.saveData.activeIndex > index) then
         self.saveData.activeIndex = self.saveData.activeIndex - 1
     end
+
+    AGS.internal:FireCallbacks(AGS.callback.SEARCH_LIST_CHANGED, REQUIRES_FULL_UPDATE)
     return true
 end
 
@@ -298,6 +312,7 @@ function SearchManager:MoveSearch(search, newIndex)
         self.saveData.activeIndex = newIndex
     end
 
+    AGS.internal:FireCallbacks(AGS.callback.SEARCH_LIST_CHANGED, REQUIRES_FULL_UPDATE)
     return true
 end
 

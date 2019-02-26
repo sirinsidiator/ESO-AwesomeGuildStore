@@ -124,6 +124,9 @@ function SearchState:IsApplying()
 end
 
 function SearchState:Update()
+    local label = self.label
+    local icon = self.icon
+
     local subcategory = self.filterState:GetFilterValues(FILTER_ID.CATEGORY_FILTER)
     if(not subcategory) then
         subcategory = SUB_CATEGORY_DEFINITION[DEFAULT_SUB_CATEGORY_ID[DEFAULT_CATEGORY_ID]]
@@ -142,6 +145,10 @@ function SearchState:Update()
         self.icon = category.icon
     else
         self.icon = subcategory.icon
+    end
+
+    if(label ~= self.label or icon ~= self.icon) then
+        AGS.internal:FireCallbacks(AGS.callback.SEARCH_LIST_CHANGED)
     end
 end
 

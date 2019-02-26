@@ -67,6 +67,11 @@ function QualityFilter:Initialize()
     self.qualityById = qualityById
 end
 
+function QualityFilter:SetFromItem(itemLink)
+    local quality = GetItemLinkQuality(itemLink)
+    self:SetValues(quality, quality)
+end
+
 function QualityFilter:IsLocal()
     return false
 end

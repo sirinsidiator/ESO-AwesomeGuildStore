@@ -114,6 +114,10 @@ end
 function FilterBase:SetValues(...)
 end
 
+function FilterBase:SetFromItem(itemLink)
+-- this function is used to set up the filter when looking for a specific item
+end
+
 function FilterBase:SetUpLocalFilter(...)
     --	return true when the filter actually has work to do
     return not self:IsDefault()

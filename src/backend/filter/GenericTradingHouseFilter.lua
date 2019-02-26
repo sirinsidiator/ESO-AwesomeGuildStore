@@ -19,6 +19,9 @@ function GenericTradingHouseFilter:Initialize(filterData)
     end
     self.filterType = filterData.type
     self.Unpack = filterData.unpack
+    if(filterData.setFromItem) then
+        self.SetFromItem = filterData.setFromItem
+    end
 end
 
 function GenericTradingHouseFilter:FilterLocalResult(itemData)

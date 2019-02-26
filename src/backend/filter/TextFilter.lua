@@ -54,6 +54,10 @@ function TextFilter:SetValues(text)
     self:SetText(text)
 end
 
+function TextFilter:SetFromItem(itemLink)
+    self:SetText(itemLink)
+end
+
 function TextFilter:SetUpLocalFilter(searchTerm)
     if(searchTerm ~= "") then
         self.searchTerm = searchTerm:lower()

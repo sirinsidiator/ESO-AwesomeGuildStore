@@ -578,8 +578,8 @@ local filterFunctions = {
         return allowedTypes[weaponType]
     end,
     [TRADING_HOUSE_FILTER_TYPE_ARMOR] = function(itemLink, allowedTypes)
-        local weaponType = GetItemLinkArmorType(itemLink)
-        return allowedTypes[weaponType]
+        local armorType = GetItemLinkArmorType(itemLink)
+        return allowedTypes[armorType]
     end,
     [TRADING_HOUSE_FILTER_TYPE_ITEM] = function(itemLink, allowedTypes)
         local itemType = GetItemLinkItemType(itemLink)
@@ -604,6 +604,37 @@ local filterFunctions = {
         return allowedTypes[itemFilterType]
     end,
 }
+
+local temp = {}
+local function GetSubcategoryFromItem(itemLink)
+    local subcategory = SUB_CATEGORY_DEFINITION[SUB_CATEGORY_ID.ALL]
+    temp[TRADING_HOUSE_FILTER_TYPE_EQUIP] = GetItemLinkEquipType(itemLink)
+    temp[TRADING_HOUSE_FILTER_TYPE_WEAPON] = GetItemLinkWeaponType(itemLink)
+    temp[TRADING_HOUSE_FILTER_TYPE_ARMOR] = GetItemLinkArmorType(itemLink)
+    temp[TRADING_HOUSE_FILTER_TYPE_ITEM], temp[TRADING_HOUSE_FILTER_TYPE_SPECIALIZED_ITEM] = GetItemLinkItemType(itemLink)
+    temp[TRADING_HOUSE_FILTER_TYPE_FURNITURE_CATEGORY], temp[TRADING_HOUSE_FILTER_TYPE_FURNITURE_SUBCATEGORY] = GetFurnitureDataInfo(GetItemLinkFurnitureDataId(itemLink))
+    temp[ITEMFILTERTYPE_LOCAL] = GetItemLinkFilterTypeInfo(itemLink)
+
+    for subcategoryId, filters in pairs(filterDefinition) do
+        if(subcategoryId ~= SUB_CATEGORY_ID.ALL) then
+            local isMatch = true
+            for i = 1, #filters do
+                local filter = filters[i]
+                if(not filter.allowed[temp[filter.type]]) then
+                    isMatch = false
+                    break
+                end
+            end
+    
+            if(isMatch and (subcategory.id == SUB_CATEGORY_ID.ALL or not SUB_CATEGORY_DEFINITION[subcategoryId].isDefault)) then
+                subcategory = SUB_CATEGORY_DEFINITION[subcategoryId]
+                local category = CATEGORY_DEFINITION[subcategory.category]
+            end
+        end
+    end
+
+    return subcategory
+end
 
 local ItemCategoryFilter = FilterBase:Subclass()
 AGS.class.ItemCategoryFilter = ItemCategoryFilter
@@ -667,6 +698,11 @@ function ItemCategoryFilter:GetValues()
 end
 
 function ItemCategoryFilter:SetValues(subcategory)
+    self:SetSubcategory(subcategory)
+end
+
+function ItemCategoryFilter:SetFromItem(itemLink)
+    local subcategory = GetSubcategoryFromItem(itemLink)
     self:SetSubcategory(subcategory)
 end
 
