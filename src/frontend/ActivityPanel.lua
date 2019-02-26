@@ -33,7 +33,8 @@ function ActivityPanel:Initialize(tradingHouseWrapper)
     local activityManager = tradingHouseWrapper.activityManager
     local tradingHouse = tradingHouseWrapper.tradingHouse
 
-    local window = AwesomeGuildStoreActivityWindow
+    local window = AwesomeGuildStoreActivityWindow -- TODO translate title
+    self.window = window
 
     local control = CreateControlFromVirtual("AwesomeGuildStoreActivityStatusLine", tradingHouse.control, "AwesomeGuildStoreActivityStatusLineTemplate")
     control.fragment = self
@@ -41,7 +42,7 @@ function ActivityPanel:Initialize(tradingHouseWrapper)
 
     AGS:RegisterCallback(AGS.callback.STORE_TAB_CHANGED, function(oldTab, newTab)
         if(newTab == tradingHouseWrapper.searchTab) then
-            control:SetAnchor(TOPLEFT, tradingHouse.resultCount, BOTTOMLEFT, -37, 0)
+            control:SetAnchor(TOPLEFT, tradingHouse.resultCount, BOTTOMLEFT, -37, -5)
             control:SetAnchor(RIGHT, tradingHouseWrapper.footer, LEFT, 0, 0, ANCHOR_CONSTRAINS_X)
         elseif(newTab == tradingHouseWrapper.sellTab) then
             control:SetAnchor(TOPLEFT, tradingHouse.control, BOTTOMLEFT, 0, -11)
@@ -70,7 +71,9 @@ function ActivityPanel:Initialize(tradingHouseWrapper)
     end)
 
     control:SetHandler("OnMouseUp", function()
-        window:SetHidden(not window:IsHidden())
+        local hidden = not window:IsHidden()
+        window:SetHidden(hidden)
+        if(not hidden) then self:Refresh() end
     end)
 
     AGS.internal.CloseActivityWindow = function()
@@ -218,5 +221,7 @@ function ActivityPanel:AddActivity(activity)
 end
 
 function ActivityPanel:Refresh()
-    self.list:RefreshFilters()
+    if(not self.window:IsHidden()) then
+        self.list:RefreshFilters()
+    end
 end
