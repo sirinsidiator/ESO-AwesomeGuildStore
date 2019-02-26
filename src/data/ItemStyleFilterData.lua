@@ -26,8 +26,8 @@ local STYLE_CATEGORIES = {
         values = {1, 2, 3, 4, 5, 6, 7, 8, 9, 14, 15, 17, 19, 20, 22, 29, 30, 33, 34},
     },
     {
-        label = gettext("Uncommon"), -- TODO: remove 10, 18, 32
-        values = {10, 13, 16, 18, 21, 27, 28, 31, 32, 35, 36, 39, 40, 44, 45, 56, 57},
+        label = gettext("Uncommon"),
+        values = {13, 16, 21, 27, 28, 31, 35, 36, 39, 40, 44, 45, 56, 57},
     },
     {
         label = gettext("Organizations"),
@@ -42,8 +42,8 @@ local STYLE_CATEGORIES = {
         values = {43, 54, 48, 49, 51, 50, 52, 61, 62, 65, 66, 69, 70},
     },
     {
-        label = gettext("Summerset"), -- TODO: remove 37, 60, 67
-        values = {37, 60, 67, 71, 72, 73, 74, 75},
+        label = gettext("Summerset"),
+        values = {71, 72, 73, 74, 75},
     },
     {
         label = gettext("New"),
