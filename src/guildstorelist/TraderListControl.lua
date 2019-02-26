@@ -218,7 +218,11 @@ function TraderListControl:BuildMasterList()
 
             local kiosk = kioskList:GetKiosk(traderName)
             local lastVisited, realLastVisited = GetLastVisited(kiosk)
-            local hasVisitedThisWeek = ownerList:IsTimeInCurrentWeek(lastVisited)
+            local hasVisitedThisWeek = false
+
+            if(lastVisited) then
+                hasVisitedThisWeek = ownerList:IsTimeInCurrentWeek(lastVisited)
+            end
 
             if(kiosk and kiosk.lastVisited and kiosk.lastVisited > 0) then
                 visitedCount = visitedCount + 1
