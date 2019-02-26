@@ -53,7 +53,7 @@ function SearchManager:Initialize(tradingHouseWrapper, saveData)
 
     ZO_PreHook(self.search, "LoadSearchItem", function(_, itemLink)
         local search = self:AddSearch()
-        search:SetLabel(zo_strformat("<<C:1>>", GetItemLinkName(itemLink)))
+        search:SetLabel(zo_strformat(SI_TOOLTIP_ITEM_NAME, GetItemLinkName(itemLink)))
         self:SetActiveSearch(search)
         for id, filter in pairs(self.availableFilters) do
             filter:SetFromItem(itemLink)
