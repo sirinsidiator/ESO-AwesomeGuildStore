@@ -8,6 +8,7 @@ local gettext = AGS.internal.gettext
 local EncodeValue = AGS.internal.EncodeValue
 local DecodeValue = AGS.internal.DecodeValue
 
+local LTF = LibTextFilter
 
 local TextFilter = FilterBase:Subclass()
 AGS.class.TextFilter = TextFilter
@@ -21,7 +22,6 @@ function TextFilter:Initialize()
     -- TRANSLATORS: label of the text filter
     self:SetLabel(gettext("Text Search"))
     self.text = ""
-    self.LTF = LibStub("LibTextFilter")
     self.haystack = {}
 end
 
@@ -70,7 +70,7 @@ function TextFilter:FilterLocalResult(itemData)
     haystack[1] = itemData.name
     haystack[2] = itemLink
     haystack[3] = setName
-    local isMatch, result = self.LTF:Filter(table.concat(haystack, "\n"):lower(), self.searchTerm)
+    local isMatch, result = LTF:Filter(table.concat(haystack, "\n"):lower(), self.searchTerm)
     return isMatch
 end
 

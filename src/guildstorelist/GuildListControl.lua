@@ -29,7 +29,7 @@ local SORT_ORDER_DOWN = {
     [SORT_KEY_LAST_ACTIVE] = ZO_SORT_ORDER_DOWN,
 }
 
-local LTF = LibStub("LibTextFilter")
+local LTF = LibTextFilter
 local LDT = LibDateTime
 
 local GuildListControl = ZO_SortFilterList:Subclass()

@@ -7,8 +7,8 @@ local AGS = {
     callback = {},
     internal = {
         callbackObject = callbackObject,
-        logger = LibDebugLogger.Create(ADDON_NAME),
-        gettext = LibStub("LibGetText")(ADDON_NAME).gettext
+        logger = LibDebugLogger(ADDON_NAME),
+        gettext = LibGetText(ADDON_NAME).gettext
     }
 }
 _G[ADDON_NAME] = AGS

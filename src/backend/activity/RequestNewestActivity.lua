@@ -7,7 +7,7 @@ local SortOrderBase = AGS.class.SortOrderBase
 local logger = AGS.internal.logger
 local gettext = AGS.internal.gettext
 
-local Promise = LibStub("LibPromises")
+local Promise = LibPromises
 local sformat = string.format
 
 

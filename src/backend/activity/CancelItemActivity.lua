@@ -5,7 +5,7 @@ local ActivityBase = AGS.class.ActivityBase
 local logger = AGS.internal.logger
 local gettext = AGS.internal.gettext
 
-local Promise = LibStub("LibPromises")
+local Promise = LibPromises
 local sformat = string.format
 
 local CancelItemActivity = ActivityBase:Subclass()

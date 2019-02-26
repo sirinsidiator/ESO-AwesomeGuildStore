@@ -1,6 +1,6 @@
 local AGS = AwesomeGuildStore
 
-local Promise = LibStub("LibPromises")
+local Promise = LibPromises
 
 local ActivityBase = ZO_Object:Subclass()
 AGS.class.ActivityBase = ActivityBase

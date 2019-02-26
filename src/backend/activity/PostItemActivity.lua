@@ -7,7 +7,7 @@ local gettext = AGS.internal.gettext
 local RegisterForEvent = AGS.internal.RegisterForEvent
 local UnregisterForEvent = AGS.internal.UnregisterForEvent
 
-local Promise = LibStub("LibPromises")
+local Promise = LibPromises
 local sformat = string.format
 
 

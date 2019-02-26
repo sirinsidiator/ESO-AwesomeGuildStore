@@ -30,7 +30,7 @@ local SORT_ORDER_DOWN = {
     [SORT_KEY_OWNER] = ZO_SORT_ORDER_DOWN,
 }
 
-local LTF = LibStub("LibTextFilter")
+local LTF = LibTextFilter
 
 local function GetLastVisitLabel(lastVisited)
     if(lastVisited) then
