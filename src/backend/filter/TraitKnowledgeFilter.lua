@@ -24,14 +24,14 @@ function TraitKnowledgeFilter:Initialize()
         {
             id = false,
             -- TRANSLATORS: tooltip text for the trait knowledge filter
-            label = gettext("Unknown Trait"),
-            icon = "EsoUI/Art/Campaign/overview_indexIcon_bonus_%s.dds",
+            label = gettext("Known Trait"),
+            icon = "EsoUI/Art/Journal/journal_tabIcon_loreLibrary_%s.dds",
         },
         {
             id = true,
             -- TRANSLATORS: tooltip text for the trait knowledge filter
-            label = gettext("Known Trait"),
-            icon = "EsoUI/Art/Journal/journal_tabIcon_loreLibrary_%s.dds",
+            label = gettext("Unknown Trait"),
+            icon = "EsoUI/Art/Campaign/overview_indexIcon_bonus_%s.dds",
         },
     })
     -- TRANSLATORS: title of the trait knowledge filter in the left panel on the search tab
