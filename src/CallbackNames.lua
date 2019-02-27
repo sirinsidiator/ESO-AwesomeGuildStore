@@ -24,6 +24,7 @@ AGS.callback.FILTER_ACTIVE_CHANGED = "FilterActiveChanged"
 -- fires on the next frame after any filter has changed. In other words after all FILTER_VALUE_CHANGED and FILTER_ACTIVE_CHANGED callbacks have fired
 -- activeFilters
 AGS.callback.FILTER_UPDATE = "FilterUpdate"
+AGS.callback.FILTER_PREPARED = "FilterPrepared"
 
 AGS.callback.ITEM_PURCHASED = "ItemPurchased"
 AGS.callback.ITEM_CANCELLED = "ItemCancelled"

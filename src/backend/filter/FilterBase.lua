@@ -103,6 +103,12 @@ function FilterBase:IsLocal()
     return true
 end
 
+function FilterBase:PrepareForSearch()
+    -- this function can be used to prepare a server filter before it has to be applied
+    -- when true is returned, the search will wait for a FILTER_PREPARED callback to fire for each filter that requires preparation
+    return false
+end
+
 function FilterBase:ApplyToSearch()
 -- this function can be used to manipulate the server filters
 end

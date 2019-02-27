@@ -21,6 +21,10 @@ function AGS:RegisterCallback(...)
     return callbackObject:RegisterCallback(...)
 end
 
+function AGS:UnregisterCallback(...)
+    return callbackObject:UnregisterCallback(...)
+end
+
 local nextEventHandleIndex = 1
 
 local function RegisterForEvent(event, callback)

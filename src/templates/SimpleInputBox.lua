@@ -248,6 +248,7 @@ function SimpleInputBox:Initialize(control, currencies)
             ShowBadPulse()
         end
 
+        self:OnTextChanged(text)
         self:SetText(text)
         self.oldText = text
     end)
@@ -270,6 +271,10 @@ function SimpleInputBox:SetText(text)
     self.virtual:SetText(text)
     self.input:SetText(text)
     self.fromCode = false
+end
+
+function SimpleInputBox:SetCursorPosition(position)
+    return self.input:SetCursorPosition(position)
 end
 
 function SimpleInputBox:SetPrecision(precision)
@@ -325,6 +330,10 @@ function SimpleInputBox:OnValueChanged(value)
 -- overwrite if needed
 end
 
+function SimpleInputBox:OnTextChanged(text)
+-- overwrite if needed
+end
+
 function SimpleInputBox:GetValue()
     return self.value
 end
@@ -341,8 +350,20 @@ function SimpleInputBox:SetHandler(name, callback)
     return self.input:SetHandler(name, callback)
 end
 
+function SimpleInputBox:GetHandler(name)
+    return self.input:GetHandler(name)
+end
+
 function SimpleInputBox:TakeFocus()
     return self.input:TakeFocus()
+end
+
+function SimpleInputBox:LoseFocus()
+    return self.input:LoseFocus()
+end
+
+function SimpleInputBox:HasFocus()
+    return self.input:HasFocus()
 end
 
 function SimpleInputBox:SetEnabled(enabled)

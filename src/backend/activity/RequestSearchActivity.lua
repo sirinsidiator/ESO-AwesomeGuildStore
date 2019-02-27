@@ -29,28 +29,62 @@ function RequestSearchActivity:Update()
     self.canExecute = (GetTradingHouseCooldownRemaining() == 0)
 end
 
-function RequestSearchActivity:RequestSearch()
-    if(not self.responsePromise) then
-        self.responsePromise = Promise:New()
+function RequestSearchActivity:PrepareFilters()
+    local promise = Promise:New()
 
-        local searchManager = self.searchManager
-        local filterState = searchManager:GetActiveSearch():GetFilterState()
-        local page = searchManager.searchPageHistory:GetNextPage(self.pendingGuildName, filterState)
-        if(page) then
-            ClearAllTradingHouseSearchTerms()
+    local searchManager = self.searchManager
+    local filterState = searchManager:GetActiveSearch():GetFilterState()
+    local page = searchManager.searchPageHistory:GetNextPage(self.pendingGuildName, filterState)
+    if(page) then
+        local count = 0
+        local filters = searchManager:GetActiveFilters()
+        for _, filter in ipairs(filters) do
+            if(filter:PrepareForSearch()) then
+                count = count + 1
+            end
+        end
 
-            local filters = searchManager:GetActiveFilters()
-            for _, filter in ipairs(filters) do
-                if(not filter:IsLocal()) then
-                    filter:ApplyToSearch()
+        self.pendingPage = page
+        self.pendingFilterState = filterState
+
+        if(count > 0) then
+            logger:Info("Waiting for %d filters to prepare", count)
+            local function OnFilterPrepared(filter)
+                count = count - 1
+                logger:Info("%s ready, %d filters left to prepare", filter:GetLabel(), count)
+                if(count == 0) then
+                    AGS:UnregisterCallback(AGS.callback.FILTER_PREPARED, OnFilterPrepared)
+                    promise:Resolve(self)
                 end
             end
 
-            self.pendingFilterState = filterState
-
-            ExecuteTradingHouseSearch(page, SortOrderBase.SORT_FIELD_TIME_LEFT, SortOrderBase.SORT_ORDER_DOWN) -- TODO
+            AGS:RegisterCallback(AGS.callback.FILTER_PREPARED, OnFilterPrepared)
         else
-            self:SetState(ActivityBase.STATE_SUCCEEDED, ActivityBase.RESULT_PAGE_ALREADY_LOADED)
+            promise:Resolve(self)
+        end
+    else
+        self:SetState(ActivityBase.STATE_SUCCEEDED, ActivityBase.RESULT_PAGE_ALREADY_LOADED)
+        promise:Resolve(self)
+    end
+
+    return promise
+end
+
+function RequestSearchActivity:RequestSearch()
+    if(not self.responsePromise) then
+        self.responsePromise = Promise:New()
+        if(self.state ~= ActivityBase.STATE_SUCCEEDED) then
+            ClearAllTradingHouseSearchTerms()
+
+            local filters = self.searchManager:GetActiveFilters()
+            for _, filter in ipairs(filters) do
+                if(not filter:IsLocal()) then
+                    filter:ApplyToSearch() -- TODO pass values from pending filter state
+                end
+            end
+
+            ExecuteTradingHouseSearch(self.pendingPage, SortOrderBase.SORT_FIELD_TIME_LEFT, SortOrderBase.SORT_ORDER_DOWN) -- TODO use appropriate sort order
+        else
             self.responsePromise:Resolve(self)
         end
     end
@@ -58,7 +92,7 @@ function RequestSearchActivity:RequestSearch()
 end
 
 function RequestSearchActivity:DoExecute()
-    return self:ApplyGuildId():Then(self.RequestSearch)
+    return self:ApplyGuildId():Then(self.PrepareFilters):Then(self.RequestSearch)
 end
 
 local AUTO_SEARCH_RESULT_COUNT_THRESHOLD = 50 -- TODO: tweak value

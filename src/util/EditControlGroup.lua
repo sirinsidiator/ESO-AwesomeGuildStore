@@ -11,8 +11,7 @@ function EditControlGroup:Initialize()
     self.controls = {}
 end
 
-function EditControlGroup:OnTabPressed(control)
-    local index = control.editControlGroupIndex -- the tab handler receives the actual control
+function EditControlGroup:OnTabPressed(index)
     local newIndex = index
 
     local direction = (IsShiftKeyDown() and -1 or 1)
@@ -38,8 +37,8 @@ function EditControlGroup:InsertControl(control, position)
 
     if(not position) then position = #self.controls + 1 end
     table.insert(self.controls, position, control)
-    control:SetHandler("OnTab", function(control, ...)
-        return self:OnTabPressed(control)
+    control:SetHandler("OnTab", function()
+        return self:OnTabPressed(control:GetEditControlGroupIndex())
     end)
     self:UpdateIndices()
     return true
