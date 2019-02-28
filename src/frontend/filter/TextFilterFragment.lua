@@ -83,13 +83,11 @@ function TextFilterFragment:SetEnabled(enabled)
 end
 
 function TextFilterFragment:StartNameMatch(text)
-    d("start matching name")
     self.pendingItemNameMatchId = MatchTradingHouseItemNames(text)
 end
 
 function TextFilterFragment:CancelPendingNameMatch()
     if self.pendingItemNameMatchId then
-        d("cancel matching name")
         CancelMatchTradingHouseItemNames(self.pendingItemNameMatchId)
         self.pendingItemNameMatchId = nil
     end
@@ -97,7 +95,6 @@ end
 
 function TextFilterFragment:OnNameMatchComplete(id, numResults)
     if id == self.pendingItemNameMatchId then
-        d("finished matching name")
         self.pendingItemNameMatchId = nil
         self.nameSearchAutoComplete:ShowListForNameSearch(id, numResults)
     end
