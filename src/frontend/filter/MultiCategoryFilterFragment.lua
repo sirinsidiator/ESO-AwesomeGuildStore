@@ -35,8 +35,8 @@ function MultiCategoryFilterFragment:New(...)
     return FilterFragment.New(self, ...)
 end
 
-function MultiCategoryFilterFragment:Initialize(filter)
-    FilterFragment.Initialize(self, filter)
+function MultiCategoryFilterFragment:Initialize(filterId)
+    FilterFragment.Initialize(self, filterId)
 
     self.enabled = true
     self.entryCache = {}

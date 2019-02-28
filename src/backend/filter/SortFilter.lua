@@ -30,6 +30,7 @@ function SortFilter:Initialize()
     self:SetLabel(gettext("Sort By"))
     self.pinned = true
     self.availableSortOrders = {}
+    self.sortOrderCount = 0
 end
 
 function SortFilter:SetSearchManager(searchManager)
@@ -37,12 +38,16 @@ function SortFilter:SetSearchManager(searchManager)
     searchManager:SetSortFilter(self)
 end
 
-function SortFilter:RegisterSortOrder(sortOrder, isDefault)
-    -- TODO: prevent overriding?
+function SortFilter:RegisterSortOrder(sortOrder)
     self.availableSortOrders[sortOrder.id] = sortOrder
-    if(isDefault) then
+    if(not self.defaultSortOrder) then
         self.defaultSortOrder = sortOrder
     end
+    self.sortOrderCount = self.sortOrderCount + 1
+end
+
+function SortFilter:GetSortOrderCount()
+    return self.sortOrderCount
 end
 
 function SortFilter:SetCurrentSortOrder(sortOrderId, direction)

@@ -16,9 +16,10 @@ function QualityFilterFragment:New(...)
     return ValueRangeFilterFragmentBase.New(self, ...)
 end
 
-function QualityFilterFragment:Initialize(filter)
-    ValueRangeFilterFragmentBase.Initialize(self, filter)
+function QualityFilterFragment:Initialize(filterId)
+    ValueRangeFilterFragmentBase.Initialize(self, filterId)
 
+    local filter = self.filter
     local container = self:GetContainer()
     local config = self.filter:GetConfig()
     self.steps = config.steps

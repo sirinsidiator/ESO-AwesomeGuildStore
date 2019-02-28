@@ -13,8 +13,8 @@ function ValueRangeFilterFragmentBase:New(...)
     return FilterFragment.New(self, ...)
 end
 
-function ValueRangeFilterFragmentBase:Initialize(filter)
-    FilterFragment.Initialize(self, filter)
+function ValueRangeFilterFragmentBase:Initialize(filterId)
+    FilterFragment.Initialize(self, filterId)
     self.fromFilter = false
 
     local container = self:GetContainer()

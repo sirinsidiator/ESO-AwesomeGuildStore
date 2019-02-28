@@ -14,8 +14,8 @@ function PriceRangeFilterFragment:New(...)
     return ValueRangeFilterFragmentBase.New(self, ...)
 end
 
-function PriceRangeFilterFragment:Initialize(filter)
-    ValueRangeFilterFragmentBase.Initialize(self, filter)
+function PriceRangeFilterFragment:Initialize(filterId)
+    ValueRangeFilterFragmentBase.Initialize(self, filterId)
     self.fromInput = false
 
     local container = self:GetContainer()

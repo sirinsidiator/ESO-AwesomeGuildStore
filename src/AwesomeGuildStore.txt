@@ -17,6 +17,7 @@ lib/LibStub/LibStub.lua
 lib/LibCustomTitles/LibCustomTitles.lua
 lib/LibAnnyoingUpdateNotificationInGame/LibAnnyoingUpdateNotificationInGame.lua
 StartUp.lua
+API.lua
 CallbackNames.lua
 i18n/en.lua
 i18n/$(language).lua

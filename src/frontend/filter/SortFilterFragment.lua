@@ -9,12 +9,12 @@ function SortFilterFragment:New(...)
     return FilterFragment.New(self, ...)
 end
 
-function SortFilterFragment:Initialize(filter)
-    FilterFragment.Initialize(self, filter)
+function SortFilterFragment:Initialize(filterId)
+    FilterFragment.Initialize(self, filterId)
 
+    self.sortOrderCount = 0
     self:InitializeControls()
     self:InitializeHandlers()
-    self:UpdateAvailableSortOrders()
 end
 
 function SortFilterFragment:InitializeControls()
@@ -57,6 +57,11 @@ end
 function SortFilterFragment:OnShow()
     local dropdown = self.dropdown
     if dropdown.m_lastParent ~= ZO_Menus then
+        local newCount = self.filter:GetSortOrderCount()
+        if(newCount ~= self.sortOrderCount) then
+            self.sortOrderCount = newCount
+            self:UpdateAvailableSortOrders()
+        end
         dropdown.m_lastParent = dropdown.m_dropdown:GetParent()
         dropdown.m_dropdown:SetParent(ZO_Menus)
         ZO_Menus:BringWindowToTop()
@@ -90,6 +95,7 @@ function SortFilterFragment:UpdateAvailableSortOrders()
     end
 
     dropdown:UpdateItems()
+    self:OnValueChanged(filter:GetCurrentSortOrder())
 end
 
 function SortFilterFragment:OnAttach(filterArea)

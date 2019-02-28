@@ -17,14 +17,6 @@ function AGS.internal:FireCallbacks(...)
     return callbackObject:FireCallbacks(...)
 end
 
-function AGS:RegisterCallback(...)
-    return callbackObject:RegisterCallback(...)
-end
-
-function AGS:UnregisterCallback(...)
-    return callbackObject:UnregisterCallback(...)
-end
-
 local nextEventHandleIndex = 1
 
 local function RegisterForEvent(event, callback)
@@ -61,8 +53,6 @@ AGS.internal.UnregisterForEvent = UnregisterForEvent
 AGS.internal.RegisterForEvent = RegisterForEvent
 AGS.internal.WrapFunction = WrapFunction
 -----------------------------------------------------------------------------------------
-
-AGS.GetAPIVersion = function() return 4 end
 
 do
     local LONG_PREFIX = "AwesomeGuildStore"

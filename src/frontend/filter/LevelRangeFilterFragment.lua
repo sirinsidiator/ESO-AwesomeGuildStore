@@ -27,8 +27,8 @@ function LevelRangeFilterFragment:New(...)
     return ValueRangeFilterFragmentBase.New(self, ...)
 end
 
-function LevelRangeFilterFragment:Initialize(filter) -- TODO: extract base ValueRangeFilterFragment
-    ValueRangeFilterFragmentBase.Initialize(self, filter)
+function LevelRangeFilterFragment:Initialize(filterId) -- TODO: extract base ValueRangeFilterFragment
+    ValueRangeFilterFragmentBase.Initialize(self, filterId)
     self.fromInput = false
     self.currentRangeType = {}
 

@@ -16,8 +16,8 @@ function MultiButtonFilterFragment:New(...)
     return FilterFragment.New(self, ...)
 end
 
-function MultiButtonFilterFragment:Initialize(filter)
-    FilterFragment.Initialize(self, filter)
+function MultiButtonFilterFragment:Initialize(filterId)
+    FilterFragment.Initialize(self, filterId)
 
     self:InitializeControls()
     self:InitializeHandlers()

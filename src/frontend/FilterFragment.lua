@@ -12,7 +12,9 @@ function FilterFragment:New(...)
     return ZO_SimpleSceneFragment.New(self, ...)
 end
 
-function FilterFragment:Initialize(filter)
+function FilterFragment:Initialize(filterId)
+    local filter = AGS:GetFilter(filterId)
+    assert(filter, string.format("No filter with id %d registered", filterId))
     self.filter = filter
     local control = CreateControlFromVirtual("AwesomeGuildStoreFilterFragment", GuiRoot, "AwesomeGuildStoreFilterFragmentTemplate", filter:GetId())
     control.fragment = self

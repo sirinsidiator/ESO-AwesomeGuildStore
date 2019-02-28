@@ -14,8 +14,8 @@ function TextFilterFragment:New(...)
     return FilterFragment.New(self, ...)
 end
 
-function TextFilterFragment:Initialize(filter)
-    FilterFragment.Initialize(self, filter)
+function TextFilterFragment:Initialize(filterId)
+    FilterFragment.Initialize(self, filterId)
 
     self:InitializeControls()
     self:InitializeHandlers()

@@ -201,14 +201,6 @@ function TradingHouseWrapper:DetachFilter(filter)
     self.searchTab:DetachFilter(filter)
 end
 
-function TradingHouseWrapper:AttachButton(button)
-    self.searchTab:AttachButton(button)
-end
-
-function TradingHouseWrapper:DetachButton(button)
-    self.searchTab:DetachButton(button)
-end
-
 function TradingHouseWrapper:PreHook(methodName, call)
     ZO_PreHook(self.tradingHouse, methodName, call)
 end
