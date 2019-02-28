@@ -124,7 +124,7 @@ function TextFilter:FilterLocalResult(itemData)
     return isMatch
 end
 
-function TextFilter:CanAttach(subcategory)
+function TextFilter:CanFilter(subcategory)
     return true
 end
 

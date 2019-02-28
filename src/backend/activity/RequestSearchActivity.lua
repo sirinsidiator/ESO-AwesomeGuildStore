@@ -76,9 +76,10 @@ function RequestSearchActivity:RequestSearch()
         if(self.state ~= ActivityBase.STATE_SUCCEEDED) then
             ClearAllTradingHouseSearchTerms()
 
+            local _, subcategory = self.searchManager:GetCurrentCategories()
             local filters = self.searchManager:GetActiveFilters()
             for _, filter in ipairs(filters) do
-                if(not filter:IsLocal()) then
+                if(not filter:IsLocal() and filter:CanFilter(subcategory)) then
                     filter:ApplyToSearch() -- TODO pass values from pending filter state
                 end
             end

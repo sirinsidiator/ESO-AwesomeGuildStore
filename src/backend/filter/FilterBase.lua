@@ -45,7 +45,7 @@ function FilterBase:SetEnabledSubcategories(categories)
     self.enabledSubcategory = categories or self.enabledSubcategory
 end
 
-function FilterBase:CanAttach(subcategory)
+function FilterBase:CanFilter(subcategory)
     return self.enabledSubcategory[subcategory.id] == true
 end
 

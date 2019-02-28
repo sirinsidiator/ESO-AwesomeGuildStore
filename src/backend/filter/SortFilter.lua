@@ -156,7 +156,7 @@ function SortFilter:SortLocalResults(items, sortOrderId, direction)
     end
 end
 
-function SortFilter:CanAttach(subcategory)
+function SortFilter:CanFilter(subcategory)
     return true
 end
 

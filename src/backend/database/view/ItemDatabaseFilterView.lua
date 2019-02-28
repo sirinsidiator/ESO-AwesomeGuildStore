@@ -14,7 +14,7 @@ function ItemDatabaseFilterView:New(...)
     return BaseItemDatabaseView.New(self, ...)
 end
 
-function ItemDatabaseFilterView:Initialize(searchManager, filterStates)
+function ItemDatabaseFilterView:Initialize(searchManager, filterStates, subcategory)
     BaseItemDatabaseView.Initialize(self)
 
     local filters = {}
@@ -30,6 +30,7 @@ function ItemDatabaseFilterView:Initialize(searchManager, filterStates)
     end
     self.filters = filters
     self.filterValues = filterValues
+    self.subcategory = subcategory
 end
 
 function ItemDatabaseFilterView:PrepareFilterFunction(activeFilters)
@@ -52,14 +53,13 @@ function ItemDatabaseFilterView:UpdateItems()
     local activeFilters = {}
     for i = 1, #filters do
         local filter = filters[i]
-        if(filter:SetUpLocalFilter(unpack(self.filterValues[i]))) then
+        if(filter:CanFilter(self.subcategory) and filter:SetUpLocalFilter(unpack(self.filterValues[i]))) then
             activeFilters[#activeFilters + 1] = filter
         end
     end
     -- TODO: sort activeFilters by resource cost -> cheap filters come first
     -- table.sort(activeFilters, ByCost)
 
-    -- do filter server
     local FilterItem = self:PrepareFilterFunction(activeFilters)
 
     local parentItems = self.parent:GetItems()

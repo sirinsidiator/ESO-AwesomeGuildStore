@@ -25,13 +25,13 @@ function BaseItemDatabaseView:MarkDirty()
     end
 end
 
-function BaseItemDatabaseView:GetSubView(searchManager, filterState, group)
+function BaseItemDatabaseView:GetSubView(searchManager, filterState, group, subcategory)
     local groupState = filterState:GetGroupState(group)
     local subView = self.children[groupState]
     if(not subView) then
         local groupValues = filterState:GetGroupValues(group)
         local viewClass = BaseItemDatabaseView.CLASS_BY_GROUP[group]
-        subView = viewClass:New(searchManager, groupValues)
+        subView = viewClass:New(searchManager, groupValues, subcategory)
         subView.parent = self
         self.children[groupState] = subView
     end

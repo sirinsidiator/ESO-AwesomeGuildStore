@@ -86,7 +86,7 @@ function QualityFilter:FilterLocalResult(itemData)
     return not (quality < self.localMin or quality > self.localMax)
 end
 
-function QualityFilter:CanAttach(subcategory)
+function QualityFilter:CanFilter(subcategory)
     return true
 end
 

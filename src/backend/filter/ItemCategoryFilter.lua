@@ -728,7 +728,7 @@ function ItemCategoryFilter:FilterLocalResult(itemData)
     return true
 end
 
-function ItemCategoryFilter:CanAttach(subcategory)
+function ItemCategoryFilter:CanFilter(subcategory)
     return true
 end
 

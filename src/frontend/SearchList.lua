@@ -197,7 +197,7 @@ function SearchList:ShowTooltip(control)
         local id, values, state = unpack(values[i])
         if(id ~= FILTER_ID.CATEGORY_FILTER) then
             local filter = searchManager:GetFilter(id)
-            if(filter and (filter:IsPinned() or search:IsFilterActive(id)) and filter:CanAttach(subcategory)) then
+            if(filter and (filter:IsPinned() or search:IsFilterActive(id)) and filter:CanFilter(subcategory)) then
                 local text = string.format(LINE_FORMAT, filter:GetLabel(), filter:GetTooltipText(unpack(values)))
                 InformationTooltip:AddLine(text, "", r, g, b)
             end

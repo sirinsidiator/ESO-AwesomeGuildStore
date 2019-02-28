@@ -143,7 +143,7 @@ function FilterArea:HasFiltersToAttach()
     local _, subcategory = self.searchManager:GetCurrentCategories()
     for id, fragment in pairs(self.availableFragments) do
         local filter = self.searchManager:GetFilter(id)
-        if(filter and not fragment:IsAttached() and filter:CanAttach(subcategory)) then
+        if(filter and not fragment:IsAttached() and filter:CanFilter(subcategory)) then
             return true
         end
     end
@@ -156,7 +156,7 @@ function FilterArea:GetSortedFilters()
     local filters = {} -- TODO create GetSortedFilters in searchManager
     for id, fragment in pairs(self.availableFragments) do
         local filter = self.searchManager:GetFilter(id)
-        if(filter and not fragment:IsAttached() and filter:CanAttach(subcategory)) then
+        if(filter and not fragment:IsAttached() and filter:CanFilter(subcategory)) then
             filters[#filters + 1] = filter
         end
     end
