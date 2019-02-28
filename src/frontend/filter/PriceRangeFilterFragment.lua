@@ -16,7 +16,6 @@ end
 
 function PriceRangeFilterFragment:Initialize(filterId)
     ValueRangeFilterFragmentBase.Initialize(self, filterId)
-    self.fromInput = false
 
     local container = self:GetContainer()
     local config = self.filter:GetConfig()
@@ -32,10 +31,8 @@ function PriceRangeFilterFragment:Initialize(filterId)
 
     local function OnInputChanged(input)
         if(self.fromFilter) then return end
-        self.fromInput = true
         local min, max = self:GetInputValues()
         self.filter:SetValues(min, max)
-        self.fromInput = false
     end
     minPrice.OnValueChanged = OnInputChanged
     maxPrice.OnValueChanged = OnInputChanged
@@ -79,10 +76,8 @@ function PriceRangeFilterFragment:OnValueChanged(min, max)
     self.fromFilter = true
     self.slider:SetRangeValue(self:ToNearestStep(min), self:ToNearestStep(max))
 
-    if(not self.fromInput) then
-        if(max == self.max) then max = nil end
-        if(not max and min == self.min) then min = nil end
-    end
+    if(max == self.max) then max = nil end
+    if(not max and min == self.min) then min = nil end
     self:SetInputValues(min, max)
 
     self.fromFilter = false

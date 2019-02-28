@@ -43,7 +43,7 @@ function ValueRangeFilterBase:SetValues(min, max)
     local minChanged = (min ~= self.min)
     local maxChanged = (max ~= self.max)
     if(min > max) then
-        if(maxChanged) then
+        if(minChanged) then
             max = min
         elseif(maxChanged) then
             min = max
