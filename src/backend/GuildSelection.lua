@@ -28,7 +28,7 @@ function GuildSelection:Initialize(tradingHouseWrapper)
     end
 
     function GetCurrentTradingHouseGuildDetails()
-        if(not self.selectedGuildId) then
+        if(not self.selectedGuildId or not self.guildById[self.selectedGuildId]) then
             return self.originalGetCurrentTradingHouseGuildDetails()
         end
         local data = self.guildById[self.selectedGuildId]
