@@ -201,6 +201,8 @@ function SimpleInputBox:Initialize(control, currencies)
     self.enabled = true
     self:SetType(INPUT_TYPE_ALL)
     self:SetTextAlign(TEXT_ALIGN_LEFT)
+    self.oldText = ""
+    self.oldCursorPosition = 0
 
     local input = self.input
     local revert = false
@@ -244,13 +246,16 @@ function SimpleInputBox:Initialize(control, currencies)
         if(self.fromCode) then return end
 
         local text, valid = self:SanitizeInput(input:GetText(), self.oldText)
-        if(not valid) then
-            ShowBadPulse()
-        end
-
         self:OnTextChanged(text)
         self:SetText(text)
+
+        if(not valid) then
+            ShowBadPulse()
+            input:SetCursorPosition(self.oldCursorPosition)
+        end
+
         self.oldText = text
+        self.oldCursorPosition = input:GetCursorPosition()
     end)
 
     input:SetHandler("OnRectWidthChanged", function()
@@ -269,7 +274,9 @@ end
 function SimpleInputBox:SetText(text)
     self.fromCode = true
     self.virtual:SetText(text)
-    self.input:SetText(text)
+    if(self.input:GetText() ~= text) then
+        self.input:SetText(text)
+    end
     self.fromCode = false
 end
 
