@@ -74,9 +74,9 @@ function TextFilter:IsSearchTextLongEnough(input)
 end
 
 function TextFilter:PrepareForSearch()
+    self.completedItemNameMatchId = nil
     if(self:IsDefault() or not self:IsSearchTextLongEnough(self.text)) then return false end
 
-    self.completedItemNameMatchId = nil
     local pendingId, eventHandle
     eventHandle = RegisterForEvent(EVENT_MATCH_TRADING_HOUSE_ITEM_NAMES_COMPLETE, function(_, id, numResults)
         if(pendingId == id) then
