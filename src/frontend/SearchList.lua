@@ -172,6 +172,10 @@ function SearchList:Initialize(searchManager)
             list:RefreshVisible()
         end
     end)
+
+    AGS:RegisterCallback(AGS.callback.SELECTED_SEARCH_CHANGED, function()
+        list:RefreshVisible()
+    end)
 end
 
 function SearchList:ShowTooltip(control)
