@@ -44,3 +44,7 @@ function WritVoucherFilter:FilterLocalResult(itemData)
     end
     return true
 end
+
+function WritVoucherFilter:IsLocal()
+    return true
+end

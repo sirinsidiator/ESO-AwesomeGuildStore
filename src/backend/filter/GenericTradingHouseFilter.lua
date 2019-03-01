@@ -11,7 +11,8 @@ function GenericTradingHouseFilter:New(...)
 end
 
 function GenericTradingHouseFilter:Initialize(filterData)
-    local group = filterData.type and FilterBase.GROUP_SERVER or FilterBase.GROUP_LOCAL
+    self.isLocal = (filterData.type == nil)
+    local group = self.isLocal and FilterBase.GROUP_LOCAL or FilterBase.GROUP_SERVER
     MultiChoiceFilterBase.Initialize(self, filterData.id, group, filterData.label, filterData.values)
     self:SetEnabledSubcategories(filterData.enabled)
     if(filterData.encoding) then
@@ -32,7 +33,7 @@ function GenericTradingHouseFilter:FilterLocalResult(itemData)
 end
 
 function GenericTradingHouseFilter:IsLocal()
-    return false
+    return self.isLocal
 end
 
 function GenericTradingHouseFilter:PrepareForSearch(selection)
