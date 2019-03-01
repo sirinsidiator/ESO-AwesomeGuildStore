@@ -39,10 +39,10 @@ function RequestSearchActivity:PrepareFilters()
     local searchManager = self.searchManager
     local filterState = searchManager:GetActiveSearch():GetFilterState()
     local page = searchManager.searchPageHistory:GetNextPage(self.pendingGuildName, filterState)
-    if(page) then
-        self.pendingPage = page
-        self.pendingFilterState = filterState
+    self.pendingPage = page
+    self.pendingFilterState = filterState
 
+    if(page) then
         local count = 0
         local subcategory = filterState:GetSubcategory()
         local filters = searchManager:GetActiveFilters()
@@ -172,8 +172,16 @@ end
 function RequestSearchActivity:GetLogEntry()
     if(not self.logEntry) then -- TODO: show filter state too
         local prefix = ActivityBase.GetLogEntry(self)
-        -- TRANSLATORS: log text shown to the user for each request of the search results. Placeholder is for the guild name
-        self.logEntry = prefix .. zo_strformat(gettext("Request search results in <<1>>"), self.pendingGuildName)
+        local message
+        if(self.pendingFilterState) then
+            local category, subcategory = self:GetPendingCategories()
+            -- TRANSLATORS: log text shown to the user for an executed request of the search results. Placeholders are for the page, category, subcategory and guild name
+            message = gettext("Request page <<1>> of <<2>> > <<3>> in <<4>>", self.pendingPage + 1, category.label, subcategory.label, self.pendingGuildName)
+        else
+            -- TRANSLATORS: log text shown to the user for a queued request of the search results. Placeholder is for the guild name
+            message = gettext("Request search results in <<1>>", self.pendingGuildName)
+        end
+        self.logEntry = prefix .. message
     end
     return self.logEntry
 end
