@@ -19,7 +19,8 @@ function ItemSetFilter:New(...)
 end
 
 function ItemSetFilter:Initialize()
-    MultiChoiceFilterBase.Initialize(self, FILTER_ID.ITEM_SET_FILTER, FilterBase.GROUP_LOCAL, {
+    -- TRANSLATORS: title of the set item filter in the left panel on the search tab
+    MultiChoiceFilterBase.Initialize(self, FILTER_ID.ITEM_SET_FILTER, FilterBase.GROUP_LOCAL, gettext("Itemset"), {
         {
             id = false,
             -- TRANSLATORS: tooltip text for the set item filter
@@ -33,8 +34,6 @@ function ItemSetFilter:Initialize()
             icon = "EsoUI/Art/Campaign/campaign_tabIcon_summary_%s.dds",
         },
     })
-    -- TRANSLATORS: title of the set item filter in the left panel on the search tab
-    self:SetLabel(gettext("Itemset"))
     self:SetEnabledSubcategories({
         [SUB_CATEGORY_ID.WEAPONS_ALL] = true,
         [SUB_CATEGORY_ID.WEAPONS_ONE_HANDED] = true,

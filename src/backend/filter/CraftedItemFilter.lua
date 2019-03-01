@@ -18,7 +18,8 @@ function CraftedItemFilter:New(...)
 end
 
 function CraftedItemFilter:Initialize()
-    MultiChoiceFilterBase.Initialize(self, FILTER_ID.ITEM_CRAFTED_FILTER, FilterBase.GROUP_LOCAL, {
+    -- TRANSLATORS: title of the crafted item filter in the left panel on the search tab
+    MultiChoiceFilterBase.Initialize(self, FILTER_ID.ITEM_CRAFTED_FILTER, FilterBase.GROUP_LOCAL, gettext("Crafting"), {
         {
             id = false,
             -- TRANSLATORS: tooltip text for the crafted item filter
@@ -30,9 +31,8 @@ function CraftedItemFilter:Initialize()
             label = gettext("Crafted item"),
             icon = "Esoui/Art/TreeIcons/achievements_indexIcon_crafting_%s.dds",
         }
-    })
-    -- TRANSLATORS: title of the crafted item filter in the left panel on the search tab
-    self:SetLabel(gettext("Crafting"))
+    }, label)
+
     self:SetEnabledSubcategories({
         [SUB_CATEGORY_ID.WEAPONS_ALL] = true,
         [SUB_CATEGORY_ID.WEAPONS_ONE_HANDED] = true,

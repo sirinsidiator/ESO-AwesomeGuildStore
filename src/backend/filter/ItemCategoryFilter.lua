@@ -644,9 +644,8 @@ function ItemCategoryFilter:New(...)
 end
 
 function ItemCategoryFilter:Initialize()
-    FilterBase.Initialize(self, FILTER_ID.CATEGORY_FILTER, FilterBase.GROUP_CATEGORY)
     -- TRANSLATORS: label of the category filter
-    self:SetLabel(gettext("Item Category"))
+    FilterBase.Initialize(self, FILTER_ID.CATEGORY_FILTER, FilterBase.GROUP_CATEGORY, gettext("Item Category"))
 
     self.activeSubcategoryForCategory = {}
     for categoryId, subcategoryId in pairs(DEFAULT_SUB_CATEGORY_ID) do

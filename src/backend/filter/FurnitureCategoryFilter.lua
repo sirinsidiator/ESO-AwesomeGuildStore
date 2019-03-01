@@ -20,9 +20,8 @@ function FurnitureCategoryFilter:New(...)
 end
 
 function FurnitureCategoryFilter:Initialize()
-    MultiChoiceFilterBase.Initialize(self, FILTER_ID.FURNITURE_CATEGORY_FILTER, FilterBase.GROUP_LOCAL, FURNITURE_CATEGORIES)
     -- TRANSLATORS: label of the writ voucher filter
-    self:SetLabel(gettext("Furnishing Category"))
+    MultiChoiceFilterBase.Initialize(self, FILTER_ID.FURNITURE_CATEGORY_FILTER, FilterBase.GROUP_LOCAL, gettext("Furnishing Category"), FURNITURE_CATEGORIES)
     self:SetEnabledSubcategories({
         [SUB_CATEGORY_ID.FURNISHING_ALL] = true,
         [SUB_CATEGORY_ID.FURNISHING_CRAFTING_STATION] = true,

@@ -25,9 +25,8 @@ function SortFilter:New(...)
 end
 
 function SortFilter:Initialize()
-    FilterBase.Initialize(self, FILTER_ID.SORT_ORDER, FilterBase.GROUP_NONE)
     -- TRANSLATORS: label of the sort filter
-    self:SetLabel(gettext("Sort By"))
+    FilterBase.Initialize(self, FILTER_ID.SORT_ORDER, FilterBase.GROUP_NONE, gettext("Sort By"))
     self.pinned = true
     self.availableSortOrders = {}
     self.sortOrderCount = 0

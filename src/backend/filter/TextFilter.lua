@@ -24,9 +24,8 @@ function TextFilter:New(...)
 end
 
 function TextFilter:Initialize()
-    FilterBase.Initialize(self, FILTER_ID.TEXT_FILTER, FilterBase.GROUP_SERVER)
     -- TRANSLATORS: label of the text filter
-    self:SetLabel(gettext("Text Search"))
+    FilterBase.Initialize(self, FILTER_ID.TEXT_FILTER, FilterBase.GROUP_SERVER, gettext("Text Search"))
     self.text = ""
     self.haystack = {}
 end

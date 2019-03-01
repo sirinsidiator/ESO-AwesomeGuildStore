@@ -11,8 +11,7 @@ function GenericTradingHouseFilter:New(...)
 end
 
 function GenericTradingHouseFilter:Initialize(filterData)
-    MultiChoiceFilterBase.Initialize(self, filterData.id, FilterBase.GROUP_SERVER, filterData.values)
-    self:SetLabel(filterData.label)
+    MultiChoiceFilterBase.Initialize(self, filterData.id, FilterBase.GROUP_SERVER, filterData.label, filterData.values)
     self:SetEnabledSubcategories(filterData.enabled)
     if(filterData.encoding) then
         self:SetEncoding(filterData.encoding)

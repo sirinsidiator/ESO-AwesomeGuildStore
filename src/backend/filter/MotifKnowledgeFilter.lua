@@ -19,7 +19,8 @@ function MotifKnowledgeFilter:New(...)
 end
 
 function MotifKnowledgeFilter:Initialize()
-    MultiChoiceFilterBase.Initialize(self, FILTER_ID.MOTIF_KNOWLEDGE_FILTER, FilterBase.GROUP_LOCAL, {
+    -- TRANSLATORS: title of the motif knowledge filter in the left panel on the search tab
+    MultiChoiceFilterBase.Initialize(self, FILTER_ID.MOTIF_KNOWLEDGE_FILTER, FilterBase.GROUP_LOCAL, gettext("Motif Knowledge"), {
         {
             id = false,
             -- TRANSLATORS: tooltip text for the motif knowledge filter
@@ -33,8 +34,6 @@ function MotifKnowledgeFilter:Initialize()
             icon = "EsoUI/Art/Journal/journal_tabIcon_loreLibrary_%s.dds",
         },
     })
-    -- TRANSLATORS: title of the motif knowledge filter in the left panel on the search tab
-    self:SetLabel(gettext("Motif Knowledge"))
     self:SetEnabledSubcategories({
         [SUB_CATEGORY_ID.CONSUMABLE_MOTIF] = true,
     })

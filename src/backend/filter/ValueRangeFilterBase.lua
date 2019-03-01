@@ -17,8 +17,7 @@ function ValueRangeFilterBase:New(...)
 end
 
 function ValueRangeFilterBase:Initialize(id, group, config)
-    FilterBase.Initialize(self, id, group)
-    self:SetLabel(config.label)
+    FilterBase.Initialize(self, id, group, config.label)
     self:SetEnabledSubcategories(config.enabled)
     self.config = config
     self.modifier = math.pow(10, config.precision or 0)

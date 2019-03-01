@@ -13,8 +13,8 @@ function MultiChoiceFilterBase:New(...)
     return FilterBase.New(self, ...)
 end
 
-function MultiChoiceFilterBase:Initialize(id, group, values)
-    FilterBase.Initialize(self, id, group)
+function MultiChoiceFilterBase:Initialize(id, group, label, values)
+    FilterBase.Initialize(self, id, group, label)
 
     -- detect the encoding based on the used value types
     local first = values[1]

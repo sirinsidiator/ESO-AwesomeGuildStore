@@ -20,7 +20,8 @@ function TraitKnowledgeFilter:New(...)
 end
 
 function TraitKnowledgeFilter:Initialize()
-    MultiChoiceFilterBase.Initialize(self, FILTER_ID.TRAIT_KNOWLEDGE_FILTER, FilterBase.GROUP_LOCAL, {
+    -- TRANSLATORS: title of the trait knowledge filter in the left panel on the search tab
+    MultiChoiceFilterBase.Initialize(self, FILTER_ID.TRAIT_KNOWLEDGE_FILTER, FilterBase.GROUP_LOCAL, gettext("Trait Knowledge"), {
         {
             id = false,
             -- TRANSLATORS: tooltip text for the trait knowledge filter
@@ -34,8 +35,6 @@ function TraitKnowledgeFilter:Initialize()
             icon = "EsoUI/Art/Campaign/overview_indexIcon_bonus_%s.dds",
         },
     })
-    -- TRANSLATORS: title of the trait knowledge filter in the left panel on the search tab
-    self:SetLabel(gettext("Trait Knowledge"))
     self:SetEnabledSubcategories({
         [SUB_CATEGORY_ID.WEAPONS_ALL] = true,
         [SUB_CATEGORY_ID.WEAPONS_ONE_HANDED] = true,

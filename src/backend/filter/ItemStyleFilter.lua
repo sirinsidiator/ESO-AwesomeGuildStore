@@ -18,8 +18,7 @@ function ItemStyleFilter:New(...)
 end
 
 function ItemStyleFilter:Initialize()
-    MultiChoiceFilterBase.Initialize(self, FILTER_ID.ITEM_STYLE_FILTER, FilterBase.GROUP_LOCAL, STYLE_CATEGORIES)
-    self:SetLabel(GetString(SI_SMITHING_HEADER_STYLE))
+    MultiChoiceFilterBase.Initialize(self, FILTER_ID.ITEM_STYLE_FILTER, FilterBase.GROUP_LOCAL, GetString(SI_SMITHING_HEADER_STYLE), STYLE_CATEGORIES)
     self:SetEnabledSubcategories({
         [SUB_CATEGORY_ID.WEAPONS_ALL] = true,
         [SUB_CATEGORY_ID.WEAPONS_ONE_HANDED] = true,

@@ -17,7 +17,8 @@ function RecipeKnowledgeFilter:New(...)
 end
 
 function RecipeKnowledgeFilter:Initialize()
-    MultiChoiceFilterBase.Initialize(self, FILTER_ID.RECIPE_KNOWLEDGE_FILTER, FilterBase.GROUP_LOCAL, {
+    -- TRANSLATORS: title of the recipe knowledge filter in the left panel on the search tab
+    MultiChoiceFilterBase.Initialize(self, FILTER_ID.RECIPE_KNOWLEDGE_FILTER, FilterBase.GROUP_LOCAL, gettext("Recipe Knowledge"), {
         {
             id = false,
             -- TRANSLATORS: tooltip text for the recipe knowledge filter
@@ -31,8 +32,6 @@ function RecipeKnowledgeFilter:Initialize()
             icon = "EsoUI/Art/Journal/journal_tabIcon_loreLibrary_%s.dds",
         },
     })
-    -- TRANSLATORS: title of the recipe knowledge filter in the left panel on the search tab
-    self:SetLabel(gettext("Recipe Knowledge"))
     self:SetEnabledSubcategories({
         [SUB_CATEGORY_ID.CONSUMABLE_RECIPE] = true,
     })

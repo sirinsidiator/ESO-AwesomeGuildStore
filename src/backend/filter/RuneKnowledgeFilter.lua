@@ -18,7 +18,8 @@ function RuneKnowledgeFilter:New(...)
 end
 
 function RuneKnowledgeFilter:Initialize()
-    MultiChoiceFilterBase.Initialize(self, FILTER_ID.RUNE_KNOWLEDGE_FILTER, FilterBase.GROUP_LOCAL, {
+    -- TRANSLATORS: title of the rune knowledge filter in the left panel on the search tab
+    MultiChoiceFilterBase.Initialize(self, FILTER_ID.RUNE_KNOWLEDGE_FILTER, FilterBase.GROUP_LOCAL, gettext("Rune Knowledge"), {
         {
             id = false,
             -- TRANSLATORS: tooltip text for the rune knowledge filter
@@ -32,8 +33,6 @@ function RuneKnowledgeFilter:Initialize()
             icon = "EsoUI/Art/Journal/journal_tabIcon_loreLibrary_%s.dds",
         },
     })
-    -- TRANSLATORS: title of the rune knowledge filter in the left panel on the search tab
-    self:SetLabel(gettext("Rune Knowledge"))
     self:SetEnabledSubcategories({
         [SUB_CATEGORY_ID.CRAFTING_ENCHANTING] = true,
     })

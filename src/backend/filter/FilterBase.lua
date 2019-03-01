@@ -17,14 +17,14 @@ function FilterBase:New(...)
     return object
 end
 
--- can be overwritten, but make sure to call FilterBase.Initialize(id, group)!
-function FilterBase:Initialize(id, group)
+-- can be overwritten, but make sure to call FilterBase.Initialize(id, group, label)!
+function FilterBase:Initialize(id, group, label)
     self.id = id
     self.group = group
     self.searchManager = nil
     self.attached = false -- TODO: save which filters are attached
     self.pinned = true -- TODO: save which filters are pinned
-    self.label = "undefined"
+    self.label = label
     self.enabledSubcategory = {}
     self.dirty = true -- flag can be used to detect filter changes and do lazy updates
 end
@@ -77,10 +77,6 @@ end
 
 function FilterBase:SetPinned(pinned)
     self.pinned = pinned
-end
-
-function FilterBase:SetLabel(label)
-    self.label = label
 end
 
 function FilterBase:GetLabel()

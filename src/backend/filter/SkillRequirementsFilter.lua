@@ -18,7 +18,8 @@ function SkillRequirementsFilter:New(...)
 end
 
 function SkillRequirementsFilter:Initialize()
-    MultiChoiceFilterBase.Initialize(self, FILTER_ID.SKILL_REQUIREMENTS_FILTER, FilterBase.GROUP_LOCAL, {
+    -- TRANSLATORS: label of the recipe improvement filter
+    MultiChoiceFilterBase.Initialize(self, FILTER_ID.SKILL_REQUIREMENTS_FILTER, FilterBase.GROUP_LOCAL, gettext("Skill requirements"), {
         {
             id = true,
             -- TRANSLATORS: tooltip text for the recipe skill requirement filter
@@ -32,8 +33,6 @@ function SkillRequirementsFilter:Initialize()
             icon = "Esoui/Art/Contacts/tabIcon_ignored_%s.dds",
         },
     })
-    -- TRANSLATORS: label of the recipe improvement filter
-    self:SetLabel(gettext("Skill requirements"))
     self:SetEnabledSubcategories({
         [SUB_CATEGORY_ID.CONSUMABLE_RECIPE] = true,
     })
