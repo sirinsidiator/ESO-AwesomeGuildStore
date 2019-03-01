@@ -10,6 +10,7 @@ FilterBase.GROUP_NONE = 1
 FilterBase.GROUP_CATEGORY = 2
 FilterBase.GROUP_SERVER = 3
 FilterBase.GROUP_LOCAL = 4
+FilterBase.GROUP_SORT = 5
 
 function FilterBase:New(...)
     local object = ZO_Object.New(self)

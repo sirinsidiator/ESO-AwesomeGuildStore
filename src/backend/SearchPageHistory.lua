@@ -28,9 +28,10 @@ function SearchPageHistory:GetGuildSearches(guildName)
 end
 
 function SearchPageHistory:CreateKeyFromFilterState(filterState) -- TODO: the filterState should offer some sort of hierarchical key
+    local sortState = filterState:GetGroupState(FilterBase.GROUP_SORT) or ""
     local categoryState = filterState:GetGroupState(FilterBase.GROUP_CATEGORY) or ""
     local serverState = filterState:GetGroupState(FilterBase.GROUP_SERVER) or ""
-    return string.format("%s-%s", categoryState, serverState)
+    return string.format("%s;%s;%s", sortState, categoryState, serverState)
 end
 
 function SearchPageHistory:ShouldRequestPage(guildName, filterState, page)

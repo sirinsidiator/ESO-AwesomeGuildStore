@@ -151,7 +151,7 @@ function ItemDatabase:GetFilteredView(guildName, filterState)
     local searchManager = self.tradingHouseWrapper.searchManager
 
     for i = 1, #groups do
-        if(groups[i] ~= FilterBase.GROUP_NONE) then
+        if(groups[i] ~= FilterBase.GROUP_NONE and groups[i] ~= FilterBase.GROUP_SORT) then
             view = view:GetSubView(searchManager, filterState, groups[i], filterState:GetSubcategory())
         end
     end
