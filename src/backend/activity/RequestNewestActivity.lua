@@ -26,13 +26,6 @@ function RequestNewestActivity:Initialize(tradingHouseWrapper, guildId)
     self.pendingGuildName = tradingHouseWrapper:GetTradingGuildName(guildId)
 end
 
-function RequestNewestActivity:Update()
-    RequestSearchActivity.Update(self)
-    if(self.canExecute) then
-        self.canExecute = self.searchManager.searchPageHistory:CanRequestNewest(self.pendingGuildName)
-    end
-end
-
 function RequestNewestActivity:RequestSearch()
     if(not self.responsePromise) then
         self.responsePromise = Promise:New()

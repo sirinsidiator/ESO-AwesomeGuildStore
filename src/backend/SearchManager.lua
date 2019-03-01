@@ -66,21 +66,6 @@ function SearchManager:Initialize(tradingHouseWrapper, saveData)
     end
 
     self.requestNewestInterval = nil
-    local function RequestNewest()
-        local guildId, guildName = GetCurrentTradingHouseGuildDetails()
-        local canRequest, cooldown = self.searchPageHistory:CanRequestNewest(guildName)
-        if(self.requestNewestInterval) then
-            ClearCallLater(self.requestNewestInterval)
-        end
-        if(canRequest) then
-            self.activityManager:RequestNewestResults(guildId)
-        else
-            self.requestNewestInterval = zo_callLater(function()
-                self.requestNewestInterval = nil
-                self.activityManager:RequestNewestResults(guildId)
-            end, cooldown * 1000)
-        end
-    end
 
     AGS:RegisterCallback(AGS.callback.FILTER_UPDATE, RequestRefreshResults)
     AGS:RegisterCallback(AGS.callback.GUILD_SELECTION_CHANGED, function(guildData)
@@ -102,7 +87,7 @@ function SearchManager:Initialize(tradingHouseWrapper, saveData)
             if(type == ActivityBase.ACTIVITY_TYPE_REQUEST_SEARCH) then
                 RequestRefreshResults()
             elseif(type == ActivityBase.ACTIVITY_TYPE_REQUEST_NEWEST) then
-                RequestNewest()
+                self:RequestNewest()
             end
         end
     end)
@@ -120,7 +105,7 @@ function SearchManager:Initialize(tradingHouseWrapper, saveData)
         if(hasMorePages and #searchResults < AUTO_SEARCH_RESULT_COUNT_THRESHOLD) then
             self:RequestSearch()
         else
-            RequestNewest()
+            self:RequestNewest()
         end
     end)
 end
@@ -404,4 +389,26 @@ function SearchManager:RequestSearch(ignoreResultCount)
         end
     end
     return false
+end
+
+function SearchManager:RequestNewest(ignoreCooldown)
+    if(self.requestNewestInterval) then
+        ClearCallLater(self.requestNewestInterval)
+    end
+
+    local guildId, guildName = GetCurrentTradingHouseGuildDetails()
+    if(ignoreCooldown) then
+        self.activityManager:RequestNewestResults(guildId)
+        return
+    end
+
+    local canRequest, cooldown = self.searchPageHistory:CanRequestNewest(guildName)
+    if(canRequest) then
+        self.activityManager:RequestNewestResults(guildId)
+    else
+        self.requestNewestInterval = zo_callLater(function()
+            self.requestNewestInterval = nil
+            self.activityManager:RequestNewestResults(guildId)
+        end, cooldown * 1000)
+    end
 end

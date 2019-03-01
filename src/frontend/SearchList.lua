@@ -31,6 +31,8 @@ local ADD_NEW_ICON = "EsoUI/Art/Progression/addpoints_up.dds"
 local r, g, b = ZO_TOOLTIP_DEFAULT_COLOR:UnpackRGB()
 local LINE_FORMAT = "%s: |cFFFFFF%s"
 
+local IGNORE_COOLDOWN = true
+
 local SearchList = ZO_Object:Subclass()
 AGS.class.SearchList = SearchList
 
@@ -129,6 +131,12 @@ function SearchList:Initialize(searchManager)
         control.name:SetText(search:GetLabel())
         control.name:SetColor(color:UnpackRGBA())
         control.search = search
+
+        control:SetHandler("OnMouseDoubleClick", function(control, button)
+            if(button == MOUSE_BUTTON_INDEX_LEFT) then
+                searchManager:RequestNewest(IGNORE_COOLDOWN)
+            end
+        end)
     end)
 
     ZO_ScrollList_AddDataType(list.list, ADD_NEW_ENTRY, "AwesomeGuildStoreSearchListEntry", ROW_HEIGHT, function(control, data)
