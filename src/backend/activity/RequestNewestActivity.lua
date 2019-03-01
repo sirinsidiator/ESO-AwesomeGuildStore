@@ -30,10 +30,10 @@ function RequestNewestActivity:RequestSearch()
     if(not self.responsePromise) then
         self.responsePromise = Promise:New()
 
-        local page = self.searchManager.searchPageHistory:GetNextRequestNewestPage(self.pendingGuildName)
+        self.pendingPage = self.searchManager.searchPageHistory:GetNextRequestNewestPage(self.pendingGuildName)
 
         ClearAllTradingHouseSearchTerms()
-        ExecuteTradingHouseSearch(page, SortOrderBase.SORT_FIELD_TIME_LEFT, SortOrderBase.SORT_ORDER_DOWN)
+        ExecuteTradingHouseSearch(self.pendingPage, SortOrderBase.SORT_FIELD_TIME_LEFT, SortOrderBase.SORT_ORDER_DOWN)
     end
     return self.responsePromise
 end
@@ -41,8 +41,15 @@ end
 function RequestNewestActivity:GetLogEntry()
     if(not self.logEntry) then
         local prefix = ActivityBase.GetLogEntry(self)
-        -- TRANSLATORS: log text shown to the user for each request of the newest search results. Placeholder is for the guild name
-        self.logEntry = prefix .. zo_strformat(gettext("Request newest results in <<1>>"), self.pendingGuildName)
+        local message
+        if(self.pendingPage) then
+            -- TRANSLATORS: log text shown to the user for each executed request of the newest search results. Placeholders are for the page and guild name
+            message = gettext("Request page <<1>> of newest results in <<2>>", self.pendingPage + 1, self.pendingGuildName)
+        else
+            -- TRANSLATORS: log text shown to the user for each request of the newest search results. Placeholder is for the guild name
+            message = gettext("Request newest results in <<1>>", self.pendingGuildName)
+        end
+        self.logEntry = prefix .. message
     end
     return self.logEntry
 end

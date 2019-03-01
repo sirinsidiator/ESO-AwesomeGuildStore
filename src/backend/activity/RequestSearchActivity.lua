@@ -175,8 +175,12 @@ function RequestSearchActivity:GetLogEntry()
         local message
         if(self.pendingFilterState) then
             local category, subcategory = self:GetPendingCategories()
-            -- TRANSLATORS: log text shown to the user for an executed request of the search results. Placeholders are for the page, category, subcategory and guild name
-            message = gettext("Request page <<1>> of <<2>> > <<3>> in <<4>>", self.pendingPage + 1, category.label, subcategory.label, self.pendingGuildName)
+            local categoryLabel = category.label
+            if(not subcategory.isDefault) then
+                categoryLabel = string.format("%s > %s", category.label, subcategory.label)
+            end
+            -- TRANSLATORS: log text shown to the user for an executed request of the search results. Placeholders are for the page, category and guild name
+            message = gettext("Request page <<1>> of <<2>> in <<3>>", self.pendingPage + 1, categoryLabel, self.pendingGuildName)
         else
             -- TRANSLATORS: log text shown to the user for a queued request of the search results. Placeholder is for the guild name
             message = gettext("Request search results in <<1>>", self.pendingGuildName)

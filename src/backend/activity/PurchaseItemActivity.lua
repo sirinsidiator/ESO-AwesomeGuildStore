@@ -68,8 +68,9 @@ function PurchaseItemActivity:GetLogEntry()
     if(not self.logEntry) then
         local prefix = ActivityBase.GetLogEntry(self)
         local itemData = self.itemData
+        local price = ZO_Currency_FormatPlatform(CURT_MONEY, itemData.purchasePrice, ZO_CURRENCY_FORMAT_AMOUNT_ICON)
         -- TRANSLATORS: log text shown to the user for each purchase item request. Placeholders are for the stackCount, itemLink, price, seller and guild name respectively
-        self.logEntry = prefix .. zo_strformat(gettext("Purchase <<1>>x <<2>> for <<3>> from <<4>> in <<5>>"), itemData.stackCount, itemData.itemLink, itemData.purchasePrice, itemData.sellerName, itemData.guildName)
+        self.logEntry = prefix .. zo_strformat(gettext("Purchase <<1>>x <<2>> for <<3>> from <<4>> in <<5>>"), itemData.stackCount, itemData.itemLink, price, itemData.sellerName, itemData.guildName)
     end
     return self.logEntry
 end
