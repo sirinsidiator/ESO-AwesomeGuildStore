@@ -11,7 +11,8 @@ function GenericTradingHouseFilter:New(...)
 end
 
 function GenericTradingHouseFilter:Initialize(filterData)
-    MultiChoiceFilterBase.Initialize(self, filterData.id, FilterBase.GROUP_SERVER, filterData.label, filterData.values)
+    local group = filterData.type and FilterBase.GROUP_SERVER or FilterBase.GROUP_LOCAL
+    MultiChoiceFilterBase.Initialize(self, filterData.id, group, filterData.label, filterData.values)
     self:SetEnabledSubcategories(filterData.enabled)
     if(filterData.encoding) then
         self:SetEncoding(filterData.encoding)
@@ -41,16 +42,11 @@ function GenericTradingHouseFilter:PrepareForSearch(selection)
             values[#value + 1] = value.id
         end
     end
-
-    if(self.filterType and #values > 0) then
-        self.serverValues = values
-    else
-        self.serverValues = nil
-    end
+    self.serverValues = values
 end
 
 function GenericTradingHouseFilter:ApplyToSearch(request)
-    if(self.serverValues) then
+    if(#self.serverValues > 0) then
         request:SetFilterValues(self.filterType, unpack(self.serverValues))
     end
 end
