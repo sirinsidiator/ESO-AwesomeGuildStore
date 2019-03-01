@@ -126,7 +126,10 @@ function ActivityPanel:Initialize(tradingHouseWrapper)
         local textControl = control:GetNamedChild("Text")
         textControl:SetText(data:GetLogEntry())
         textControl:SetColor(textColor:UnpackRGBA())
-        -- TODO set tooltip with additional details (status, created time, update time, etc)
+
+        if(Zgoo) then
+            control:SetHandler("OnMouseUp", function() Zgoo(data) end)
+        end
     end
 
     local LOG_COLOR_QUEUED = ZO_ColorDef:New("3ABAFF")
