@@ -42,6 +42,7 @@ guildselector/HiredTraderTooltip.lua
 guildselector/GuildSelector.lua
 guildselector/GuildSelector.xml
 backend/sort/SortOrderBase.lua
+data/CategoryDefinitions.lua
 backend/activity/ActivityBase.lua
 backend/activity/RequestSearchActivity.lua
 backend/activity/RequestNewestActivity.lua
@@ -53,7 +54,6 @@ backend/activity/FetchGuildItemsActivity.lua
 frontend/ActivityPanel.xml
 frontend/ActivityPanel.lua
 backend/activity/ActivityManager.lua
-data/CategoryDefinitions.lua
 data/FilterIds.lua
 data/SortOrderIds.lua
 data/FurnitureCategoryFilterData.lua
