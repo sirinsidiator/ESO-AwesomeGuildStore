@@ -25,11 +25,3 @@ function SortOrderTimeLeft:Initialize()
 
     self.useLocalDirection = true
 end
-
-function SortOrderTimeLeft:ResetDirection()
-    self.direction = SortOrderBase.SORT_ORDER_DOWN
-end
-
-function SortOrderTimeLeft:IsDefaultDirection()
-    return self.direction == SortOrderBase.SORT_ORDER_DOWN
-end

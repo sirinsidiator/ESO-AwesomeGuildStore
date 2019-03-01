@@ -25,8 +25,8 @@ function RequestSearchActivity:Initialize(tradingHouseWrapper, guildId)
     self.searchManager = tradingHouseWrapper.searchManager
     self.itemDatabase = tradingHouseWrapper.itemDatabase
     self.pendingGuildName = tradingHouseWrapper:GetTradingGuildName(guildId)
-    self.sortField = SortOrderBase.SORT_FIELD_TIME_LEFT
-    self.sortOrder = SortOrderBase.SORT_ORDER_DOWN
+    self.sortField = SortOrderBase.SORT_FIELD_UNIT_PRICE
+    self.sortOrder = SortOrderBase.SORT_ORDER_UP
 end
 
 function RequestSearchActivity:Update()
