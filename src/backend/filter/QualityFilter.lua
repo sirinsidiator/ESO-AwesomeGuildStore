@@ -76,9 +76,8 @@ function QualityFilter:IsLocal()
     return false
 end
 
-function QualityFilter:ApplyToSearch()
-    if(not self:IsAttached() or self:IsDefault()) then return end
-    SetTradingHouseFilterRange(TRADING_HOUSE_FILTER_TYPE_QUALITY, self.min, self.max)
+function QualityFilter:ApplyToSearch(request)
+    request:SetFilterRange(TRADING_HOUSE_FILTER_TYPE_QUALITY, self.serverMin, self.serverMax)
 end
 
 function QualityFilter:FilterLocalResult(itemData)

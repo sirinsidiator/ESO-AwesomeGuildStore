@@ -6,6 +6,8 @@ local SortOrderBase = AGS.class.SortOrderBase
 local logger = AGS.internal.logger
 local gettext = AGS.internal.gettext
 
+local CATEGORY_DEFINITION = AGS.data.CATEGORY_DEFINITION
+
 local Promise = LibPromises
 local sformat = string.format
 
@@ -23,6 +25,8 @@ function RequestSearchActivity:Initialize(tradingHouseWrapper, guildId)
     self.searchManager = tradingHouseWrapper.searchManager
     self.itemDatabase = tradingHouseWrapper.itemDatabase
     self.pendingGuildName = tradingHouseWrapper:GetTradingGuildName(guildId)
+    self.sortField = SortOrderBase.SORT_FIELD_TIME_LEFT
+    self.sortOrder = SortOrderBase.SORT_ORDER_DOWN
 end
 
 function RequestSearchActivity:Update()
@@ -36,16 +40,23 @@ function RequestSearchActivity:PrepareFilters()
     local filterState = searchManager:GetActiveSearch():GetFilterState()
     local page = searchManager.searchPageHistory:GetNextPage(self.pendingGuildName, filterState)
     if(page) then
-        local count = 0
-        local filters = searchManager:GetActiveFilters()
-        for _, filter in ipairs(filters) do
-            if(filter:PrepareForSearch()) then
-                count = count + 1
-            end
-        end
-
         self.pendingPage = page
         self.pendingFilterState = filterState
+
+        local count = 0
+        local subcategory = filterState:GetSubcategory()
+        local filters = searchManager:GetActiveFilters()
+        local activeFilters = {}
+        for _, filter in ipairs(filters) do
+            local id = filter:GetId()
+            if(not filter:IsLocal() and filter:CanFilter(subcategory) and filterState:GetRawFilterValues(id)) then
+                if(filter:PrepareForSearch(filterState:GetFilterValues(id))) then
+                    count = count + 1
+                end
+                activeFilters[#activeFilters + 1] = filter
+            end
+        end
+        self.activeFilters = activeFilters
 
         if(count > 0) then
             logger:Info("Waiting for %d filters to prepare", count)
@@ -70,21 +81,48 @@ function RequestSearchActivity:PrepareFilters()
     return promise
 end
 
+function RequestSearchActivity:GetPendingCategories()
+    local subcategory = self.pendingFilterState:GetSubcategory()
+    return CATEGORY_DEFINITION[subcategory.category], subcategory
+end
+
+function RequestSearchActivity:SetFilterValues(type, ...)
+    local values = self.appliedValues[type] or {}
+    for i = 1, select("#", ...) do
+        values[#values + 1] = select(i, ...)
+    end
+    self.appliedValues[type] = values
+
+    SetTradingHouseFilter(type, ...)
+end
+
+function RequestSearchActivity:SetFilterRange(type, min, max)
+    local values = self.appliedValues[type] or {}
+    values.min = min
+    values.max = max
+    self.appliedValues[type] = values
+
+    SetTradingHouseFilterRange(type, min, max)
+end
+
+function RequestSearchActivity:SetSortOrder(field, order)
+    self.sortField = field
+    self.sortOrder = order
+end
+
 function RequestSearchActivity:RequestSearch()
     if(not self.responsePromise) then
         self.responsePromise = Promise:New()
         if(self.state ~= ActivityBase.STATE_SUCCEEDED) then
+            self.appliedValues = {}
             ClearAllTradingHouseSearchTerms()
 
-            local _, subcategory = self.searchManager:GetCurrentCategories()
-            local filters = self.searchManager:GetActiveFilters()
+            local filters = self.activeFilters
             for _, filter in ipairs(filters) do
-                if(not filter:IsLocal() and filter:CanFilter(subcategory)) then
-                    filter:ApplyToSearch() -- TODO pass values from pending filter state
-                end
+                filter:ApplyToSearch(self)
             end
 
-            ExecuteTradingHouseSearch(self.pendingPage, SortOrderBase.SORT_FIELD_TIME_LEFT, SortOrderBase.SORT_ORDER_DOWN) -- TODO use appropriate sort order
+            ExecuteTradingHouseSearch(self.pendingPage, self.sortField, self.sortOrder)
         else
             self.responsePromise:Resolve(self)
         end

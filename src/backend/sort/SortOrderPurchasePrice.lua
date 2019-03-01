@@ -23,6 +23,6 @@ function SortOrderPurchasePrice:Initialize()
         return a.purchasePrice < b.purchasePrice and 1 or -1
     end)
 
-    self.serverField = SortOrderBase.SORT_FIELD_PURCHASE_PRICE
+    self.serverKey = SortOrderBase.SORT_FIELD_PURCHASE_PRICE
     self.useLocalOrder = true
 end

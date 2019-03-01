@@ -96,8 +96,17 @@ function MultiChoiceFilterBase:Reset(silent)
     end
 end
 
-function MultiChoiceFilterBase:IsDefault()
-    return (self.count == 0)
+function MultiChoiceFilterBase:IsDefault(selection)
+    if(selection) then
+        for value, enabled in pairs(selection) do
+            if(enabled) then
+                return false
+            end
+        end
+        return true
+    end
+
+    return self.count == 0
 end
 
 function MultiChoiceFilterBase:GetValues()

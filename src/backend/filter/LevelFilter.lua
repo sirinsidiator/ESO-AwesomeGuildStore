@@ -82,13 +82,12 @@ function LevelFilter:IsLocal()
     return false
 end
 
-function LevelFilter:ApplyToSearch()
-    if(not self:IsAttached() or self:IsDefault()) then return end
-    local category = self.searchManager:GetCurrentCategories() -- TODO pass the search manager to the function
+function LevelFilter:ApplyToSearch(request)
+    local category = request:GetPendingCategories()
     if(not CAN_SERVER_FILTER_IN_CATEGORY[category.id]) then return end
 
-    local min = self.min
-    local max = self.max
+    local min = self.serverMin
+    local max = self.serverMax
     local minType = min > MAX_LEVEL and TRADING_HOUSE_FILTER_TYPE_CHAMPION_POINTS or TRADING_HOUSE_FILTER_TYPE_LEVEL
     local maxType = max > MAX_LEVEL and TRADING_HOUSE_FILTER_TYPE_CHAMPION_POINTS or TRADING_HOUSE_FILTER_TYPE_LEVEL
     if(minType ~= maxType) then return end
@@ -98,7 +97,7 @@ function LevelFilter:ApplyToSearch()
         max = max - MAX_LEVEL
     end
 
-    SetTradingHouseFilterRange(minType, min, max)
+    request:SetFilterRange(minType, min, max)
 end
 
 function LevelFilter:SetFromItem(itemLink)

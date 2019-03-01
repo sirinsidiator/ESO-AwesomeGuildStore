@@ -676,10 +676,12 @@ function ItemCategoryFilter:IsLocal()
     return false
 end
 
-function ItemCategoryFilter:ApplyToSearch()
-    if(not self:IsAttached() or self:IsDefault()) then return end
+function ItemCategoryFilter:PrepareForSearch(subcategory)
+    self.serverSubcategory = subcategory
+end
 
-    local filters = self:GetCurrentFilterDefinition(self.subcategory) -- TODO: use external value
+function ItemCategoryFilter:ApplyToSearch(request)
+    local filters = self:GetCurrentFilterDefinition(self.serverSubcategory)
     for i = 1, #filters do
         local filter = filters[i]
         if(filter.type ~= ITEMFILTERTYPE_LOCAL) then
@@ -687,7 +689,7 @@ function ItemCategoryFilter:ApplyToSearch()
             for value in pairs(filter.allowed) do
                 values[#values + 1] = value
             end
-            SetTradingHouseFilter(filter.type, unpack(values))
+            request:SetFilterValues(filter.type, unpack(values))
         end
     end
 end
@@ -762,7 +764,11 @@ function ItemCategoryFilter:Reset()
     self:HandleChange(self.category, self.subcategory)
 end
 
-function ItemCategoryFilter:IsDefault()
+function ItemCategoryFilter:IsDefault(subcategory)
+    if(subcategory) then
+        return subcategory.id ~= DEFAULT_SUB_CATEGORY_ID[DEFAULT_CATEGORY_ID]
+    end
+
     if(self.category.id ~= DEFAULT_CATEGORY_ID or self.subcategory.id ~= DEFAULT_SUB_CATEGORY_ID[DEFAULT_CATEGORY_ID]) then
         return false
     end

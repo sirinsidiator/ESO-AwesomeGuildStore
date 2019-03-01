@@ -89,17 +89,26 @@ function SortFilter:Reset()
     self:SetCurrentSortOrder(nil)
 end
 
-function SortFilter:IsDefault()
-    return self.sortOrder == self.defaultSortOrder and self.sortOrder:IsDefaultDirection()
+function SortFilter:IsDefault(id, direction)
+    local sortOrder = self.sortOrder
+    if(self.availableSortOrders[id]) then
+        sortOrder = self.availableSortOrders[id]
+    end
+    return sortOrder == self.defaultSortOrder and sortOrder:IsDefaultDirection()
 end
 
 function SortFilter:IsLocal()
     return false
 end
 
-function SortFilter:ApplyToSearch(search)
-    if(self.sortOrder) then
-        -- TODO self.sortOrder:ApplySortValues(search)
+function SortFilter:PrepareForSearch(id, direction)
+    self.serverSortOrder = self.availableSortOrders[id]
+    self.serverSortDirection = direction
+end
+
+function SortFilter:ApplyToSearch(request)
+    if(self.serverSortOrder) then
+        self.serverSortOrder:ApplySortValues(request, self.serverSortDirection)
     end
 end
 

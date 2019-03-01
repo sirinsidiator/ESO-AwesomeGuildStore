@@ -6,9 +6,6 @@ local AdjustLinkStyle = AGS.internal.AdjustLinkStyle
 local ItemDatabaseGuildView = AGS.class.ItemDatabaseGuildView
 local FilterBase = AGS.class.FilterBase
 
-local FILTER_ID = AGS.data.FILTER_ID
-local DEFAULT_SUBCATEGORY = AGS.data.SUB_CATEGORY_DEFINITION[AGS.data.DEFAULT_SUB_CATEGORY_ID[AGS.data.DEFAULT_CATEGORY_ID]]
-
 local ItemDatabase = ZO_Object:Subclass()
 AGS.class.ItemDatabase = ItemDatabase
 
@@ -155,7 +152,7 @@ function ItemDatabase:GetFilteredView(guildName, filterState)
 
     for i = 1, #groups do
         if(groups[i] ~= FilterBase.GROUP_NONE) then
-            view = view:GetSubView(searchManager, filterState, groups[i], filterState:GetFilterValues(FILTER_ID.CATEGORY_FILTER) or DEFAULT_SUBCATEGORY)
+            view = view:GetSubView(searchManager, filterState, groups[i], filterState:GetSubcategory())
         end
     end
 

@@ -5,6 +5,7 @@ AGS.class.SortOrderBase = SortOrderBase
 
 SortOrderBase.SORT_FIELD_TIME_LEFT = TRADING_HOUSE_SORT_EXPIRY_TIME
 SortOrderBase.SORT_FIELD_PURCHASE_PRICE = TRADING_HOUSE_SORT_SALE_PRICE
+SortOrderBase.SORT_FIELD_UNIT_PRICE = TRADING_HOUSE_SORT_SALE_PRICE_PER_UNIT
 
 SortOrderBase.SORT_ORDER_UP = ZO_SORT_ORDER_UP
 SortOrderBase.SORT_ORDER_DOWN = ZO_SORT_ORDER_DOWN
@@ -71,13 +72,14 @@ function SortOrderBase:GetSortResult(data1, data2)
     end
 end
 
-function SortOrderBase:ApplySortValues(search)
-    search.m_sortField = self.serverKey
+function SortOrderBase:ApplySortValues(request, localDirection)
+    local direction
     if(self.useLocalDirection) then
-        search.m_sortOrder = self.direction
+        direction = localDirection
     else
-        search.m_sortOrder = self.serverDirection
+        direction = self.serverDirection
     end
+    request:SetSortOrder(self.serverKey, direction)
 end
 
 function SortOrderBase:Serialize(direction)

@@ -2,6 +2,8 @@ local AGS = AwesomeGuildStore
 
 local FilterBase = AGS.class.FilterBase
 
+local FILTER_ID = AGS.data.FILTER_ID
+local DEFAULT_SUBCATEGORY = AGS.data.SUB_CATEGORY_DEFINITION[AGS.data.DEFAULT_SUB_CATEGORY_ID[AGS.data.DEFAULT_CATEGORY_ID]]
 
 local FilterState = ZO_Object:Subclass()
 AGS.class.FilterState = FilterState
@@ -54,6 +56,7 @@ function FilterState:Initialize(searchManager, filterStates)
     local values = {}
     local valuesById = {}
     local valuesByGroup = {}
+    self.subcategory = DEFAULT_SUBCATEGORY
 
     for id, filterState in pairs(filterStates) do
         local filter = searchManager:GetFilter(id)
@@ -64,6 +67,9 @@ function FilterState:Initialize(searchManager, filterStates)
             -- disabled filters should be added with group_none and an empty object for the filterValues
             group = filter:GetGroup()
             filterValues = { filter:Deserialize(filterState) }
+            if(id == FILTER_ID.CATEGORY_FILTER) then
+                self.subcategory = filterValues[1]
+            end
         end
 
         valuesById[id] = {id, filterValues or {}, filterState}
@@ -89,6 +95,11 @@ function FilterState:Initialize(searchManager, filterStates)
     self.values = values
     self.valuesById = valuesById
     self.valuesByGroup = valuesByGroup
+end
+
+-- returns the subcategory object for this filter state
+function FilterState:GetSubcategory()
+    return self.subcategory
 end
 
 -- return an object containing {filterId, values, state}

@@ -30,9 +30,6 @@ function FurnitureCategoryFilter:Initialize()
         [SUB_CATEGORY_ID.FURNISHING_SEATING] = true,
         [SUB_CATEGORY_ID.FURNISHING_TARGET_DUMMY] = true,
     })
-
-    self.selectedCategoryId = nil
-    self.selectedSubcategoryId = nil
 end
 
 function FurnitureCategoryFilter:FilterLocalResult(itemData)
@@ -44,42 +41,35 @@ function FurnitureCategoryFilter:FilterLocalResult(itemData)
     return self.localSelection[value]
 end
 
-function FurnitureCategoryFilter:GetSelectedCategoryIndicesForServer()
-    if(self.dirty) then
-        local selectedCategoryId, selectedSubcategoryId
-        local firstValue = true
-        for value, selected in pairs(self.selection) do
-            if(selected) then
-                local categoryId = value.parentId
-                if(firstValue) then
-                    selectedCategoryId = categoryId
-                    selectedSubcategoryId = value.id
-                    firstValue = false
-                elseif(selectedCategoryId and selectedCategoryId ~= categoryId) then
-                    selectedCategoryId = nil
-                    selectedSubcategoryId = nil
-                    break
-                else
-                    selectedSubcategoryId = nil
-                end
-            end
-        end
-
-        self.selectedCategoryId = selectedCategoryId
-        self.selectedSubcategoryId = selectedSubcategoryId
-        self.dirty = false
-    end
-
-    return self.selectedCategoryId, self.selectedSubcategoryId
-end
-
 function FurnitureCategoryFilter:IsLocal()
     return false
 end
 
-function FurnitureCategoryFilter:ApplyToSearch()
-    if(not self:IsAttached() or self:IsDefault()) then return end
-    local categoryId, subcategoryId = self:GetSelectedCategoryIndicesForServer()
-    SetTradingHouseFilter(TRADING_HOUSE_FILTER_TYPE_FURNITURE_CATEGORY, categoryId)
-    SetTradingHouseFilter(TRADING_HOUSE_FILTER_TYPE_FURNITURE_SUBCATEGORY, subcategoryId)
+function FurnitureCategoryFilter:PrepareForSearch(selection)
+    local selectedCategoryId, selectedSubcategoryId
+    local firstValue = true
+    for value, selected in pairs(selection) do
+        if(selected) then
+            local categoryId = value.parentId
+            if(firstValue) then
+                selectedCategoryId = categoryId
+                selectedSubcategoryId = value.id
+                firstValue = false
+            elseif(selectedCategoryId and selectedCategoryId ~= categoryId) then
+                selectedCategoryId = nil
+                selectedSubcategoryId = nil
+                break
+            else
+                selectedSubcategoryId = nil
+            end
+        end
+    end
+
+    self.serverCategoryId = selectedCategoryId
+    self.serverSubcategoryId = selectedSubcategoryId
+end
+
+function FurnitureCategoryFilter:ApplyToSearch(request)
+    request:SetFilterValues(TRADING_HOUSE_FILTER_TYPE_FURNITURE_CATEGORY, self.serverCategoryId)
+    request:SetFilterValues(TRADING_HOUSE_FILTER_TYPE_FURNITURE_SUBCATEGORY, self.serverSubcategoryId)
 end

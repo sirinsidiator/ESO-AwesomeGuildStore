@@ -34,16 +34,23 @@ function GenericTradingHouseFilter:IsLocal()
     return false
 end
 
-function GenericTradingHouseFilter:ApplyToSearch()
-    if(not self.filterType or not self:IsAttached() or self:IsDefault()) then
-        return
-    end
-
+function GenericTradingHouseFilter:PrepareForSearch(selection)
     local values = {}
-    for value, enabled in pairs(self.selection) do
+    for value, enabled in pairs(selection) do
         if(enabled) then
             values[#value + 1] = value.id
         end
     end
-    SetTradingHouseFilter(self.filterType, unpack(values))
+
+    if(self.filterType and #values > 0) then
+        self.serverValues = values
+    else
+        self.serverValues = nil
+    end
+end
+
+function GenericTradingHouseFilter:ApplyToSearch(request)
+    if(self.serverValues) then
+        request:SetFilterValues(self.filterType, unpack(self.serverValues))
+    end
 end

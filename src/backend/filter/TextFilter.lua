@@ -47,8 +47,8 @@ function TextFilter:Reset()
     self:SetText("")
 end
 
-function TextFilter:IsDefault()
-    return self.text == ""
+function TextFilter:IsDefault(text)
+    return (text or self.text) == ""
 end
 
 function TextFilter:GetValues()
@@ -72,9 +72,9 @@ function TextFilter:IsSearchTextLongEnough(input)
     return length >= MIN_LETTERS
 end
 
-function TextFilter:PrepareForSearch()
+function TextFilter:PrepareForSearch(text)
     self.completedItemNameMatchId = nil
-    if(self:IsDefault() or not self:IsSearchTextLongEnough(self.text)) then return false end
+    if(self:IsDefault(text) or not self:IsSearchTextLongEnough(text)) then return false end
 
     local pendingId, eventHandle
     eventHandle = RegisterForEvent(EVENT_MATCH_TRADING_HOUSE_ITEM_NAMES_COMPLETE, function(_, id, numResults)
@@ -88,7 +88,7 @@ function TextFilter:PrepareForSearch()
     return true
 end
 
-function TextFilter:ApplyToSearch()
+function TextFilter:ApplyToSearch(request)
     if(not self.completedItemNameMatchId) then return end
 
     local numResults = GetNumMatchTradingHouseItemNamesResults(self.completedItemNameMatchId)
@@ -100,7 +100,7 @@ function TextFilter:ApplyToSearch()
         local _, hash = GetMatchTradingHouseItemNamesResult(self.completedItemNameMatchId, hashIndex)
         hashes[hashIndex] = hash
     end
-    SetTradingHouseFilter(TRADING_HOUSE_FILTER_TYPE_NAME_HASH, unpack(hashes))
+    request:SetFilterValues(TRADING_HOUSE_FILTER_TYPE_NAME_HASH, unpack(hashes))
 end
 
 function TextFilter:SetUpLocalFilter(searchTerm)

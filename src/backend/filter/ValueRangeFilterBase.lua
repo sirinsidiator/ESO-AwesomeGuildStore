@@ -57,6 +57,11 @@ function ValueRangeFilterBase:SetValues(min, max)
     end
 end
 
+function ValueRangeFilterBase:PrepareForSearch(min, max)
+    self.serverMin = min
+    self.serverMax = max
+end
+
 function ValueRangeFilterBase:SetUpLocalFilter(min, max)
     self.localMin = min
     self.localMax = max
@@ -67,8 +72,10 @@ function ValueRangeFilterBase:Reset()
     self:SetValues(nil, nil)
 end
 
-function ValueRangeFilterBase:IsDefault()
-    return not (self.min ~= self.config.min or self.max ~= self.config.max)
+function ValueRangeFilterBase:IsDefault(min, max)
+    min = min or self.min
+    max = max or self.max
+    return not (min ~= self.config.min or max ~= self.config.max)
 end
 
 function ValueRangeFilterBase:Serialize(min, max)
