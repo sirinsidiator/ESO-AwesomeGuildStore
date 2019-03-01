@@ -659,11 +659,6 @@ function ItemCategoryFilter:Initialize()
     self.pinned = true
 end
 
-function ItemCategoryFilter:SetSearchManager(searchManager)
-    FilterBase.SetSearchManager(self, searchManager)
-    searchManager:SetCategoryFilter(self)
-end
-
 function ItemCategoryFilter:GetCurrentFilterDefinition(subcategory)
     if(not filterDefinition[subcategory.id]) then
         logger:Warn(string.format("No filter definition for category %d (%s) found", subcategory.id, subcategory.label))

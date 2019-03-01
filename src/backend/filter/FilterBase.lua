@@ -21,7 +21,6 @@ end
 function FilterBase:Initialize(id, group, label)
     self.id = id
     self.group = group
-    self.searchManager = nil
     self.attached = false -- TODO: save which filters are attached
     self.pinned = true -- TODO: save which filters are pinned
     self.label = label
@@ -35,10 +34,6 @@ end
 
 function FilterBase:GetGroup()
     return self.group
-end
-
-function FilterBase:SetSearchManager(searchManager)
-    self.searchManager = searchManager
 end
 
 function FilterBase:SetEnabledSubcategories(categories)
@@ -90,9 +85,6 @@ end
 function FilterBase:HandleChange(...)
     self.dirty = true
     AGS.internal:FireCallbacks(AGS.callback.FILTER_VALUE_CHANGED, self.id, ...)
-    if(self.searchManager) then -- TODO use the callback and get rid of this dependency
-        self.searchManager:RequestFilterUpdate()
-    end
 end
 
 function FilterBase:IsLocal()

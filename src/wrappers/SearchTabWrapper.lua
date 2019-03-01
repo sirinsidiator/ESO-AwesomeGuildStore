@@ -119,11 +119,15 @@ function SearchTabWrapper:InitializeFilters(tradingHouseWrapper)
 
     self.filterArea = AGS.class.FilterArea:New(tradingHouse.browseItemsLeftPane, searchManager)
 
-    searchManager:RegisterFilter(AGS.class.ItemCategoryFilter:New())
+    local categoryFilter = AGS.class.ItemCategoryFilter:New()
+    searchManager:RegisterFilter(categoryFilter)
+    searchManager:SetCategoryFilter(categoryFilter)
     local category, subcategory = searchManager:GetCurrentCategories()
     self.categorySelector:Update(category, subcategory) -- TODO do this inside the selector
 
-    AGS:RegisterFilter(AGS.class.SortFilter:New())
+    local sortFilter = AGS.class.SortFilter:New()
+    searchManager:SetSortFilter(sortFilter)
+    AGS:RegisterFilter(sortFilter)
     AGS:RegisterFilterFragment(AGS.class.SortFilterFragment:New(FILTER_ID.SORT_ORDER))
     AGS:RegisterSortOrder(AGS.class.SortOrderUnitPrice:New())
     AGS:RegisterSortOrder(AGS.class.SortOrderTimeLeft:New())

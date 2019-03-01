@@ -161,6 +161,7 @@ function SearchManager:OnFiltersInitialized()
             self:UpdateAttachedFilters(SILENT)
         end
         self.activeSearch:HandleFilterChanged(self.availableFilters[id])
+        self:RequestFilterUpdate()
     end)
 
     AGS:RegisterCallback(AGS.callback.FILTER_ACTIVE_CHANGED, function(filter)
@@ -179,7 +180,6 @@ end
 function SearchManager:RegisterFilter(filter)
     local filterId = filter:GetId()
     assert(not self.availableFilters[filterId], "Filter is already registered")
-    filter:SetSearchManager(self)
     self.availableFilters[filterId] = filter
 end
 

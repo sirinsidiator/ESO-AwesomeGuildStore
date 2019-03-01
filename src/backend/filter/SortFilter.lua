@@ -32,11 +32,6 @@ function SortFilter:Initialize()
     self.sortOrderCount = 0
 end
 
-function SortFilter:SetSearchManager(searchManager)
-    FilterBase.SetSearchManager(self, searchManager)
-    searchManager:SetSortFilter(self)
-end
-
 function SortFilter:RegisterSortOrder(sortOrder)
     self.availableSortOrders[sortOrder.id] = sortOrder
     if(not self.defaultSortOrder) then
