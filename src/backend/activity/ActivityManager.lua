@@ -296,9 +296,9 @@ function ActivityManager:RequestSearchResults(guildId, ignoreResultCount)
     local key = RequestSearchActivity.CreateKey(guildId)
     if(not (self:CanQueue(key) and self.tradingHouseWrapper.searchTab.isOpen)) then return end
 
-    local AUTO_SEARCH_RESULT_COUNT_THRESHOLD = 50 -- TODO: tweak value, move into search manager?
     local guildName = self.tradingHouseWrapper:GetTradingGuildName(guildId)
-    if(ignoreResultCount or self.tradingHouseWrapper.searchManager:GetNumVisibleResults(guildName) < AUTO_SEARCH_RESULT_COUNT_THRESHOLD) then
+    local searchManager = self.tradingHouseWrapper.searchManager
+    if(ignoreResultCount or searchManager:IsResultCountBelowAutoSearchThreshold(searchManager:GetNumVisibleResults(guildName))) then
         local activity = RequestSearchActivity:New(self.tradingHouseWrapper, guildId)
         self:QueueActivity(activity)
         return activity

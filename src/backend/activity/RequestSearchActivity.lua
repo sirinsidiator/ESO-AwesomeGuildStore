@@ -134,7 +134,6 @@ function RequestSearchActivity:DoExecute()
     return self:ApplyGuildId():Then(self.PrepareFilters):Then(self.RequestSearch)
 end
 
-local AUTO_SEARCH_RESULT_COUNT_THRESHOLD = 50 -- TODO: tweak value
 function RequestSearchActivity:OnResponse(responseType, result)
     if(responseType == self.expectedResponseType) then
         if(result == TRADING_HOUSE_RESULT_SUCCESS and self.responsePromise) then

@@ -8,7 +8,7 @@ local SearchState = AGS.class.SearchState
 local ClearCallLater = AGS.internal.ClearCallLater
 
 local FILTER_UPDATE_DELAY = 0 -- TODO do we even need this? check with profiler
-local AUTO_SEARCH_RESULT_COUNT_THRESHOLD = 50 -- TODO: global
+local AUTO_SEARCH_RESULT_COUNT_THRESHOLD = 20
 local SILENT = true
 local REQUIRES_FULL_UPDATE = true
 
@@ -103,7 +103,7 @@ function SearchManager:Initialize(tradingHouseWrapper, saveData)
     end)
 
     AGS:RegisterCallback(AGS.callback.SEARCH_RESULT_UPDATE, function(searchResults, hasMorePages)
-        if(hasMorePages and #searchResults < AUTO_SEARCH_RESULT_COUNT_THRESHOLD) then
+        if(hasMorePages and self:IsResultCountBelowAutoSearchThreshold(#searchResults)) then
             self:RequestSearch()
         else
             self:RequestNewest()
@@ -361,6 +361,10 @@ function SearchManager:GetNumVisibleResults(guildName)
     return #self.searchResults
 end
 
+function SearchManager:IsResultCountBelowAutoSearchThreshold(resultCount)
+    return resultCount < AUTO_SEARCH_RESULT_COUNT_THRESHOLD
+end
+
 function SearchManager:HasMorePages()
     return self.hasMorePages
 end
@@ -371,7 +375,7 @@ end
 
 function SearchManager:RequestSearch(ignoreResultCount)
     local guildId, guildName = GetCurrentTradingHouseGuildDetails()
-    if(ignoreResultCount or self:GetNumVisibleResults(guildName) < AUTO_SEARCH_RESULT_COUNT_THRESHOLD) then
+    if(ignoreResultCount or self:IsResultCountBelowAutoSearchThreshold(self:GetNumVisibleResults(guildName))) then
         local currentState = self.activeSearch:GetFilterState()
         local page = self.searchPageHistory:GetNextPage(guildName, currentState)
         if(page) then
