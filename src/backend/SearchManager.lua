@@ -87,6 +87,7 @@ function SearchManager:Initialize(tradingHouseWrapper, saveData)
             if(type == ActivityBase.ACTIVITY_TYPE_REQUEST_SEARCH) then
                 RequestRefreshResults()
             elseif(type == ActivityBase.ACTIVITY_TYPE_REQUEST_NEWEST) then
+                RequestRefreshResults()
                 self:RequestNewest()
             end
         end
