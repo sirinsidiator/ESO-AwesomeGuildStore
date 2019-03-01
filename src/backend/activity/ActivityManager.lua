@@ -149,6 +149,7 @@ function ActivityManager:QueueActivity(activity)
     lookup[key] = activity
     zo_callLater(self.executeNext, 0)
 
+    self.panel:SetStatusText(gettext("<<1[No activity/One activity/$d activities]>> queued", #queue)) -- TODO
     self.panel:Refresh()
 
     return true
