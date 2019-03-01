@@ -23,7 +23,7 @@ function SortOrderTimeLeft:Initialize()
         return a.timeRemaining < b.timeRemaining and 1 or -1
     end)
 
-    self.useLocalOrder = true
+    self.useLocalDirection = true
 end
 
 function SortOrderTimeLeft:ResetDirection()

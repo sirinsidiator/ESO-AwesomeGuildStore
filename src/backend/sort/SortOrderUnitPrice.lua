@@ -24,5 +24,5 @@ function SortOrderUnitPrice:Initialize()
     end)
 
     self.serverKey = SortOrderBase.SORT_FIELD_UNIT_PRICE
-    self.useLocalOrder = true
+    self.useLocalDirection = true
 end
