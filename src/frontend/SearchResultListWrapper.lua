@@ -292,11 +292,18 @@ function SearchResultListWrapper:InitializeSortHeaders(tradingHouseWrapper, sear
     tradingHouse.UpdateSortHeaders = function() end -- not needed anymore since we sort locally
     sortHeaderGroup:SetEnabled(true)
 
+    local nameHeader = sortHeaderGroup.headerContainer:GetNamedChild("Name")
+    nameHeader:SetWidth(340)
+    nameHeader:SetMouseEnabled(true)
+    ZO_SortHeader_Initialize(nameHeader, GetString(SI_TRADING_HOUSE_COLUMN_ITEM), SORT_ORDER_ID.ITEM_NAME_ORDER, ZO_SORT_ORDER_UP, TEXT_ALIGN_LEFT, "ZoFontHeader")
+    sortHeaderGroup:AddHeader(nameHeader)
+
     -- move unit and total price headers close together and put a separator inbetween
     local unitPriceHeader = sortHeaderGroup.headerContainer:GetNamedChild("PricePerUnit")
     local priceHeader = sortHeaderGroup.headerContainer:GetNamedChild("Price")
     priceHeader:ClearAnchors()
-    priceHeader:SetAnchor(RIGHT, nil, RIGHT, -30)
+    priceHeader:SetAnchor(RIGHT, nil, RIGHT, -30, 0, ANCHOR_CONSTRAINS_X)
+    priceHeader:SetAnchor(TOP, nameHeader, TOP, 0, 0, ANCHOR_CONSTRAINS_Y)
     priceHeader:SetWidth(nil)
     priceHeader:SetResizeToFitDescendents(true)
     local priceHeaderLabel = priceHeader:GetNamedChild("Name")
@@ -310,18 +317,13 @@ function SearchResultListWrapper:InitializeSortHeaders(tradingHouseWrapper, sear
     separator:SetAnchor(RIGHT, priceHeaderLabel, LEFT, -15)
 
     unitPriceHeader:ClearAnchors()
-    unitPriceHeader:SetAnchor(RIGHT, priceHeader, LEFT, -20)
+    unitPriceHeader:SetAnchor(RIGHT, priceHeader, LEFT, -20, 0, ANCHOR_CONSTRAINS_X)
+    unitPriceHeader:SetAnchor(TOP, nameHeader, TOP, 0, 0, ANCHOR_CONSTRAINS_Y)
     unitPriceHeader:SetWidth(nil)
     unitPriceHeader:SetResizeToFitDescendents(true)
     local unitPriceHeaderLabel = unitPriceHeader:GetNamedChild("Name")
     unitPriceHeaderLabel:ClearAnchors()
     unitPriceHeaderLabel:SetAnchor(RIGHT)
-
-    local nameHeader = sortHeaderGroup.headerContainer:GetNamedChild("Name")
-    nameHeader:SetWidth(340)
-    nameHeader:SetMouseEnabled(true)
-    ZO_SortHeader_Initialize(nameHeader, GetString(SI_TRADING_HOUSE_COLUMN_ITEM), SORT_ORDER_ID.ITEM_NAME_ORDER, ZO_SORT_ORDER_UP, TEXT_ALIGN_LEFT, "ZoFontHeader")
-    sortHeaderGroup:AddHeader(nameHeader)
 
     local customHeader = CreateControlFromVirtual("$(parent)Custom", nameHeader:GetParent(), "ZO_SortHeaderIcon")
     local customHeaderIcon = customHeader:GetNamedChild("Icon")
