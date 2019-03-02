@@ -27,12 +27,11 @@ function GuildSelector:Initialize(tradingHouseWrapper)
     local comboBoxControl = GetControl(control, "ComboBox")
     self.comboBox = ZO_ComboBox_ObjectFromContainer(comboBoxControl)
     self.selectedItemText = GetControl(comboBoxControl, "SelectedItemText")
-    self.selectedItemText.guildId = 0
 
     self:InitializeComboBox(comboBoxControl, self.comboBox)
     self:InitializeHiredTraderTooltip(comboBoxControl, self.comboBox)
 
-    AGS:RegisterCallback(AGS.callback.AVAILABLE_GUILDS_CHANGED, function(guilds) -- TODO: test what happens when we fire this callback outside a trading house
+    AGS:RegisterCallback(AGS.callback.AVAILABLE_GUILDS_CHANGED, function(guilds)
         self:SetupGuildList(guilds)
 
         local hasGuilds = (#guilds > 1)
@@ -45,9 +44,8 @@ function GuildSelector:Initialize(tradingHouseWrapper)
         if(focused) then focused:LoseFocus() end
 
         self.selectedGuildData = guildData
-        self.selectedItemText.guildId = guildData.guildId -- TODO
         self.comboBox:SetSelectedItem(guildData.guildName)
-        self.traderTooltip:Update(self.selectedItemText)
+        self.traderTooltip:Update(self.selectedItemText, guildData.guildId)
         tradingHouse:UpdateForGuildChange() -- TODO: disable all the unnecessary stuff in there
     end)
 end
@@ -90,35 +88,33 @@ end
 function GuildSelector:InitializeHiredTraderTooltip(comboBoxControl, comboBox)
     local traderTooltip = HiredTraderTooltip:New(self.tradingHouseWrapper.saveData)
     local function GuildSelectorShowTooltip(control)
-        traderTooltip:Show(control)
+        local guildId = self.guildIdByMenuIndex[control.menuIndex]
+        if(not guildId) then
+            guildId = self.selectedGuildData.guildId
+        end
+        traderTooltip:Show(control, guildId)
     end
     local function GuildSelectorHideTooltip(control)
         traderTooltip:Hide(control)
     end
 
-    -- allow for tooltips on the drop down entries
-    local function AddMenuItemCallback() -- TODO not working
-        local entry = ZO_Menu.items[#ZO_Menu.items] -- fetch the last added entry
-        local control = entry.item
-        control.guildId = self.guildIdByMenuIndex[control.menuIndex] -- TODO find a better solution
-        entry.onMouseEnter = control:GetHandler("OnMouseEnter")
-        entry.onMouseExit = control:GetHandler("OnMouseExit")
-        ZO_PreHookHandler(control, "OnMouseEnter", GuildSelectorShowTooltip)
-        ZO_PreHookHandler(control, "OnMouseExit", GuildSelectorHideTooltip)
-    end
-
+    local hooked = false
+    local originalZO_Menu_EnterItem, originalZO_Menu_ExitItem
     ZO_PreHook(comboBox, "ShowDropdownInternal", function(comboBox)
-        SetAddMenuItemCallback(AddMenuItemCallback)
+        if(not hooked) then
+            hooked = true
+            originalZO_Menu_EnterItem = ZO_Menu_EnterItem
+            originalZO_Menu_ExitItem = ZO_Menu_ExitItem
+            ZO_PreHook("ZO_Menu_EnterItem", GuildSelectorShowTooltip)
+            ZO_PreHook("ZO_Menu_ExitItem", GuildSelectorHideTooltip)
+        end
     end)
 
     ZO_PreHook(comboBox, "HideDropdownInternal", function(comboBox)
-        local entries = ZO_Menu.items
-        for i = 1, #entries do
-            local entry = entries[i]
-            local control = entries[i].item
-            control:SetHandler("OnMouseEnter", entry.onMouseEnter)
-            control:SetHandler("OnMouseExit", entry.onMouseExit)
-            control.guildId = nil
+        if(hooked) then
+            hooked = false
+            ZO_Menu_EnterItem = originalZO_Menu_EnterItem
+            ZO_Menu_ExitItem = originalZO_Menu_ExitItem
         end
     end)
 
@@ -154,7 +150,7 @@ function GuildSelector:SetupGuildList(guilds)
     local guildIdByMenuIndex = self.guildIdByMenuIndex
     for i = 1, #entries do
         local entry = entries[i]
-        guildIdByMenuIndex[i] = entry.guildId
+        guildIdByMenuIndex[i] = entry.data.guildId
     end
 end
 
