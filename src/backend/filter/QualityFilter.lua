@@ -8,7 +8,6 @@ local SUB_CATEGORY_ID = AGS.data.SUB_CATEGORY_ID
 
 local gettext = AGS.internal.gettext
 
-local GetItemLinkQuality = GetItemLinkQuality
 local TRADING_HOUSE_FILTER_TYPE_QUALITY = TRADING_HOUSE_FILTER_TYPE_QUALITY
 
 
@@ -77,6 +76,11 @@ function QualityFilter:IsLocal()
 end
 
 function QualityFilter:ApplyToSearch(request)
+    if(CraftedPotions) then
+        -- when CraftedPotions is active, we will request potions and poisons of all qualities and filter locally
+        local _, subcategory = request:GetPendingCategories()
+        if(subcategory.id == SUB_CATEGORY_ID.CONSUMABLE_POTION or subcategory.id == SUB_CATEGORY_ID.CONSUMABLE_POISON) then return end
+    end
     request:SetFilterRange(TRADING_HOUSE_FILTER_TYPE_QUALITY, self.serverMin, self.serverMax)
 end
 
