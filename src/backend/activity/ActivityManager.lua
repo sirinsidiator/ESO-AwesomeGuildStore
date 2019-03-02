@@ -109,11 +109,11 @@ function ActivityManager:Initialize(tradingHouseWrapper, loadingIndicator, loadi
     AGS:RegisterCallback(AGS.callback.STORE_TAB_CHANGED, function(oldTab, newTab)
         if(oldTab == tradingHouseWrapper.searchTab) then
             self:CancelSearch()
-        elseif(oldTab == tradingHouseWrapper.listingTab) then
-            self:RemoveActivitiesByType(ActivityBase.ACTIVITY_TYPE_REQUEST_LISTINGS)
         end
 
-        if(newTab == tradingHouseWrapper.listingTab) then
+        if(newTab == tradingHouseWrapper.searchTab) then
+            self:RemoveActivitiesByType(ActivityBase.ACTIVITY_TYPE_REQUEST_LISTINGS)
+        else
             local guildId = GetCurrentTradingHouseGuildDetails()
             self:RequestListings(guildId)
         end
@@ -123,7 +123,7 @@ function ActivityManager:Initialize(tradingHouseWrapper, loadingIndicator, loadi
     AGS:RegisterCallback(AGS.callback.GUILD_SELECTION_CHANGED, function(guildData)
         self:CancelSearch()
 
-        if(self.tradingHouse:IsInListingsMode()) then
+        if(self.tradingHouse:IsInListingsMode() or self.tradingHouse:IsInSellMode()) then
             self:RequestListings(guildData.guildId)
         end
     end)
