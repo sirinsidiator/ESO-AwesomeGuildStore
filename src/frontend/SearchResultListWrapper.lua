@@ -119,6 +119,7 @@ function SearchResultListWrapper:InitializeResultList(tradingHouseWrapper, searc
 
     tradingHouse.RebuildSearchResultsPage = Noop
     tradingHouse.ClearSearchResults = Noop
+    tradingHouse.OnSearchStateChanged = Noop
 
     self.list = list
 
