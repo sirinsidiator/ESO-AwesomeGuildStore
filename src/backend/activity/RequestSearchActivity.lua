@@ -87,13 +87,7 @@ function RequestSearchActivity:GetPendingCategories()
 end
 
 function RequestSearchActivity:SetFilterValues(type, ...)
-    local values = self.appliedValues[type] or {}
-    for i = 1, select("#", ...) do
-        values[#values + 1] = select(i, ...)
-    end
-    self.appliedValues[type] = values
-
-    SetTradingHouseFilter(type, ...)
+    self.appliedValues[type] = {...}
 end
 
 function RequestSearchActivity:SetFilterRange(type, min, max)
@@ -101,8 +95,6 @@ function RequestSearchActivity:SetFilterRange(type, min, max)
     values.min = min
     values.max = max
     self.appliedValues[type] = values
-
-    SetTradingHouseFilterRange(type, min, max)
 end
 
 function RequestSearchActivity:SetSortOrder(field, order)
@@ -120,6 +112,14 @@ function RequestSearchActivity:RequestSearch()
             local filters = self.activeFilters
             for _, filter in ipairs(filters) do
                 filter:ApplyToSearch(self)
+            end
+
+            for type, values in pairs(self.appliedValues) do
+                if(values.min) then
+                    SetTradingHouseFilterRange(type, values.min, values.max)
+                else
+                    SetTradingHouseFilter(type, unpack(values))
+                end
             end
 
             ExecuteTradingHouseSearch(self.pendingPage, self.sortField, self.sortOrder)
