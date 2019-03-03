@@ -1,9 +1,6 @@
 local AGS = AwesomeGuildStore
 
 local FILTER_ID = AGS.data.FILTER_ID
-local SUB_CATEGORY_DEFINITION = AGS.data.SUB_CATEGORY_DEFINITION
-local DEFAULT_CATEGORY_ID = AGS.data.DEFAULT_CATEGORY_ID
-local DEFAULT_SUB_CATEGORY_ID = AGS.data.DEFAULT_SUB_CATEGORY_ID
 local gettext = AGS.internal.gettext
 local logger = AGS.internal.logger
 
@@ -194,19 +191,15 @@ function SearchList:ShowTooltip(control)
     InformationTooltip:AddLine(search:GetLabel(), "ZoFontGameBold", r, g, b)
 
     local filterState = search:GetFilterState()
-    local values = filterState:GetValues()
+    local filterValues = filterState:GetValues()
 
-    local subcategory = filterState:GetFilterValues(FILTER_ID.CATEGORY_FILTER)
-    if(not subcategory) then
-        subcategory = SUB_CATEGORY_DEFINITION[DEFAULT_SUB_CATEGORY_ID[DEFAULT_CATEGORY_ID]]
-    end
-
+    local subcategory = filterState:GetSubcategory()
     local categoryFilter = searchManager:GetCategoryFilter()
     local text = string.format(LINE_FORMAT, categoryFilter:GetLabel(), categoryFilter:GetTooltipText(subcategory))
     InformationTooltip:AddLine(text, "", r, g, b)
 
-    for i = 1, #values do
-        local id, values, state = unpack(values[i])
+    for i = 1, #filterValues do
+        local id, values, state = unpack(filterValues[i])
         if(id ~= FILTER_ID.CATEGORY_FILTER) then
             local filter = searchManager:GetFilter(id)
             if(filter and (filter:IsPinned() or search:IsFilterActive(id)) and filter:CanFilter(subcategory)) then

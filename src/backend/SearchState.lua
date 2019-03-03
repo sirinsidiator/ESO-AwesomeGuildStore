@@ -3,9 +3,6 @@ local AGS = AwesomeGuildStore
 local FilterState = AGS.class.FilterState
 local FILTER_ID = AGS.data.FILTER_ID
 local CATEGORY_DEFINITION = AGS.data.CATEGORY_DEFINITION
-local SUB_CATEGORY_DEFINITION = AGS.data.SUB_CATEGORY_DEFINITION
-local DEFAULT_CATEGORY_ID = AGS.data.DEFAULT_CATEGORY_ID
-local DEFAULT_SUB_CATEGORY_ID = AGS.data.DEFAULT_SUB_CATEGORY_ID
 local WriteToSavedVariable = AGS.internal.WriteToSavedVariable
 local ReadFromSavedVariable = AGS.internal.ReadFromSavedVariable
 
@@ -102,7 +99,7 @@ function SearchState:Apply()
     local searchManager = self.searchManager
     local availableFilters = searchManager:GetAvailableFilters()
     for id, filter in pairs(availableFilters) do
-        if(not self.filterState:GetRawFilterValues(id) and not filter:IsDefault()) then
+        if(not self.filterState:HasFilter(id) and not filter:IsDefault()) then
             filter:Reset()
         end
     end
@@ -127,10 +124,7 @@ function SearchState:Update()
     local label = self.label
     local icon = self.icon
 
-    local subcategory = self.filterState:GetFilterValues(FILTER_ID.CATEGORY_FILTER)
-    if(not subcategory) then
-        subcategory = SUB_CATEGORY_DEFINITION[DEFAULT_SUB_CATEGORY_ID[DEFAULT_CATEGORY_ID]]
-    end
+    local subcategory = self.filterState:GetSubcategory()
     local category = CATEGORY_DEFINITION[subcategory.category]
 
     if(not self.customLabel) then

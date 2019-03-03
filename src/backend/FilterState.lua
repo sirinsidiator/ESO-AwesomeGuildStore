@@ -108,6 +108,11 @@ function FilterState:GetRawFilterValues(id)
     return self.valuesById[id]
 end
 
+-- return true if the filter is part of this state
+function FilterState:HasFilter(id)
+    return self.valuesById[id] ~= nil
+end
+
 -- return an array of objects containing {filterId, values, state} sorted by filterId
 -- or nil if the group is not part of this state
 function FilterState:GetGroupValues(group)

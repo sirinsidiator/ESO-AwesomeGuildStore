@@ -49,7 +49,7 @@ function RequestSearchActivity:PrepareFilters()
         local activeFilters = {}
         for _, filter in ipairs(filters) do
             local id = filter:GetId()
-            if(not filter:IsLocal() and filter:CanFilter(subcategory) and filterState:GetRawFilterValues(id)) then
+            if(not filter:IsLocal() and filter:CanFilter(subcategory) and filterState:HasFilter(id)) then
                 if(filter:PrepareForSearch(filterState:GetFilterValues(id))) then
                     count = count + 1
                 end
