@@ -64,7 +64,7 @@ function MultiButtonFilterFragment:InitializeHandlers()
 
     local function OnClick(button, ctrl, alt, shift)
         local wasSelected = filter:IsSelected(button.value)
-        if(not shift) then
+        if(not ctrl) then
             if(filter:GetSelectionCount() > 1) then
                 wasSelected = false
             end
