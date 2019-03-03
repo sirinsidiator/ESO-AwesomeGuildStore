@@ -25,8 +25,8 @@ function TextFilterFragment:InitializeControls()
     local container = self:GetContainer()
 
     local inputContainer = CreateControlFromVirtual("$(parent)Input", container, "AwesomeGuildStoreTextSearchInputTemplate")
-    inputContainer:SetAnchor(TOPLEFT, container, TOPLEFT, 0, 4)
-    inputContainer:SetAnchor(TOPRIGHT, container, TOPRIGHT, 0, 4)
+    inputContainer:SetAnchor(TOPLEFT, container, TOPLEFT, 5, 4)
+    inputContainer:SetAnchor(TOPRIGHT, container, TOPRIGHT, -5, 4)
 
     local autoComplete = CreateControlFromVirtual("AwesomeGuildStoreTextSearchInputAutoComplete", ZO_TradingHouse, "ZO_TradingHouseNameSearchAutoComplete_Menu")
     autoComplete:SetClampedToScreen(false)

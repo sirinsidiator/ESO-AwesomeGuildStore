@@ -4,8 +4,8 @@ local ValueRangeFilterFragmentBase = AGS.class.ValueRangeFilterFragmentBase
 local SimpleIconButton = AGS.class.SimpleIconButton
 
 local BUTTON_SIZE = 36
-local BUTTON_PADDING = 14
-local BUTTON_OFFSET_Y = 18
+local BUTTON_OFFSET_X = -12
+local BUTTON_OFFSET_Y = 2
 
 local QUALITY_BUTTON_OVER_ICON = "AwesomeGuildStore/images/qualitybuttons/over.dds"
 
@@ -37,12 +37,13 @@ function QualityFilterFragment:Initialize(filterId)
     end
 
     local buttons = {}
-    local width = container:GetWidth()
+    local width = container:GetWidth() - BUTTON_OFFSET_X * 2
     local valueCount = #config.steps
+    local spacing = width / valueCount
     for i = 1, valueCount do
         local button = self:CreateButton(container, i, config.steps[i])
-        local spacing = (width + BUTTON_PADDING) / valueCount
-        button:SetAnchor(TOPLEFT, self.slider.control, TOPLEFT, spacing * (i - 1), BUTTON_OFFSET_Y)
+        button:SetAnchor(TOP, self.slider.control, BOTTOM, 0, BUTTON_OFFSET_Y, ANCHOR_CONSTRAINS_Y)
+        button:SetAnchor(CENTER, container, LEFT, BUTTON_OFFSET_X + spacing * (i - 0.5), 0, ANCHOR_CONSTRAINS_X)
         button:SetClickHandler(MOUSE_BUTTON_INDEX_LEFT, SetMinQuality)
         button:SetClickHandler(MOUSE_BUTTON_INDEX_RIGHT, SetMaxQuality)
         buttons[#buttons + 1] = button
