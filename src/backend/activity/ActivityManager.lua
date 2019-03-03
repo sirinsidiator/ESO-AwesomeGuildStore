@@ -49,12 +49,14 @@ function ActivityManager:Initialize(tradingHouseWrapper, loadingIndicator, loadi
         end
     end)
 
-    RegisterForEvent(EVENT_TRADING_HOUSE_OPERATION_TIME_OUT, function(_, responseType) -- TODO prehook?
+    local function OnTimeout(_, responseType) -- TODO prehook?
         if(self.currentActivity and self.currentActivity:OnTimeout(responseType)) then
             -- TRANSLATORS: Status text when a server response timed out
             self.panel:SetStatusText(gettext("Request timed out"))
         end
-    end)
+    end
+    RegisterForEvent(EVENT_TRADING_HOUSE_RESPONSE_TIMEOUT, OnTimeout)
+    RegisterForEvent(EVENT_TRADING_HOUSE_OPERATION_TIME_OUT, OnTimeout)
 
     RegisterForEvent(EVENT_TRADING_HOUSE_ERROR, function(_, errorCode) -- TODO prehook?
         if(self.currentActivity) then
