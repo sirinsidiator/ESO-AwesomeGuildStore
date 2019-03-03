@@ -172,7 +172,7 @@ function RequestSearchActivity:GetLogEntry()
     if(not self.logEntry) then -- TODO: show filter state too
         local prefix = ActivityBase.GetLogEntry(self)
         local message
-        if(self.pendingFilterState) then
+        if(self.pendingFilterState and self.pendingPage) then
             local category, subcategory = self:GetPendingCategories()
             local categoryLabel = category.label
             if(not subcategory.isDefault) then
