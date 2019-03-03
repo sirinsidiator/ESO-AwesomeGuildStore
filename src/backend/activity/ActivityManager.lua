@@ -46,14 +46,14 @@ function ActivityManager:Initialize(tradingHouseWrapper, loadingIndicator, loadi
         if(self.currentActivity and self.currentActivity:OnAwaitingResponse(responseType)) then
             -- TRANSLATORS: Status text when waiting for a server response
             self.panel:SetStatusText(gettext("Waiting for response"))
-        end
+    end
     end)
 
     local function OnTimeout(_, responseType) -- TODO prehook?
         if(self.currentActivity and self.currentActivity:OnTimeout(responseType)) then
             -- TRANSLATORS: Status text when a server response timed out
             self.panel:SetStatusText(gettext("Request timed out"))
-        end
+    end
     end
     RegisterForEvent(EVENT_TRADING_HOUSE_RESPONSE_TIMEOUT, OnTimeout)
     RegisterForEvent(EVENT_TRADING_HOUSE_OPERATION_TIME_OUT, OnTimeout)
@@ -62,7 +62,7 @@ function ActivityManager:Initialize(tradingHouseWrapper, loadingIndicator, loadi
         if(self.currentActivity) then
             local responseType = self.currentActivity.expectedResponseType
             self.currentActivity:OnResponse(responseType, errorCode)
-        end
+    end
     end)
 
     -- need to prehook this in order to update the itemdatabase before anything else happens
@@ -90,7 +90,9 @@ function ActivityManager:Initialize(tradingHouseWrapper, loadingIndicator, loadi
 
     RegisterForEvent(EVENT_CLOSE_TRADING_HOUSE, function(_) -- TODO prehook?
         if(self.currentActivity) then
+            local activity = self.currentActivity
             self:RemoveCurrentActivity()
+            activity.result = ActivityBase.ERROR_TRADING_HOUSE_CLOSED
     end
     self:ClearQueue()
     self:StopWatchdog()
@@ -280,13 +282,15 @@ function ActivityManager:OnFailure(activity)
         logger:Warn(message)
     end
 
-    -- TRANSLATORS: Status text when a server request has failed. Placeholder is for an explanation text
-    self.panel:SetStatusText(gettext("Request failed: <<1>>", message))
-    ZO_Alert(UI_ALERT_CATEGORY_ERROR, SOUNDS.NEGATIVE_CLICK, message)
+    if(self.tradingHouseWrapper.search:IsAtTradingHouse()) then
+        -- TRANSLATORS: Status text when a server request has failed. Placeholder is for an explanation text
+        self.panel:SetStatusText(gettext("Request failed: <<1>>", message))
+        ZO_Alert(UI_ALERT_CATEGORY_ERROR, SOUNDS.NEGATIVE_CLICK, message)
 
-    self.panel:HideLoading()
-    self:RemoveCurrentActivity()
-    self:ExecuteNext()
+        self.panel:HideLoading()
+        self:RemoveCurrentActivity()
+        self:ExecuteNext()
+    end
 end
 
 function ActivityManager:CanQueue(key)
