@@ -257,6 +257,7 @@ end
 function SearchList:HandleSetSearchEnabled(search, enabled)
     search:SetEnabled(enabled)
     PlaySound("Click")
+    self.list:RefreshVisible()
     AGS.internal:FireCallbacks(AGS.callback.SEARCH_LOCK_STATE_CHANGED, search, search == self.searchManager:GetActiveSearch())
 end
 

@@ -25,6 +25,11 @@ function KeybindStripWrapper:Initialize(tradingHouseWrapper)
     local browseKeybindStripDescriptor = tradingHouse.browseKeybindStripDescriptor
     local doSearchDescriptor = browseKeybindStripDescriptor[DO_SEARCH_SHORTCUT_INDEX]
     doSearchDescriptor.enabled = function()
+        local guildId, guildName = GetCurrentTradingHouseGuildDetails()
+        if(not searchManager:HasCurrentSearchMorePages(guildName)) then
+            return false
+        end
+
         -- TODO consolidate into one function together with the show more row state
         local activity = activityManager:GetCurrentActivity()
         if(activity and activity:GetType() == ActivityBase.ACTIVITY_TYPE_REQUEST_SEARCH) then
@@ -47,11 +52,21 @@ function KeybindStripWrapper:Initialize(tradingHouseWrapper)
     switchGuildDescriptor.enabled = true
 
     local resetSearchDescriptor = browseKeybindStripDescriptor[RESET_SEARCH_SHORTCUT_INDEX]
+    resetSearchDescriptor.enabled = function()
+        return searchManager:GetActiveSearch():IsEnabled()
+    end
+
     resetSearchDescriptor.callback = function()
         searchManager:GetActiveSearch():Reset()
     end
 
-    AGS:RegisterCallback(AGS.callback.CURRENT_ACTIVITY_CHANGED, function(currentActivity, previousActivity)
+    local function UpdateKeybinds()
         KEYBIND_STRIP:UpdateKeybindButtonGroup(tradingHouse.keybindStripDescriptor)
-    end)
+    end
+
+    AGS:RegisterCallback(AGS.callback.CURRENT_ACTIVITY_CHANGED, UpdateKeybinds)
+    AGS:RegisterCallback(AGS.callback.SELECTED_SEARCH_CHANGED, UpdateKeybinds)
+    AGS:RegisterCallback(AGS.callback.SEARCH_LOCK_STATE_CHANGED, UpdateKeybinds)
+    AGS:RegisterCallback(AGS.callback.FILTER_UPDATE, UpdateKeybinds)
+    AGS:RegisterCallback(AGS.callback.GUILD_SELECTION_CHANGED, UpdateKeybinds)
 end

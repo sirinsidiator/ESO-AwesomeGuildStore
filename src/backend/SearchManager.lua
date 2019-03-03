@@ -373,12 +373,15 @@ function SearchManager:GetSearchResults()
     return self.searchResults
 end
 
+function SearchManager:HasCurrentSearchMorePages(guildName)
+    local currentState = self.activeSearch:GetFilterState()
+    return self.searchPageHistory:GetNextPage(guildName, currentState) ~= false
+end
+
 function SearchManager:RequestSearch(ignoreResultCount)
     local guildId, guildName = GetCurrentTradingHouseGuildDetails()
     if(ignoreResultCount or self:IsResultCountBelowAutoSearchThreshold(self:GetNumVisibleResults(guildName))) then
-        local currentState = self.activeSearch:GetFilterState()
-        local page = self.searchPageHistory:GetNextPage(guildName, currentState)
-        if(page) then
+        if(self:HasCurrentSearchMorePages(guildName)) then
             if(self.activityManager:RequestSearchResults(guildId, ignoreResultCount)) then
                 if(self.requestNewestInterval) then
                     ClearCallLater(self.requestNewestInterval)
