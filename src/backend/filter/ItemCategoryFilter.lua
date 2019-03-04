@@ -201,8 +201,17 @@ local filterDefinition = {
                 [ITEMTYPE_MASTER_WRIT] = true,
                 [ITEMTYPE_RACIAL_STYLE_MOTIF] = true,
                 [ITEMTYPE_CONTAINER] = true,
-                [ITEMTYPE_FISH] = true,
                 [ITEMTYPE_AVA_REPAIR] = true,
+                [ITEMTYPE_COLLECTIBLE] = true,
+                [ITEMTYPE_FISH] = true,
+                [ITEMTYPE_TREASURE] = true,
+                [ITEMTYPE_TROPHY] = true,
+            }
+        },
+        {
+            type = ITEMFILTERTYPE_LOCAL,
+            allowed = {
+                [ITEMFILTERTYPE_CONSUMABLE] = true,
             }
         }
     },
@@ -509,6 +518,12 @@ local filterDefinition = {
                 [ITEMTYPE_TROPHY] = true,
                 [ITEMTYPE_COLLECTIBLE] = true,
             }
+        },
+        {
+            type = ITEMFILTERTYPE_LOCAL,
+            allowed = {
+                [ITEMFILTERTYPE_MISCELLANEOUS] = true,
+            }
         }
     },
     [SUB_CATEGORY_ID.MISCELLANEOUS_GLYPHS] = {
@@ -557,10 +572,8 @@ local filterDefinition = {
         {
             type = TRADING_HOUSE_FILTER_TYPE_ITEM,
             allowed = {
-                [ITEMTYPE_COLLECTIBLE] = true,
-                [ITEMTYPE_FISH] = true,
-                [ITEMTYPE_TREASURE] = true,
                 [ITEMTYPE_TROPHY] = true,
+                [ITEMTYPE_COLLECTIBLE] = true,
             }
         },
         {
