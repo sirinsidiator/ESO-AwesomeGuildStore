@@ -69,6 +69,7 @@ function SearchManager:Initialize(tradingHouseWrapper, saveData)
 
     AGS:RegisterCallback(AGS.callback.FILTER_UPDATE, RequestRefreshResults)
     AGS:RegisterCallback(AGS.callback.GUILD_SELECTION_CHANGED, function(guildData)
+        self.activityManager:CancelRequestNewest()
         local guildId = guildData.guildId
         if(guildId and guildId > 0 and not self.itemDatabase:HasGuildSpecificItems(guildData.guildName)) then
             self.activityManager:FetchGuildItems(guildId)
