@@ -41,3 +41,10 @@ function AGS:RegisterSortOrder(sortOrder)
     local sortFilter = AGS.internal.tradingHouse.searchManager:GetSortFilter()
     sortFilter:RegisterSortOrder(sortOrder)
 end
+
+-- This function returns the backpack layouts used on the sell tab when the custom item category filtering is active.
+-- The first layout is used when no sub categories are shown and the second one otherwise.
+-- May return nil in the future, in case the layouts are no longer necessary.
+function AGS:GetSellTabBackpackLayouts()
+    return AGS.internal.BACKPACK_TRADING_HOUSE_LAYOUT_FRAGMENT_BASIC, AGS.internal.BACKPACK_TRADING_HOUSE_LAYOUT_FRAGMENT_ADVANCED
+end

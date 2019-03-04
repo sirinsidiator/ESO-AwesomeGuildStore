@@ -748,6 +748,9 @@ local BACKPACK_TRADING_HOUSE_LAYOUT_FRAGMENT_ADVANCED = ZO_BackpackLayoutFragmen
         hideTabBar = true
     })
 
+AGS.internal.BACKPACK_TRADING_HOUSE_LAYOUT_FRAGMENT_BASIC = BACKPACK_TRADING_HOUSE_LAYOUT_FRAGMENT_BASIC
+AGS.internal.BACKPACK_TRADING_HOUSE_LAYOUT_FRAGMENT_ADVANCED = BACKPACK_TRADING_HOUSE_LAYOUT_FRAGMENT_ADVANCED
+
 local function InitializeLibFilterHooks()
     -- let libFilters hook into our custom fragments to ensure compatibility with other addons
     local libFilters = LibStub("LibFilters-2.0", true)
