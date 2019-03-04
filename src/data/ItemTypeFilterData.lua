@@ -249,8 +249,51 @@ local SIEGE_TYPE_FILTER = {
     }
 }
 
-local TROPHY_TYPE_FILTER = { -- TODO: split up for consumable and misc trophies
-    id = FILTER_ID.TROPHY_TYPE_FILTER,
+local CONSUMABLE_TROPHY_TYPE_FILTER = {
+    id = FILTER_ID.CONSUMABLE_TROPHY_TYPE_FILTER,
+    type = TRADING_HOUSE_FILTER_TYPE_SPECIALIZED_ITEM,
+    unpack = UnpackSpecializedItemType,
+    -- TRANSLATORS: title of the trophy type filter in the left panel on the search tab
+    label = gettext("Trophy Type"),
+    enabled = {
+        [SUB_CATEGORY_ID.CONSUMABLE_TROPHY] = true,
+    },
+    values = {
+        {
+            id = SPECIALIZED_ITEMTYPE_TROPHY_RECIPE_FRAGMENT,
+            label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_TROPHY_RECIPE_FRAGMENT)),
+            icon = "EsoUI/Art/tradinghouse/tradinghouse_trophy_recipe_fragment_%s.dds",
+        },
+        {
+            id = SPECIALIZED_ITEMTYPE_TROPHY_RUNEBOX_FRAGMENT,
+            label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_TROPHY_RUNEBOX_FRAGMENT)),
+            icon = "EsoUI/Art/tradinghouse/tradinghouse_trophy_runebox_fragment_%s.dds",
+        },
+        {
+            id = SPECIALIZED_ITEMTYPE_TROPHY_SCROLL,
+            label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_TROPHY_SCROLL)),
+            icon = "EsoUI/Art/tradinghouse/tradinghouse_trophy_scroll_%s.dds",
+        },
+        {
+            id = SPECIALIZED_ITEMTYPE_FURNISHING_ATTUNABLE_STATION,
+            label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_FURNISHING_ATTUNABLE_STATION)),
+        icon = "EsoUI/Art/Inventory/inventory_tabIcon_crafting_%s.dds",
+        },
+        {
+            id = SPECIALIZED_ITEMTYPE_FISH,
+            label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_FISH)),
+            icon = "EsoUI/Art/treeicons/tutorial_idexicon_fishing_%s.dds",
+        },
+        {
+            id = SPECIALIZED_ITEMTYPE_TREASURE,
+            label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_TREASURE)),
+            icon = "EsoUI/Art/tradinghouse/tradinghouse_other_trophy_types_%s.dds",
+        },
+    }
+}
+
+local MISC_TROPHY_TYPE_FILTER = {
+    id = FILTER_ID.MISC_TROPHY_TYPE_FILTER,
     type = TRADING_HOUSE_FILTER_TYPE_SPECIALIZED_ITEM,
     unpack = UnpackSpecializedItemType,
     -- TRANSLATORS: title of the trophy type filter in the left panel on the search tab
@@ -265,24 +308,19 @@ local TROPHY_TYPE_FILTER = { -- TODO: split up for consumable and misc trophies
             icon = "EsoUI/Art/worldmap/map_indexicon_key_%s.dds",
         },
         {
-            id = SPECIALIZED_ITEMTYPE_TROPHY_MUSEUM_PIECE,
-            label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_TROPHY_MUSEUM_PIECE)),
-            icon = "EsoUI/Art/Inventory/inventory_tabIcon_craftbag_stylematerial_%s.dds",
-        },
-        {
-            id = SPECIALIZED_ITEMTYPE_TROPHY_RECIPE_FRAGMENT,
-            label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_TROPHY_RECIPE_FRAGMENT)),
-            icon = "EsoUI/Art/Guild/tabIcon_roster_%s.dds",
-        },
-        {
             id = SPECIALIZED_ITEMTYPE_TROPHY_TREASURE_MAP,
             label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_TROPHY_TREASURE_MAP)),
-            icon = "EsoUI/Art/icons/achievements_indexicon_exploration_%s.dds",
+            icon = "EsoUI/Art/tradinghouse/tradinghouse_trophy_treasure_map_%s.dds",
         },
         {
             id = SPECIALIZED_ITEMTYPE_COLLECTIBLE_RARE_FISH,
             label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_COLLECTIBLE_RARE_FISH)),
             icon = "EsoUI/Art/treeicons/tutorial_idexicon_fishing_%s.dds",
+        },
+        {
+            id = SPECIALIZED_ITEMTYPE_TROPHY_MUSEUM_PIECE,
+            label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_TROPHY_MUSEUM_PIECE)),
+            icon = "EsoUI/Art/tradinghouse/tradinghouse_other_trophy_types_%s.dds",
         },
     }
 }
@@ -292,4 +330,5 @@ AGS.data.RECIPE_TYPE_FILTER = RECIPE_TYPE_FILTER
 AGS.data.DRINK_TYPE_FILTER = DRINK_TYPE_FILTER
 AGS.data.FOOD_TYPE_FILTER = FOOD_TYPE_FILTER
 AGS.data.SIEGE_TYPE_FILTER = SIEGE_TYPE_FILTER
-AGS.data.TROPHY_TYPE_FILTER = TROPHY_TYPE_FILTER
+AGS.data.CONSUMABLE_TROPHY_TYPE_FILTER = CONSUMABLE_TROPHY_TYPE_FILTER
+AGS.data.MISC_TROPHY_TYPE_FILTER = MISC_TROPHY_TYPE_FILTER

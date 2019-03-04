@@ -255,7 +255,11 @@ function SearchTabWrapper:InitializeFilters(tradingHouseWrapper)
     AGS:RegisterFilter(AGS.class.GenericTradingHouseFilter:New(filterData))
     AGS:RegisterFilterFragment(AGS.class.MultiButtonFilterFragment:New(filterData.id))
 
-    filterData = AGS.data.TROPHY_TYPE_FILTER
+    filterData = AGS.data.CONSUMABLE_TROPHY_TYPE_FILTER
+    AGS:RegisterFilter(AGS.class.GenericTradingHouseFilter:New(filterData))
+    AGS:RegisterFilterFragment(AGS.class.MultiButtonFilterFragment:New(filterData.id))
+
+    filterData = AGS.data.MISC_TROPHY_TYPE_FILTER
     AGS:RegisterFilter(AGS.class.GenericTradingHouseFilter:New(filterData))
     AGS:RegisterFilterFragment(AGS.class.MultiButtonFilterFragment:New(filterData.id))
 
