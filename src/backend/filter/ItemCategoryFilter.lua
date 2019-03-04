@@ -448,22 +448,14 @@ local filterDefinition = {
             type = TRADING_HOUSE_FILTER_TYPE_SPECIALIZED_ITEM,
             allowed = {
                 [SPECIALIZED_ITEMTYPE_FURNISHING_CRAFTING_STATION] = true,
-                [SPECIALIZED_ITEMTYPE_FURNISHING_ATTUNABLE_STATION] = true,
             }
         }
     },
     [SUB_CATEGORY_ID.FURNISHING_LIGHT] = {
-        --TODO: [TRADING_HOUSE_FILTER_TYPE_SPECIALIZED_ITEM] = { SPECIALIZED_ITEMTYPE_FURNISHING_LIGHT },
         {
-            type = TRADING_HOUSE_FILTER_TYPE_ITEM,
+            type = TRADING_HOUSE_FILTER_TYPE_SPECIALIZED_ITEM,
             allowed = {
-                [ITEMTYPE_FURNISHING] = true,
-            }
-        },
-        {
-            type = TRADING_HOUSE_FILTER_TYPE_FURNITURE_CATEGORY,
-            allowed = {
-                [11] = true, -- lighting
+                [SPECIALIZED_ITEMTYPE_FURNISHING_LIGHT] = true,
             }
         }
     },
@@ -484,23 +476,10 @@ local filterDefinition = {
         }
     },
     [SUB_CATEGORY_ID.FURNISHING_TARGET_DUMMY] = {
-        --TODO: [TRADING_HOUSE_FILTER_TYPE_SPECIALIZED_ITEM] = { SPECIALIZED_ITEMTYPE_FURNISHING_TARGET_DUMMY },
         {
-            type = TRADING_HOUSE_FILTER_TYPE_ITEM,
+            type = TRADING_HOUSE_FILTER_TYPE_SPECIALIZED_ITEM,
             allowed = {
-                [ITEMTYPE_FURNISHING] = true,
-            }
-        },
-        {
-            type = TRADING_HOUSE_FILTER_TYPE_FURNITURE_CATEGORY,
-            allowed = {
-                [25] = true, -- services
-            }
-        },
-        {
-            type = TRADING_HOUSE_FILTER_TYPE_FURNITURE_CATEGORY,
-            allowed = {
-                [98] = true, -- training dummies
+                [SPECIALIZED_ITEMTYPE_FURNISHING_TARGET_DUMMY] = true,
             }
         }
     },
