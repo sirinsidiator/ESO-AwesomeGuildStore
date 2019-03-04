@@ -84,7 +84,8 @@ function ActivityPanel:Initialize(tradingHouseWrapper)
     local list = ZO_SortFilterList:New(container)
     list:SetAlternateRowBackgrounds(true)
     list:SetAutomaticallyColorRows(false)
-    list:SetEmptyText("No activities queued") -- TODO translate
+    -- TRANSLATORS: Text when the activity list is empty
+    list:SetEmptyText(gettext("No activities queued"))
 
     local TOOLTIP_LINE_TEMPLATE = "%s: |cFFFFFF%s|r"
     local function EnterRow(control)

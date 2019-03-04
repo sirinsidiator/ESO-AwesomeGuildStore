@@ -11,11 +11,6 @@ function FilterArea:New(...)
     return object
 end
 
--- TODO: create class for FilterArea
--- manages the order and displaying of filters
--- offer buttons to add, remove, (un)pin and reset filters
--- default frame for filters
--- use sortfilter list? would make some things easy
 function FilterArea:Initialize(container, searchManager)
     self.searchManager = searchManager
     self.availableFragments = {}
@@ -39,7 +34,6 @@ function FilterArea:Initialize(container, searchManager)
             self:ShowFilterSelection()
         end
     end)
-    addFilterButton.__AGS_NO_REANCHOR = true -- TODO: this is a hack and should be cleaned up
     self.addFilterButton = addFilterButton
 
     self.editControlGroup = AGS.class.EditControlGroup:New()

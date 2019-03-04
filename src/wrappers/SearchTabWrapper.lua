@@ -6,6 +6,7 @@ local ToggleButton = AGS.class.ToggleButton
 local ClearCallLater = AGS.internal.ClearCallLater
 local GetItemLinkWritCount = AGS.internal.GetItemLinkWritCount
 local Print = AGS.internal.Print
+local logger = AGS.internal.logger
 local AdjustLinkStyle = AGS.internal.AdjustLinkStyle
 
 local FILTER_ID = AGS.data.FILTER_ID
@@ -26,60 +27,6 @@ function SearchTabWrapper:RunInitialSetup(tradingHouseWrapper)
     self:InitializeFilters(tradingHouseWrapper)
     self:InitializePurchase(tradingHouseWrapper)
     self.tradingHouseWrapper = tradingHouseWrapper
-end
-
-local function SortByFilterPriority(a, b)
-    if(a.priority == b.priority) then
-        return a.type < b.type
-    end
-    return b.priority < a.priority
-end
-
-function SearchTabWrapper:RequestUpdateFilterAnchors()
-    if(self.updateFilterAnchorRequest) then
-        ClearCallLater(self.updateFilterAnchorRequest)
-    end
-    self.updateFilterAnchorRequest = zo_callLater(function()
-        self.updateFilterAnchorRequest = nil
-        self:UpdateFilterAnchors()
-    end, 10)
-end
-
-function SearchTabWrapper:UpdateFilterAnchors()
-    local filters = self.searchManager:GetActiveFilters()
-    table.sort(filters, SortByFilterPriority)
-
-    local previousChild = self.filterAreaScrollChild
-    for i = 1, #filters do
-        local isFirst = (i == 1)
-        local filterContainer = filters[i]:GetControl()
-        filterContainer:ClearAnchors()
-        filterContainer:SetAnchor(TOPLEFT, previousChild, isFirst and TOPLEFT or BOTTOMLEFT, 0, isFirst and 0 or 10)
-        previousChild = filterContainer
-    end
-end
-
-local function HandleFilterChanged(self)
-end
-
-local function RebuildSearchResultsPage()
-    TRADING_HOUSE:RebuildSearchResultsPage()
-end
-
-function SearchTabWrapper:AttachFilter(filter) -- TODO: remove
-end
-
-function SearchTabWrapper:DetachFilter(filter) -- TODO: remove
-    if(self.searchManager:DetachFilter(filter.type)) then
-        filter:SetHidden(true)
-        filter:SetParent(GuiRoot)
-        CALLBACK_MANAGER:UnregisterCallback(filter.callbackName, HandleFilterChanged)
-        if(filter.isLocal) then
-            CALLBACK_MANAGER:UnregisterCallback(filter.callbackName, RebuildSearchResultsPage)
-        end
-
-        self:RequestUpdateFilterAnchors()
-end
 end
 
 function SearchTabWrapper:PrepareIngameControls(tradingHouseWrapper)
@@ -325,13 +272,12 @@ function SearchTabWrapper:InitializePurchase(tradingHouseWrapper)
         if(originalVerifyBuyItemAndShowErrors(tradingHouse, inventorySlot)) then
             local entry = ZO_ScrollList_GetData(inventorySlot:GetParent())
             if(not entry) then
-                -- logger:Warn("no item for current inventorySlot")
-                Zgoo(inventorySlot) -- TODO remove
+                logger:Warn("No item for current inventorySlot")
                 return false
             end
 
             if(entry.purchased) then
-                -- TODO translation comment
+                -- TRANSLATORS: Alert message when they try to purchase an item which was already purchased by them earlier
                 ZO_AlertNoSuppression(UI_ALERT_CATEGORY_ALERT, SOUNDS.PLAYER_ACTION_INSUFFICIENT_GOLD, gettext("Item is already in your possession."))
             else
                 tradingHouse:ConfirmPendingPurchase(entry.itemUniqueId)

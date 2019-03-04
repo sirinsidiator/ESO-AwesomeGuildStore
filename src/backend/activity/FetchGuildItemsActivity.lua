@@ -52,7 +52,7 @@ function FetchGuildItemsActivity:GetErrorMessage()
 end
 
 function FetchGuildItemsActivity:GetLogEntry()
-    if(not self.logEntry) then -- TODO: show filter state too
+    if(not self.logEntry) then
         local prefix = ActivityBase.GetLogEntry(self)
         -- TRANSLATORS: log text shown to the user for each time the guild items are fetched. Placeholder is for the guild name
         self.logEntry = prefix .. zo_strformat(gettext("Fetch guild items in <<1>>"), self.pendingGuildName)

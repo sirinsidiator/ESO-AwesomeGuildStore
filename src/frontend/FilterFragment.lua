@@ -43,7 +43,7 @@ function FilterFragment:SetupChildControl(name)
     return child
 end
 
-function FilterFragment:GetId() -- TODO
+function FilterFragment:GetId()
     return self.filter.id
 end
 
@@ -110,8 +110,8 @@ function FilterFragment:ShowMenu()
         else
             -- TRANSLATORS: menu text for removing a filter from the filter area
             AddCustomMenuItem(gettext("Remove Filter"), function()
-                local activeSearch = self.filter.searchManager:GetActiveSearch() -- TODO get the search manager or the active search from somewhere else
-                activeSearch:SetFilterActive(self.filter, false)
+                --local activeSearch = self.filter.searchManager:GetActiveSearch() -- TODO get the search manager or the active search from somewhere else
+                --activeSearch:SetFilterActive(self.filter, false)
             end)
             -- TRANSLATORS: menu text for pinning a filter to the filter area
             AddCustomMenuItem(gettext("Pin Filter"), function()

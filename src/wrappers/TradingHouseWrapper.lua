@@ -193,14 +193,6 @@ function TradingHouseWrapper:RegisterFilter(filter)
     self.searchManager:RegisterFilter(filter)
 end
 
-function TradingHouseWrapper:AttachFilter(filter)
-    self.searchTab:AttachFilter(filter)
-end
-
-function TradingHouseWrapper:DetachFilter(filter)
-    self.searchTab:DetachFilter(filter)
-end
-
 function TradingHouseWrapper:PreHook(methodName, call)
     ZO_PreHook(self.tradingHouse, methodName, call)
 end

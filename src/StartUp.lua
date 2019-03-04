@@ -156,5 +156,8 @@ OnAddonLoaded(function()
     if(not saveData.hasTouchedAction["AGS_SUPPRESS_LOCAL_FILTERS"]) then
         CreateDefaultActionBind(actionName, defaultKey)
     end
-    end)
-end
+
+    if(LibCIF and not saveData.disableCustomSellTabFilter) then
+        LibCIF:disableGuildStoreSellFilters()
+    end
+end)

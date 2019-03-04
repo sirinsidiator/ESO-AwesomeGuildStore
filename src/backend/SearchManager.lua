@@ -395,10 +395,10 @@ function SearchManager:RequestSearch(ignoreResultCount)
                 logger:Debug("Queued request search results")
                 return true
             else
-                logger:Debug("Could not queue request search results")
+                logger:Debug("Could not queue request search results") -- TODO notify users somehow
             end
         else
-            logger:Debug("No more pages for current state") -- TODO user feedback
+            logger:Debug("No more pages for current state") -- TODO notify users somehow
         end
     end
     return false

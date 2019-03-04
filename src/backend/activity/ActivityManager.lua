@@ -33,10 +33,6 @@ function ActivityManager:New(...)
 end
 
 function ActivityManager:Initialize(tradingHouseWrapper, loadingIndicator, loadingOverlay)
-    self.counterFailure = 0 -- TODO remove
-    self.counterSuccess = 0
-    self.counterOther = 0
-
     self.queue = {}
     self.lookup = {}
     self.tradingHouseWrapper = tradingHouseWrapper

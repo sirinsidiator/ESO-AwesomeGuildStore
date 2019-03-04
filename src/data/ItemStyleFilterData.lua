@@ -14,7 +14,7 @@ for itemStyleIndex = 1, GetNumValidItemStyles() do
     end
 end
 
-local newStyles = { 77, 78, 79, 80, 81 } -- TODO: remove 80
+local newStyles = { 77, 78, 79, 80, 81 }
 -- automatically fill in new styles if there are any
 for styleId = NEXT_UNASSIGNED_STYLE_ID, GetHighestItemStyleId() do
     newStyles[#newStyles + 1] = styleId

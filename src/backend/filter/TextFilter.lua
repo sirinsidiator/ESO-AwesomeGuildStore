@@ -30,7 +30,7 @@ function TextFilter:Initialize()
     self.haystack = {}
 end
 
-function TextFilter:SetText(text) -- TODO filter input and only allow ascii?
+function TextFilter:SetText(text)
     local changed = (text ~= self.text)
     self.text = text
 

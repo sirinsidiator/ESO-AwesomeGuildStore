@@ -136,14 +136,7 @@ function SellTabWrapper:Initialize(saveData)
     self.lastSoldPricePerUnit = saveData.lastSoldPricePerUnit or {}
     saveData.lastSoldPricePerUnit = self.lastSoldPricePerUnit
 
-    if(saveData.disableCustomSellTabFilter) then
-        self.customFilterDisabled = true
-    else
-        self.customFilterDisabled = false
-        if(LibCIF) then -- TODO: only allow this when LibCIF is loaded -> make it optional
-            LibCIF:disableGuildStoreSellFilters()
-        end
-    end
+    self.customFilterDisabled = saveData.disableCustomSellTabFilter
     self.currentInventoryFragment = INVENTORY_FRAGMENT
 end
 
@@ -435,7 +428,7 @@ function SellTabWrapper:InitializeCraftingBag(tradingHouseWrapper)
         self.lastSoldPricePerUnit[self.pendingItemIdentifier] = self.currentPricePerUnit
     end
 
-    local activityManager = tradingHouseWrapper.activityManager -- TODO move
+    local activityManager = tradingHouseWrapper.activityManager
 
     -- we completely replace the original function with our own
     tradingHouse.PostPendingItem = function(tradingHouse)
