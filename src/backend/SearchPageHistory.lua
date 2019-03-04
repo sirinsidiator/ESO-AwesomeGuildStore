@@ -93,6 +93,14 @@ function SearchPageHistory:SetRequestNewest(guildName, nextPage)
     searches[REQUEST_NEWEST_KEY] = data
 end
 
+function SearchPageHistory:ResetRequestNewestCooldown(guildName)
+    local searches = self:GetGuildSearches(guildName)
+    local data = searches[REQUEST_NEWEST_KEY]
+    if(data) then
+        data.time = 0
+    end
+end
+
 function SearchPageHistory:GetNextRequestNewestPage(guildName)
     local searches = self:GetGuildSearches(guildName)
     if(searches[REQUEST_NEWEST_KEY]) then

@@ -110,6 +110,10 @@ function SearchManager:Initialize(tradingHouseWrapper, saveData)
             self:RequestNewest()
         end
     end)
+
+    AGS:RegisterCallback(AGS.callback.ITEM_POSTED, function(guildId, itemLink, price, stackCount)
+        self.searchPageHistory:ResetRequestNewestCooldown(GetGuildName(guildId))
+    end)
 end
 
 function SearchManager:SetCategoryFilter(categoryFilter)
