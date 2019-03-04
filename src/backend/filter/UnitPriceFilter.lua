@@ -41,10 +41,9 @@ function UnitPriceFilter:Initialize()
             [SUB_CATEGORY_ID.CONSUMABLE_POTION] = true,
             [SUB_CATEGORY_ID.CONSUMABLE_POISON] = true,
             [SUB_CATEGORY_ID.CONSUMABLE_WRIT] = true,
-            [SUB_CATEGORY_ID.CONSUMABLE_MOTIF] = true, -- TODO
-            [SUB_CATEGORY_ID.CONSUMABLE_CONTAINER] = true, -- TODO
-            [SUB_CATEGORY_ID.CONSUMABLE_TOOL] = true, -- TODO
-            [SUB_CATEGORY_ID.CONSUMABLE_TROPHY] = true, -- TODO
+            [SUB_CATEGORY_ID.CONSUMABLE_MOTIF] = true,
+            [SUB_CATEGORY_ID.CONSUMABLE_TOOL] = true,
+            [SUB_CATEGORY_ID.CONSUMABLE_TROPHY] = true,
             [SUB_CATEGORY_ID.CRAFTING_BLACKSMITHING] = true,
             [SUB_CATEGORY_ID.CRAFTING_CLOTHIER] = true,
             [SUB_CATEGORY_ID.CRAFTING_WOODWORKING] = true,
@@ -56,12 +55,10 @@ function UnitPriceFilter:Initialize()
             [SUB_CATEGORY_ID.CRAFTING_TRAIT_MATERIAL] = true,
             [SUB_CATEGORY_ID.CRAFTING_FURNISHING_MATERIAL] = true,
             [SUB_CATEGORY_ID.MISCELLANEOUS_ALL] = true,
-            [SUB_CATEGORY_ID.MISCELLANEOUS_GLYPHS] = true, -- TODO
             [SUB_CATEGORY_ID.MISCELLANEOUS_SOUL_GEM] = true,
-            [SUB_CATEGORY_ID.MISCELLANEOUS_SIEGE] = true, -- TODO
             [SUB_CATEGORY_ID.MISCELLANEOUS_FISHING] = true,
-            [SUB_CATEGORY_ID.MISCELLANEOUS_TOOL] = true, -- TODO
-            [SUB_CATEGORY_ID.MISCELLANEOUS_TROPHY] = true, -- TODO
+            [SUB_CATEGORY_ID.MISCELLANEOUS_TOOL] = true,
+            [SUB_CATEGORY_ID.MISCELLANEOUS_TROPHY] = true,
         }
     })
 end
