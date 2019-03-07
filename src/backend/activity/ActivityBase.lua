@@ -84,6 +84,8 @@ local RESULT_TO_STRING = {
 }
 ActivityBase.RESULT_TO_STRING = RESULT_TO_STRING
 
+local startTime = GetTimeStamp() * 1000 - GetGameTimeMilliseconds()
+
 function ActivityBase:New(...)
     local selector = ZO_Object.New(self)
     selector:Initialize(...)
@@ -101,14 +103,17 @@ function ActivityBase:Initialize(tradingHouseWrapper, key, priority, guildId)
     self.canExecute = false
     self.expectedResponseType = RESPONSE_TYPE_BY_ACTIVITY_TYPE[self:GetType()] -- TODO: handle response inside the requests?
     self.state = ActivityBase.STATE_QUEUED
-    self.creationTime = GetTimeStamp() * 1000 + GetGameTimeMilliseconds()
+    self.creationTime = GetGameTimeMilliseconds() + startTime
     self.updateTime = self.creationTime
 end
 
 function ActivityBase:SetState(state, result)
+    self.updateTime = GetGameTimeMilliseconds() + startTime
+    if(self.state == ActivityBase.STATE_QUEUED and state ~= ActivityBase.STATE_QUEUED) then
+        self.executionTime = self.updateTime
+    end
     self.state = state
     self.result = result
-    self.updateTime = GetTimeStamp() * 1000 + GetGameTimeMilliseconds()
     self.logEntry = nil -- force it to refresh
     self.activityPanel:Refresh()
 end
@@ -154,7 +159,14 @@ function ActivityBase:AddTooltipText(output)
     output[#output + 1] = ActivityBase.TOOLTIP_LINE_TEMPLATE:format("State", STATE_TO_STRING[self.state] or tostring(self.state))
     output[#output + 1] = ActivityBase.TOOLTIP_LINE_TEMPLATE:format("Created", os.date("%T", math.floor(self.creationTime / 1000)))
     output[#output + 1] = ActivityBase.TOOLTIP_LINE_TEMPLATE:format("Updated", os.date("%T", math.floor(self.updateTime / 1000)))
-    output[#output + 1] = ActivityBase.TOOLTIP_LINE_TEMPLATE:format("Duration", string.format("%d ms", self.updateTime - self.creationTime))
+
+    if(self.executionTime) then
+        output[#output + 1] = ActivityBase.TOOLTIP_LINE_TEMPLATE:format("Queue Time", string.format("%d ms", self.executionTime - self.creationTime))
+        output[#output + 1] = ActivityBase.TOOLTIP_LINE_TEMPLATE:format("Execution Time", string.format("%d ms", self.updateTime - self.executionTime))
+    else
+        output[#output + 1] = ActivityBase.TOOLTIP_LINE_TEMPLATE:format("Queue Time", string.format("%d ms", self.updateTime - self.creationTime))
+    end
+
     if(self.result) then
         output[#output + 1] = ActivityBase.TOOLTIP_LINE_TEMPLATE:format("Result", RESULT_TO_STRING[self.result] or tostring(self.result))
     end
