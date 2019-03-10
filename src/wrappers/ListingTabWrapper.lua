@@ -37,7 +37,6 @@ function ListingTabWrapper:RunInitialSetup(tradingHouseWrapper)
     self.tradingHouseWrapper = tradingHouseWrapper
     self:InitializeListingSortHeaders(tradingHouseWrapper)
     self:InitializeListingCount(tradingHouseWrapper)
-    self:InitializeLoadingOverlay(tradingHouseWrapper)
     self:InitializeUnitPriceDisplay(tradingHouseWrapper)
     self:InitializeCancelSaleOperation(tradingHouseWrapper)
     self:InitializeRequestListingsOperation(tradingHouseWrapper)
@@ -92,25 +91,6 @@ function ListingTabWrapper:InitializeListingCount(tradingHouseWrapper)
     self.infoControl = self.listingControl:GetParent()
     self.itemControl = self.infoControl:GetNamedChild("Item")
     self.postedItemsControl = tradingHouse.postedItemsHeader:GetParent()
-end
-
-function ListingTabWrapper:InitializeLoadingOverlay(tradingHouseWrapper) -- TODO remove
---    tradingHouseWrapper:PreHook("OnAwaitingResponse", function(self, responseType)
---        if(responseType == TRADING_HOUSE_RESULT_LISTINGS_PENDING or responseType == TRADING_HOUSE_RESULT_CANCEL_SALE_PENDING) then
---            if(self:IsInListingsMode()) then
---                tradingHouseWrapper:ShowLoadingOverlay()
---            end
---        end
---    end)
---
---    tradingHouseWrapper:PreHook("OnResponseReceived", function(self, responseType, result)
---        if(responseType == TRADING_HOUSE_RESULT_LISTINGS_PENDING or responseType == TRADING_HOUSE_RESULT_CANCEL_SALE_PENDING) then
---            if(result == TRADING_HOUSE_RESULT_SUCCESS) then
---                self:UpdateListingCounts()
---            end
---            tradingHouseWrapper:HideLoadingOverlay()
---        end
---    end)
 end
 
 function ListingTabWrapper:InitializeUnitPriceDisplay(tradingHouseWrapper)
