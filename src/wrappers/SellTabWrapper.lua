@@ -323,6 +323,12 @@ function SellTabWrapper:InitializeListingInput(tradingHouseWrapper)
             self:SetUnitPrice(gold / (self.currentStackCount + 1e-9))
         end
     end)
+
+    tradingHouseWrapper:PreHook("OnPendingPostItemUpdated", function(tradingHouse, slotId, isPending)
+        if(isPending) then
+            return true -- we handle that case ourselves
+        end
+    end)
 end
 
 function SellTabWrapper:IsAboveVendorPrice()
