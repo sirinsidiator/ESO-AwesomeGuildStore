@@ -1,5 +1,6 @@
 local AGS = AwesomeGuildStore
 
+local CancelItemActivity = AGS.class.CancelItemActivity
 local gettext = AGS.internal.gettext
 local RegisterForEvent = AGS.internal.RegisterForEvent
 local Print = AGS.internal.Print
@@ -180,15 +181,14 @@ function ListingTabWrapper:InitializeCancelSaleOperation(tradingHouseWrapper)
         end
     end)
 
-    local ActivityBase = AGS.class.ActivityBase
     local originalZO_TradingHouse_CreateListingItemData = ZO_TradingHouse_CreateListingItemData
     ZO_TradingHouse_CreateListingItemData = function(index)
         local result = originalZO_TradingHouse_CreateListingItemData(index)
         if(result) then
             local guildId = GetSelectedTradingHouseGuildId()
-            local key = string.format("%d_%d", ActivityBase.ACTIVITY_TYPE_CANCEL_ITEM, guildId) -- TODO: make it work with multiple cancel operations
+            local key = CancelItemActivity.CreateKey(guildId, result.itemUniqueId)
             local operation = activityManager:GetActivity(key)
-            if(operation and operation.listingIndex == result.slotIndex) then
+            if(operation) then
                 result.cancelPending = true
             end
             return result
