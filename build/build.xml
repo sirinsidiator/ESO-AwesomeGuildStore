@@ -16,6 +16,7 @@
 			<entry key="major" type="int" default="1" />
 			<entry key="minor" type="int" default="0" />
 			<entry key="patch" type="int" default="0" />
+			<entry key="suffix" default="" />
 			<entry key="api" value="$${eso.api}" />
 		</propertyfile>
 	</target>
@@ -68,21 +69,21 @@
 	</target>
 
 	<target name="createArchive" depends="loadBuildProperties,getIsCustomVersion,getCustomVersion">
-		<echo>build v${major}.${minor}.${patch}.${build.number}</echo>
+		<echo>build v${major}.${minor}.${patch}.${build.number}${suffix}</echo>
 		<delete includeemptydirs="true" dir="${tempdir}" />
 
 		<copy todir="${tempdir}/${ant.project.name}">
 			<fileset dir="${srcdir}" />
 		</copy>
 
-		<replace file="${tempdir}/${ant.project.name}/${ant.project.name}.txt" token="@VERSION_NUMBER@" value="${major}.${minor}.${patch}" encoding="UTF-8" />
+		<replace file="${tempdir}/${ant.project.name}/${ant.project.name}.txt" token="@VERSION_NUMBER@" value="${major}.${minor}.${patch}${suffix}" encoding="UTF-8" />
 		<replace file="${tempdir}/${ant.project.name}/${ant.project.name}.txt" token="@API_VERSION@" value="${api}" encoding="UTF-8" />
 		<replace file="${tempdir}/${ant.project.name}/${ant.project.name}.txt" token="@BUILD_NUMBER@" value="${build.number}" encoding="UTF-8" />
-		<replace file="${tempdir}/${ant.project.name}/Settings.lua" token="@FULL_VERSION_NUMBER@" value="${major}.${minor}.${patch}.${build.number}-dev" encoding="UTF-8" />
-		<replace file="${tempdir}/${ant.project.name}/Settings.lua" token="@VERSION_NUMBER@" value="${major}.${minor}.${patch}" encoding="UTF-8" />
+		<replace file="${tempdir}/${ant.project.name}/Settings.lua" token="@FULL_VERSION_NUMBER@" value="${major}.${minor}.${patch}.${build.number}${suffix}" encoding="UTF-8" />
+		<replace file="${tempdir}/${ant.project.name}/Settings.lua" token="@VERSION_NUMBER@" value="${major}.${minor}.${patch}${suffix}" encoding="UTF-8" />
 		<replace file="${tempdir}/${ant.project.name}/Settings.lua" token="@BUILD_NUMBER@" value="${build.number}" encoding="UTF-8" />
 
-		<zip destfile="${targetdir}/${ant.project.name}v${fileVersion}.zip">
+		<zip destfile="${targetdir}/${ant.project.name}_${major}_${minor}_${patch}${suffix}.zip">
 			<fileset dir="${tempdir}" />
 		</zip>
 		<delete includeemptydirs="true" dir="${tempdir}" />
