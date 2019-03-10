@@ -248,12 +248,12 @@ function ListingTabWrapper:InitializeOverallPrice(tradingHouseWrapper)
     listingPriceSumControl:SetHidden(true)
     self.listingPriceSumControl = listingPriceSumControl
 
-    tradingHouseWrapper:PreHook("RebuildListingsScrollList", function()
-        self:RefreshListingPriceSumDisplay()
+    tradingHouseWrapper:PreHook("RebuildListingsScrollList", function(tradingHouse)
+        self:RefreshListingPriceSumDisplay(tradingHouse)
     end)
 end
 
-function ListingTabWrapper:RefreshListingPriceSumDisplay()
+function ListingTabWrapper:RefreshListingPriceSumDisplay(tradingHouse)
     local sum = 0
     for i = 1, GetNumTradingHouseListings() do
         local _, _, _, _, _, _, price = GetTradingHouseListingItemInfo(i)
@@ -262,6 +262,7 @@ function ListingTabWrapper:RefreshListingPriceSumDisplay()
 
     sum = zo_strformat("|cffffff<<1>>|r", ZO_Currency_FormatPlatform(CURT_MONEY, sum, ZO_CURRENCY_FORMAT_AMOUNT_ICON))
     self.listingPriceSumControl:SetText(gettext("Overall Price: <<1>>", sum))
+    tradingHouse:UpdateListingCounts()
 end
 
 function ListingTabWrapper:ChangeSort(key, order)

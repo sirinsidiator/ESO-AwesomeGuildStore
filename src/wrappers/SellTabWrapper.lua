@@ -326,6 +326,7 @@ function SellTabWrapper:InitializeListingInput(tradingHouseWrapper)
 
     tradingHouseWrapper:PreHook("OnPendingPostItemUpdated", function(tradingHouse, slotId, isPending)
         if(isPending) then
+            tradingHouse:UpdateListingCounts()
             return true -- we handle that case ourselves
         end
     end)
