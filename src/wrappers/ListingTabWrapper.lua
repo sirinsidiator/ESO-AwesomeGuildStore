@@ -77,9 +77,9 @@ function ListingTabWrapper:InitializeListingSortHeaders(tradingHouseWrapper)
 
     local originalScrollListCommit = ZO_ScrollList_Commit
     local noop = function() end
-    tradingHouseWrapper:Wrap("OnListingsRequestSuccess", function(originalOnListingsRequestSuccess, tradingHouse)
+    tradingHouseWrapper:Wrap("RebuildListingsScrollList", function(originalRebuildListingsScrollList, tradingHouse)
         ZO_ScrollList_Commit = noop
-        originalOnListingsRequestSuccess(tradingHouse)
+        originalRebuildListingsScrollList(tradingHouse)
         ZO_ScrollList_Commit = originalScrollListCommit
         self:UpdateResultList()
     end)
