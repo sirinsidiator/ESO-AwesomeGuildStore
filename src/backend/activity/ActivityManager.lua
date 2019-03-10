@@ -18,14 +18,6 @@ local FetchGuildItemsActivity = AGS.class.FetchGuildItemsActivity
 
 local ByPriority = ActivityBase.ByPriority
 
-local WATCHDOG_NAME = "AwesomeGuildStore_ActivityManager"
-local WATCHDOG_INTERVAL = 5000
-
-local QSTATE_QUEUED = 1
-local QSTATE_CURRENT = 2
-local QSTATE_REMOVED = 3
-local QSTATE_CLEARED = 4
-
 function ActivityManager:New(...)
     local selector = ZO_Object.New(self)
     selector:Initialize(...)
@@ -80,7 +72,6 @@ function ActivityManager:Initialize(tradingHouseWrapper, loadingIndicator, loadi
     RegisterForEvent(EVENT_TRADING_HOUSE_STATUS_RECEIVED, function(_) -- TODO prehook?
         logger:Debug(string.format("cooldown on status received: %d", GetTradingHouseCooldownRemaining()))
         -- TODO: queue is ready to do work
-        self:StartWatchdog()
         self.panel:Refresh()
     end)
 
@@ -91,7 +82,6 @@ function ActivityManager:Initialize(tradingHouseWrapper, loadingIndicator, loadi
             activity.result = ActivityBase.ERROR_TRADING_HOUSE_CLOSED
     end
     self:ClearQueue()
-    self:StopWatchdog()
     self.panel:Refresh()
     end)
 
@@ -131,14 +121,6 @@ end
 
 function ActivityManager:SetPanel(panel)
     self.panel = panel
-end
-
-function ActivityManager:StartWatchdog()
-    EVENT_MANAGER:RegisterForUpdate(WATCHDOG_NAME, WATCHDOG_INTERVAL, self.executeNext)
-end
-
-function ActivityManager:StopWatchdog()
-    EVENT_MANAGER:UnregisterForUpdate(WATCHDOG_NAME, WATCHDOG_INTERVAL)
 end
 
 function ActivityManager:QueueActivity(activity)
@@ -349,7 +331,7 @@ function ActivityManager:CancelItem(guildId, listingIndex)
     local key = CancelItemActivity.CreateKey(guildId, uniqueId)
     if(not self:CanQueue(key)) then return end
 
-    local activity = CancelItemActivity:New(self.tradingHouseWrapper, guildId, listingIndex, uniqueId, price)
+    local activity = CancelItemActivity:New(self.tradingHouseWrapper, guildId, listingIndex)
     self:QueueActivity(activity)
     return activity
 end
