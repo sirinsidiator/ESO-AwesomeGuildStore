@@ -136,7 +136,7 @@ end
 function PostItemActivity:AddTooltipText(output)
     ActivityBase.AddTooltipText(self, output)
     if(self.step) then -- TODO translate
-        output[#output + 1] = ActivityBase.TOOLTIP_LINE_TEMPLATE:format("Item Count", STEP_TO_STRING[self.step])
+        output[#output + 1] = ActivityBase.TOOLTIP_LINE_TEMPLATE:format("Step", STEP_TO_STRING[self.step])
     end
 end
 

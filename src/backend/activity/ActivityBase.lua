@@ -51,6 +51,12 @@ local STATE_TO_STRING = { -- TODO translate
     [ActivityBase.STATE_CANCELLED] = "STATE_CANCELLED",
 }
 
+local FINISHED_STATES = {
+    [ActivityBase.STATE_FAILED] = true,
+    [ActivityBase.STATE_SUCCEEDED] = true,
+    [ActivityBase.STATE_CANCELLED] = true,
+}
+
 local RESULT_TO_STRING = {
     [TRADING_HOUSE_RESULT_AWAITING_INITIAL_STATUS] = "TRADING_HOUSE_RESULT_AWAITING_INITIAL_STATUS",
     [TRADING_HOUSE_RESULT_CANCEL_SALE_PENDING] = "TRADING_HOUSE_RESULT_CANCEL_SALE_PENDING",
@@ -109,7 +115,7 @@ end
 
 function ActivityBase:SetState(state, result)
     self.updateTime = GetGameTimeMilliseconds() + startTime
-    if(self.state == ActivityBase.STATE_QUEUED and state ~= ActivityBase.STATE_QUEUED) then
+    if(self.state == ActivityBase.STATE_QUEUED and state ~= self.state and not FINISHED_STATES[state]) then
         self.executionTime = self.updateTime
     end
     self.state = state
@@ -160,16 +166,49 @@ function ActivityBase:AddTooltipText(output)
     output[#output + 1] = ActivityBase.TOOLTIP_LINE_TEMPLATE:format("Created", os.date("%T", math.floor(self.creationTime / 1000)))
     output[#output + 1] = ActivityBase.TOOLTIP_LINE_TEMPLATE:format("Updated", os.date("%T", math.floor(self.updateTime / 1000)))
 
+    local queueTime, executionTime = self:GetFormattedDuration()
+    output[#output + 1] = ActivityBase.TOOLTIP_LINE_TEMPLATE:format("Queue Time", queueTime)
+
     if(self.executionTime) then
-        output[#output + 1] = ActivityBase.TOOLTIP_LINE_TEMPLATE:format("Queue Time", string.format("%d ms", self.executionTime - self.creationTime))
-        output[#output + 1] = ActivityBase.TOOLTIP_LINE_TEMPLATE:format("Execution Time", string.format("%d ms", self.updateTime - self.executionTime))
-    else
-        output[#output + 1] = ActivityBase.TOOLTIP_LINE_TEMPLATE:format("Queue Time", string.format("%d ms", self.updateTime - self.creationTime))
+        output[#output + 1] = ActivityBase.TOOLTIP_LINE_TEMPLATE:format("Execution Time", executionTime)
+    elseif(not FINISHED_STATES[self.state]) then
+        output[#output + 1] = ActivityBase.TOOLTIP_LINE_TEMPLATE:format("Cooldown", executionTime)
     end
 
     if(self.result) then
         output[#output + 1] = ActivityBase.TOOLTIP_LINE_TEMPLATE:format("Result", RESULT_TO_STRING[self.result] or tostring(self.result))
     end
+end
+
+local function FormatTimeMs(time)
+    if(time) then
+        time = ZO_CommaDelimitDecimalNumber(time)
+    else
+        time = "-"
+    end
+    return zo_strformat("<<1>> ms", time)
+end
+
+function ActivityBase:GetFormattedDuration()
+    local updateTime, queueTime, executionTime
+    local isFinished = FINISHED_STATES[self.state]
+
+    if(isFinished) then
+        updateTime = self.updateTime
+    else
+        updateTime = GetGameTimeMilliseconds() + startTime
+    end
+
+    if(self.executionTime) then
+        queueTime = self.executionTime - self.creationTime
+        executionTime = updateTime - self.executionTime
+    else
+        queueTime = updateTime - self.creationTime
+        if(not isFinished) then
+            executionTime = GetTradingHouseCooldownRemaining()
+        end
+    end
+    return FormatTimeMs(queueTime), FormatTimeMs(executionTime)
 end
 
 function ActivityBase:GetKey()
@@ -206,11 +245,11 @@ function ActivityBase:OnResponse(responseType, result)
         if(result == TRADING_HOUSE_RESULT_SUCCESS) then
             self:SetState(ActivityBase.STATE_SUCCEEDED, result)
             if(self.responsePromise) then self.responsePromise:Resolve(self) end
-        else
-            self:SetState(ActivityBase.STATE_FAILED, ActivityBase.ERROR_GUILD_SELECTION_FAILED)
-            if(self.responsePromise) then self.responsePromise:Reject(self) end
-        end
-        return true
+    else
+        self:SetState(ActivityBase.STATE_FAILED, ActivityBase.ERROR_GUILD_SELECTION_FAILED)
+        if(self.responsePromise) then self.responsePromise:Reject(self) end
+    end
+    return true
     end
     return false
 end
@@ -222,10 +261,9 @@ end
 
 function ActivityBase:OnRemove()
     if(self.state == ActivityBase.STATE_QUEUED) then
-        self.state = ActivityBase.STATE_CANCELLED
+        self:SetState(ActivityBase.STATE_CANCELLED, self.result)
     elseif(self.state ~= ActivityBase.STATE_FAILED and self.state ~= ActivityBase.STATE_SUCCEEDED) then
-        self.state = ActivityBase.STATE_FAILED
-        self.result = ActivityBase.ERROR_USER_CANCELLED
+        self:SetState(ActivityBase.STATE_FAILED, ActivityBase.ERROR_USER_CANCELLED)
         if(self.responsePromise) then self.responsePromise:Reject(self) end
     end
 end

@@ -10,6 +10,8 @@ AGS.class.ActivityPanel = ActivityPanel
 
 local PRESSED = true
 local DISABLED = true
+local REFRESH_INTERVAL_NAME = "AwesomeGuildStore_ActivityPanel_RefeshInterval"
+local REFRESH_INTERVAL = 100
 
 local ACTIVITY_TO_STRING = {
     [ActivityBase.ACTIVITY_TYPE_REQUEST_SEARCH] = "ACTIVITY_TYPE_REQUEST_SEARCH",
@@ -26,7 +28,7 @@ local PRIORITY_TO_STRING = {
 }
 
 function ActivityPanel:New(...)
-    return ZO_SimpleSceneFragment.New(self, ...)
+    return ZO_SimpleSceneFragment.New(self, ...) -- TODO: are we even using it as a scene fragment?
 end
 
 function ActivityPanel:Initialize(tradingHouseWrapper)
@@ -71,13 +73,15 @@ function ActivityPanel:Initialize(tradingHouseWrapper)
     end)
 
     control:SetHandler("OnMouseUp", function()
-        local hidden = not window:IsHidden()
-        window:SetHidden(hidden)
-        if(not hidden) then self:Refresh() end
+        if(window:IsHidden()) then
+            self:ShowWindow()
+        else
+            self:HideWindow()
+        end
     end)
 
     AGS.internal.CloseActivityWindow = function()
-        window:SetHidden(true)
+        self:HideWindow()
     end
 
     local container = window:GetNamedChild("Container")
@@ -127,6 +131,16 @@ function ActivityPanel:Initialize(tradingHouseWrapper)
         local textControl = control:GetNamedChild("Text")
         textControl:SetText(data:GetLogEntry())
         textControl:SetColor(textColor:UnpackRGBA())
+
+        local queueTime, executionTime = data:GetFormattedDuration()
+
+        local queueTimeControl = control:GetNamedChild("QueueTime")
+        queueTimeControl:SetText(queueTime)
+        queueTimeControl:SetColor(textColor:UnpackRGBA())
+
+        local executionTimeControl = control:GetNamedChild("ExecutionTime")
+        executionTimeControl:SetText(executionTime)
+        executionTimeControl:SetColor(textColor:UnpackRGBA())
 
         if(Zgoo) then
             control:SetHandler("OnMouseUp", function() Zgoo(data) end)
@@ -200,7 +214,38 @@ function ActivityPanel:Initialize(tradingHouseWrapper)
             scrollData[#scrollData + 1] = CreateEntry(log[i], FINISHED_DATA)
         end
     end
+
+
+    local function UpdateVisible(control, data)
+        local queueTime, executionTime = data:GetFormattedDuration(true)
+
+        local queueTimeControl = control:GetNamedChild("QueueTime")
+        queueTimeControl:SetText(queueTime)
+
+        local executionTimeControl = control:GetNamedChild("ExecutionTime")
+        executionTimeControl:SetText(executionTime)
+    end
+
+    function list:RefreshVisible()
+        ZO_ScrollList_RefreshVisible(self.list, nil, UpdateVisible)
+    end
+
+    self.refreshVisible = function()
+        list:RefreshVisible()
+    end
+
     self.list = list
+end
+
+function ActivityPanel:ShowWindow()
+    self.window:SetHidden(false)
+    self:Refresh()
+    EVENT_MANAGER:RegisterForUpdate(REFRESH_INTERVAL_NAME, REFRESH_INTERVAL, self.refreshVisible)
+end
+
+function ActivityPanel:HideWindow()
+    self.window:SetHidden(true)
+    EVENT_MANAGER:UnregisterForUpdate(REFRESH_INTERVAL_NAME)
 end
 
 function ActivityPanel:ShowLoading()

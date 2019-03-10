@@ -12,7 +12,15 @@
                 <Label name="$(parent)Text" font="ZoFontGame" verticalAlignment="CENTER" wrapMode="ELLIPSIS" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_SELECTED" linkEnabled="true">
                     <Dimensions y="24" />
                     <Anchor point="LEFT" relativeTo="$(parent)Icon" relativePoint="RIGHT" offsetX="5" />
+                    <Anchor point="RIGHT" relativeTo="$(parent)QueueTime" relativePoint="LEFT" offsetX="-5" />
+                </Label>
+                <Label name="$(parent)ExecutionTime" font="ZoFontGame" verticalAlignment="CENTER" horizontalAlignment="RIGHT" wrapMode="ELLIPSIS" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_SELECTED">
+                    <Dimensions x="100" y="24" />
                     <Anchor point="RIGHT" />
+                </Label>
+                <Label name="$(parent)QueueTime" font="ZoFontGame" verticalAlignment="CENTER" horizontalAlignment="RIGHT" wrapMode="ELLIPSIS" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_SELECTED">
+                    <Dimensions x="100" y="24" />
+                    <Anchor point="RIGHT" relativeTo="$(parent)ExecutionTime" relativePoint="LEFT" offsetX="-5" />
                 </Label>
             </Controls>
         </Control>
