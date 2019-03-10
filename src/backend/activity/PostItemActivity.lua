@@ -128,7 +128,7 @@ function PostItemActivity:GetLogEntry()
         local prefix = ActivityBase.GetLogEntry(self)
         local price = ZO_Currency_FormatPlatform(CURT_MONEY, self.price, ZO_CURRENCY_FORMAT_AMOUNT_ICON)
         -- TRANSLATORS: log text shown to the user for each post item request. Placeholders are for the stackCount, itemLink, price and guild name respectively
-        self.logEntry = prefix .. zo_strformat(gettext("Post <<1>>x <<2>> for <<3>> to <<4>>"), self.stackCount, GetItemLink(self.bagId, self.slotIndex), price, GetGuildName(self.guildId))
+        self.logEntry = prefix .. zo_strformat(gettext("Post <<1>>x <<2>> for <<3>> to <<4>>"), self.stackCount, self.itemLink, price, GetGuildName(self.guildId))
     end
     return self.logEntry
 end
