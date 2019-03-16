@@ -6,10 +6,13 @@ local logger = AGS.internal.logger
 local gettext = AGS.internal.gettext
 local RegisterForEvent = AGS.internal.RegisterForEvent
 local UnregisterForEvent = AGS.internal.UnregisterForEvent
+local ClearCallLater = AGS.internal.ClearCallLater
 
 local Promise = LibPromises
 local sformat = string.format
 
+
+local MOVE_ITEM_TIMEOUT = 10000
 
 local STEP_BEGIN_EXECUTION = 1
 local STEP_MOVE_ITEM = 2
@@ -60,13 +63,24 @@ function PostItemActivity:MoveItemIfNeeded()
         self.step = STEP_MOVE_ITEM
         self.effectiveSlotIndex = FindFirstEmptySlotInBag(BAG_BACKPACK)
 
-        local eventHandle
+        local eventHandle, timeoutHandle
+
+        local function CleanUp()
+            UnregisterForEvent(EVENT_INVENTORY_SINGLE_SLOT_UPDATE, eventHandle)
+            ClearCallLater(timeoutHandle)
+        end
+
         eventHandle = RegisterForEvent(EVENT_INVENTORY_SINGLE_SLOT_UPDATE, function(_, bagId, slotId, isNewItem, itemSoundCategory, inventoryUpdateReason, stackCountChange)
             if(bagId == BAG_BACKPACK and slotId == self.effectiveSlotIndex) then
-                UnregisterForEvent(EVENT_INVENTORY_SINGLE_SLOT_UPDATE, eventHandle)
+                CleanUp()
                 promise:Resolve(self)
             end
         end)
+        timeoutHandle = zo_callLater(function()
+            CleanUp()
+            self:SetState(ActivityBase.STATE_FAILED, ActivityBase.ERROR_OPERATION_TIMEOUT)
+            promise:Reject(self)
+        end, MOVE_ITEM_TIMEOUT)
 
         CallSecureProtected("RequestMoveItem", self.bagId, self.slotIndex, BAG_BACKPACK, self.effectiveSlotIndex, self.stackCount)
     else
