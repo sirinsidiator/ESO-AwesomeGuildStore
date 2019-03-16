@@ -229,6 +229,8 @@ function ListingTabWrapper:InitializeCancelNotification(tradingHouseWrapper)
     local saveData = self.saveData
 
     AGS:RegisterCallback(AGS.callback.ITEM_CANCELLED, function(guildId, itemLink, price, stackCount)
+        if(not saveData.cancelNotification) then return end
+
         local guildName = GetGuildName(guildId)
         price = ZO_Currency_FormatPlatform(CURT_MONEY, price, ZO_CURRENCY_FORMAT_AMOUNT_ICON)
 
