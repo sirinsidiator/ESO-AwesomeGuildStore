@@ -725,6 +725,7 @@ function SellTabWrapper:OnClose(tradingHouseWrapper)
         ZO_PlayerInventoryInfoBar:SetParent(ZO_PlayerInventory)
         SCENE_MANAGER:RemoveFragment(CRAFT_BAG_FRAGMENT)
     end
+    self:UnsetPendingItem()
     self.isOpen = false
     self.suppressNextInventorySlotEvent = false
     self.dragFinalized = true
