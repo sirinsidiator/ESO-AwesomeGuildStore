@@ -294,7 +294,13 @@ function SearchTabWrapper:InitializePurchase(tradingHouseWrapper)
         local dialog = ESO_Dialogs["CONFIRM_TRADING_HOUSE_PURCHASE"]
         dialog.buttons[1].callback = function(dialog)
             local itemData, guildId = itemDatabase:TryGetItemDataInCurrentGuildByUniqueId(dialog.purchaseIndex)
-            tradingHouseWrapper.activityManager:PurchaseItem(guildId, itemData)
+            if(itemData) then
+                tradingHouseWrapper.activityManager:PurchaseItem(guildId, itemData)
+            else
+                logger:Warn("Item data missing on confirm purchase.", Id64ToString(dialog.purchaseIndex), guildId)
+                -- TRANSLATORS: Alert message when the item data for the item id could not be found
+                ZO_AlertNoSuppression(UI_ALERT_CATEGORY_ALERT, SOUNDS.PLAYER_ACTION_INSUFFICIENT_GOLD, gettext("Item not found in current guild."))
+            end
         end
         dialog.buttons[2].callback = function()
         -- nothing to do here
