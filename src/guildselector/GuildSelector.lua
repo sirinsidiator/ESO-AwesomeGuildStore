@@ -38,6 +38,7 @@ function GuildSelector:Initialize(tradingHouseWrapper)
         local hasGuilds = (#guilds > 1)
         self.guildSelector:SetHidden(not hasGuilds)
         self.titleLabel:SetHidden(hasGuilds)
+        tradingHouse:UpdateForGuildChange()
     end)
 
     AGS:RegisterCallback(AGS.callback.GUILD_SELECTION_CHANGED, function(guildData)
