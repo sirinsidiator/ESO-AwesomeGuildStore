@@ -1,8 +1,8 @@
 ## Title: LibDebugLogger
 ## Author: sirinsidiator
-## Version: 1.0.1
+## Version: 1.0.2
 ## APIVersion: 100026 100027
-## AddOnVersion: 66
+## AddOnVersion: 77
 ## SavedVariables: LibDebugLoggerSettings LibDebugLoggerLog
 ##
 ## This Add-on is not created by, affiliated with or sponsored by ZeniMax Media Inc. or its affiliates. 

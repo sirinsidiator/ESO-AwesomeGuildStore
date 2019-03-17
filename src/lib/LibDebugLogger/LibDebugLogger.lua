@@ -11,9 +11,18 @@ local LOG_LEVEL_INFO = "I"
 local LOG_LEVEL_WARNING = "W"
 local LOG_LEVEL_ERROR = "E"
 
--- these are not hard limits and we will only clean up once on UI load
 local NUM_MAX_ENTRIES = 10000
+local LOG_PRUNE_THRESHOLD = NUM_MAX_ENTRIES + 1000
 local MAX_ENTRY_AGE = 24 * 3600 * 1000 -- one day
+local MAX_SAVE_DATA_LENGTH = 1999 -- buffer length used by ZOS
+
+local ENTRY_TIME_INDEX = 1
+local ENTRY_FORMATTED_TIME_INDEX = 2
+local ENTRY_OCCURENCES_INDEX = 3
+local ENTRY_LEVEL_INDEX = 4
+local ENTRY_TAG_INDEX = 5
+local ENTRY_MESSAGE_INDEX = 6
+local ENTRY_STACK_INDEX = 7
 
 -- these are used during UI load before the saved settings become available
 local STARTUP_LOG_TRACES = true
@@ -37,6 +46,17 @@ for level, str in pairs(LOG_LEVEL_TO_STRING) do
     STR_TO_LOG_LEVEL[string.lower(level)] = level
 end
 
+local strformat = string.format
+local tostring = tostring
+local tconcat = table.concat
+local osdate = os.date
+local traceback = debug.traceback
+local select = select
+local type = type
+local pcall = pcall
+local ZO_ClearTable = ZO_ClearTable
+local GetGameTimeMilliseconds = GetGameTimeMilliseconds
+
 -- variables
 local startTime = GetTimeStamp() * 1000 - GetGameTimeMilliseconds()
 -- before the library is fully loaded we just store all logs in a temporary table
@@ -55,6 +75,9 @@ settings.logTraces = STARTUP_LOG_TRACES
 settings.minLogLevel = STARTUP_LOG_LEVEL
 
 -- private functions
+
+-- this function should probably be smarter about detecting real formatting strings.
+-- right now we just do a simple detection, try if it works and fall back to using tostring otherwise
 local function IsFormattingString(input)
     if(type(input) == "string" and input:find("%%%S")) then
         return true
@@ -63,11 +86,26 @@ local function IsFormattingString(input)
 end
 
 local function FormatTime(timestamp)
-    return os.date("%F %T.%%03.0f %z", timestamp / 1000):format(timestamp % 1000)
+    return osdate("%F %T.%%03.0f %z", timestamp / 1000):format(timestamp % 1000)
 end
 
-local MAX_SAVE_DATA_LENGTH = 1999 -- buffer length used by ZOS
+local function PruneLog()
+    if(#log > LOG_PRUNE_THRESHOLD) then
+        -- table.remove is slow, so instead we just copy the results over to a new table and discard the old one
+        local newLog = {}
+        local startIndex = #log - NUM_MAX_ENTRIES
+        for i = startIndex, #log do
+            newLog[#newLog + 1] = log[i]
+        end
+
+        log = newLog
+        LibDebugLoggerLog = newLog
+    end
+end
+
 local function SplitLongStringIfNeeded(value)
+    if(not value) then return nil end
+
     local output = value
     local byteLength = #value
     if(byteLength > MAX_SAVE_DATA_LENGTH) then
@@ -83,6 +121,7 @@ local function SplitLongStringIfNeeded(value)
     return output
 end
 
+local lastEntry, lastMessage, lastStacktrace
 local function DoLog(level, tag, ...)
     local message = ""
     local count = select("#", ...)
@@ -90,9 +129,7 @@ local function DoLog(level, tag, ...)
         local handled = false
         if(IsFormattingString(select(1, ...))) then
             -- use pcall to try formatting the string, otherwise we may end up with an infinite error loop
-            handled = pcall(function(...)
-                message = string.format(...)
-            end, ...)
+            handled, message = pcall(strformat, ...)
         end
 
         if(not handled) then
@@ -100,24 +137,38 @@ local function DoLog(level, tag, ...)
             for i = 1, select("#", ...) do
                 temp[i] = tostring(select(i, ...))
             end
-            message = table.concat(temp, " ")
+            message = tconcat(temp, " ")
         end
     end
 
-    local now = startTime + GetGameTimeMilliseconds()
-    local entry = {
-        now,
-        FormatTime(now),
-        level,
-        tag,
-        SplitLongStringIfNeeded(message)
-    }
-
+    local stacktrace
     if(settings.logTraces) then
-        entry[#entry + 1] = SplitLongStringIfNeeded(debug.traceback())
+        stacktrace = traceback()
     end
 
-    log[#log + 1] = entry
+    if(not lastEntry or lastMessage ~= message or lastStacktrace ~= stacktrace or lastEntry[ENTRY_LEVEL_INDEX] ~= level or lastEntry[ENTRY_TAG_INDEX] ~= tag) then
+        local now = startTime + GetGameTimeMilliseconds()
+        local entry = {
+            now, -- ENTRY_TIME_INDEX
+            FormatTime(now), -- ENTRY_FORMATTED_TIME_INDEX
+            1, -- ENTRY_OCCURENCES_INDEX
+            level, -- ENTRY_LEVEL_INDEX
+            tag, -- ENTRY_TAG_INDEX
+            SplitLongStringIfNeeded(message), -- ENTRY_MESSAGE_INDEX
+            SplitLongStringIfNeeded(stacktrace) -- ENTRY_STACK_INDEX
+        }
+
+        log[#log + 1] = entry
+
+        lastEntry = entry
+        lastMessage = message
+        lastStacktrace = stacktrace
+    else
+        lastEntry[ENTRY_OCCURENCES_INDEX] = lastEntry[ENTRY_OCCURENCES_INDEX] + 1
+    end
+
+    -- need to trim the log during the session in case some addon is producing an error every frame for the whole session without the user noticing, until they cannot log in next time
+    PruneLog()
 end
 
 local function Log(level, tag, ...)
@@ -133,6 +184,7 @@ local function Log(level, tag, ...)
         log[#log + 1] = {
             startTime + GetGameTimeMilliseconds(),
             "-",
+            1,
             LOG_LEVEL_ERROR,
             LIB_IDENTIFIER,
             message
@@ -157,11 +209,19 @@ lib.LOG_LEVEL_ERROR = LOG_LEVEL_ERROR
 lib.LOG_LEVEL_TO_STRING = LOG_LEVEL_TO_STRING
 lib.STR_TO_LOG_LEVEL = STR_TO_LOG_LEVEL
 
+lib.ENTRY_TIME_INDEX = ENTRY_TIME_INDEX
+lib.ENTRY_FORMATTED_TIME_INDEX = ENTRY_FORMATTED_TIME_INDEX
+lib.ENTRY_OCCURENCES_INDEX = ENTRY_OCCURENCES_INDEX
+lib.ENTRY_LEVEL_INDEX = ENTRY_LEVEL_INDEX
+lib.ENTRY_TAG_INDEX = ENTRY_TAG_INDEX
+lib.ENTRY_MESSAGE_INDEX = ENTRY_MESSAGE_INDEX
+lib.ENTRY_STACK_INDEX = ENTRY_STACK_INDEX
+
 --- Convenience method to create a new instance of the logger with a combined tag. Can be used to separate logs from different files.
 --- @param tag - a string identifier that is appended to the tag of the parent, separated by a slash
 --- @return a new logger instance with the combined tag
 function Logger:Create(tag)
-    return Logger:New(string.format("%s/%s", self.tag, tag))
+    return Logger:New(strformat("%s/%s", self.tag, tag))
 end
 
 --- setter to turn this logger of so it no longer adds anything to the log when one of its log methods is called.
@@ -216,7 +276,7 @@ for i = 1, numAddons do
     local version = AddOnManager:GetAddOnVersion(i)
     local directory = AddOnManager:GetAddOnRootDirectoryPath(i)
     if(enabled) then
-        addOnInfo[name] = string.format("Addon loaded: %s, AddOnVersion: %d, directory: '%s'", name, version, directory)
+        addOnInfo[name] = strformat("Addon loaded: %s, AddOnVersion: %d, directory: '%s'", name, version, directory)
         numEnabledAddons = numEnabledAddons + 1
     end
 end
@@ -232,10 +292,10 @@ local debugInfo = {
     IsESOPlusSubscriber() and "eso+" or "regular",
     GetCVar("language.2"),
     GetKeyboardLayout(),
-    string.format("addon count: %d/%d", numEnabledAddons, numAddons),
+    strformat("addon count: %d/%d", numEnabledAddons, numAddons),
     AddOnManager:GetLoadOutOfDateAddOns() and "allow outdated" or "block outdated",
 }
-Log(LOG_LEVEL_INFO, LIB_IDENTIFIER, "Initializing...\n" .. table.concat(debugInfo, "\n"))
+Log(LOG_LEVEL_INFO, LIB_IDENTIFIER, "Initializing...\n" .. tconcat(debugInfo, "\n"))
 
 EVENT_MANAGER:RegisterForEvent(LIB_IDENTIFIER, EVENT_LUA_ERROR, function(eventCode, errorString)
     if(errorString) then
@@ -244,7 +304,7 @@ EVENT_MANAGER:RegisterForEvent(LIB_IDENTIFIER, EVENT_LUA_ERROR, function(eventCo
 end)
 
 EVENT_MANAGER:RegisterForEvent(LIB_IDENTIFIER, EVENT_ADD_ON_LOADED, function(event, name)
-    Log(LOG_LEVEL_INFO, LIB_IDENTIFIER, addOnInfo[name] or string.format("UI module loaded: %s", name))
+    Log(LOG_LEVEL_INFO, LIB_IDENTIFIER, addOnInfo[name] or strformat("UI module loaded: %s", name))
 
     if(name == LIB_IDENTIFIER) then
         SLASH_COMMANDS["/debuglogger"] = function(params)
@@ -280,7 +340,7 @@ EVENT_MANAGER:RegisterForEvent(LIB_IDENTIFIER, EVENT_ADD_ON_LOADED, function(eve
                 out[#out + 1] = "- <clear>     Deletes all log entries"
                 out[#out + 1] = "-"
                 out[#out + 1] = "- Example: /debuglogger stack on"
-                d(table.concat(out, "\n"))
+                d(tconcat(out, "\n"))
             end
         end
 
@@ -294,7 +354,7 @@ EVENT_MANAGER:RegisterForEvent(LIB_IDENTIFIER, EVENT_ADD_ON_LOADED, function(eve
             local minTime = startTime - MAX_ENTRY_AGE
             for i = startIndex, #oldLog do
                 local entry = oldLog[i]
-                if(entry[1] >= minTime) then
+                if(entry[ENTRY_TIME_INDEX] >= minTime) then
                     log[#log + 1] = entry
                 end
             end
