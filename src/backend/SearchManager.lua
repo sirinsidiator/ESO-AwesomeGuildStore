@@ -357,12 +357,7 @@ function SearchManager:SelectSubcategory(subcategory)
     self.categoryFilter:SetSubcategory(subcategory)
 end
 
-function SearchManager:GetNumVisibleResults(guildName)
-    if(not guildName) then
-        guildName = select(2, GetCurrentTradingHouseGuildDetails())
-    end
-    local filterState = self.activeSearch:GetFilterState()
-    local results = self.itemDatabase:GetFilteredView(guildName, filterState):GetItems()
+function SearchManager:GetNumVisibleResults()
     return #self.searchResults
 end
 
@@ -384,8 +379,8 @@ function SearchManager:HasCurrentSearchMorePages(guildName)
 end
 
 function SearchManager:RequestSearch(ignoreResultCount)
-    local guildId, guildName = GetCurrentTradingHouseGuildDetails()
-    if(ignoreResultCount or self:IsResultCountBelowAutoSearchThreshold(self:GetNumVisibleResults(guildName))) then
+    if(ignoreResultCount or self:IsResultCountBelowAutoSearchThreshold(#self.searchResults)) then
+        local guildId, guildName = GetCurrentTradingHouseGuildDetails()
         if(self:HasCurrentSearchMorePages(guildName)) then
             if(self.activityManager:RequestSearchResults(guildId, ignoreResultCount)) then
                 if(self.requestNewestInterval) then

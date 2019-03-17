@@ -306,9 +306,8 @@ function ActivityManager:RequestSearchResults(guildId, ignoreResultCount)
     local key = RequestSearchActivity.CreateKey(guildId)
     if(not (self:CanQueue(key) and self.tradingHouseWrapper.searchTab.isOpen)) then return end
 
-    local guildName = self.tradingHouseWrapper:GetTradingGuildName(guildId)
     local searchManager = self.tradingHouseWrapper.searchManager
-    if(ignoreResultCount or searchManager:IsResultCountBelowAutoSearchThreshold(searchManager:GetNumVisibleResults(guildName))) then
+    if(ignoreResultCount or searchManager:IsResultCountBelowAutoSearchThreshold(searchManager:GetNumVisibleResults())) then
         local activity = RequestSearchActivity:New(self.tradingHouseWrapper, guildId)
         self:QueueActivity(activity)
         return activity

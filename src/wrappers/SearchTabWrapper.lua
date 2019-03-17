@@ -298,7 +298,7 @@ function SearchTabWrapper:InitializePurchase(tradingHouseWrapper)
                 tradingHouseWrapper.activityManager:PurchaseItem(guildId, itemData)
             else
                 logger:Warn("Item data missing on confirm purchase.", Id64ToString(dialog.purchaseIndex), guildId)
-                -- TRANSLATORS: Alert message when the item data for the item id could not be found
+                -- TRANSLATORS: Alert message when the item data for the item id could not be found while confirming a purchase
                 ZO_AlertNoSuppression(UI_ALERT_CATEGORY_ALERT, SOUNDS.PLAYER_ACTION_INSUFFICIENT_GOLD, gettext("Item not found in current guild."))
             end
         end
