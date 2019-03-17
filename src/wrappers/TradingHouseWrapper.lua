@@ -6,6 +6,10 @@ local gettext = AGS.internal.gettext
 local RegisterForEvent = AGS.internal.RegisterForEvent
 local ItemDatabase = AGS.class.ItemDatabase
 
+local FOOTER_MIN_ALPHA = 0.6
+local FOOTER_MAX_ALPHA = 1
+local FOOTER_FADE_DURATION = 300
+
 local TradingHouseWrapper = ZO_Object:Subclass()
 AGS.class.TradingHouseWrapper = TradingHouseWrapper
 
@@ -159,6 +163,12 @@ function TradingHouseWrapper:InitializeFooter()
     local footer = CreateControlFromVirtual("AwesomeGuildStoreFooter", parent, "AwesomeGuildStoreFooterTemplate")
     footer:SetAnchor(BOTTOMRIGHT, parent, BOTTOMRIGHT, -20, 32)
     self.footer = footer
+
+    local animation = ZO_AlphaAnimation:New(footer)
+    animation:SetMinMaxAlpha(FOOTER_MIN_ALPHA, FOOTER_MAX_ALPHA)
+    footer:SetHandler("OnMouseEnter", function() animation:FadeIn(0, FOOTER_FADE_DURATION) end)
+    footer:SetHandler("OnMouseExit", function() animation:FadeOut(0, FOOTER_FADE_DURATION) end)
+    footer:SetAlpha(FOOTER_MIN_ALPHA)
 
     local versionLabel = AGS.info.fullVersion
     local labelControl = footer:GetNamedChild("Version")
