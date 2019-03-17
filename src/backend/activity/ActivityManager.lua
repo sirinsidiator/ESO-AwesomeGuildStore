@@ -327,7 +327,8 @@ end
 
 function ActivityManager:RequestListings(guildId)
     local key = RequestListingsActivity.CreateKey(guildId)
-    if(not self:CanQueue(key)) then return end -- TODO: check currently opened tab too?
+    if(not self:CanQueue(key)) then return end
+    if(self.tradingHouseWrapper.guildSelection:IsAppliedGuildId(GetSelectedTradingHouseGuildId()) and HasTradingHouseListings()) then return end
 
     local activity = RequestListingsActivity:New(self.tradingHouseWrapper, guildId)
     self:QueueActivity(activity)
