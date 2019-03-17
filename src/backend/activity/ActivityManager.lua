@@ -30,27 +30,27 @@ function ActivityManager:Initialize(tradingHouseWrapper, loadingIndicator, loadi
     self.tradingHouseWrapper = tradingHouseWrapper
     self.tradingHouse = tradingHouseWrapper.tradingHouse
 
-    RegisterForEvent(EVENT_TRADING_HOUSE_AWAITING_RESPONSE, function(_, responseType) -- TODO prehook?
+    RegisterForEvent(EVENT_TRADING_HOUSE_AWAITING_RESPONSE, function(_, responseType)
         if(self.currentActivity and self.currentActivity:OnAwaitingResponse(responseType)) then
             -- TRANSLATORS: Status text when waiting for a server response
             self:SetStatusText(gettext("Waiting for response"))
-    end
+        end
     end)
 
-    local function OnTimeout(_, responseType) -- TODO prehook?
+    local function OnTimeout(_, responseType)
         if(self.currentActivity and self.currentActivity:OnTimeout(responseType)) then
             -- TRANSLATORS: Status text when a server response timed out
             self:SetStatusText(gettext("Request timed out"))
-    end
+        end
     end
     RegisterForEvent(EVENT_TRADING_HOUSE_RESPONSE_TIMEOUT, OnTimeout)
     RegisterForEvent(EVENT_TRADING_HOUSE_OPERATION_TIME_OUT, OnTimeout)
 
-    RegisterForEvent(EVENT_TRADING_HOUSE_ERROR, function(_, errorCode) -- TODO prehook?
+    RegisterForEvent(EVENT_TRADING_HOUSE_ERROR, function(_, errorCode)
         if(self.currentActivity) then
             local responseType = self.currentActivity.expectedResponseType
             self.currentActivity:OnResponse(responseType, errorCode)
-    end
+        end
     end)
 
     -- need to prehook this in order to update the itemdatabase before anything else happens
@@ -69,20 +69,20 @@ function ActivityManager:Initialize(tradingHouseWrapper, loadingIndicator, loadi
         end
     end)
 
-    RegisterForEvent(EVENT_TRADING_HOUSE_STATUS_RECEIVED, function(_) -- TODO prehook?
+    RegisterForEvent(EVENT_TRADING_HOUSE_STATUS_RECEIVED, function(_)
         logger:Debug(string.format("cooldown on status received: %d", GetTradingHouseCooldownRemaining()))
         -- TODO: queue is ready to do work
         self:RefreshStatusPanel()
     end)
 
-    RegisterForEvent(EVENT_CLOSE_TRADING_HOUSE, function(_) -- TODO prehook?
+    RegisterForEvent(EVENT_CLOSE_TRADING_HOUSE, function(_)
         if(self.currentActivity) then
             local activity = self.currentActivity
             self:RemoveCurrentActivity()
             activity.result = ActivityBase.ERROR_TRADING_HOUSE_CLOSED
-    end
-    self:ClearQueue()
-    self:RefreshStatusPanel()
+        end
+        self:ClearQueue()
+        self:RefreshStatusPanel()
     end)
 
     RegisterForEvent(EVENT_TRADING_HOUSE_CONFIRM_ITEM_PURCHASE, function(_, index)
