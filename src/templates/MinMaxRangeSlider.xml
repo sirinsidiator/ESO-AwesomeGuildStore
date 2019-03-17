@@ -1,5 +1,7 @@
 <GuiXml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sir.insidi.at/or/schema/esoui.xsd">
     <Controls>
+        <Control name="AwesomeGuildStoreMinMaxRangeSliderTemplateLoaded" hidden="true" />
+
         <Control name="AwesomeGuildStoreMinMaxRangeSliderTemplate" virtual="true">
             <DimensionConstraints minX="50" minY="16" maxY="16"/>
             <Controls>

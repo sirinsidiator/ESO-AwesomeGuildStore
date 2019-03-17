@@ -1,5 +1,7 @@
 <GuiXml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sir.insidi.at/or/schema/esoui.xsd">
     <Controls>
+        <Control name="AwesomeGuildStoreLevelInputTemplateLoaded" hidden="true" />
+
         <Control name="AwesomeGuildStoreLevelInputTemplate" virtual="true" resizeToFitDescendents="true">
             <Controls>
                 <Control name="$(parent)MinLevel" resizeToFitDescendents="true">

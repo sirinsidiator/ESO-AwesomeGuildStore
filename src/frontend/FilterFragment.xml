@@ -1,5 +1,7 @@
 <GuiXml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sir.insidi.at/or/schema/esoui.xsd">
     <Controls>
+        <Control name="AwesomeGuildStoreFilterFragmentTemplateLoaded" hidden="true" />
+
         <Control name="AwesomeGuildStoreFilterFragmentTemplate" virtual="true" resizeToFitDescendents="true">
             <DimensionConstraints minX="250" maxX="250" minY="40" />
             <Controls>

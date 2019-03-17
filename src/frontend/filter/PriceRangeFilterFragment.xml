@@ -1,5 +1,7 @@
 <GuiXml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sir.insidi.at/or/schema/esoui.xsd">
     <Controls>
+        <Control name="AwesomeGuildStorePriceInputTemplateLoaded" hidden="true" />
+
         <Control name="AwesomeGuildStorePriceInputTemplate" virtual="true" resizeToFitDescendents="true">
             <Controls>
                 <Control name="$(parent)MinPrice" resizeToFitDescendents="true">

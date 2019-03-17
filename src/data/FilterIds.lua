@@ -57,8 +57,4 @@ local FILTER_ID = {
     WRIT_WORTHY_WRIT_COST_FILTER = 103,
 }
 
-local AGS = AwesomeGuildStore
-
-AGS.data.FILTER_ID = FILTER_ID
-
-local FILTER_ID = AGS.data.FILTER_ID
+AwesomeGuildStore.data.FILTER_ID = FILTER_ID

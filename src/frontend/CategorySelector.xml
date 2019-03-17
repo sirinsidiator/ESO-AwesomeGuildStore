@@ -1,5 +1,7 @@
 <GuiXml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sir.insidi.at/or/schema/esoui.xsd">
     <Controls>
+        <Control name="AwesomeGuildStoreCategorySelectorTemplateLoaded" hidden="true" />
+
         <Control name="AwesomeGuildStoreCategorySelectorTemplate" virtual="true" resizeToFitDescendents="true">
             <Anchor point="TOPLEFT" />
             <Anchor point="TOPRIGHT" />

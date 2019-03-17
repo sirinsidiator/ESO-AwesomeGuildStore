@@ -1,5 +1,7 @@
 <GuiXml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sir.insidi.at/or/schema/esoui.xsd">
     <Controls>
+        <Control name="AwesomeGuildStoreXmlLoaded" hidden="true" />
+
         <Control name="AwesomeGuildStoreLoadingTemplate" virtual="true">
             <Controls>
                 <Texture name="$(parent)Icon" textureFile="EsoUI/Art/Miscellaneous/wait_icon.dds" layer="OVERLAY">
