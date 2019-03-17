@@ -40,7 +40,7 @@ function GenericTradingHouseFilter:PrepareForSearch(selection)
     local values = {}
     for value, enabled in pairs(selection) do
         if(enabled) then
-            values[#value + 1] = value.id
+            values[#values + 1] = value.id
         end
     end
     self.serverValues = values
