@@ -54,6 +54,7 @@ function MultiButtonFilterFragment:CreateButton(container, i, value)
     button:SetTooltipText(value.label)
     button:SetTextureTemplate(value.icon)
     button.value = value
+    button.index = i
     return button
 end
 
@@ -62,15 +63,49 @@ function MultiButtonFilterFragment:InitializeHandlers()
     local buttonsByValue = self.buttonsByValue
     local filter = self.filter
 
+    local lastInteractedButton = buttons[1]
+    local lastInteraction = true
     local function OnClick(button, ctrl, alt, shift)
         local wasSelected = filter:IsSelected(button.value)
-        if(not ctrl) then
-            if(filter:GetSelectionCount() > 1) then
-                wasSelected = false
+        if(shift) then -- change multiple buttons
+            local startIndex = lastInteractedButton.index
+            local endIndex = button.index
+            if(startIndex > endIndex) then
+                startIndex = button.index
+                endIndex = lastInteractedButton.index
             end
-            filter:Reset(SILENT)
+
+            for i = 1, #buttons do
+                if(ctrl) then
+                    if(i < startIndex or i > endIndex) then
+                        -- don't change them
+                    else
+                        filter:SetSelected(buttons[i].value, lastInteraction, SILENT)
+                    end
+                else
+                    if(i < startIndex or i > endIndex) then
+                        filter:SetSelected(buttons[i].value, false, SILENT)
+                    else
+                        filter:SetSelected(buttons[i].value, true, SILENT)
+                    end
+                    lastInteraction = true
+                end
+            end
+        else -- just operate on one button
+            if(not ctrl) then
+                if(filter:GetSelectionCount() > 1) then
+                    wasSelected = false
+                end
+                filter:Reset(SILENT)
+            end
+
+            if(not shift) then
+                lastInteractedButton = button
+            end
+            filter:SetSelected(button.value, not wasSelected, SILENT)
+            lastInteraction = not wasSelected
         end
-        filter:SetSelected(button.value, not wasSelected, SILENT)
+
         filter:OnSelectionChanged()
     end
 
