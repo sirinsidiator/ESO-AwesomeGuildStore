@@ -33,14 +33,14 @@ function ActivityManager:Initialize(tradingHouseWrapper, loadingIndicator, loadi
     RegisterForEvent(EVENT_TRADING_HOUSE_AWAITING_RESPONSE, function(_, responseType) -- TODO prehook?
         if(self.currentActivity and self.currentActivity:OnAwaitingResponse(responseType)) then
             -- TRANSLATORS: Status text when waiting for a server response
-            self.panel:SetStatusText(gettext("Waiting for response"))
+            self:SetStatusText(gettext("Waiting for response"))
     end
     end)
 
     local function OnTimeout(_, responseType) -- TODO prehook?
         if(self.currentActivity and self.currentActivity:OnTimeout(responseType)) then
             -- TRANSLATORS: Status text when a server response timed out
-            self.panel:SetStatusText(gettext("Request timed out"))
+            self:SetStatusText(gettext("Request timed out"))
     end
     end
     RegisterForEvent(EVENT_TRADING_HOUSE_RESPONSE_TIMEOUT, OnTimeout)
@@ -63,8 +63,8 @@ function ActivityManager:Initialize(tradingHouseWrapper, loadingIndicator, loadi
     RegisterForEvent(EVENT_TRADING_HOUSE_SEARCH_COOLDOWN_UPDATE, function(_, cooldown)
         -- TODO prehook?
         if(cooldown == 0) then
-            self.panel:HideLoading()
-            self.panel:Refresh()
+            self:HideLoading()
+            self:RefreshStatusPanel()
             self:ExecuteNext()
         end
     end)
@@ -72,7 +72,7 @@ function ActivityManager:Initialize(tradingHouseWrapper, loadingIndicator, loadi
     RegisterForEvent(EVENT_TRADING_HOUSE_STATUS_RECEIVED, function(_) -- TODO prehook?
         logger:Debug(string.format("cooldown on status received: %d", GetTradingHouseCooldownRemaining()))
         -- TODO: queue is ready to do work
-        self.panel:Refresh()
+        self:RefreshStatusPanel()
     end)
 
     RegisterForEvent(EVENT_CLOSE_TRADING_HOUSE, function(_) -- TODO prehook?
@@ -82,7 +82,7 @@ function ActivityManager:Initialize(tradingHouseWrapper, loadingIndicator, loadi
             activity.result = ActivityBase.ERROR_TRADING_HOUSE_CLOSED
     end
     self:ClearQueue()
-    self.panel:Refresh()
+    self:RefreshStatusPanel()
     end)
 
     RegisterForEvent(EVENT_TRADING_HOUSE_CONFIRM_ITEM_PURCHASE, function(_, index)
@@ -119,8 +119,34 @@ function ActivityManager:Initialize(tradingHouseWrapper, loadingIndicator, loadi
     end)
 end
 
+-- TODO: these functions should be removed and the panel should react to callbacks instead
 function ActivityManager:SetPanel(panel)
     self.panel = panel
+end
+
+function ActivityManager:SetStatusText(text)
+    if(not self.panel) then return end
+    self.panel:SetStatusText(text)
+end
+
+function ActivityManager:RefreshStatusPanel()
+    if(not self.panel) then return end
+    self.panel:Refresh()
+end
+
+function ActivityManager:AddActivityToStatusPanel(activity)
+    if(not self.panel) then return end
+    self.panel:AddActivity(activity)
+end
+
+function ActivityManager:ShowLoading()
+    if(not self.panel) then return end
+    self.panel:ShowLoading()
+end
+
+function ActivityManager:HideLoading()
+    if(not self.panel) then return end
+    self.panel:HideLoading()
 end
 
 function ActivityManager:QueueActivity(activity)
@@ -131,8 +157,8 @@ function ActivityManager:QueueActivity(activity)
     lookup[key] = activity
     zo_callLater(self.executeNext, 0)
 
-    self.panel:SetStatusText(gettext("<<1[No activity/One activity/$d activities]>> queued", #queue)) -- TODO
-    self.panel:Refresh()
+    self:SetStatusText(gettext("<<1[No activity/One activity/$d activities]>> queued", #queue)) -- TODO
+    self:RefreshStatusPanel()
 
     return true
 end
@@ -140,9 +166,9 @@ end
 function ActivityManager:ClearQueue()
     for _, activity in pairs(self.queue) do
         activity:OnRemove()
-        self.panel:AddActivity(activity)
+        self:AddActivityToStatusPanel(activity)
     end
-    self.panel:Refresh()
+    self:RefreshStatusPanel()
 
     ZO_ClearTable(self.lookup)
     ZO_ClearTable(self.queue)
@@ -151,12 +177,12 @@ end
 function ActivityManager:RemoveCurrentActivity()
     if(self.currentActivity) then
         self.currentActivity:OnRemove()
-        self.panel:AddActivity(self.currentActivity)
+        self:AddActivityToStatusPanel(self.currentActivity)
         self.lookup[self.currentActivity:GetKey()] = nil
         local oldActivity = self.currentActivity
         self.currentActivity = nil
         AGS.internal:FireCallbacks(AGS.callback.CURRENT_ACTIVITY_CHANGED, nil, oldActivity)
-        self.panel:Refresh()
+        self:RefreshStatusPanel()
     end
 end
 
@@ -168,10 +194,10 @@ function ActivityManager:RemoveActivitiesByType(activityType)
             table.remove(queue, i)
             self.lookup[activity:GetKey()] = nil
             activity:OnRemove()
-            self.panel:AddActivity(activity)
+            self:AddActivityToStatusPanel(activity)
         end
     end
-    self.panel:Refresh()
+    self:RefreshStatusPanel()
 end
 
 function ActivityManager:RemoveActivityByKey(key)
@@ -182,10 +208,10 @@ function ActivityManager:RemoveActivityByKey(key)
             table.remove(queue, i)
             self.lookup[key] = nil
             activity:OnRemove()
-            self.panel:AddActivity(activity)
+            self:AddActivityToStatusPanel(activity)
         end
     end
-    self.panel:Refresh()
+    self:RefreshStatusPanel()
 end
 
 function ActivityManager:GetActivity(key)
@@ -225,8 +251,8 @@ function ActivityManager:ExecuteNext()
 
         self.currentActivity = activity
         AGS.internal:FireCallbacks(AGS.callback.CURRENT_ACTIVITY_CHANGED, activity)
-        self.panel:SetStatusText("Execute next activity") -- TODO
-        self.panel:ShowLoading()
+        self:SetStatusText("Execute next activity") -- TODO
+        self:ShowLoading()
 
         activity:DoExecute():Then(function(activity)
             self:OnSuccess(activity)
@@ -236,15 +262,15 @@ function ActivityManager:ExecuteNext()
         return true
     end
 
-    self.panel:Refresh()
+    self:RefreshStatusPanel()
 
     return false
 end
 
 function ActivityManager:OnSuccess(activity)
     -- TRANSLATORS: Status text when a server request was successfully completed
-    self.panel:SetStatusText(gettext("Request finished"))
-    self.panel:HideLoading()
+    self:SetStatusText(gettext("Request finished"))
+    self:HideLoading()
     self:RemoveCurrentActivity()
     self:ExecuteNext()
 end
@@ -262,10 +288,10 @@ function ActivityManager:OnFailure(activity)
 
     if(self.tradingHouseWrapper.search:IsAtTradingHouse()) then
         -- TRANSLATORS: Status text when a server request has failed. Placeholder is for an explanation text
-        self.panel:SetStatusText(gettext("Request failed: <<1>>", message))
+        self:SetStatusText(gettext("Request failed: <<1>>", message))
         ZO_Alert(UI_ALERT_CATEGORY_ERROR, SOUNDS.NEGATIVE_CLICK, message)
 
-        self.panel:HideLoading()
+        self:HideLoading()
         self:RemoveCurrentActivity()
         self:ExecuteNext()
     end
