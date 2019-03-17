@@ -43,6 +43,7 @@ function KeybindStripWrapper:Initialize(tradingHouseWrapper)
 
     doSearchDescriptor.callback = function()
         searchManager:RequestSearch(IGNORE_RESULT_COUNT)
+        PlaySound(SOUNDS.TRADING_HOUSE_SEARCH_INITIATED)
     end
 
     -- TRANSLATORS: Label for the keybind to show more results

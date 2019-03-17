@@ -246,6 +246,7 @@ function SearchResultListWrapper:InitializeShowMoreRow(tradingHouseWrapper, sear
             if(rowControl.enabled and button == MOUSE_BUTTON_INDEX_LEFT and isInside) then
                 PlaySound("Click")
                 if(searchManager:RequestSearch(IGNORE_RESULT_COUNT)) then
+                    PlaySound(SOUNDS.TRADING_HOUSE_SEARCH_INITIATED)
                     self:UpdateShowMoreRowState()
                 end
             end
@@ -276,9 +277,30 @@ function SearchResultListWrapper:InitializeShowMoreRow(tradingHouseWrapper, sear
         ZO_ObjectPool_DefaultResetControl(rowControl)
     end)
 
+    local searchResultsMessageLabel = tradingHouse.searchResultsMessageLabel
     AGS:RegisterCallback(AGS.callback.CURRENT_ACTIVITY_CHANGED, function(activity)
         if(self.showMoreEntry) then
             self:UpdateShowMoreRowState()
+        end
+
+        local hasSearchActivity = false
+        if(activity and activity:GetType() == ActivityBase.ACTIVITY_TYPE_REQUEST_SEARCH) then
+            hasSearchActivity = true
+        else
+            local searchActivities = self.activityManager:GetActivitiesByType(ActivityBase.ACTIVITY_TYPE_REQUEST_SEARCH)
+            hasSearchActivity = (#searchActivities > 0)
+        end
+
+        if(searchManager:GetNumVisibleResults() == 0) then
+            searchResultsMessageLabel:SetHidden(false)
+            if(hasSearchActivity) then
+                searchResultsMessageLabel:SetText(GetString("SI_TRADINGHOUSESEARCHSTATE", TRADING_HOUSE_SEARCH_STATE_WAITING))
+            else
+                searchResultsMessageLabel:SetText(GetString("SI_TRADINGHOUSESEARCHOUTCOME", TRADING_HOUSE_SEARCH_OUTCOME_NO_RESULTS))
+            end
+        else
+            searchResultsMessageLabel:SetHidden(true)
+            searchResultsMessageLabel:SetText("")
         end
     end)
 end
