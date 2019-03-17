@@ -1,6 +1,7 @@
 local AGS = AwesomeGuildStore
 
 local HiredTraderTooltip = AGS.class.HiredTraderTooltip
+local IngameGuildSelector = GuildSelector
 
 local GuildSelector = ZO_Object:Subclass()
 AGS.class.GuildSelector = GuildSelector
@@ -48,6 +49,16 @@ function GuildSelector:Initialize(tradingHouseWrapper)
         self.traderTooltip:Update(self.selectedItemText, guildData.guildId)
         tradingHouse:UpdateForGuildChange() -- TODO: disable all the unnecessary stuff in there
     end)
+
+    ZO_PreHook(IngameGuildSelector, "SelectGuildByIndex", function(_, index)
+        if(tradingHouseWrapper.search:IsAtTradingHouse()) then
+            if(GetNumTradingHouseGuilds() > 1) then
+                SelectTradingHouseGuildId(GetGuildId(index))
+            end
+            return true
+        end
+    end)
+    TRADING_HOUSE_SCENE:AddFragment(GUILD_SELECTOR_ACTION_LAYER_FRAGMENT)
 end
 
 function GuildSelector:InitializeComboBox(comboBoxControl, comboBox)
