@@ -152,8 +152,12 @@ function ActivityBase:DoExecute()
     return false
 end
 
-function ActivityBase:GetLogEntry()
+function ActivityBase:GetFormattedTime()
     return os.date("[%T] ", math.floor(self.updateTime / 1000))
+end
+
+function ActivityBase:GetLogEntry()
+    return ""
 end
 
 function ActivityBase:GetErrorMessage()

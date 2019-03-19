@@ -40,16 +40,13 @@ end
 
 function RequestNewestActivity:GetLogEntry()
     if(not self.logEntry) then
-        local prefix = ActivityBase.GetLogEntry(self)
-        local message
         if(self.pendingPage) then
             -- TRANSLATORS: log text shown to the user for each executed request of the newest search results. Placeholders are for the page and guild name
-            message = gettext("Request page <<1>> of newest results in <<2>>", self.pendingPage + 1, self.pendingGuildName)
+            self.logEntry = gettext("Request page <<1>> of newest results in <<2>>", self.pendingPage + 1, self.pendingGuildName)
         else
             -- TRANSLATORS: log text shown to the user for each request of the newest search results. Placeholder is for the guild name
-            message = gettext("Request newest results in <<1>>", self.pendingGuildName)
+            self.logEntry = gettext("Request newest results in <<1>>", self.pendingGuildName)
         end
-        self.logEntry = prefix .. message
     end
     return self.logEntry
 end

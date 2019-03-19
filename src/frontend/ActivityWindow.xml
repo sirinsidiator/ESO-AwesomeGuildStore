@@ -9,10 +9,9 @@
                     <Dimensions x="24" y="24" />
                     <Anchor point="LEFT" />
                 </Texture>
-                <Label name="$(parent)Text" font="ZoFontGame" verticalAlignment="CENTER" wrapMode="ELLIPSIS" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_SELECTED" linkEnabled="true">
-                    <Dimensions y="24" />
+                <Label name="$(parent)Timestamp" font="ZoFontGame" verticalAlignment="CENTER" wrapMode="ELLIPSIS" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_SELECTED">
+                    <Dimensions x="70" y="24" />
                     <Anchor point="LEFT" relativeTo="$(parent)Icon" relativePoint="RIGHT" offsetX="5" />
-                    <Anchor point="RIGHT" relativeTo="$(parent)QueueTime" relativePoint="LEFT" offsetX="-5" />
                 </Label>
                 <Label name="$(parent)ExecutionTime" font="ZoFontGame" verticalAlignment="CENTER" horizontalAlignment="RIGHT" wrapMode="ELLIPSIS" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_SELECTED">
                     <Dimensions x="100" y="24" />
@@ -21,6 +20,11 @@
                 <Label name="$(parent)QueueTime" font="ZoFontGame" verticalAlignment="CENTER" horizontalAlignment="RIGHT" wrapMode="ELLIPSIS" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_SELECTED">
                     <Dimensions x="100" y="24" />
                     <Anchor point="RIGHT" relativeTo="$(parent)ExecutionTime" relativePoint="LEFT" offsetX="-5" />
+                </Label>
+                <Label name="$(parent)Text" font="ZoFontGame" verticalAlignment="CENTER" wrapMode="ELLIPSIS" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_SELECTED" linkEnabled="true">
+                    <Dimensions y="24" />
+                    <Anchor point="LEFT" relativeTo="$(parent)Timestamp" relativePoint="RIGHT" offsetX="5" />
+                    <Anchor point="RIGHT" relativeTo="$(parent)QueueTime" relativePoint="LEFT" offsetX="-5" />
                 </Label>
             </Controls>
         </Control>
@@ -52,10 +56,34 @@
                 </Button>
 
                 <Control name="$(parent)Container">
-                    <Anchor point="TOPLEFT" offsetX="10" offsetY="40" />
+                    <Anchor point="TOPLEFT" offsetX="10" offsetY="50" />
                     <Anchor point="BOTTOMRIGHT" offsetX="-10" offsetY="-10" />
 
                     <Controls>
+                        <Control name="$(parent)Header">
+                            <Dimensions y="32" />
+                            <Anchor point="BOTTOMLEFT" relativePoint="TOPLEFT" offsetX="-10" offsetY="0" />
+                            <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT" offsetX="10" offsetY="0" />
+                            <Controls>
+                                <Control name="$(parent)Time" inherits="ZO_SortHeader" mouseEnabled="false">
+                                    <Dimensions x="70" y="20" />
+                                    <Anchor point="LEFT" offsetX="40" />
+                                </Control>
+                                <Control name="$(parent)Message" inherits="ZO_SortHeader" mouseEnabled="false">
+                                    <Dimensions x="200" y="20" />
+                                    <Anchor point="LEFT" relativeTo="$(parent)Time" relativePoint="RIGHT" offsetX="5" />
+                                </Control>
+                                <Control name="$(parent)ExecutionTime" inherits="ZO_SortHeader" mouseEnabled="false">
+                                    <Dimensions x="80" y="20" />
+                                    <Anchor point="RIGHT" />
+                                </Control>
+                                <Control name="$(parent)QueueTime" inherits="ZO_SortHeader" mouseEnabled="false">
+                                    <Dimensions x="80" y="20" />
+                                    <Anchor point="RIGHT" relativeTo="$(parent)ExecutionTime" relativePoint="LEFT" offsetX="-30" />
+                                </Control>
+                            </Controls>
+                        </Control>
+
                         <Control name="$(parent)List" inherits="ZO_ScrollList">
                             <AnchorFill />
                         </Control>

@@ -170,8 +170,6 @@ end
 
 function RequestSearchActivity:GetLogEntry()
     if(not self.logEntry) then -- TODO: show filter state too
-        local prefix = ActivityBase.GetLogEntry(self)
-        local message
         if(self.pendingFilterState and self.pendingPage) then
             local category, subcategory = self:GetPendingCategories()
             local categoryLabel = category.label
@@ -179,12 +177,11 @@ function RequestSearchActivity:GetLogEntry()
                 categoryLabel = string.format("%s > %s", category.label, subcategory.label)
             end
             -- TRANSLATORS: log text shown to the user for an executed request of the search results. Placeholders are for the page, category and guild name
-            message = gettext("Request page <<1>> of <<2>> in <<3>>", self.pendingPage + 1, categoryLabel, self.pendingGuildName)
+            self.logEntry = gettext("Request page <<1>> of <<2>> in <<3>>", self.pendingPage + 1, categoryLabel, self.pendingGuildName)
         else
             -- TRANSLATORS: log text shown to the user for a queued request of the search results. Placeholder is for the guild name
-            message = gettext("Request search results in <<1>>", self.pendingGuildName)
+            self.logEntry = gettext("Request search results in <<1>>", self.pendingGuildName)
         end
-        self.logEntry = prefix .. message
     end
     return self.logEntry
 end

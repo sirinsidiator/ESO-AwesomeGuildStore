@@ -44,9 +44,8 @@ end
 
 function RequestListingsActivity:GetLogEntry()
     if(not self.logEntry) then
-        local prefix = ActivityBase.GetLogEntry(self)
         -- TRANSLATORS: log text shown to the user for each listings request. Placeholder is for the guild name
-        self.logEntry = prefix .. zo_strformat(gettext("Request listings in <<1>>"), GetGuildName(self.guildId))
+        self.logEntry = gettext("Request listings in <<1>>", GetGuildName(self.guildId))
     end
     return self.logEntry
 end

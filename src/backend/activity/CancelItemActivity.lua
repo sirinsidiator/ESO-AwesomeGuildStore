@@ -55,10 +55,9 @@ end
 
 function CancelItemActivity:GetLogEntry()
     if(not self.logEntry) then
-        local prefix = ActivityBase.GetLogEntry(self)
         local price = ZO_Currency_FormatPlatform(CURT_MONEY, self.price, ZO_CURRENCY_FORMAT_AMOUNT_ICON)
         -- TRANSLATORS: log text shown to the user for each cancel item activity. First placeholder is for the item link and second for the guild name
-        self.logEntry = prefix .. zo_strformat(gettext("Cancel listing of <<1>>x <<t:2>> for <<3>> in <<4>>"), self.stackCount, self.itemLink, price, GetGuildName(self.guildId))
+        self.logEntry = gettext("Cancel listing of <<1>>x <<t:2>> for <<3>> in <<4>>", self.stackCount, self.itemLink, price, GetGuildName(self.guildId))
     end
     return self.logEntry
 end

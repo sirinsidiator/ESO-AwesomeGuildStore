@@ -10,6 +10,7 @@ AGS.class.ActivityWindow = ActivityWindow
 
 local REFRESH_INTERVAL_NAME = "AwesomeGuildStore_ActivityWindow_RefeshInterval"
 local REFRESH_INTERVAL = 100
+local NO_SORT_KEY = nil
 
 local ACTIVITY_TO_STRING = {
     [ActivityBase.ACTIVITY_TYPE_REQUEST_SEARCH] = "ACTIVITY_TYPE_REQUEST_SEARCH",
@@ -52,6 +53,13 @@ function ActivityWindow:Initialize(tradingHouseWrapper)
     end
 
     local container = window:GetNamedChild("Container")
+
+    local headers = container:GetNamedChild("Header")
+    ZO_SortHeader_Initialize(headers:GetNamedChild("Time"), gettext("Time"), NO_SORT_KEY, ZO_SORT_ORDER_UP, TEXT_ALIGN_LEFT, "ZoFontHeader")
+    ZO_SortHeader_Initialize(headers:GetNamedChild("Message"), gettext("Message"), NO_SORT_KEY, ZO_SORT_ORDER_UP, TEXT_ALIGN_LEFT, "ZoFontHeader")
+    ZO_SortHeader_Initialize(headers:GetNamedChild("QueueTime"), gettext("Queued"), NO_SORT_KEY, ZO_SORT_ORDER_UP, TEXT_ALIGN_LEFT, "ZoFontHeader")
+    ZO_SortHeader_Initialize(headers:GetNamedChild("ExecutionTime"), gettext("Active"), NO_SORT_KEY, ZO_SORT_ORDER_UP, TEXT_ALIGN_LEFT, "ZoFontHeader")
+
     local list = ZO_SortFilterList:New(container)
     list:SetAlternateRowBackgrounds(true)
     list:SetAutomaticallyColorRows(false)
@@ -94,6 +102,10 @@ function ActivityWindow:Initialize(tradingHouseWrapper)
         if(iconColor) then
             iconControl:SetColor(iconColor:UnpackRGBA())
         end
+
+        local timestampControl = control:GetNamedChild("Timestamp")
+        timestampControl:SetText(data:GetFormattedTime())
+        timestampControl:SetColor(textColor:UnpackRGBA())
 
         local textControl = control:GetNamedChild("Text")
         textControl:SetText(data:GetLogEntry())
