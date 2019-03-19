@@ -269,6 +269,10 @@ function SearchTabWrapper:InitializePurchase(tradingHouseWrapper)
     tradingHouse.control:UnregisterForEvent(EVENT_TRADING_HOUSE_CONFIRM_ITEM_PURCHASE)
 
     tradingHouseWrapper:Wrap("VerifyBuyItemAndShowErrors", function(originalVerifyBuyItemAndShowErrors, tradingHouse, inventorySlot)
+        if(ZO_InventorySlot_GetType(inventorySlot) == SLOT_TYPE_GUILD_SPECIFIC_ITEM) then
+            return originalVerifyBuyItemAndShowErrors(tradingHouse, inventorySlot)
+        end
+
         if(originalVerifyBuyItemAndShowErrors(tradingHouse, inventorySlot)) then
             local entry = ZO_ScrollList_GetData(inventorySlot:GetParent())
             if(not entry) then
