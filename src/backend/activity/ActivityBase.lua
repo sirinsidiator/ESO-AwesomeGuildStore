@@ -100,7 +100,7 @@ end
 
 function ActivityBase:Initialize(tradingHouseWrapper, key, priority, guildId)
     self.tradingHouseWrapper = tradingHouseWrapper
-    self.activityPanel = tradingHouseWrapper.activityPanel
+    self.activityWindow = tradingHouseWrapper.activityWindow
     self.tradingHouse = tradingHouseWrapper.tradingHouse
     self.guildSelection = tradingHouseWrapper.guildSelection
     self.key = key
@@ -121,7 +121,7 @@ function ActivityBase:SetState(state, result)
     self.state = state
     self.result = result
     self.logEntry = nil -- force it to refresh
-    self.activityPanel:Refresh()
+    self.activityWindow:Refresh() -- TODO this needs to happen via a callback or something
 end
 
 function ActivityBase:ApplyGuildId()

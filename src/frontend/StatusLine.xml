@@ -1,0 +1,19 @@
+<GuiXml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sir.insidi.at/or/schema/esoui.xsd">
+    <Controls>
+        <Control name="AwesomeGuildStoreActivityStatusLineTemplateLoaded" hidden="true" />
+
+        <Control name="AwesomeGuildStoreActivityStatusLineTemplate" virtual="true" mouseEnabled="true">
+            <Dimensions y="32" />
+            <Controls>
+                <Texture name="$(parent)Loading" textureFile="EsoUI/Art/Miscellaneous/wait_icon.dds">
+                    <Anchor point="LEFT" />
+                    <Dimensions x="32" y="32" />
+                </Texture>
+                <Label name="$(parent)Status" font="ZoFontGameLarge" verticalAlignment="CENTER" wrapMode="ELLIPSIS" maxLineCount="1" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_SELECTED">
+                    <Anchor point="LEFT" relativeTo="$(parent)Loading" relativePoint="RIGHT" offsetX="5" />
+                    <Anchor point="RIGHT" />
+                </Label>
+            </Controls>
+        </Control>
+    </Controls>
+</GuiXml>

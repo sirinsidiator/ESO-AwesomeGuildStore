@@ -119,34 +119,38 @@ function ActivityManager:Initialize(tradingHouseWrapper, loadingIndicator, loadi
     end)
 end
 
--- TODO: these functions should be removed and the panel should react to callbacks instead
-function ActivityManager:SetPanel(panel)
-    self.panel = panel
+-- TODO: these functions should be removed and we should react to callbacks instead
+function ActivityManager:SetStatusLine(statusLine)
+    self.statusLine = statusLine
+end
+
+function ActivityManager:SetActivityWindow(activityWindow)
+    self.activityWindow = activityWindow
 end
 
 function ActivityManager:SetStatusText(text)
-    if(not self.panel) then return end
-    self.panel:SetStatusText(text)
+    if(not self.statusLine) then return end
+    self.statusLine:SetStatusText(text)
 end
 
 function ActivityManager:RefreshStatusPanel()
-    if(not self.panel) then return end
-    self.panel:Refresh()
+    if(not self.activityWindow) then return end
+    self.activityWindow:Refresh()
 end
 
 function ActivityManager:AddActivityToStatusPanel(activity)
-    if(not self.panel) then return end
-    self.panel:AddActivity(activity)
+    if(not self.activityWindow) then return end
+    self.activityWindow:AddActivity(activity)
 end
 
 function ActivityManager:ShowLoading()
-    if(not self.panel) then return end
-    self.panel:ShowLoading()
+    if(not self.statusLine) then return end
+    self.statusLine:ShowLoading()
 end
 
 function ActivityManager:HideLoading()
-    if(not self.panel) then return end
-    self.panel:HideLoading()
+    if(not self.statusLine) then return end
+    self.statusLine:HideLoading()
 end
 
 function ActivityManager:QueueActivity(activity)

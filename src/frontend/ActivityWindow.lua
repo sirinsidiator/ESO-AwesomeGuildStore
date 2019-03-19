@@ -5,12 +5,10 @@ local gettext = AGS.internal.gettext
 local ActivityBase = AGS.class.ActivityBase
 local SimpleIconButton = AGS.class.SimpleIconButton
 
-local ActivityPanel = ZO_SimpleSceneFragment:Subclass()
-AGS.class.ActivityPanel = ActivityPanel
+local ActivityWindow = ZO_SimpleSceneFragment:Subclass()
+AGS.class.ActivityWindow = ActivityWindow
 
-local PRESSED = true
-local DISABLED = true
-local REFRESH_INTERVAL_NAME = "AwesomeGuildStore_ActivityPanel_RefeshInterval"
+local REFRESH_INTERVAL_NAME = "AwesomeGuildStore_ActivityWindow_RefeshInterval"
 local REFRESH_INTERVAL = 100
 
 local ACTIVITY_TO_STRING = {
@@ -27,61 +25,30 @@ local PRIORITY_TO_STRING = {
     [ActivityBase.PRIORITY_HIGH] = "PRIORITY_HIGH",
 }
 
-function ActivityPanel:New(...)
+function ActivityWindow:New(...)
     return ZO_SimpleSceneFragment.New(self, ...) -- TODO: are we even using it as a scene fragment?
 end
 
-function ActivityPanel:Initialize(tradingHouseWrapper)
+function ActivityWindow:Initialize(tradingHouseWrapper)
     local activityManager = tradingHouseWrapper.activityManager
     local tradingHouse = tradingHouseWrapper.tradingHouse
 
     local window = AwesomeGuildStoreActivityWindow -- TODO translate title
     self.window = window
 
-    local control = CreateControlFromVirtual("AwesomeGuildStoreActivityStatusLine", tradingHouse.control, "AwesomeGuildStoreActivityStatusLineTemplate")
-    control.fragment = self
-    ZO_SimpleSceneFragment.Initialize(self, control)
+    ZO_SimpleSceneFragment.Initialize(self, window)
 
-    AGS:RegisterCallback(AGS.callback.STORE_TAB_CHANGED, function(oldTab, newTab)
-        if(newTab == tradingHouseWrapper.searchTab) then
-            control:SetAnchor(TOPLEFT, tradingHouse.resultCount, BOTTOMLEFT, -37, -5)
-            control:SetAnchor(RIGHT, tradingHouseWrapper.footer, LEFT, 0, 0, ANCHOR_CONSTRAINS_X)
-        elseif(newTab == tradingHouseWrapper.sellTab) then
-            control:SetAnchor(TOPLEFT, tradingHouse.control, BOTTOMLEFT, 0, -11)
-            control:SetAnchor(RIGHT, ZO_PlayerInventory, LEFT, 0, 0, ANCHOR_CONSTRAINS_X)
-        else
-            control:SetAnchor(TOPLEFT, tradingHouse.control, BOTTOMLEFT, 0, -11)
-            control:SetAnchor(RIGHT, tradingHouseWrapper.footer, LEFT, 0, 0, ANCHOR_CONSTRAINS_X)
-        end
-    end)
-
-    self.loadingSpinner = self.control:GetNamedChild("Loading")
-    self.statusText = self.control:GetNamedChild("Status")
-
-    self.loadingAnimation = ANIMATION_MANAGER:CreateTimelineFromVirtual("LoadIconAnimation", self.loadingSpinner)
-
-    -- TRANSLATORS: Tooltip text when hovering over the activity status line
-    local MORE_INFO_TEXT = gettext("Click for more information")
-    control:SetHandler("OnMouseEnter", function()
-        InitializeTooltip(InformationTooltip, control, BOTTOM, 0, 0)
-        SetTooltipText(InformationTooltip, self.statusText:GetText())
-        SetTooltipText(InformationTooltip, MORE_INFO_TEXT)
-    end)
-
-    control:SetHandler("OnMouseExit", function()
-        ClearTooltip(InformationTooltip)
-    end)
-
-    control:SetHandler("OnMouseUp", function()
-        if(window:IsHidden()) then
-            self:ShowWindow()
-        else
-            self:HideWindow()
-        end
-    end)
+    -- TODO: find a way around these 3 methods
+    AGS.internal.OpenActivityWindow = function()
+        self:ShowWindow()
+    end
 
     AGS.internal.CloseActivityWindow = function()
         self:HideWindow()
+    end
+
+    AGS.internal.IsActivityWindowHidden = function()
+        window:IsHidden()
     end
 
     local container = window:GetNamedChild("Container")
@@ -237,39 +204,33 @@ function ActivityPanel:Initialize(tradingHouseWrapper)
     self.list = list
 end
 
-function ActivityPanel:ShowWindow()
+function ActivityWindow:ShowWindow()
     self.window:SetHidden(false)
     self:Refresh()
     EVENT_MANAGER:RegisterForUpdate(REFRESH_INTERVAL_NAME, REFRESH_INTERVAL, self.refreshVisible)
 end
 
-function ActivityPanel:HideWindow()
+function ActivityWindow:HideWindow()
     self.window:SetHidden(true)
     EVENT_MANAGER:UnregisterForUpdate(REFRESH_INTERVAL_NAME)
 end
 
-function ActivityPanel:ShowLoading()
-    self.loadingAnimation:PlayForward()
-    self.loadingSpinner:SetHidden(false)
+function ActivityWindow:ToggleWindow()
+    if(self.window:IsHidden()) then
+        self:ShowWindow()
+    else
+        self:HideWindow()
+    end
 end
 
-function ActivityPanel:HideLoading()
-    self.loadingSpinner:SetHidden(true)
-    self.loadingAnimation:Stop()
-end
-
-function ActivityPanel:SetStatusText(text)
-    self.statusText:SetText(text)
-end
-
-function ActivityPanel:AddActivity(activity)
+function ActivityWindow:AddActivity(activity)
     table.insert(self.activitylog, 1, activity)
     if(#self.activitylog > 40) then -- TODO config value
         table.remove(self.activitylog)
     end
 end
 
-function ActivityPanel:Refresh()
+function ActivityWindow:Refresh()
     if(not self.window:IsHidden()) then
         self.list:RefreshFilters()
     end

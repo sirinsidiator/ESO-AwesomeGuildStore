@@ -79,9 +79,14 @@ function TradingHouseWrapper:Initialize(saveData)
 
         self:InitializeFooter()
 
-        self.activityPanel = AGS.class.ActivityPanel:New(self)
-        TRADING_HOUSE_SCENE:AddFragment(self.activityPanel)
-        self.activityManager:SetPanel(self.activityPanel)
+        self.activityWindow = AGS.class.ActivityWindow:New(self)
+        self.statusLine = AGS.class.StatusLine:New(self)
+
+        TRADING_HOUSE_SCENE:AddFragment(self.activityWindow)
+        TRADING_HOUSE_SCENE:AddFragment(self.statusLine)
+
+        self.activityManager:SetActivityWindow(self.activityWindow)
+        self.activityManager:SetStatusLine(self.statusLine)
 
         self:InitializeGuildSelector()
         self:InitializeKeybindStripWrapper()
