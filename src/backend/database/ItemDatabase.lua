@@ -20,6 +20,7 @@ function ItemDatabase:Initialize(tradingHouseWrapper)
     self.data = {}
     self.guildItemData = {}
     self.viewCache = {}
+    self.itemIdToIndex = {}
     self.dirty = true
 
     self.originalGetTradingHouseSearchResultItemInfo = GetTradingHouseSearchResultItemInfo
@@ -61,6 +62,7 @@ end
 
 function ItemDatabase:Update(guildName, numItems)
     local data = self:GetOrCreateDataForGuild(guildName)
+    ZO_ClearTable(self.itemIdToIndex)
 
     local hasAnyResultAlreadyStored = false
     for i = 1, numItems do
@@ -73,12 +75,19 @@ function ItemDatabase:Update(guildName, numItems)
         end
         data[itemUniqueId] = item
         item:UpdateFromStore(i, guildName)
+
+        local itemId = GetItemLinkItemId(item.itemLink)
+        self.itemIdToIndex[itemId] = i
     end
 
     self:GetItemView(guildName):MarkDirty()
 
     AGS.internal:FireCallbacks(AGS.callback.ITEM_DATABASE_UPDATE, self, guildName, hasAnyResultAlreadyStored)
     return hasAnyResultAlreadyStored
+end
+
+function ItemDatabase:GetCurrentPageIndexForItemId(itemId)
+    return self.itemIdToIndex[itemId]
 end
 
 function ItemDatabase:UpdateGuildSpecificItems(guildId, guildName)

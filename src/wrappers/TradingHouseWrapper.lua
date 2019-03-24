@@ -32,6 +32,7 @@ function TradingHouseWrapper:Initialize(saveData)
     self.loadingIndicator:SetAnchor(BOTTOMLEFT, tradingHouse.control, BOTTOMLEFT, 15, 20)
     local itemDatabase = ItemDatabase:New(self)
     self.itemDatabase = itemDatabase
+    self.itemNameMatcher = AGS.class.ItemNameMatcher:New()
     local activityManager = AGS.class.ActivityManager:New(self, self.loadingIndicator, self.loadingOverlay)
     self.activityManager = activityManager
     local searchManager = AGS.class.SearchManager:New(self, saveData.searchManager)
@@ -116,12 +117,16 @@ function TradingHouseWrapper:Initialize(saveData)
         SCENE_MANAGER:RemoveFragment(TRADING_HOUSE_SEARCH_HISTORY_KEYBOARD_FRAGMENT)
     end)
 
-    function ITEM_PREVIEW_KEYBOARD:PreviewTradingHouseSearchResultAsFurniture(tradingHouseIndex)
-        local item = itemDatabase:TryGetItemDataInCurrentGuildByUniqueId(tradingHouseIndex)
-        if(item and item.originalSlotIndex) then
-            tradingHouseIndex = item.originalSlotIndex
+    function tradingHouse:PreviewSearchResult(tradingHouseIndex)
+        activityManager:CancelPreviewItem()
+
+        local item, guildId = itemDatabase:TryGetItemDataInCurrentGuildByUniqueId(tradingHouseIndex)
+        if(item) then
+            activityManager:PreviewItem(item, guildId)
+        else
+            -- TRANSLATORS: Alert message when an item cannot be previewed due to missing data.
+            ZO_AlertNoSuppression(UI_ALERT_CATEGORY_ALERT, SOUNDS.PLAYER_ACTION_INSUFFICIENT_GOLD, gettext("Item preview not possible."))
         end
-        self:SharedPreviewSetup(ZO_ITEM_PREVIEW_TRADING_HOUSE_SEARCH_RESULT_AS_FURNITURE, tradingHouseIndex)
     end
 
     RegisterForEvent(EVENT_CLOSE_TRADING_HOUSE, function()

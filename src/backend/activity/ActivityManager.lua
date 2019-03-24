@@ -15,6 +15,7 @@ local PurchaseItemActivity = AGS.class.PurchaseItemActivity
 local PostItemActivity = AGS.class.PostItemActivity
 local CancelItemActivity = AGS.class.CancelItemActivity
 local FetchGuildItemsActivity = AGS.class.FetchGuildItemsActivity
+local PreviewItemActivity = AGS.class.PreviewItemActivity
 
 local ByPriority = ActivityBase.ByPriority
 
@@ -375,10 +376,24 @@ function ActivityManager:FetchGuildItems(guildId)
     return activity
 end
 
+function ActivityManager:PreviewItem(itemData, guildId)
+    local itemId = GetItemLinkItemId(itemData.itemLink)
+    local key = PreviewItemActivity.CreateKey(guildId, itemId)
+    if(not self:CanQueue(key)) then return end
+
+    local activity = PreviewItemActivity:New(self.tradingHouseWrapper, guildId, itemId, itemData)
+    self:QueueActivity(activity)
+    return activity
+end
+
 function ActivityManager:CancelSearch()
     self:RemoveActivitiesByType(ActivityBase.ACTIVITY_TYPE_REQUEST_SEARCH)
 end
 
 function ActivityManager:CancelRequestNewest()
     self:RemoveActivitiesByType(ActivityBase.ACTIVITY_TYPE_REQUEST_NEWEST)
+end
+
+function ActivityManager:CancelPreviewItem()
+    self:RemoveActivitiesByType(ActivityBase.ACTIVITY_TYPE_PREVIEW_ITEM)
 end

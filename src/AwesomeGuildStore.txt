@@ -50,6 +50,7 @@ backend/activity/PostItemActivity.lua
 backend/activity/PurchaseItemActivity.lua
 backend/activity/CancelItemActivity.lua
 backend/activity/FetchGuildItemsActivity.lua
+backend/activity/PreviewItemActivity.lua
 frontend/ActivityWindow.xml
 frontend/ActivityWindow.lua
 frontend/StatusLine.xml
@@ -104,6 +105,7 @@ backend/SearchState.lua
 backend/SearchPageHistory.lua
 backend/SearchManager.lua
 backend/GuildSelection.lua
+backend/ItemNameMatcher.lua
 frontend/SearchList.xml
 frontend/SearchList.lua
 frontend/SearchResultListWrapper.lua
