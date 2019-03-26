@@ -43,14 +43,6 @@ function ItemDatabase:Initialize(tradingHouseWrapper)
         return self.originalGetTradingHouseSearchResultItemLink(slotIndex, linkStyle)
     end
 
-    ZO_PreHook(ItemTooltip, "SetTradingHouseItem", function(tooltip, tradingHouseIndex)
-        local item = self:TryGetItemDataInCurrentGuildByUniqueId(tradingHouseIndex)
-        if(item) then
-            tooltip:SetLink(item.itemLink)
-            return true
-        end
-    end)
-
     local function SetDirty()
         local guildName = select(2, GetCurrentTradingHouseGuildDetails())
         self:GetItemView(guildName):MarkDirty()
@@ -58,6 +50,17 @@ function ItemDatabase:Initialize(tradingHouseWrapper)
 
     AGS:RegisterCallback(AGS.callback.FILTER_VALUE_CHANGED, SetDirty)
     AGS:RegisterCallback(AGS.callback.FILTER_ACTIVE_CHANGED, SetDirty)
+end
+
+function ItemDatabase:SetupItemTooltipHook()
+    -- need to hook this after other addons, otherwise they may incorrectly run their code twice
+    ZO_PreHook(ItemTooltip, "SetTradingHouseItem", function(tooltip, tradingHouseIndex)
+        local item = self:TryGetItemDataInCurrentGuildByUniqueId(tradingHouseIndex)
+        if(item) then
+            tooltip:SetLink(item.itemLink)
+            return true
+        end
+    end)
 end
 
 function ItemDatabase:Update(guildName, numItems)
