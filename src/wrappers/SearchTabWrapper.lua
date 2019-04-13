@@ -241,6 +241,9 @@ function SearchTabWrapper:InitializeFilters(tradingHouseWrapper)
     AGS:RegisterFilter(AGS.class.FurnitureCategoryFilter:New())
     AGS:RegisterFilterFragment(AGS.class.MultiCategoryFilterFragment:New(FILTER_ID.FURNITURE_CATEGORY_FILTER))
 
+    AGS:RegisterFilter(AGS.class.CollectibleOwnershipFilter:New())
+    AGS:RegisterFilterFragment(AGS.class.MultiButtonFilterFragment:New(FILTER_ID.COLLECTIBLE_OWNERSHIP_FILTER))
+
     AGS.internal:FireCallbacks(AGS.callback.AFTER_FILTER_SETUP, tradingHouseWrapper)
 
     self.searchResultList = AGS.class.SearchResultListWrapper:New(tradingHouseWrapper, searchManager)

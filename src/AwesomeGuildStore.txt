@@ -3,7 +3,7 @@
 ## Version: @VERSION_NUMBER@
 ## APIVersion: @API_VERSION@
 ## AddOnVersion: @BUILD_NUMBER@
-## DependsOn: LibStub LibCustomMenu LibDebugLogger LibDateTime LibAddonMenu-2.0 LibMapPing LibGPS LibPromises LibTextFilter LibGetText libCommonInventoryFilters
+## DependsOn: LibStub LibCustomMenu LibDebugLogger LibDateTime LibAddonMenu-2.0 LibMapPing LibGPS LibPromises LibTextFilter LibGetText libCommonInventoryFilters LibRunebox
 ## OptionalDependsOn: LibFilters-2.0 LibCustomTitles LibAnnyoingUpdateNotificationInGame CraftedPotions
 ## SavedVariables: AwesomeGuildStore_Data
 ##
@@ -101,6 +101,7 @@ backend/filter/CraftedItemFilter.lua
 backend/filter/SkillRequirementsFilter.lua
 backend/filter/WritVoucherFilter.lua
 backend/filter/FurnitureCategoryFilter.lua
+backend/filter/CollectibleOwnershipFilter.lua
 backend/SearchState.lua
 backend/SearchPageHistory.lua
 backend/SearchManager.lua

@@ -164,6 +164,7 @@ local integrityCheckList = {
     ["backend/filter/SkillRequirementsFilter.lua"] = function() return AGS.class.SkillRequirementsFilter ~= nil end,
     ["backend/filter/WritVoucherFilter.lua"] = function() return AGS.class.WritVoucherFilter ~= nil end,
     ["backend/filter/FurnitureCategoryFilter.lua"] = function() return AGS.class.FurnitureCategoryFilter ~= nil end,
+    ["backend/filter/CollectibleOwnershipFilter.lua"] = function() return AGS.class.CollectibleOwnershipFilter ~= nil end,
     ["backend/SearchState.lua"] = function() return AGS.class.SearchState ~= nil end,
     ["backend/SearchPageHistory.lua"] = function() return AGS.class.SearchPageHistory ~= nil end,
     ["backend/SearchManager.lua"] = function() return AGS.class.SearchManager ~= nil end,

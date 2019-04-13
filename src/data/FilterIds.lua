@@ -48,7 +48,8 @@ local FILTER_ID = {
     FURNITURE_CATEGORY_FILTER = 58,
     CONSUMABLE_TROPHY_TYPE_FILTER = 59,
     MISC_TROPHY_TYPE_FILTER = 60,
-    -- 59 .. 99 - reserved
+    COLLECTIBLE_OWNERSHIP_FILTER = 61,
+    -- 62 .. 99 - reserved
 
     -- external:
     MASTER_MERCHANT_DEAL_SELECTOR = 100,
