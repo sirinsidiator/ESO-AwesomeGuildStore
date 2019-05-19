@@ -25,9 +25,14 @@ function QualityFilter:Initialize()
     ValueRangeFilterBase.Initialize(self, FILTER_ID.QUALITY_FILTER, FilterBase.GROUP_SERVER, {
         -- TRANSLATORS: label of the quality filter
         label = gettext("Quality Range"),
-        min = ITEM_QUALITY_NORMAL,
+        min = ITEM_QUALITY_TRASH,
         max = ITEM_QUALITY_LEGENDARY,
         steps = {
+            {
+                id = ITEM_QUALITY_TRASH,
+                label = GetString("SI_ITEMQUALITY", ITEM_QUALITY_TRASH),
+                icon = "AwesomeGuildStore/images/qualitybuttons/trash_%s.dds",
+            },
             {
                 id = ITEM_QUALITY_NORMAL,
                 label = GetString("SI_ITEMQUALITY", ITEM_QUALITY_NORMAL),
@@ -53,7 +58,8 @@ function QualityFilter:Initialize()
                 label = GetString("SI_ITEMQUALITY", ITEM_QUALITY_LEGENDARY),
                 icon = "AwesomeGuildStore/images/qualitybuttons/legendary_%s.dds",
             }
-        }
+        },
+        requiresStepConversion = true,
     })
 
     local qualityById = {}

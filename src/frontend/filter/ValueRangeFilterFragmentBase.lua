@@ -23,6 +23,18 @@ function ValueRangeFilterFragmentBase:Initialize(filterId)
     local slider = MinMaxRangeSlider:New("$(parent)Slider", container)
     if(config.steps) then
         slider:SetMinMax(1, #config.steps)
+
+        if(config.requiresStepConversion) then
+            self.steps = config.steps
+
+            local stepIdToSliderValue = {}
+            for i = 1, #config.steps do
+                local step = config.steps[i]
+                stepIdToSliderValue[step.id] = i
+            end
+            self.stepIdToSliderValue = stepIdToSliderValue
+            self.requiresStepConversion = true
+        end
     else
         slider:SetMinMax(config.min, config.max)
     end
@@ -43,11 +55,19 @@ function ValueRangeFilterFragmentBase:Initialize(filterId)
 end
 
 function ValueRangeFilterFragmentBase:ToNearestValue(value)
+    if(self.requiresStepConversion) then
+        return self.steps[value].id
+    end
     return value
 end
 
 function ValueRangeFilterFragmentBase:OnValueChanged(min, max)
     self.fromFilter = true
+    if(self.requiresStepConversion) then
+        local stepIdToSliderValue = self.stepIdToSliderValue
+        min = stepIdToSliderValue[min]
+        max = stepIdToSliderValue[max]
+    end
     self.slider:SetRangeValue(min, max)
     self.fromFilter = false
 end

@@ -51,10 +51,6 @@ function QualityFilterFragment:Initialize(filterId)
     self.buttons = buttons
 end
 
-function QualityFilterFragment:ToNearestValue(value)
-    return self.steps[value].id
-end
-
 function QualityFilterFragment:CreateButton(container, i, data)
     local control = CreateControl("$(parent)Button" .. i, container, CT_BUTTON)
     local button = SimpleIconButton:New(control)
