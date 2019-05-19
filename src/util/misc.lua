@@ -93,3 +93,12 @@ local function ClampValue(value, min, max)
     return value
 end
 AGS.internal.ClampValue = ClampValue
+
+
+local KIOSK_OPTION_INDEX = 1
+local function IsAtGuildKiosk()
+    local _, optionType = GetChatterOption(KIOSK_OPTION_INDEX)
+    return optionType == CHATTER_START_TRADINGHOUSE
+end
+AGS.internal.KIOSK_OPTION_INDEX = KIOSK_OPTION_INDEX
+AGS.internal.IsAtGuildKiosk = IsAtGuildKiosk

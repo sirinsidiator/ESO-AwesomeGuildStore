@@ -3,9 +3,11 @@ local AGS = AwesomeGuildStore
 local logger = AGS.internal.logger
 local gettext = AGS.internal.gettext
 
-local RegisterForEvent = AGS.internal.RegisterForEvent
 local ItemDatabase = AGS.class.ItemDatabase
+local RegisterForEvent = AGS.internal.RegisterForEvent
+local IsAtGuildKiosk = AGS.internal.IsAtGuildKiosk
 
+local KIOSK_OPTION_INDEX = AGS.internal.KIOSK_OPTION_INDEX
 local FOOTER_MIN_ALPHA = 0.6
 local FOOTER_MAX_ALPHA = 1
 local FOOTER_FADE_DURATION = 300
@@ -58,6 +60,7 @@ function TradingHouseWrapper:Initialize(saveData)
     local CollectGuildKiosk = AGS.internal.CollectGuildKiosk
     RegisterForEvent(EVENT_OPEN_TRADING_HOUSE, function()
         self:ResetSalesCategoryFilter()
+
         if(CollectGuildKiosk) then
             CollectGuildKiosk()
         end
@@ -136,15 +139,13 @@ function TradingHouseWrapper:Initialize(saveData)
         tradingHouse:ClearPendingPost()
     end)
 
-    local KIOSK_OPTION_INDEX = 1
     local INTERACT_WINDOW_SHOWN = "Shown"
     INTERACT_WINDOW:RegisterCallback(INTERACT_WINDOW_SHOWN, function()
         -- TODO: find a way to prevent the long wait time that happens sometimes
         -- ResetChatter, IsInteractionPending, EndPendingInteraction
         -- TODO: prevent user from selecting the guild store option again when it is already pending
         if(IsShiftKeyDown() or not saveData.skipGuildKioskDialog) then return end
-        local _, optionType = GetChatterOption(KIOSK_OPTION_INDEX)
-        if(optionType == CHATTER_START_TRADINGHOUSE) then
+        if(IsAtGuildKiosk()) then
             logger:Debug(string.format("SelectChatterOption"))
             SelectChatterOption(KIOSK_OPTION_INDEX)
         end
