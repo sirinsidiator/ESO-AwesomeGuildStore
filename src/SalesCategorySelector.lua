@@ -690,14 +690,13 @@ local function contains(haystack, needle)
 end
 
 local function SalesCategoryFilter(slot)
-    if(slot.quality == ITEM_QUALITY_TRASH) then return false end
-    if(IsItemBoPAndTradeable(slot.bagId, slot.slotIndex)) then return false end
-    local itemLink = GetItemLink(slot.bagId, slot.slotIndex)
-    if(IsItemLinkBound(itemLink) or IsItemLinkStolen(itemLink)) then return false end
+    local bagId, slotIndex = ZO_Inventory_GetBagAndIndex(slot)
+    if(IsItemBoPAndTradeable(bagId, slotIndex) or IsItemBound(bagId, slotIndex) or IsItemStolen(bagId, slotIndex)) then return false end
 
     if(NonContiguousCount(currentFilterValues) == 0) then
         return true
     else
+        local itemLink = GetItemLink(bagId, slotIndex)
         local isValid = true
         for type, values in pairs(currentFilterValues) do
             if(type == TRADING_HOUSE_FILTER_TYPE_EQUIP) then
