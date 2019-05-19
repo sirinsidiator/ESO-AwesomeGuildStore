@@ -83,6 +83,7 @@ function TextFilterFragment:SetEnabled(enabled)
 end
 
 function TextFilterFragment:StartNameMatch(text)
+    ClearAllTradingHouseSearchTerms()
     self.pendingItemNameMatchId = MatchTradingHouseItemNames(text)
 end
 

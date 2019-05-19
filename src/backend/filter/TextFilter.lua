@@ -84,6 +84,7 @@ function TextFilter:PrepareForSearch(text)
             AGS.internal:FireCallbacks(AGS.callback.FILTER_PREPARED, self)
         end
     end)
+    ClearAllTradingHouseSearchTerms()
     pendingId = MatchTradingHouseItemNames(self.text)
     return true
 end
