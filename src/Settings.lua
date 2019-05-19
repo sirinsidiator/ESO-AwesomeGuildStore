@@ -39,13 +39,13 @@ local function LoadSettings()
     end
 
     local function CreateSettingsDialog(saveData)
-        local LAM = LibStub("LibAddonMenu-2.0")
+        local LAM = LibAddonMenu2
         local panelData = {
             type = "panel",
             name = "Awesome Guild Store",
             author = "sirinsidiator",
             version = info.fullVersion,
-            website = "http://www.esoui.com/downloads/info695-AwesomeGuildStore.html",
+            website = "https://www.esoui.com/downloads/info695-AwesomeGuildStore.html",
             registerForRefresh = true,
             registerForDefaults = true
         }
