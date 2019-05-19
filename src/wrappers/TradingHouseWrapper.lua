@@ -118,17 +118,13 @@ function TradingHouseWrapper:Initialize(saveData)
         SCENE_MANAGER:RemoveFragment(TRADING_HOUSE_SEARCH_HISTORY_KEYBOARD_FRAGMENT)
     end)
 
-    function tradingHouse:PreviewSearchResult(tradingHouseIndex)
-        activityManager:CancelPreviewItem()
-
-        local item, guildId = itemDatabase:TryGetItemDataInCurrentGuildByUniqueId(tradingHouseIndex)
+    ZO_PreHook(ITEM_PREVIEW_KEYBOARD, "PreviewTradingHouseSearchResultAsFurniture", function(self, tradingHouseIndex)
+        local item = itemDatabase:TryGetItemDataInCurrentGuildByUniqueId(tradingHouseIndex)
         if(item) then
-            activityManager:PreviewItem(item, guildId)
-        else
-            -- TRANSLATORS: Alert message when an item cannot be previewed due to missing data.
-            ZO_AlertNoSuppression(UI_ALERT_CATEGORY_ALERT, SOUNDS.PLAYER_ACTION_INSUFFICIENT_GOLD, gettext("Item preview not possible."))
+            ITEM_PREVIEW_KEYBOARD:PreviewTradingHouseSearchResultItemLinkAsFurniture(item.itemLink)
+            return true
         end
-    end
+    end)
 
     RegisterForEvent(EVENT_CLOSE_TRADING_HOUSE, function()
         if(not ranInitialSetup) then return end

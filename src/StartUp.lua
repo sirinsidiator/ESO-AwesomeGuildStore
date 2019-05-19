@@ -113,7 +113,6 @@ local integrityCheckList = {
     ["backend/activity/PurchaseItemActivity.lua"] = function() return AGS.class.PurchaseItemActivity ~= nil end,
     ["backend/activity/CancelItemActivity.lua"] = function() return AGS.class.CancelItemActivity ~= nil end,
     ["backend/activity/FetchGuildItemsActivity.lua"] = function() return AGS.class.FetchGuildItemsActivity ~= nil end,
-    ["backend/activity/PreviewItemActivity.lua"] = function() return AGS.class.PreviewItemActivity ~= nil end,
     ["frontend/ActivityWindow.xml"] = function() return AwesomeGuildStoreActivityWindow ~= nil end,
     ["frontend/ActivityWindow.lua"] = function() return AGS.class.ActivityWindow ~= nil end,
     ["frontend/StatusLine.xml"] = function() return AwesomeGuildStoreActivityStatusLineTemplateLoaded ~= nil end,
