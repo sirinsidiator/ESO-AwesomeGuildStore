@@ -133,13 +133,13 @@ function TradingHouseWrapper:Initialize(saveData)
         SCENE_MANAGER:RemoveFragment(TRADING_HOUSE_SEARCH_HISTORY_KEYBOARD_FRAGMENT)
     end)
 
-    ZO_PreHook(ITEM_PREVIEW_KEYBOARD, "PreviewTradingHouseSearchResultAsFurniture", function(self, tradingHouseIndex)
+    function ITEM_PREVIEW_KEYBOARD:PreviewTradingHouseSearchResultAsFurniture(tradingHouseIndex)
         local item = itemDatabase:TryGetItemDataInCurrentGuildByUniqueId(tradingHouseIndex)
-        if(item) then
-            ITEM_PREVIEW_KEYBOARD:PreviewTradingHouseSearchResultItemLinkAsFurniture(item.itemLink)
-            return true
+        if(item and item.originalSlotIndex) then
+            tradingHouseIndex = item.originalSlotIndex
         end
-    end)
+        self:SharedPreviewSetup(ZO_ITEM_PREVIEW_TRADING_HOUSE_SEARCH_RESULT_AS_FURNITURE, tradingHouseIndex)
+    end
 
     RegisterForEvent(EVENT_CLOSE_TRADING_HOUSE, function()
         if(not ranInitialSetup) then return end
