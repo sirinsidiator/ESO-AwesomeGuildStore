@@ -100,6 +100,17 @@ function TradingHouseWrapper:Initialize(saveData)
         ranInitialSetup = true
     end)
 
+    -- we hook into this function in order to disable the ingame search features
+    ZO_PreHook(self.search, "AssociateWithSearchFeatures", function(self)
+        self.features = {}
+        return true
+    end)
+
+    -- TODO this is only needed until we have implemented the history feature
+    ZO_PreHook(self.search, "GenerateSearchTableShortDescription", function(self)
+        return true
+    end)
+
     local currentTab = searchTab
     self:Wrap("HandleTabSwitch", function(originalHandleTabSwitch, tradingHouse, tabData)
         if(not ranInitialSetup) then return end

@@ -43,10 +43,6 @@ function SearchManager:Initialize(tradingHouseWrapper, saveData)
     self.hasMorePages = true
 
     self.search = tradingHouseWrapper.search
-    -- disable the internal filter system
-    self.search:DisassociateWithSearchFeatures()
-    self.search.features = {} -- TODO better way?
-
     self.search.DoSearch = function()
         self:RequestSearch()
     end
