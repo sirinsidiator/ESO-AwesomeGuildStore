@@ -3,8 +3,8 @@
 ## Version: @VERSION_NUMBER@
 ## APIVersion: @API_VERSION@
 ## AddOnVersion: @BUILD_NUMBER@
-## DependsOn: LibStub LibCustomMenu LibDebugLogger LibDateTime LibAddonMenu-2.0 LibMapPing LibGPS LibPromises LibTextFilter LibGetText libCommonInventoryFilters LibRunebox
-## OptionalDependsOn: LibFilters-2.0 LibFilters-3.0 LibCustomTitles LibAnnyoingUpdateNotificationInGame CraftedPotions
+## DependsOn: LibCustomMenu LibDebugLogger LibDateTime LibAddonMenu-2.0 LibMapPing LibGPS LibPromises LibTextFilter LibGetText libCommonInventoryFilters LibRunebox
+## OptionalDependsOn: LibStub LibFilters-2.0 LibFilters-3.0 LibCustomTitles LibAnnyoingUpdateNotificationInGame CraftedPotions
 ## SavedVariables: AwesomeGuildStore_Data
 ##
 ## This Add-on is not created by, affiliated with or sponsored by ZeniMax Media Inc. or its affiliates. 
@@ -13,6 +13,7 @@
 ##
 ## You can read the full terms at https://account.elderscrollsonline.com/add-on-terms
 
+lib/LibStub/LibStub.lua
 lib/LibCustomTitles/LibCustomTitles.lua
 lib/LibAnnyoingUpdateNotificationInGame/LibAnnyoingUpdateNotificationInGame.lua
 StartUp.lua

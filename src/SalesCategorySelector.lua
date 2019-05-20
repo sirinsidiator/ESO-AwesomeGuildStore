@@ -754,7 +754,7 @@ AGS.internal.BACKPACK_TRADING_HOUSE_LAYOUT_FRAGMENT_ADVANCED = BACKPACK_TRADING_
 
 local function InitializeLibFilterHooks()
     -- let libFilters hook into our custom fragments to ensure compatibility with other addons
-    local libFilters = LibFilters3 or LibFilters2 or (LibStub and LibStub("LibFilters-2.0", true))
+    local libFilters = LibFilters3 or (LibStub and LibStub("LibFilters-2.0", true))
     if(libFilters) then
         libFilters:HookAdditionalFilter(LF_GUILDSTORE_SELL, BACKPACK_TRADING_HOUSE_LAYOUT_FRAGMENT_BASIC)
         libFilters:HookAdditionalFilter(LF_GUILDSTORE_SELL, BACKPACK_TRADING_HOUSE_LAYOUT_FRAGMENT_ADVANCED)
