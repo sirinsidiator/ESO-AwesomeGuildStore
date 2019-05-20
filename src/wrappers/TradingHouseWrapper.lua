@@ -194,15 +194,16 @@ function TradingHouseWrapper:InitializeFooter()
     footer:SetAnchor(BOTTOMRIGHT, parent, BOTTOMRIGHT, -20, 32)
     self.footer = footer
 
-    local animation = ZO_AlphaAnimation:New(footer)
-    animation:SetMinMaxAlpha(FOOTER_MIN_ALPHA, FOOTER_MAX_ALPHA)
-    footer:SetHandler("OnMouseEnter", function() animation:FadeIn(0, FOOTER_FADE_DURATION) end)
-    footer:SetHandler("OnMouseExit", function() animation:FadeOut(0, FOOTER_FADE_DURATION) end)
-    footer:SetAlpha(FOOTER_MIN_ALPHA)
-
     local versionLabel = AGS.info.fullVersion
     local labelControl = footer:GetNamedChild("Version")
-    labelControl:SetText(gettext("AwesomeGuildStore - Version: <<1>>", versionLabel))
+    labelControl:SetText(gettext("AwesomeGuildStore - Version: <<1>> - |cFFD700|H0|hDonate|h|r", versionLabel))
+    labelControl:SetHandler("OnLinkMouseUp", AwesomeGuildStore.internal.Donate)
+
+    local animation = ZO_AlphaAnimation:New(labelControl)
+    animation:SetMinMaxAlpha(FOOTER_MIN_ALPHA, FOOTER_MAX_ALPHA)
+    labelControl:SetHandler("OnMouseEnter", function() animation:FadeIn(0, FOOTER_FADE_DURATION) end)
+    labelControl:SetHandler("OnMouseExit", function() animation:FadeOut(0, FOOTER_FADE_DURATION) end)
+    labelControl:SetAlpha(FOOTER_MIN_ALPHA)
 end
 
 function TradingHouseWrapper:ResetSalesCategoryFilter()

@@ -76,7 +76,7 @@
 
         <Control name="AwesomeGuildStoreFooterTemplate" virtual="true" resizeToFitDescendents="true" mouseEnabled="true">
             <Controls>
-                <Label name="$(parent)Version" font="ZoFontGameSmall" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_SELECTED">
+                <Label name="$(parent)Version" font="ZoFontGameSmall" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_SELECTED" mouseEnabled="true" linkEnabled="true">
                     <Anchor point="RIGHT" />
                 </Label>
             </Controls>

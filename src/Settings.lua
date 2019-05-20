@@ -38,6 +38,12 @@ local function LoadSettings()
         end
     end
 
+    local DONATION_URL = "https://www.esoui.com/downloads/info695-AwesomeGuildStore.html#donate"
+    local function Donate()
+        RequestOpenUnsafeURL(DONATION_URL)
+    end
+    AwesomeGuildStore.internal.Donate = Donate
+
     local function CreateSettingsDialog(saveData)
         local LAM = LibAddonMenu2
         local panelData = {
@@ -46,6 +52,8 @@ local function LoadSettings()
             author = "sirinsidiator",
             version = info.fullVersion,
             website = "https://www.esoui.com/downloads/info695-AwesomeGuildStore.html",
+            feedback = "https://www.esoui.com/portal.php?id=218&a=bugreport",
+            donation = DONATION_URL,
             registerForRefresh = true,
             registerForDefaults = true
         }
