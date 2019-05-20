@@ -585,6 +585,8 @@ function SalesCategorySelector:New(parent, name)
         selector:ResetLayout()
     end)
 
+    TRADING_HOUSE_SCENE:RemoveFragment(BACKPACK_TRADING_HOUSE_LAYOUT_FRAGMENT)
+
     return selector
 end
 

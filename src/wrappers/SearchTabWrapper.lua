@@ -62,7 +62,6 @@ function SearchTabWrapper:InitializeFilters(tradingHouseWrapper)
 
     self.categorySelector = AGS.class.CategorySelector:New(tradingHouse.itemPane, searchManager) -- TODO pass the category filter to it
     tradingHouse.searchSortHeadersControl:SetAnchor(TOPRIGHT, self.categorySelector:GetControl(), BOTTOMRIGHT)
-    TRADING_HOUSE_SCENE:AddFragment(self.categorySelector) -- TODO is this the right place?
 
     self.filterArea = AGS.class.FilterArea:New(tradingHouse.browseItemsLeftPane, searchManager)
 
@@ -342,7 +341,7 @@ end
 
 function SearchTabWrapper:OnOpen(tradingHouseWrapper)
     local tradingHouse = tradingHouseWrapper.tradingHouse
-    self.categorySelector:GetControl():SetHidden(false)
+    TRADING_HOUSE_SCENE:AddFragment(self.categorySelector)
     self.searchList:Show()
     PushActionLayerByName(ACTION_LAYER_NAME) -- TODO should this action layer only be active here or better in the whole trading house?
     self.isOpen = true
@@ -350,7 +349,7 @@ end
 
 function SearchTabWrapper:OnClose(tradingHouseWrapper)
     self.searchList:Hide()
-    self.categorySelector:GetControl():SetHidden(true)
+    TRADING_HOUSE_SCENE:RemoveFragment(self.categorySelector)
     self.tradingHouseWrapper.activityManager:CancelSearch()
     self.tradingHouseWrapper.activityManager:CancelRequestNewest()
     RemoveActionLayerByName(ACTION_LAYER_NAME)

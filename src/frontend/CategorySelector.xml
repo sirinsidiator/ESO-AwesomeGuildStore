@@ -2,7 +2,7 @@
     <Controls>
         <Control name="AwesomeGuildStoreCategorySelectorTemplateLoaded" hidden="true" />
 
-        <Control name="AwesomeGuildStoreCategorySelectorTemplate" virtual="true" resizeToFitDescendents="true">
+        <Control name="AwesomeGuildStoreCategorySelectorTemplate" hidden="true" virtual="true" resizeToFitDescendents="true">
             <Anchor point="TOPLEFT" />
             <Anchor point="TOPRIGHT" />
 

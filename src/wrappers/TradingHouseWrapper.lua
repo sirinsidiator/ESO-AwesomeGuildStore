@@ -95,6 +95,7 @@ function TradingHouseWrapper:Initialize(saveData)
 
         self:InitializeGuildSelector()
         self:InitializeKeybindStripWrapper()
+        self:InitializeStoreTabAutoSwitch()
         AGS.internal:FireCallbacks(AGS.callback.AFTER_INITIAL_SETUP, self)
 
         ranInitialSetup = true
@@ -111,7 +112,7 @@ function TradingHouseWrapper:Initialize(saveData)
         return true
     end)
 
-    local currentTab = searchTab
+    local currentTab
     self:Wrap("HandleTabSwitch", function(originalHandleTabSwitch, tradingHouse, tabData)
         if(not ranInitialSetup) then return end
         local oldTab = currentTab
@@ -175,6 +176,16 @@ end
 
 function TradingHouseWrapper:InitializeKeybindStripWrapper()
     self.keybindStrip = AGS.class.KeybindStripWrapper:New(self)
+end
+
+function TradingHouseWrapper:InitializeStoreTabAutoSwitch()
+    local tradingHouse = self.tradingHouse
+    RegisterForEvent(EVENT_TRADING_HOUSE_STATUS_RECEIVED, function()
+        -- change to the sell tab when at a banker
+        if(not IsAtGuildKiosk() and not tradingHouse:IsInSellMode() and CanSellOnTradingHouse(GetSelectedTradingHouseGuildId())) then
+            ZO_MenuBar_SelectDescriptor(tradingHouse.menuBar, ZO_TRADING_HOUSE_MODE_SELL)
+        end
+    end)
 end
 
 function TradingHouseWrapper:InitializeFooter()
