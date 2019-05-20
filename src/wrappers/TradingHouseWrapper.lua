@@ -249,10 +249,8 @@ function TradingHouseWrapper:Wrap(methodName, call)
 end
 
 function TradingHouseWrapper:GetTradingGuildName(guildId)
-    local guildName
-    if(guildId > 0) then
-        guildName = GetGuildName(guildId)
-    else
+    local guildName = GetGuildName(guildId)
+    if(guildName == "") then -- TODO find a better way
         guildName = select(2, GetCurrentTradingHouseGuildDetails())
     end
     return guildName
