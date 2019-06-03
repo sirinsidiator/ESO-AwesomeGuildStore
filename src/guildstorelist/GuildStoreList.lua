@@ -4,7 +4,7 @@ local IsUnitGuildKiosk = AGS.internal.IsUnitGuildKiosk
 local GetUnitGuildKioskOwner = AGS.internal.GetUnitGuildKioskOwner
 local IsLocationVisible = AGS.internal.IsLocationVisible
 local IsCurrentMapZoneMap = AGS.internal.IsCurrentMapZoneMap
-local GetKioskName = AGS.internal.GetKioskName
+local GetKioskNameFromInfoText = AGS.internal.GetKioskNameFromInfoText
 local RegisterForEvent = AGS.internal.RegisterForEvent
 local Print = AGS.internal.Print
 local gettext = AGS.internal.gettext
@@ -823,7 +823,8 @@ local function InitializeGuildStoreList(globalSaveData)
     EVENT_MANAGER:AddFilterForEvent(handle, EVENT_GUILD_ID_CHANGED, REGISTER_FILTER_UNIT_TAG, TARGET_UNIT_TAG)
 
     local function UpdateKioskMemberFlag(guildId)
-        local kioskName = GetKioskName(guildId)
+        local infoText = GetGuildOwnedKioskInfo(guildId)
+        local kioskName = GetKioskNameFromInfoText(infoText)
         if(kioskName) then
             local kiosk = kioskList:GetKiosk(kioskName)
             if(kiosk) then -- TODO find a way to create the entry when we have not visited the kiosk yet
@@ -857,5 +858,30 @@ local function InitializeGuildStoreList(globalSaveData)
     RegisterForEvent(EVENT_GUILD_SELF_JOINED_GUILD, UpdateAllKioskMemberFlags)
     RegisterForEvent(EVENT_GUILD_SELF_LEFT_GUILD, UpdateAllKioskMemberFlags)
     RegisterForEvent(EVENT_GUILD_TRADER_HIRED_UPDATED, UpdateAllKioskMemberFlags)
+
+    local NO_TRADER_TEXT = gettext("None") -- TODO: translate
+
+    local function OnGuildDataReady(guildId)
+        local guildMetaData = GUILD_BROWSER_MANAGER:GetGuildData(guildId)
+        if(guildMetaData.guildTraderText and guildMetaData.guildTraderText ~= NO_TRADER_TEXT) then
+            local kioskName = GetKioskNameFromInfoText(guildMetaData.guildTraderText)
+            if(kioskName) then
+                local kiosk = kioskList:GetKiosk(kioskName)
+                if(kiosk) then -- TODO find a way to create the entry when we have not visited the kiosk yet
+                    kiosk.lastVisited = GetTimeStamp()
+                    kioskList:SetKiosk(kiosk)
+                    ownerList:SetCurrentOwner(kioskName, guildMetaData.guildName, guildId)
+                end
+            end
+        end
+    end
+
+    local function OnGuildFinderSearchResultsReady()
+        for _, guildId in GUILD_BROWSER_MANAGER:CurrentFoundGuildsListIterator() do
+            OnGuildDataReady(guildId)
+        end
+    end
+    GUILD_BROWSER_MANAGER:RegisterCallback("OnGuildDataReady", OnGuildDataReady)
+    GUILD_BROWSER_MANAGER:RegisterCallback("OnGuildFinderSearchResultsReady", OnGuildFinderSearchResultsReady)
 end
 AGS.internal.InitializeGuildStoreList = InitializeGuildStoreList
