@@ -57,14 +57,16 @@ function TradingHouseWrapper:Initialize(saveData)
     -- we cannot wrap TRADING_HOUSE.OpenTradingHouse or RunInitialSetup as it would taint the call stack down the line
     -- e.g. when using inventory items or withdrawing from the bank
     -- instead we use the EVENT_OPEN_TRADING_HOUSE and hook into the first method after RunInitialSetup is called
-    local CollectGuildKiosk = AGS.internal.CollectGuildKiosk
     RegisterForEvent(EVENT_OPEN_TRADING_HOUSE, function()
         self:ResetSalesCategoryFilter()
-
-        if(CollectGuildKiosk) then
-            CollectGuildKiosk()
-        end
     end)
+
+    local CollectGuildKiosk = AGS.internal.CollectGuildKiosk
+    if(CollectGuildKiosk) then
+        RegisterForEvent(EVENT_TRADING_HOUSE_STATUS_RECEIVED, function()
+            zo_callLater(CollectGuildKiosk, 0) -- need to wait a frame, otherwise the guild info is incorrect
+        end)
+    end
 
     local ranInitialSetup = false
     -- SetCurrentMode is the first method called after RunInitialSetup
@@ -133,13 +135,13 @@ function TradingHouseWrapper:Initialize(saveData)
         SCENE_MANAGER:RemoveFragment(TRADING_HOUSE_SEARCH_HISTORY_KEYBOARD_FRAGMENT)
     end)
 
-    function ITEM_PREVIEW_KEYBOARD:PreviewTradingHouseSearchResultAsFurniture(tradingHouseIndex)
+    ZO_PreHook(ITEM_PREVIEW_KEYBOARD, "PreviewTradingHouseSearchResultAsFurniture", function(self, tradingHouseIndex)
         local item = itemDatabase:TryGetItemDataInCurrentGuildByUniqueId(tradingHouseIndex)
-        if(item and item.originalSlotIndex) then
-            tradingHouseIndex = item.originalSlotIndex
+        if(item) then
+            ITEM_PREVIEW_KEYBOARD:PreviewTradingHouseSearchResultItemLinkAsFurniture(item.itemLink)
+            return true
         end
-        self:SharedPreviewSetup(ZO_ITEM_PREVIEW_TRADING_HOUSE_SEARCH_RESULT_AS_FURNITURE, tradingHouseIndex)
-    end
+    end)
 
     RegisterForEvent(EVENT_CLOSE_TRADING_HOUSE, function()
         if(not ranInitialSetup) then return end
