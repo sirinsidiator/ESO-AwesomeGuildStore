@@ -108,11 +108,28 @@ local function InitializeGuildList(saveData, kioskList, storeList, ownerList)
     window.historyList = historyList
 
     local selectedTraderData
+    local function GoBack()
+        MAIN_MENU_KEYBOARD:ShowScene(sceneName)
+    end
+
+    local detailsGuildInfoButton = details:GetNamedChild("GuildInfoButton")
+    -- TRANSLATORS: label for the open guild info button in the detail view on the guild kiosk tab
+    detailsGuildInfoButton:SetText(gettext("Open Guild Info"))
+    detailsGuildInfoButton:SetHandler("OnClicked", function()
+        if(selectedTraderData) then
+            local guild = selectedTraderData.guild
+            GUILD_BROWSER_GUILD_INFO_KEYBOARD.closeCallback = GoBack
+            GUILD_BROWSER_GUILD_INFO_KEYBOARD:SetGuildToShow(guild.id)
+            MAIN_MENU_KEYBOARD:ShowSceneGroup("guildsSceneGroup", "linkGuildInfoKeyboard")
+        end
+    end)
+
     local function SetSelectedDetails(data)
         selectedTraderData = data
 
         local guild = data.guild
         detailTraderName:SetText(guild.name)
+        detailsGuildInfoButton:SetHidden(not guild.id)
         historyList:SetSelectedGuild(guild)
         historyList:RefreshData()
         detailKioskCount:SetText(historyList:GetKioskCount())
