@@ -306,6 +306,9 @@ local function LoadSettings()
         AwesomeGuildStore_Data[name] = nil
     end
 
+    AwesomeGuildStore_Data.guilds = AwesomeGuildStore_Data.guilds or {}
+    AGS.internal.guildIdMapping = AGS.class.GuildIdMapping:New(AwesomeGuildStore_Data.guilds, world)
+
     local saveData = AwesomeGuildStore_Data[key] or ZO_DeepTableCopy(defaultData)
     AwesomeGuildStore_Data[key] = saveData
     AGS.data.DEFAULT_SETTINGS = defaultData

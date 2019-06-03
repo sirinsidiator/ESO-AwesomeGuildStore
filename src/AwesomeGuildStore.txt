@@ -107,6 +107,7 @@ backend/SearchPageHistory.lua
 backend/SearchManager.lua
 backend/GuildSelection.lua
 backend/ItemNameMatcher.lua
+backend/GuildIdMapping.lua
 frontend/SearchList.xml
 frontend/SearchList.lua
 frontend/SearchResultListWrapper.lua

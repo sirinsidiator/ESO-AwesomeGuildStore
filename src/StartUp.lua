@@ -169,6 +169,7 @@ local integrityCheckList = {
     ["backend/SearchManager.lua"] = function() return AGS.class.SearchManager ~= nil end,
     ["backend/GuildSelection.lua"] = function() return AGS.class.GuildSelection ~= nil end,
     ["backend/ItemNameMatcher.lua"] = function() return AGS.class.ItemNameMatcher ~= nil end,
+    ["backend/GuildIdMapping.lua"] = function() return AGS.class.GuildIdMapping ~= nil end,
     ["frontend/SearchList.xml"] = function() return AwesomeGuildStoreSearchListContainer ~= nil end,
     ["frontend/SearchList.lua"] = function() return AGS.class.SearchList ~= nil end,
     ["frontend/SearchResultListWrapper.lua"] = function() return AGS.class.SearchResultListWrapper ~= nil end,
