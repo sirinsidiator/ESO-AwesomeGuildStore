@@ -516,7 +516,7 @@ local function InitializeStoreListWindow(saveData, kioskList, storeList, ownerLi
     AGS.internal.GuildTraderHistoryStatVisited_OnMouseEnter = OnVisitedStatEnter
     AGS.internal.GuildTraderHistoryStatOverall_OnMouseEnter = OnOverallStatEnter
     AGS.internal.GuildTraderHistoryStat_OnMouseExit = OnStatExit
-    
+
     -- mouse handler for the details
     local function OnDetailsLastVisitedEnter(control)
         if(selectedTraderData) then
@@ -582,7 +582,8 @@ local function InitializeGuildStoreList(globalSaveData)
         return
     end
 
-    local ownerList = AGS.class.OwnerList:New(saveData.owners)
+    local guildIdMapping = AGS.internal.guildIdMapping
+    local ownerList = AGS.class.OwnerList:New(saveData.owners, guildIdMapping)
     local storeList = AGS.class.StoreList:New(saveData.stores)
     local kioskList = AGS.class.KioskList:New(saveData.kiosks)
     local guildTradersScene = InitializeStoreListWindow(saveData, kioskList, storeList, ownerList)
@@ -658,7 +659,7 @@ local function InitializeGuildStoreList(globalSaveData)
         end
     end
 
-    local currentVersion = GetAPIVersion() 
+    local currentVersion = GetAPIVersion()
     if(storeList:IsEmpty() or not saveData.lastScannedVersion or saveData.lastScannedVersion < currentVersion) then
         local visitedMaps = {}
         local mapIndex, numMaps = 1, GetNumMaps()
@@ -791,8 +792,8 @@ local function InitializeGuildStoreList(globalSaveData)
         local kioskName = GetUnitName(INTERACT_UNIT_TAG)
         if(IsUnitGuildKiosk(INTERACT_UNIT_TAG)) then
             UpdateKioskAndStore(kioskName, true)
-            local _, guildName = GetCurrentTradingHouseGuildDetails()
-            ownerList:SetCurrentOwner(kioskName, guildName)
+            local guildId, guildName = GetCurrentTradingHouseGuildDetails()
+            ownerList:SetCurrentOwner(kioskName, guildName, guildId)
         end
     end
     AGS.internal.CollectGuildKiosk = CollectGuildKiosk
@@ -810,7 +811,8 @@ local function InitializeGuildStoreList(globalSaveData)
             UpdateKioskAndStore(kioskName, false)
 
             local ownerName = GetUnitGuildKioskOwner(TARGET_UNIT_TAG)
-            ownerList:SetCurrentOwner(kioskName, ownerName)
+            local guildId = guildIdMapping:GetGuildId(ownerName)
+            ownerList:SetCurrentOwner(kioskName, ownerName, guildId)
         end
     end
 
@@ -828,7 +830,7 @@ local function InitializeGuildStoreList(globalSaveData)
                 kiosk.isMember = true
                 kioskList:SetKiosk(kiosk)
                 local ownerName = GetGuildName(guildId)
-                ownerList:SetCurrentOwner(kioskName, ownerName)
+                ownerList:SetCurrentOwner(kioskName, ownerName, guildId)
             end
         end
     end

@@ -4,7 +4,6 @@ local IsUnitGuildKiosk = AGS.internal.IsUnitGuildKiosk
 local GetUnitGuildKioskOwner = AGS.internal.GetUnitGuildKioskOwner
 local IsLocationVisible = AGS.internal.IsLocationVisible
 local IsCurrentMapZoneMap = AGS.internal.IsCurrentMapZoneMap
-local GetKioskName = AGS.internal.GetKioskName
 local RegisterForEvent = AGS.internal.RegisterForEvent
 local gettext = AGS.internal.gettext
 local osdate = os.date
@@ -114,7 +113,7 @@ local function InitializeGuildList(saveData, kioskList, storeList, ownerList)
 
         local guild = data.guild
         detailTraderName:SetText(guild.name)
-        historyList:SetSelectedGuild(guild.name)
+        historyList:SetSelectedGuild(guild)
         historyList:RefreshData()
         detailKioskCount:SetText(historyList:GetKioskCount())
 
@@ -130,7 +129,7 @@ local function InitializeGuildList(saveData, kioskList, storeList, ownerList)
                     local yearA, weekA = LDT:SeparateIsoWeekAndYear(guild.lastVisitedWeek)
                     local yearB, weekB = LDT:CalculateIsoWeekAndYear()
                     local diff = LDT:CalculateIsoWeekDifference(yearA, weekA, yearB, weekB)
-                    -- TRANSLATORS: text for the last visited label in the guild list detail view. $d is a placeholder for the number of weeks 
+                    -- TRANSLATORS: text for the last visited label in the guild list detail view. $d is a placeholder for the number of weeks
                     data.lastVisitedLabel = zo_strformat(gettext("<<1[this week/1 week ago/$d weeks ago]>>"), diff)
                 else
                     data.lastVisitedLabel = "-"
@@ -200,7 +199,7 @@ local function InitializeGuildList(saveData, kioskList, storeList, ownerList)
     local function OnMouseUp(control, button, upInside)
         if(upInside) then
             if(button == MOUSE_BUTTON_INDEX_RIGHT) then
-                --ShowTraderContextMenu(control)
+            --ShowTraderContextMenu(control)
             else
                 SetSelectedDetails(ZO_ScrollList_GetData(control))
             end

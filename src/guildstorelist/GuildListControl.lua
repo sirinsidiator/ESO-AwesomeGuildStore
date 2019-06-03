@@ -158,10 +158,10 @@ function GuildListControl:BuildMasterList()
 
     local haystack = {}
     local length = 0
-    for guildName, guild in pairs(ownerList:GetAllGuilds()) do
+    for _, guild in pairs(ownerList:GetAllGuilds()) do
         overallCount = overallCount + 1
 
-        haystack[1] = guildName
+        haystack[1] = guild.name
         length = 1
         for kiosk in pairs(guild.kiosks) do
             length = length + 1
@@ -174,7 +174,8 @@ function GuildListControl:BuildMasterList()
         self.masterList[#self.masterList + 1] = {
             type = TRADER_DATA,
             guild = guild,
-            guildName = guildName,
+            guildId = guild.id,
+            guildName = guild.name,
             kioskCount = guild.numKiosks,
             kioskCountInv = guild.numKiosks,
             lastActive = diff,

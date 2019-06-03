@@ -88,22 +88,21 @@ function KioskHistoryControl:InitializeList(control, storeList, kioskList, owner
     self.SortHistory = SortHistory
 end
 
-function KioskHistoryControl:SetSelectedGuild(guildName)
-    self.selectedGuildName = guildName
+function KioskHistoryControl:SetSelectedGuild(guild)
+    self.selectedGuild = guild
 end
 
 function KioskHistoryControl:BuildMasterList()
     ZO_ClearNumericallyIndexedTable(self.masterList)
-    if(not self.selectedGuildName) then return end
+    if(not self.selectedGuild) then return end
 
     local ownerList = self.ownerList
     local kioskList = self.kioskList
     local storeList = self.storeList
-    local guildName = self.selectedGuildName
     local GetZoneLabel = AGS.internal.GetZoneLabel
     local GetPoiLabel = AGS.internal.GetPoiLabel
 
-    local guild = ownerList:GetGuildData(guildName)
+    local guild = self.selectedGuild
     local minWeek, maxWeek = 300099, 0
     local weekWithKiosk = {}
     for yearAndWeek, kioskName in pairs(guild.history) do

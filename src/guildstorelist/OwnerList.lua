@@ -11,16 +11,28 @@ function OwnerList:New(...)
     return object
 end
 
-function OwnerList:AddTraderInfoToGuild(guildName, kiosk, week, isActive)
-    local data = self.guildList[guildName] or {
-        name = guildName,
-        kiosks = {},
-        history = {},
-        lastKiosk = nil,
-        lastVisitedWeek = 0,
-        numKiosks = 0,
-        hasActiveTrader = false
-    }
+function OwnerList:AddTraderInfoToGuild(guildName, kiosk, week, isActive, guildId)
+    local data
+    if(guildId) then
+        data = self.guildList[guildName] or self.guildList[guildId]
+        self.guildList[guildName] = nil
+    else
+        data = self.guildList[guildName]
+    end
+
+    if(not data) then
+        data = {
+            id = guildId,
+            name = guildName,
+            kiosks = {},
+            history = {},
+            lastKiosk = nil,
+            lastVisitedWeek = 0,
+            numKiosks = 0,
+            hasActiveTrader = false
+        }
+    end
+
     data.kiosks[kiosk] = true
     data.history[week] = kiosk
     data.numKiosks = data.numKiosks + 1
@@ -31,19 +43,36 @@ function OwnerList:AddTraderInfoToGuild(guildName, kiosk, week, isActive)
         data.lastKiosk = kiosk
         data.lastVisitedWeek = week
     end
-    self.guildList[guildName] = data
+
+    if(guildId) then
+        self.guildList[guildId] = data
+    else
+        self.guildList[guildName] = data
+    end
 end
 
-function OwnerList:Initialize(saveData)
+function OwnerList:Initialize(saveData, guildIdMapping)
     self.saveData = saveData
+    self.guildIdMapping = guildIdMapping
     local weekOrder = {}
     self.guildList = {}
     local currentWeek = self:GetCurrentWeek()
     for week, traders in pairs(saveData) do
         weekOrder[#weekOrder + 1] = week
-        for kiosk, guildName in pairs(traders) do
-            if(guildName ~= false) then
-                self:AddTraderInfoToGuild(guildName, kiosk, week, currentWeek == week)
+        for kiosk, guildNameOrId in pairs(traders) do
+            if(guildNameOrId ~= false) then
+                local guildId, guildName
+                if(type(guildNameOrId) == "string") then
+                    guildName = guildNameOrId
+                    guildId = guildIdMapping:GetGuildId(guildNameOrId)
+                    if(guildId) then
+                        traders[kiosk] = guildId
+                    end
+                else
+                    guildId = guildNameOrId
+                    guildName = guildIdMapping:GetGuildName(guildId)
+                end
+                self:AddTraderInfoToGuild(guildName, kiosk, week, currentWeek == week, guildId)
             end
         end
     end
@@ -77,7 +106,7 @@ function OwnerList:GetDataForWeek(week)
     return self.saveData[week] or {}
 end
 
-function OwnerList:SetCurrentOwner(kioskName, guildName)
+function OwnerList:SetCurrentOwner(kioskName, guildName, guildId)
     local week = self:GetCurrentWeek()
     if(not self:HasDataForWeek(week)) then
         self.weekOrder[#self.weekOrder + 1] = week
@@ -88,23 +117,35 @@ function OwnerList:SetCurrentOwner(kioskName, guildName)
         -- set entry to false when the trader is not hired
         weekData[kioskName] = false
     elseif(guildName) then
-        weekData[kioskName] = guildName
-        self:AddTraderInfoToGuild(guildName, kioskName, week, true)
+        if(guildId) then
+            weekData[kioskName] = guildId
+            self.guildIdMapping:UpdateMapping(guildId, guildName)
+        else
+            weekData[kioskName] = guildName
+        end
+        self:AddTraderInfoToGuild(guildName, kioskName, week, true, guildId)
     end
     self.saveData[week] = weekData
+end
+
+function OwnerList:ResolveOwner(owner)
+    if(type(owner) == "number") then
+        return self.guildIdMapping:GetGuildName(owner)
+    end
+    return owner
 end
 
 function OwnerList:GetCurrentOwner(kioskName)
     local week = self:GetCurrentWeek()
     local weekData = self:GetDataForWeek(week)
-    return weekData[kioskName]
+    return self:ResolveOwner(weekData[kioskName])
 end
 
 function OwnerList:GetLastKnownOwner(kioskName)
     for _, week in ipairs(self.weekOrder) do
         local weekData = self:GetDataForWeek(week)
         if(weekData[kioskName]) then
-            return weekData[kioskName]
+            return self:ResolveOwner(weekData[kioskName])
         end
     end
 end
@@ -114,7 +155,7 @@ function OwnerList:GetOwnerHistory(kioskName)
     for _, week in ipairs(self.weekOrder) do
         local weekData = self:GetDataForWeek(week)
         if(weekData[kioskName]) then
-            history[week] = weekData[kioskName]
+            history[week] = self:ResolveOwner(weekData[kioskName])
         end
     end
     return history
@@ -124,6 +165,6 @@ function OwnerList:GetAllGuilds()
     return self.guildList
 end
 
-function OwnerList:GetGuildData(guildName)
-    return self.guildList[guildName]
+function OwnerList:GetGuildData(guildNameOrId)
+    return self.guildList[guildNameOrId]
 end
