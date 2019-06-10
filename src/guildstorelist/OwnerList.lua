@@ -57,6 +57,7 @@ function OwnerList:Initialize(saveData, guildIdMapping)
     local weekOrder = {}
     self.guildList = {}
     local currentWeek = self:GetCurrentWeek()
+    saveData[197001] = nil -- get rid of invalid data that previously could be stored during times when the guild system is down
     for week, traders in pairs(saveData) do
         weekOrder[#weekOrder + 1] = week
         for kiosk, guildNameOrId in pairs(traders) do
@@ -107,6 +108,7 @@ function OwnerList:GetDataForWeek(week)
 end
 
 function OwnerList:SetCurrentOwner(kioskName, guildName, guildId)
+    AwesomeGuildStore.internal.logger:Debug("SetCurrentOwner", kioskName, guildName, guildId)
     local week = self:GetCurrentWeek()
     if(not week) then return end -- happens when the guild system is down
     if(not self:HasDataForWeek(week)) then
