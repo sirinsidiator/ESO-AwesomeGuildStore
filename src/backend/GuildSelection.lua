@@ -1,7 +1,7 @@
 local AGS = AwesomeGuildStore
 
 local RegisterForEvent = AGS.internal.RegisterForEvent
-
+local IsAtGuildKiosk = AGS.internal.IsAtGuildKiosk
 local logger = AGS.internal.logger
 
 local GuildSelection = ZO_Object:Subclass()
@@ -105,7 +105,7 @@ end
 
 function GuildSelection:TryReselectLastGuildId()
     self.selectedGuildId = nil
-    local lastGuild = self.guildByName[self.saveData.lastGuildName or ""]
+    local lastGuild = self.guildById[self.saveData.lastGuildId or -1]
     if(lastGuild) then
         self:SetSelectedGuildId(lastGuild.guildId)
     else
@@ -121,7 +121,9 @@ function GuildSelection:SetSelectedGuildId(guildId)
     local guildData = self.guildById[guildId]
     if(guildData) then
         self.selectedGuildId = guildId
-        self.saveData.lastGuildName = guildData.guildName
+        if(not IsAtGuildKiosk()) then
+            self.saveData.lastGuildId = guildId
+        end
         AGS.internal:FireCallbacks(AGS.callback.GUILD_SELECTION_CHANGED, guildData)
         return true
     end

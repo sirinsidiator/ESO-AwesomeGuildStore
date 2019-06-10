@@ -12,7 +12,7 @@ local function LoadSettings()
     AGS.info = info
 
     local defaultData = {
-        version = 24,
+        version = 25,
         listWithSingleClick = true,
         showTraderTooltip = true,
         augementMails = true,
@@ -292,6 +292,10 @@ local function LoadSettings()
             saveData.keepPurchasedResultsInList = nil
             saveData.guildTraderListEnabled = true
             saveData.version = 24
+        end
+        if(saveData.version <= 24) then
+            saveData.lastGuildName = nil
+            saveData.version = 25
         end
     end
 
