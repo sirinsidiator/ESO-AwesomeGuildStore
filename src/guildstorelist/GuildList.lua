@@ -5,6 +5,7 @@ local GetUnitGuildKioskOwner = AGS.internal.GetUnitGuildKioskOwner
 local IsLocationVisible = AGS.internal.IsLocationVisible
 local IsCurrentMapZoneMap = AGS.internal.IsCurrentMapZoneMap
 local RegisterForEvent = AGS.internal.RegisterForEvent
+local ShowGuildDetails = AGS.internal.ShowGuildDetails
 local gettext = AGS.internal.gettext
 local osdate = os.date
 
@@ -117,10 +118,7 @@ local function InitializeGuildList(saveData, kioskList, storeList, ownerList)
     detailsGuildInfoButton:SetText(gettext("Open Guild Info"))
     detailsGuildInfoButton:SetHandler("OnClicked", function()
         if(selectedTraderData) then
-            local guild = selectedTraderData.guild
-            GUILD_BROWSER_GUILD_INFO_KEYBOARD.closeCallback = GoBack
-            GUILD_BROWSER_GUILD_INFO_KEYBOARD:SetGuildToShow(guild.id)
-            MAIN_MENU_KEYBOARD:ShowSceneGroup("guildsSceneGroup", "linkGuildInfoKeyboard")
+            ShowGuildDetails(selectedTraderData.guild.id, GoBack)
         end
     end)
 

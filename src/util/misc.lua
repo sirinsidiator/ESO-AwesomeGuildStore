@@ -100,3 +100,11 @@ local function IsAtGuildKiosk()
 end
 AGS.internal.KIOSK_OPTION_INDEX = KIOSK_OPTION_INDEX
 AGS.internal.IsAtGuildKiosk = IsAtGuildKiosk
+
+
+local function ShowGuildDetails(guildId, closeCallback)
+    GUILD_BROWSER_GUILD_INFO_KEYBOARD.closeCallback = closeCallback
+    GUILD_BROWSER_GUILD_INFO_KEYBOARD:SetGuildToShow(guildId)
+    MAIN_MENU_KEYBOARD:ShowSceneGroup("guildsSceneGroup", "linkGuildInfoKeyboard")
+end
+AGS.internal.ShowGuildDetails = ShowGuildDetails

@@ -7,6 +7,7 @@ local IsLocationVisible = AGS.internal.IsLocationVisible
 local IsCurrentMapZoneMap = AGS.internal.IsCurrentMapZoneMap
 local GetKioskNameFromInfoText = AGS.internal.GetKioskNameFromInfoText
 local RegisterForEvent = AGS.internal.RegisterForEvent
+local ShowGuildDetails = AGS.internal.ShowGuildDetails
 local Print = AGS.internal.Print
 local gettext = AGS.internal.gettext
 local osdate = os.date
@@ -376,10 +377,16 @@ local function InitializeStoreListWindow(saveData, kioskList, storeList, ownerLi
         end
     end)
 
+    local function GoBack()
+        MAIN_MENU_KEYBOARD:ShowScene(sceneName)
+    end
+
     -- TRANSLATORS: label for a context menu entry for a row on the guild kiosk tab
     local showDetailsLabel = gettext("Show Details")
     -- TRANSLATORS: label for a context menu entry for a row on the guild kiosk tab
     local showOnMapLabel = gettext("Show On Map")
+    -- TRANSLATORS: label for a context menu entry for a row on the guild kiosk tab
+    local showGuildDetailsLabel = gettext("Show Guild Details")
     local function ShowTraderContextMenu(control)
         ClearMenu()
 
@@ -390,6 +397,13 @@ local function InitializeStoreListWindow(saveData, kioskList, storeList, ownerLi
         AddCustomMenuItem(showOnMapLabel, function()
             ShowTraderOnMap(ZO_ScrollList_GetData(control))
         end)
+
+        local data = ZO_ScrollList_GetData(control)
+        if(data.owner and data.owner.id) then
+            AddCustomMenuItem(showGuildDetailsLabel, function()
+                ShowGuildDetails(data.owner.id, GoBack)
+            end)
+        end
 
         ShowMenu()
     end
