@@ -6,6 +6,7 @@ local gettext = AGS.internal.gettext
 local ItemDatabase = AGS.class.ItemDatabase
 local RegisterForEvent = AGS.internal.RegisterForEvent
 local IsAtGuildKiosk = AGS.internal.IsAtGuildKiosk
+local ShowGuildDetails = AGS.internal.ShowGuildDetails
 
 local KIOSK_OPTION_INDEX = AGS.internal.KIOSK_OPTION_INDEX
 local FOOTER_MIN_ALPHA = 0.6
@@ -174,6 +175,23 @@ end
 function TradingHouseWrapper:InitializeGuildSelector()
     self.guildSelection = AGS.class.GuildSelection:New(self)
     self.guildSelector = AGS.class.GuildSelector:New(self)
+
+    local function GoBack()
+        SCENE_MANAGER:HideCurrentScene()
+    end
+
+    local title = self.tradingHouse.control:GetNamedChild("Title")
+    local label = title:GetNamedChild("Label")
+    label:SetWidth(0) -- let the guild name length determine the width
+    label:SetDimensionConstraints(0, 0, 500, 0)
+    local button = CreateControlFromVirtual("$(parent)AGSGuildInfoButton", title, "ZO_DefaultButton")
+    button:SetAnchor(LEFT, label, RIGHT, 15, 0)
+    -- TRANSLATORS: label for the open guild info button in the guild store
+    button:SetText(gettext("Open Guild Info"))
+    button:SetHandler("OnClicked", function()
+        local guildId = GetCurrentTradingHouseGuildDetails()
+        ShowGuildDetails(guildId, GoBack)
+    end)
 end
 
 function TradingHouseWrapper:InitializeKeybindStripWrapper()
