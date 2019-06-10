@@ -121,7 +121,7 @@ function TraderListControl:InitializeList(control, storeList, kioskList, ownerLi
         if(not data.isHired or not data.owner) then
             owner:SetText("-")
         else
-            owner:SetText(data.owner)
+            owner:SetText(data.owner.name)
         end
 
         local lastVisited = GetControl(control, "LastVisited")
@@ -241,7 +241,7 @@ function TraderListControl:BuildMasterList()
             haystack[1] = traderName
             haystack[2] = zoneName
             haystack[3] = poi
-            haystack[4] = owner
+            if(owner) then haystack[4] = owner.name end
             self.masterList[#self.masterList + 1] = {
                 type = TRADER_DATA,
                 traderName = traderName,

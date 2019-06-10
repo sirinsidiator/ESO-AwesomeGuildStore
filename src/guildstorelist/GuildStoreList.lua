@@ -268,7 +268,7 @@ local function InitializeStoreListWindow(saveData, kioskList, storeList, ownerLi
         if(not data.isHired or not data.owner) then
             detailOwner:SetText("-")
         else
-            detailOwner:SetText(data.owner)
+            detailOwner:SetText(data.owner.name)
         end
         historyList:SetSelectedKiosk(data.traderName)
         historyList:RefreshData()
