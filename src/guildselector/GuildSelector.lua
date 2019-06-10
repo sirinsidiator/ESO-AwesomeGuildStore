@@ -140,8 +140,8 @@ local function OnSelectionChanged(comboBox, selectedName, selectedEntry)
     SelectTradingHouseGuildId(selectedEntry.data.guildId)
 end
 
-local function ByGuildIdAsc(a, b)
-    return a.data.guildId < b.data.guildId
+local function ByGuildIndexAsc(a, b)
+    return a.data.guildIndex < b.data.guildIndex
 end
 
 function GuildSelector:SetupGuildList(guilds)
@@ -155,7 +155,7 @@ function GuildSelector:SetupGuildList(guilds)
         entry.data = data
         entries[#entries + 1] = entry
     end
-    table.sort(entries, ByGuildIdAsc)
+    table.sort(entries, ByGuildIndexAsc)
 
     comboBox:AddItems(entries)
 

@@ -69,12 +69,18 @@ function GuildSelection:UpdateGuildData()
     local guildCount = GetNumTradingHouseGuilds()
     local guildId = self.originalGetCurrentTradingHouseGuildDetails()
     if(guildId > 0) then
+        local guildIndexById = {}
+        for guildIndex = 1, GetNumGuilds() do
+            guildIndexById[GetGuildId(guildIndex)] = guildIndex
+        end
+
         for i = 1, guildCount do
             local guildId, guildName, guildAlliance = GetTradingHouseGuildDetails(i)
             local iconPath = GetAllianceBannerIcon(guildAlliance)
             local entryText = iconPath and zo_iconTextFormat(iconPath, 36, 36, guildName) or guildName
             local guildData = {
                 guildId = guildId,
+                guildIndex = guildIndexById[guildId] or i,
                 guildName = guildName,
                 guildAlliance = guildAlliance,
                 entryText = entryText,
