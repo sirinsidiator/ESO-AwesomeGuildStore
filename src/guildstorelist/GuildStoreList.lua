@@ -1,6 +1,7 @@
 local AGS = AwesomeGuildStore
 
 local IsUnitGuildKiosk = AGS.internal.IsUnitGuildKiosk
+local IsAtGuildKiosk = AGS.internal.IsAtGuildKiosk
 local GetUnitGuildKioskOwner = AGS.internal.GetUnitGuildKioskOwner
 local IsLocationVisible = AGS.internal.IsLocationVisible
 local IsCurrentMapZoneMap = AGS.internal.IsCurrentMapZoneMap
@@ -789,10 +790,10 @@ local function InitializeGuildStoreList(globalSaveData)
     end
 
     local function CollectGuildKiosk()
-        local kioskName = GetUnitName(INTERACT_UNIT_TAG)
-        if(IsUnitGuildKiosk(INTERACT_UNIT_TAG)) then
-            UpdateKioskAndStore(kioskName, true)
+        if(IsAtGuildKiosk()) then
+            local kioskName = GetUnitName(INTERACT_UNIT_TAG)
             local guildId, guildName = GetCurrentTradingHouseGuildDetails()
+            UpdateKioskAndStore(kioskName, true)
             ownerList:SetCurrentOwner(kioskName, guildName, guildId)
         end
     end

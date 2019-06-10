@@ -108,6 +108,7 @@ end
 
 function OwnerList:SetCurrentOwner(kioskName, guildName, guildId)
     local week = self:GetCurrentWeek()
+    if(not week) then return end -- happens when the guild system is down
     if(not self:HasDataForWeek(week)) then
         self.weekOrder[#self.weekOrder + 1] = week
         table.sort(self.weekOrder, SortDesc)
