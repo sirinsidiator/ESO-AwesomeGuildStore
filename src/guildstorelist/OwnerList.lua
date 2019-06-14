@@ -147,8 +147,9 @@ end
 function OwnerList:GetLastKnownOwner(kioskName)
     for _, week in ipairs(self.weekOrder) do
         local weekData = self:GetDataForWeek(week)
-        if(weekData[kioskName]) then
+        if(weekData[kioskName] ~= nil) then
             local owner = weekData[kioskName]
+            if(not owner) then return end
             local data = self.guildList[owner]
             if(data.hasActiveTrader and data.lastKiosk ~= kioskName) then return end
             return data

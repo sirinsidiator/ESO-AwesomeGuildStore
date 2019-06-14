@@ -848,6 +848,11 @@ local function InitializeGuildStoreList(globalSaveData)
                 local ownerName = GetGuildName(guildId)
                 ownerList:SetCurrentOwner(kioskName, ownerName, guildId)
             end
+        else
+            local guildData = ownerList:GetGuildData(guildId)
+            if(guildData and ownerList:GetCurrentOwner(guildData.lastKiosk) == nil) then
+                ownerList:SetCurrentOwner(kioskName)
+            end
         end
     end
 
@@ -876,8 +881,9 @@ local function InitializeGuildStoreList(globalSaveData)
 
     local NO_TRADER_TEXT = gettext("None") -- TODO: translate
 
-    local function OnGuildDataReady(guildId)
+    local function OnGuildDataReady(guildId, skipRefresh)
         local guildMetaData = GUILD_BROWSER_MANAGER:GetGuildData(guildId)
+        if(guildMetaData.guildName == "") then return end -- guild info was unavailable
         if(guildMetaData.guildTraderText and guildMetaData.guildTraderText ~= NO_TRADER_TEXT) then
             local kioskName = GetKioskNameFromInfoText(guildMetaData.guildTraderText)
             if(kioskName) then
@@ -888,12 +894,25 @@ local function InitializeGuildStoreList(globalSaveData)
                     ownerList:SetCurrentOwner(kioskName, guildMetaData.guildName, guildId)
                 end
             end
+        else
+            local guildData = ownerList:GetGuildData(guildId)
+            AGS.internal.logger:Debug(guildId, guildData, guildData and ownerList:GetCurrentOwner(guildData.lastKiosk))
+            if(guildData and ownerList:GetCurrentOwner(guildData.lastKiosk) == nil) then
+                ownerList:SetCurrentOwner(guildData.lastKiosk)
+            end
+        end
+
+        if(not skipRefresh and guildTradersScene:IsShowing()) then
+            guildTradersScene.RefreshTraderList()
         end
     end
 
     local function OnGuildFinderSearchResultsReady()
         for _, guildId in GUILD_BROWSER_MANAGER:CurrentFoundGuildsListIterator() do
-            OnGuildDataReady(guildId)
+            OnGuildDataReady(guildId, true)
+        end
+        if(guildTradersScene:IsShowing()) then
+            guildTradersScene.RefreshTraderList()
         end
     end
     GUILD_BROWSER_MANAGER:RegisterCallback("OnGuildDataReady", OnGuildDataReady)
