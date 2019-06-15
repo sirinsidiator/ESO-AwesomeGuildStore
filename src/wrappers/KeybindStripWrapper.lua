@@ -25,8 +25,8 @@ function KeybindStripWrapper:Initialize(tradingHouseWrapper)
     local browseKeybindStripDescriptor = tradingHouse.browseKeybindStripDescriptor
     local doSearchDescriptor = browseKeybindStripDescriptor[DO_SEARCH_SHORTCUT_INDEX]
     doSearchDescriptor.enabled = function()
-        local guildId, guildName = GetCurrentTradingHouseGuildDetails()
-        if(not searchManager:HasCurrentSearchMorePages(guildName)) then
+        local guildId = GetSelectedTradingHouseGuildId()
+        if(not searchManager:HasCurrentSearchMorePages(guildId)) then
             return false
         end
 

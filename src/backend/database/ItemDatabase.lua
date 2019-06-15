@@ -44,8 +44,8 @@ function ItemDatabase:Initialize(tradingHouseWrapper)
     end
 
     local function SetDirty()
-        local guildName = select(2, GetCurrentTradingHouseGuildDetails())
-        self:GetItemView(guildName):MarkDirty()
+        local guildId = GetSelectedTradingHouseGuildId()
+        self:GetItemView(guildId):MarkDirty()
     end
 
     AGS:RegisterCallback(AGS.callback.FILTER_VALUE_CHANGED, SetDirty)
@@ -63,8 +63,8 @@ function ItemDatabase:SetupItemTooltipHook()
     end)
 end
 
-function ItemDatabase:Update(guildName, numItems)
-    local data = self:GetOrCreateDataForGuild(guildName)
+function ItemDatabase:Update(guildId, guildName, numItems)
+    local data = self:GetOrCreateDataForGuild(guildId)
     ZO_ClearTable(self.itemIdToIndex)
 
     local hasAnyResultAlreadyStored = false
@@ -77,15 +77,15 @@ function ItemDatabase:Update(guildName, numItems)
             item = ItemData:New(itemUniqueId)
         end
         data[itemUniqueId] = item
-        item:UpdateFromStore(i, guildName)
+        item:UpdateFromStore(i, guildId, guildName)
 
         local itemId = GetItemLinkItemId(item.itemLink)
         self.itemIdToIndex[itemId] = i
     end
 
-    self:GetItemView(guildName):MarkDirty()
+    self:GetItemView(guildId):MarkDirty()
 
-    AGS.internal:FireCallbacks(AGS.callback.ITEM_DATABASE_UPDATE, self, guildName, hasAnyResultAlreadyStored)
+    AGS.internal:FireCallbacks(AGS.callback.ITEM_DATABASE_UPDATE, self, guildId, hasAnyResultAlreadyStored)
     return hasAnyResultAlreadyStored
 end
 
@@ -94,23 +94,20 @@ function ItemDatabase:GetCurrentPageIndexForItemId(itemId)
 end
 
 function ItemDatabase:UpdateGuildSpecificItems(guildId, guildName)
-    if(guildId and guildId > 0) then
-        local data = self:GetOrCreateGuildItemDataForGuild(guildName)
-
-        local count = GetNumGuildSpecificItems()
-        if(count > 0) then
-            for i = 1, count do
-                local item = ItemData:New(i, guildName)
-                item:UpdateFromGuildSpecificItem(i)
-                data[i] = item
-            end
-            self:GetItemView(guildName):MarkDirty()
+    local data = self:GetOrCreateGuildItemDataForGuild(guildId)
+    local count = GetNumGuildSpecificItems()
+    if(count > 0) then
+        for i = 1, count do
+            local item = ItemData:New(i)
+            item:UpdateFromGuildSpecificItem(i, guildId, guildName)
+            data[i] = item
         end
+        self:GetItemView(guildId):MarkDirty()
 
-        AGS.internal:FireCallbacks(AGS.callback.ITEM_DATABASE_UPDATE, self, guildName)
-        return true, TRADING_HOUSE_RESULT_SUCCESS
+        AGS.internal:FireCallbacks(AGS.callback.ITEM_DATABASE_UPDATE, self, guildId)
     end
-    return false, TRADING_HOUSE_RESULT_NOT_A_MEMBER
+
+    return true, TRADING_HOUSE_RESULT_SUCCESS
 end
 
 function ItemDatabase:GetItemUniqueIdForSlotIndex(slotIndex)
@@ -118,29 +115,27 @@ function ItemDatabase:GetItemUniqueIdForSlotIndex(slotIndex)
     return itemUniqueId
 end
 
-function ItemDatabase:GetOrCreateDataForGuild(guildName)
-    if(not guildName) then return {} end
-    local data = self.data[guildName] or {}
-    self.data[guildName] = data
+function ItemDatabase:GetOrCreateDataForGuild(guildId)
+    local data = self.data[guildId] or {}
+    self.data[guildId] = data
     return data
 end
 
-function ItemDatabase:GetOrCreateGuildItemDataForGuild(guildName)
-    if(not guildName) then return {} end
-    local data = self.guildItemData[guildName] or {}
-    self.guildItemData[guildName] = data
+function ItemDatabase:GetOrCreateGuildItemDataForGuild(guildId)
+    local data = self.guildItemData[guildId] or {}
+    self.guildItemData[guildId] = data
     return data
 end
 
-function ItemDatabase:HasGuildSpecificItems(guildName)
-    return self.guildItemData[guildName] ~= nil
+function ItemDatabase:HasGuildSpecificItems(guildId)
+    return self.guildItemData[guildId] ~= nil
 end
 
 function ItemDatabase:TryGetItemDataInCurrentGuildByUniqueId(itemUniqueId)
     if(not itemUniqueId) then return end
 
-    local guildId, guildName = GetCurrentTradingHouseGuildDetails()
-    local data = self:GetOrCreateDataForGuild(guildName)
+    local guildId = GetSelectedTradingHouseGuildId()
+    local data = self:GetOrCreateDataForGuild(guildId)
     return data[itemUniqueId], guildId
 end
 
@@ -148,17 +143,17 @@ function ItemDatabase:Reset()
     ZO_ClearTable(self.data)
 end
 
-function ItemDatabase:GetItemView(guildName)
-    local view = self.viewCache[guildName]
+function ItemDatabase:GetItemView(guildId)
+    local view = self.viewCache[guildId]
     if(not view) then
-        view = ItemDatabaseGuildView:New(self, guildName)
-        self.viewCache[guildName] = view
+        view = ItemDatabaseGuildView:New(self, guildId)
+        self.viewCache[guildId] = view
     end
     return view
 end
 
-function ItemDatabase:GetFilteredView(guildName, filterState)
-    local view = self:GetItemView(guildName)
+function ItemDatabase:GetFilteredView(guildId, filterState)
+    local view = self:GetItemView(guildId)
     local groups = filterState:GetGroups()
     local searchManager = self.tradingHouseWrapper.searchManager
 

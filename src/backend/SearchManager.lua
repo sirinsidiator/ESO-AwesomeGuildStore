@@ -67,13 +67,13 @@ function SearchManager:Initialize(tradingHouseWrapper, saveData)
     AGS:RegisterCallback(AGS.callback.GUILD_SELECTION_CHANGED, function(guildData)
         self.activityManager:CancelRequestNewest()
         local guildId = guildData.guildId
-        if(guildId and guildId > 0 and not self.itemDatabase:HasGuildSpecificItems(guildData.guildName)) then
+        if(not self.itemDatabase:HasGuildSpecificItems(guildId)) then
             self.activityManager:FetchGuildItems(guildId)
         else
             RequestRefreshResults()
         end
     end)
-    AGS:RegisterCallback(AGS.callback.ITEM_DATABASE_UPDATE, function(itemDatabase, guildName, hasAnyResultAlreadyStored)
+    AGS:RegisterCallback(AGS.callback.ITEM_DATABASE_UPDATE, function(itemDatabase, guildId, hasAnyResultAlreadyStored)
         if(hasAnyResultAlreadyStored == nil) then
             RequestRefreshResults()
         end
@@ -108,7 +108,7 @@ function SearchManager:Initialize(tradingHouseWrapper, saveData)
     end)
 
     AGS:RegisterCallback(AGS.callback.ITEM_POSTED, function(guildId, itemLink, price, stackCount)
-        self.searchPageHistory:ResetRequestNewestCooldown(GetGuildName(guildId))
+        self.searchPageHistory:ResetRequestNewestCooldown(guildId)
     end)
 end
 
@@ -314,13 +314,13 @@ end
 function SearchManager:UpdateSearchResults()
     ZO_ClearNumericallyIndexedTable(self.searchResults)
 
-    local guildName = select(2, GetCurrentTradingHouseGuildDetails())
+    local guildId = GetSelectedTradingHouseGuildId()
     local activeSearch = self:GetActiveSearch()
     local filterState = activeSearch:GetFilterState()
-    local view = self.itemDatabase:GetFilteredView(guildName, filterState)
+    local view = self.itemDatabase:GetFilteredView(guildId, filterState)
     ZO_ShallowTableCopy(view:GetItems(), self.searchResults)
 
-    local page = self.searchPageHistory:GetNextPage(guildName, filterState)
+    local page = self.searchPageHistory:GetNextPage(guildId, filterState)
     self.hasMorePages = (page ~= false)
     AGS.internal:FireCallbacks(AGS.callback.SEARCH_RESULT_UPDATE, self.searchResults, self.hasMorePages)
 end
@@ -369,15 +369,15 @@ function SearchManager:GetSearchResults()
     return self.searchResults
 end
 
-function SearchManager:HasCurrentSearchMorePages(guildName)
+function SearchManager:HasCurrentSearchMorePages(guildId)
     local currentState = self.activeSearch:GetFilterState()
-    return self.searchPageHistory:GetNextPage(guildName, currentState) ~= false
+    return self.searchPageHistory:GetNextPage(guildId, currentState) ~= false
 end
 
 function SearchManager:RequestSearch(ignoreResultCount)
     if(ignoreResultCount or self:IsResultCountBelowAutoSearchThreshold(#self.searchResults)) then
-        local guildId, guildName = GetCurrentTradingHouseGuildDetails()
-        if(self:HasCurrentSearchMorePages(guildName)) then
+        local guildId = GetSelectedTradingHouseGuildId()
+        if(self:HasCurrentSearchMorePages(guildId)) then
             if(self.activityManager:RequestSearchResults(guildId, ignoreResultCount)) then
                 if(self.requestNewestInterval) then
                     ClearCallLater(self.requestNewestInterval)
@@ -400,13 +400,13 @@ function SearchManager:RequestNewest(ignoreCooldown)
         ClearCallLater(self.requestNewestInterval)
     end
 
-    local guildId, guildName = GetCurrentTradingHouseGuildDetails()
+    local guildId = GetSelectedTradingHouseGuildId()
     if(ignoreCooldown) then
         self.activityManager:RequestNewestResults(guildId)
         return
     end
 
-    local canRequest, cooldown = self.searchPageHistory:CanRequestNewest(guildName)
+    local canRequest, cooldown = self.searchPageHistory:CanRequestNewest(guildId)
     if(canRequest) then
         self.activityManager:RequestNewestResults(guildId)
     else

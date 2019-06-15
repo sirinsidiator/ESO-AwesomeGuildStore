@@ -38,7 +38,7 @@ function RequestSearchActivity:PrepareFilters()
 
     local searchManager = self.searchManager
     local filterState = searchManager:GetActiveSearch():GetFilterState()
-    local page = searchManager.searchPageHistory:GetNextPage(self.pendingGuildName, filterState)
+    local page = searchManager.searchPageHistory:GetNextPage(self.guildId, filterState)
     self.pendingPage = page
     self.pendingFilterState = filterState
 
@@ -139,11 +139,11 @@ function RequestSearchActivity:OnResponse(responseType, result)
         if(result == TRADING_HOUSE_RESULT_SUCCESS and self.responsePromise) then
             self.numItems, self.page, self.hasMore = GetTradingHouseSearchResultsInfo()
             self:SetState(ActivityBase.STATE_SUCCEEDED, result)
-            local hasAnyResultAlreadyStored = self.itemDatabase:Update(self.pendingGuildName, self.numItems)
+            local hasAnyResultAlreadyStored = self.itemDatabase:Update(self.guildId, self.pendingGuildName, self.numItems)
 
             self:HandleSearchResultsReceived(hasAnyResultAlreadyStored)
 
-            AGS.internal:FireCallbacks(AGS.callback.SEARCH_RESULTS_RECEIVED, self.pendingGuildName, self.numItems, self.page, self.hasMore)
+            AGS.internal:FireCallbacks(AGS.callback.SEARCH_RESULTS_RECEIVED, self.pendingGuildName, self.numItems, self.page, self.hasMore, self.guildId)
 
             self.responsePromise:Resolve(self)
         else
@@ -157,9 +157,9 @@ end
 
 function RequestSearchActivity:HandleSearchResultsReceived(hasAnyResultAlreadyStored)
     if(self.hasMore) then
-        self.searchManager.searchPageHistory:SetHighestSearchedPage(self.pendingGuildName, self.pendingFilterState, self.page)
+        self.searchManager.searchPageHistory:SetHighestSearchedPage(self.guildId, self.pendingFilterState, self.page)
     else
-        self.searchManager.searchPageHistory:SetStateHasNoMorePages(self.pendingGuildName, self.pendingFilterState)
+        self.searchManager.searchPageHistory:SetStateHasNoMorePages(self.guildId, self.pendingFilterState)
     end
 end
 

@@ -102,8 +102,8 @@ function SearchResultListWrapper:InitializeResultList(tradingHouseWrapper, searc
             scrollData[#scrollData + 1] = ZO_ScrollList_CreateDataEntry(SHOW_MORE_DATA_TYPE, {})
         end
 
-        local guildName = select(2, GetCurrentTradingHouseGuildDetails())
-        local items = itemDatabase:GetItemView(guildName):GetItems()
+        local guildId = GetSelectedTradingHouseGuildId()
+        local items = itemDatabase:GetItemView(guildId):GetItems()
         resultCount:SetHidden(false)
         resultCount:SetText(ITEM_COUNT_TEMPLATE:format(#searchResults, #items))
     end

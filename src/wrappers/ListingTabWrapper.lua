@@ -220,7 +220,7 @@ end
 function ListingTabWrapper:InitializeRequestListingsOperation(tradingHouseWrapper)
     local activityManager = tradingHouseWrapper.activityManager
     tradingHouseWrapper.tradingHouse.RequestListings = function()
-        local guildId = GetCurrentTradingHouseGuildDetails()
+        local guildId = GetSelectedTradingHouseGuildId()
         activityManager:RequestListings(guildId)
     end
 end

@@ -30,7 +30,7 @@ function RequestNewestActivity:RequestSearch()
     if(not self.responsePromise) then
         self.responsePromise = Promise:New()
 
-        self.pendingPage = self.searchManager.searchPageHistory:GetNextRequestNewestPage(self.pendingGuildName)
+        self.pendingPage = self.searchManager.searchPageHistory:GetNextRequestNewestPage(self.guildId)
 
         ClearAllTradingHouseSearchTerms()
         ExecuteTradingHouseSearch(self.pendingPage, SortOrderBase.SORT_FIELD_TIME_LEFT, SortOrderBase.SORT_ORDER_DOWN)
@@ -57,7 +57,7 @@ function RequestNewestActivity:HandleSearchResultsReceived(hasAnyResultAlreadySt
     if(not hasAnyResultAlreadyStored and self.hasMore) then
         page = self.page + 1
     end
-    self.searchManager.searchPageHistory:SetRequestNewest(self.pendingGuildName, page)
+    self.searchManager.searchPageHistory:SetRequestNewest(self.guildId, page)
 end
 
 function RequestNewestActivity:GetType()

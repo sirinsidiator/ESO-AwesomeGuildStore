@@ -104,7 +104,7 @@ function ActivityManager:Initialize(tradingHouseWrapper, loadingIndicator, loadi
         if(newTab == tradingHouseWrapper.searchTab) then
             self:RemoveActivitiesByType(ActivityBase.ACTIVITY_TYPE_REQUEST_LISTINGS)
         else
-            local guildId = GetCurrentTradingHouseGuildDetails()
+            local guildId = GetSelectedTradingHouseGuildId()
             self:RequestListings(guildId)
         end
     end)

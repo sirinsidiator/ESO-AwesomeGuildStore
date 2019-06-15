@@ -189,7 +189,7 @@ function TradingHouseWrapper:InitializeGuildSelector()
     -- TRANSLATORS: label for the open guild info button in the guild store
     button:SetText(gettext("Open Guild Info"))
     button:SetHandler("OnClicked", function()
-        local guildId = GetCurrentTradingHouseGuildDetails()
+        local guildId = GetSelectedTradingHouseGuildId()
         ShowGuildDetails(guildId, GoBack)
     end)
 end

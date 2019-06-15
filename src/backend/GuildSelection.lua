@@ -17,14 +17,13 @@ function GuildSelection:Initialize(tradingHouseWrapper)
     self.saveData = tradingHouseWrapper.saveData
     self.guilds = {}
     self.guildById = {}
-    self.guildByName = {}
 
     self.originalGetSelectedTradingHouseGuildId = GetSelectedTradingHouseGuildId
     self.originalGetCurrentTradingHouseGuildDetails = GetCurrentTradingHouseGuildDetails
     self.originalSelectTradingHouseGuildId = SelectTradingHouseGuildId
 
     function GetSelectedTradingHouseGuildId()
-        return self:GetSelectedGuildId()
+        return self:GetSelectedGuildId() or self.originalGetSelectedTradingHouseGuildId()
     end
 
     function GetCurrentTradingHouseGuildDetails()
@@ -38,12 +37,6 @@ function GuildSelection:Initialize(tradingHouseWrapper)
     function SelectTradingHouseGuildId(guildId)
         return self:SetSelectedGuildId(guildId)
     end
-
-    -- apply guild id when necessary
-    local function ApplySelectedGuildId()
-        self:ApplySelectedGuildId()
-    end
-    ZO_PreHook("RequestPostItemOnTradingHouse", ApplySelectedGuildId)
 
     RegisterForEvent(EVENT_TRADING_HOUSE_STATUS_RECEIVED, function()
         self:UpdateGuildData()
@@ -60,45 +53,39 @@ end
 function GuildSelection:UpdateGuildData()
     local guilds = self.guilds
     local guildById = self.guildById
-    local guildByName = self.guildByName
 
     ZO_ClearTable(guilds)
     ZO_ClearTable(guildById)
-    ZO_ClearTable(guildByName)
 
     local guildCount = GetNumTradingHouseGuilds()
-    local guildId = self.originalGetCurrentTradingHouseGuildDetails()
-    if(guildId > 0) then
-        local guildIndexById = {}
-        for guildIndex = 1, GetNumGuilds() do
-            guildIndexById[GetGuildId(guildIndex)] = guildIndex
-        end
-
-        for i = 1, guildCount do
-            local guildId, guildName, guildAlliance = GetTradingHouseGuildDetails(i)
-            local iconPath = GetAllianceBannerIcon(guildAlliance)
-            local entryText = iconPath and zo_iconTextFormat(iconPath, 36, 36, guildName) or guildName
-            local guildData = {
-                guildId = guildId,
-                guildIndex = guildIndexById[guildId] or i,
-                guildName = guildName,
-                guildAlliance = guildAlliance,
-                entryText = entryText,
-                canBuy = CanBuyFromTradingHouse(guildId),
-                canSell = CanSellOnTradingHouse(guildId),
-            }
-            guilds[i] = guildData
-            guildById[guildId] = guildData
-            guildByName[guildName] = guildData
-
-            if(i > 1) then
-                guildData.previous = guilds[i - 1]
-                guildData.previous.next = guildData
-            end
-        end
-        guilds[1].previous = guilds[guildCount]
-        guilds[guildCount].next = guilds[1]
+    local guildIndexById = {}
+    for guildIndex = 1, GetNumGuilds() do
+        guildIndexById[GetGuildId(guildIndex)] = guildIndex
     end
+
+    for i = 1, guildCount do
+        local guildId, guildName, guildAlliance = GetTradingHouseGuildDetails(i)
+        local iconPath = GetAllianceBannerIcon(guildAlliance)
+        local entryText = iconPath and zo_iconTextFormat(iconPath, 36, 36, guildName) or guildName
+        local guildData = {
+            guildId = guildId,
+            guildIndex = guildIndexById[guildId] or i,
+            guildName = guildName,
+            guildAlliance = guildAlliance,
+            entryText = entryText,
+            canBuy = CanBuyFromTradingHouse(guildId),
+            canSell = CanSellOnTradingHouse(guildId),
+        }
+        guilds[i] = guildData
+        guildById[guildId] = guildData
+
+        if(i > 1) then
+            guildData.previous = guilds[i - 1]
+            guildData.previous.next = guildData
+        end
+    end
+    guilds[1].previous = guilds[guildCount]
+    guilds[guildCount].next = guilds[1]
 
     AGS.internal:FireCallbacks(AGS.callback.AVAILABLE_GUILDS_CHANGED, guilds)
 end
@@ -119,14 +106,14 @@ function GuildSelection:SetSelectedGuildId(guildId)
     if(guildId == self.selectedGuildId) then return true end
 
     local guildData = self.guildById[guildId]
-    if(guildData) then
-        self.selectedGuildId = guildId
-        if(not IsAtGuildKiosk()) then
-            self.saveData.lastGuildId = guildId
-        end
-        AGS.internal:FireCallbacks(AGS.callback.GUILD_SELECTION_CHANGED, guildData)
-        return true
+    if(not guildData) then return false end
+
+    self.selectedGuildId = guildId
+    if(not IsAtGuildKiosk()) then -- TODO: what happens in Cyrodiil?
+        self.saveData.lastGuildId = guildId
     end
+    AGS.internal:FireCallbacks(AGS.callback.GUILD_SELECTION_CHANGED, guildData)
+    return true
 end
 
 function GuildSelection:GetSelectedGuildId()
@@ -147,8 +134,8 @@ end
 
 function GuildSelection:ApplySelectedGuildId(guildId)
     guildId = guildId or self.selectedGuildId
-    local currentGuildId = self.originalGetSelectedTradingHouseGuildId()
-    if(not currentGuildId or currentGuildId == guildId) then return true end
+    local currentGuildId = self.originalGetSelectedTradingHouseGuildId() 
+    if(currentGuildId == guildId) then return true end
 
     logger:Info(string.format("Set selected trading house guild to %s", tostring(guildId)))
     return self.originalSelectTradingHouseGuildId(guildId)

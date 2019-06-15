@@ -441,7 +441,7 @@ function SellTabWrapper:InitializeCraftingBag(tradingHouseWrapper)
     tradingHouse.PostPendingItem = function(tradingHouse)
         if(tradingHouse.pendingItemSlot and tradingHouse.pendingSaleIsValid) then
             UpdateLastSoldData() -- update regardless of the outcome
-            local guildId = GetCurrentTradingHouseGuildDetails()
+            local guildId = GetSelectedTradingHouseGuildId()
             local bagId, slotIndex = ZO_Inventory_GetBagAndIndex(tradingHouse.pendingItem)
 
             for i = 1, self.currentRepetitions do

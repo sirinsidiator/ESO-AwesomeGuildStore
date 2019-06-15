@@ -17,7 +17,7 @@ function ItemData:New(...)
     return object
 end
 
-function ItemData:Initialize(itemUniqueId, guildName)
+function ItemData:Initialize(itemUniqueId)
     self.itemUniqueId = itemUniqueId
     self.icon = MISSING_ICON
     self.name = ""
@@ -31,11 +31,12 @@ function ItemData:Initialize(itemUniqueId, guildName)
     self.lastSeen = 0
     self.itemLink = ""
     self.guildName = ""
+    self.guildId = -1
     self.purchased = false
     self.soldout = false
 end
 
-function ItemData:UpdateFromStore(slotIndex, guildName)
+function ItemData:UpdateFromStore(slotIndex, guildId, guildName)
     local icon, itemName, quality, stackCount, sellerName, timeRemaining, price, currencyType, itemUniqueId, purchasePricePerUnit = GetTradingHouseSearchResultItemInfo(slotIndex)
 
     self.slotIndex = itemUniqueId
@@ -51,11 +52,12 @@ function ItemData:UpdateFromStore(slotIndex, guildName)
     self.currencyType = currencyType
     self.itemUniqueId = itemUniqueId
     self.guildName = guildName
+    self.guildId = guildId
     self.lastSeen = GetTimeStamp()
     self.itemLink = GetTradingHouseSearchResultItemLink(slotIndex, LINK_STYLE_DEFAULT)
 end
 
-function ItemData:UpdateFromGuildSpecificItem(index, guildName)
+function ItemData:UpdateFromGuildSpecificItem(index, guildId, guildName)
     local icon, itemName, quality, stackCount, _, _, price, currencyType = GetGuildSpecificItemInfo(index)
 
     self.slotIndex = index
@@ -68,6 +70,7 @@ function ItemData:UpdateFromGuildSpecificItem(index, guildName)
     self.purchasePricePerUnit = price
     self.currencyType = currencyType
     self.guildName = guildName
+    self.guildId = guildId
     self.itemLink = GetGuildSpecificItemLink(index, LINK_STYLE_DEFAULT)
     self.isGuildSpecificItem = true
 end

@@ -18,13 +18,13 @@ function SearchPageHistory:Initialize()
     self.searches = {}
 end
 
-function SearchPageHistory:GetGuildSearches(guildName)
+function SearchPageHistory:GetGuildSearches(guildId)
     local searches = self.searches
-    if(not searches[guildName]) then
-        searches[guildName] = {}
+    if(not searches[guildId]) then
+        searches[guildId] = {}
     end
 
-    return searches[guildName]
+    return searches[guildId]
 end
 
 function SearchPageHistory:CreateKeyFromFilterState(filterState) -- TODO: the filterState should offer some sort of hierarchical key
@@ -34,9 +34,9 @@ function SearchPageHistory:CreateKeyFromFilterState(filterState) -- TODO: the fi
     return string.format("%s;%s;%s", sortState, categoryState, serverState)
 end
 
-function SearchPageHistory:ShouldRequestPage(guildName, filterState, page)
+function SearchPageHistory:ShouldRequestPage(guildId, filterState, page)
     local key = self:CreateKeyFromFilterState(filterState)
-    local searches = self:GetGuildSearches(guildName)
+    local searches = self:GetGuildSearches(guildId)
     if(not searches[key]) then
         return true -- haven't searched any page yet
     elseif(searches[key] == true) then
@@ -45,9 +45,9 @@ function SearchPageHistory:ShouldRequestPage(guildName, filterState, page)
     return page > searches[key]
 end
 
-function SearchPageHistory:GetNextPage(guildName, filterState)
+function SearchPageHistory:GetNextPage(guildId, filterState)
     local key = self:CreateKeyFromFilterState(filterState)
-    local searches = self:GetGuildSearches(guildName)
+    local searches = self:GetGuildSearches(guildId)
     if(not searches[key]) then
         return 0 -- haven't searched any page yet
     elseif(searches[key] == true) then
@@ -56,20 +56,20 @@ function SearchPageHistory:GetNextPage(guildName, filterState)
     return searches[key] + 1
 end
 
-function SearchPageHistory:SetHighestSearchedPage(guildName, filterState, page)
+function SearchPageHistory:SetHighestSearchedPage(guildId, filterState, page)
     local key = self:CreateKeyFromFilterState(filterState)
-    local searches = self:GetGuildSearches(guildName)
+    local searches = self:GetGuildSearches(guildId)
     searches[key] = page
 end
 
-function SearchPageHistory:SetStateHasNoMorePages(guildName, filterState)
+function SearchPageHistory:SetStateHasNoMorePages(guildId, filterState)
     local key = self:CreateKeyFromFilterState(filterState)
-    local searches = self:GetGuildSearches(guildName)
+    local searches = self:GetGuildSearches(guildId)
     searches[key] = true
 end
 
-function SearchPageHistory:CanRequestNewest(guildName)
-    local searches = self:GetGuildSearches(guildName)
+function SearchPageHistory:CanRequestNewest(guildId)
+    local searches = self:GetGuildSearches(guildId)
     local lastRequestTime = 0
     if(searches[REQUEST_NEWEST_KEY]) then
         if(searches[REQUEST_NEWEST_KEY].page > 0) then
@@ -81,8 +81,8 @@ function SearchPageHistory:CanRequestNewest(guildName)
     return delta >= REQUEST_NEWEST_THRESHOLD, math.max(0, math.min(REQUEST_NEWEST_THRESHOLD, REQUEST_NEWEST_THRESHOLD - delta))
 end
 
-function SearchPageHistory:SetRequestNewest(guildName, nextPage)
-    local searches = self:GetGuildSearches(guildName)
+function SearchPageHistory:SetRequestNewest(guildId, nextPage)
+    local searches = self:GetGuildSearches(guildId)
     local data = searches[REQUEST_NEWEST_KEY]
     if(not data) then
         data = {}
@@ -93,16 +93,16 @@ function SearchPageHistory:SetRequestNewest(guildName, nextPage)
     searches[REQUEST_NEWEST_KEY] = data
 end
 
-function SearchPageHistory:ResetRequestNewestCooldown(guildName)
-    local searches = self:GetGuildSearches(guildName)
+function SearchPageHistory:ResetRequestNewestCooldown(guildId)
+    local searches = self:GetGuildSearches(guildId)
     local data = searches[REQUEST_NEWEST_KEY]
     if(data) then
         data.time = 0
     end
 end
 
-function SearchPageHistory:GetNextRequestNewestPage(guildName)
-    local searches = self:GetGuildSearches(guildName)
+function SearchPageHistory:GetNextRequestNewestPage(guildId)
+    local searches = self:GetGuildSearches(guildId)
     if(searches[REQUEST_NEWEST_KEY]) then
         return searches[REQUEST_NEWEST_KEY].page
     end
