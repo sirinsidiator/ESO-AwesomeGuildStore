@@ -106,8 +106,8 @@ function GuildSelector:InitializeHiredTraderTooltip(comboBoxControl, comboBox)
         end
         traderTooltip:Show(control, guildId)
     end
-    local function GuildSelectorHideTooltip(control)
-        traderTooltip:Hide(control)
+    local function GuildSelectorHideTooltip()
+        traderTooltip:Hide()
     end
 
     local hooked = false
@@ -127,6 +127,7 @@ function GuildSelector:InitializeHiredTraderTooltip(comboBoxControl, comboBox)
             hooked = false
             ZO_Menu_EnterItem = originalZO_Menu_EnterItem
             ZO_Menu_ExitItem = originalZO_Menu_ExitItem
+            GuildSelectorHideTooltip()
         end
     end)
 
