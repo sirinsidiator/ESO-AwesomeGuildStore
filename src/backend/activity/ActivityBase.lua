@@ -157,11 +157,11 @@ function ActivityBase:GetFormattedTime()
 end
 
 function ActivityBase:GetLogEntry()
-    return ""
+    return ("missing (%s)"):format(self.key)
 end
 
 function ActivityBase:GetErrorMessage()
-    return ""
+    return ("missing (%s)"):format(self.key)
 end
 
 function ActivityBase:AddTooltipText(output)

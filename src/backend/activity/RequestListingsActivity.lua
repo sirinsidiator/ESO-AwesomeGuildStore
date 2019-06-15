@@ -50,6 +50,11 @@ function RequestListingsActivity:GetLogEntry()
     return self.logEntry
 end
 
+function RequestListingsActivity:GetErrorMessage()
+    -- TRANSLATORS: error text shown to the user when listings could not be requested
+    return gettext("Could not request listings")
+end
+
 function RequestListingsActivity:GetType()
     return ActivityBase.ACTIVITY_TYPE_REQUEST_LISTINGS
 end
