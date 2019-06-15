@@ -27,7 +27,8 @@ local function LoadSettings()
         hasTouchedAction = {},
         guildTraderListEnabled = true,
         minimizeChatOnOpen = true,
-        shortMessagePrefix = false
+        shortMessagePrefix = false,
+        preferredBankerStoreTab = ZO_TRADING_HOUSE_MODE_SELL
     }
 
     local function RepairSaveData(saveData)
@@ -173,6 +174,26 @@ local function LoadSettings()
             requiresReload = true
         }
         optionsData[#optionsData + 1] = {
+            type = "dropdown",
+            -- TRANSLATORS: label for an entry in the addon settings
+            name = gettext("Preferred banker store tab"),
+            -- TRANSLATORS: tooltip text for an entry in the addon settings
+            tooltip = gettext("Controls which tab should be opened first when visiting the guild store at a banker."),
+            choices = {
+                GetString(SI_TRADING_HOUSE_MODE_BROWSE),
+                GetString(SI_TRADING_HOUSE_MODE_SELL),
+                GetString(SI_TRADING_HOUSE_MODE_LISTINGS),
+            },
+            choicesValues = {
+                ZO_TRADING_HOUSE_MODE_BROWSE,
+                ZO_TRADING_HOUSE_MODE_SELL,
+                ZO_TRADING_HOUSE_MODE_LISTINGS,
+            },
+            getFunc = function() return saveData.preferredBankerStoreTab end,
+            setFunc = function(value) saveData.preferredBankerStoreTab = value end,
+            default = defaultData.preferredBankerStoreTab,
+        }
+        optionsData[#optionsData + 1] = {
             type = "checkbox",
             -- TRANSLATORS: label for an entry in the addon settings
             name = gettext("Skip guild kiosk dialog"),
@@ -295,6 +316,7 @@ local function LoadSettings()
         end
         if(saveData.version <= 24) then
             saveData.lastGuildName = nil
+            saveData.preferredBankerStoreTab = defaultData.preferredBankerStoreTab
             saveData.version = 25
         end
     end

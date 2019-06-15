@@ -202,9 +202,9 @@ end
 function TradingHouseWrapper:InitializeStoreTabAutoSwitch()
     local tradingHouse = self.tradingHouse
     RegisterForEvent(EVENT_TRADING_HOUSE_STATUS_RECEIVED, function()
-        -- change to the sell tab when at a banker
-        if(not IsAtGuildKiosk() and not tradingHouse:IsInSellMode() and CanSellOnTradingHouse(GetSelectedTradingHouseGuildId())) then
-            ZO_MenuBar_SelectDescriptor(tradingHouse.menuBar, ZO_TRADING_HOUSE_MODE_SELL)
+        -- change to the configured tab when at a banker
+        if(not IsAtGuildKiosk()) then
+            ZO_MenuBar_SelectDescriptor(tradingHouse.menuBar, self.saveData.preferredBankerStoreTab)
         end
     end)
 end
