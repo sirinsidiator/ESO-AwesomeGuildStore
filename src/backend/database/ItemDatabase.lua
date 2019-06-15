@@ -15,6 +15,13 @@ function ItemDatabase:New(...)
     return object
 end
 
+-- need to do this as early as possible to avoid other addons hooking into it. if they do, they may break
+local originalItemTooltipSetLink = ItemTooltip.SetLink
+local SetTradingHouseItemHook = function() end -- do nothing until the database is initialized
+ZO_PreHook(ItemTooltip, "SetTradingHouseItem", function(...)
+    return SetTradingHouseItemHook(...)
+end)
+
 function ItemDatabase:Initialize(tradingHouseWrapper)
     self.tradingHouseWrapper = tradingHouseWrapper
     self.data = {}
@@ -50,17 +57,14 @@ function ItemDatabase:Initialize(tradingHouseWrapper)
 
     AGS:RegisterCallback(AGS.callback.FILTER_VALUE_CHANGED, SetDirty)
     AGS:RegisterCallback(AGS.callback.FILTER_ACTIVE_CHANGED, SetDirty)
-end
 
-function ItemDatabase:SetupItemTooltipHook()
-    -- need to hook this after other addons, otherwise they may incorrectly run their code twice
-    ZO_PreHook(ItemTooltip, "SetTradingHouseItem", function(tooltip, tradingHouseIndex)
+    function SetTradingHouseItemHook(tooltip, tradingHouseIndex)
         local item = self:TryGetItemDataInCurrentGuildByUniqueId(tradingHouseIndex)
         if(item) then
-            tooltip:SetLink(item.itemLink)
+            originalItemTooltipSetLink(tooltip, item.itemLink)
             return true
         end
-    end)
+    end
 end
 
 function ItemDatabase:Update(guildId, guildName, numItems)

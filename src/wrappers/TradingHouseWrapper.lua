@@ -76,7 +76,6 @@ function TradingHouseWrapper:Initialize(saveData)
 
         AGS.internal:FireCallbacks(AGS.callback.BEFORE_INITIAL_SETUP, self)
 
-        itemDatabase:SetupItemTooltipHook()
         for mode, tab in next, self.modeToTab do
             tab:RunInitialSetup(self)
         end
