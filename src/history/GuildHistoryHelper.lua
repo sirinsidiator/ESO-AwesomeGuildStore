@@ -3,20 +3,20 @@ local AGS = AwesomeGuildStore
 local WrapFunction = AGS.internal.WrapFunction
 local RegisterForEvent = AGS.internal.RegisterForEvent
 local Print = AGS.internal.Print
-local ActivityLogWrapper = ZO_Object:Subclass()
-AGS.class.ActivityLogWrapper = ActivityLogWrapper
+local GuildHistoryHelper = ZO_Object:Subclass()
+AGS.class.GuildHistoryHelper = GuildHistoryHelper
 
-function ActivityLogWrapper:New(...)
+function GuildHistoryHelper:New(...)
 	local wrapper = ZO_Object.New(self)
 	wrapper:Initialize(...)
 	return wrapper
 end
 
-function ActivityLogWrapper:GetNumPurchaseEvents(guildId)
+function GuildHistoryHelper:GetNumPurchaseEvents(guildId)
 	return GetNumGuildEvents(guildId, GUILD_HISTORY_STORE)
 end
 
-function ActivityLogWrapper:GetPurchaseEvent(guildId, index)
+function GuildHistoryHelper:GetPurchaseEvent(guildId, index)
 	local eventType, secsSinceEvent, sellerName, buyerName, itemCount, itemLink, sellPrice, tax = GetGuildEventInfo(guildId, GUILD_HISTORY_STORE, index)
 	local subcategory = ComputeGuildHistoryEventSubcategory(eventType, GUILD_HISTORY_STORE)
 	if(subcategory == GUILD_HISTORY_STORE_PURCHASES) then
@@ -24,7 +24,7 @@ function ActivityLogWrapper:GetPurchaseEvent(guildId, index)
 	end
 end
 
-function ActivityLogWrapper:GetMinMaxPurchaseEventTimes(guildId, startIndex)
+function GuildHistoryHelper:GetMinMaxPurchaseEventTimes(guildId, startIndex)
 	startIndex = math.max(1, startIndex or 1)
 	local endIndex = self:GetNumPurchaseEvents(guildId)
 	local oldest, newest = math.huge, 0
@@ -39,7 +39,7 @@ function ActivityLogWrapper:GetMinMaxPurchaseEventTimes(guildId, startIndex)
 	return oldest, newest, endIndex
 end
 
-function ActivityLogWrapper:Initialize()
+function GuildHistoryHelper:Initialize()
 	self:InitializeGuildState()
 
 	RegisterForEvent(EVENT_GUILD_HISTORY_CATEGORY_UPDATED, function(_, guildId, category)
@@ -62,7 +62,7 @@ function ActivityLogWrapper:Initialize()
 	end)
 end
 
-function ActivityLogWrapper:InitializeGuildState()
+function GuildHistoryHelper:InitializeGuildState()
 	local state = {}
 	for i = 1, GetNumGuilds() do
 		local guildId = GetGuildId(i)
@@ -77,7 +77,7 @@ function ActivityLogWrapper:InitializeGuildState()
 	self.state = state
 end
 
-function ActivityLogWrapper:RequestNewest(guildId)
+function GuildHistoryHelper:RequestNewest(guildId)
 	if(RequestGuildHistoryCategoryNewest(guildId, GUILD_HISTORY_STORE)) then
 		GUILD_HISTORY:IncrementRequestCount()
 		return true
@@ -85,7 +85,7 @@ function ActivityLogWrapper:RequestNewest(guildId)
 	return false
 end
 
-function ActivityLogWrapper:RequestOlder(guildId)
+function GuildHistoryHelper:RequestOlder(guildId)
 	if(RequestGuildHistoryCategoryOlder(guildId, GUILD_HISTORY_STORE)) then
 		GUILD_HISTORY:IncrementRequestCount()
 		return true
@@ -93,11 +93,11 @@ function ActivityLogWrapper:RequestOlder(guildId)
 	return false
 end
 
-function ActivityLogWrapper:HandleReceivedData(guildId)
+function GuildHistoryHelper:HandleReceivedData(guildId)
 	local guildState = self.state[guildId]
 end
 
-function ActivityLogWrapper:RequestData(normalizedTime)
+function GuildHistoryHelper:RequestData(normalizedTime)
 	local hasRequestedData = false
 	for i = 1, GetNumGuilds() do
 		local guildId = GetGuildId(i)

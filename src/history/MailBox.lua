@@ -14,7 +14,7 @@ AGS.internal.InitializeAugmentedMails = function(saveData)
 	local nextId = 1
 	local hasData = false
 	local currentMailTime = 0
-	local activityLog = AGS.class.ActivityLogWrapper:New()
+	local guildHistory = AGS.class.GuildHistoryHelper:New()
 	local transactionDataByMailIdString = {}
 	local button
 
@@ -31,8 +31,8 @@ AGS.internal.InitializeAugmentedMails = function(saveData)
 		local potentialEvents = {}
 		for i = 1, GetNumGuilds() do
 			id = GetGuildId(i)
-			for j = 1, activityLog:GetNumPurchaseEvents(id) do
-				eventType, secsSinceEvent, sellerName, buyerName, itemCount, itemLink, sellPrice, tax = activityLog:GetPurchaseEvent(id, j)
+			for j = 1, guildHistory:GetNumPurchaseEvents(id) do
+				eventType, secsSinceEvent, sellerName, buyerName, itemCount, itemLink, sellPrice, tax = guildHistory:GetPurchaseEvent(id, j)
 				if(sellerName == playerName and math.abs(secsSinceEvent - secsSinceReceived) < 2) then
 					listingFee, houseCut, profit = GetTradingHousePostPriceInfo(sellPrice)
 					if (attachedMoney == 0 or attachedMoney == profit + listingFee) then
@@ -169,7 +169,7 @@ AGS.internal.InitializeAugmentedMails = function(saveData)
 		button:SetWidth(200)
 		button:SetHandler("OnMouseUp",function(control, button, isInside)
 			if(control:GetState() == BSTATE_NORMAL and button == 1 and isInside) then
-				if(not activityLog:RequestData(currentMailTime)) then
+				if(not guildHistory:RequestData(currentMailTime)) then
 					control:SetHidden(true)
 				end
 			end

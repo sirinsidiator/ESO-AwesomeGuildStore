@@ -37,6 +37,7 @@ templates/SimpleInputBox.lua
 util/ButtonGroup.lua
 util/ToggleButton.lua
 util/LoadingOverlay.lua
+history/GuildHistoryHelper.lua
 history/MailBox.lua
 guildselector/HiredTraderTooltip.lua
 guildselector/GuildSelector.lua
@@ -133,7 +134,6 @@ wrappers/SearchTabWrapper.lua
 wrappers/SellTabWrapper.lua
 wrappers/ListingTabWrapper.lua
 wrappers/KeybindStripWrapper.lua
-wrappers/ActivityLogWrapper.lua
 guildstorelist/KioskData.lua
 guildstorelist/StoreData.lua
 guildstorelist/KioskList.lua
