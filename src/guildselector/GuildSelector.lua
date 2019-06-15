@@ -51,6 +51,12 @@ function GuildSelector:Initialize(tradingHouseWrapper)
         tradingHouse:UpdateForGuildChange() -- TODO: disable all the unnecessary stuff in there
     end)
 
+    tradingHouseWrapper:Wrap("UpdateForGuildChange", function(originalUpdateForGuildChange, tradingHouse) -- TODO remove once fixed in the game code
+        originalUpdateForGuildChange(tradingHouse)
+        local guildId = GetSelectedTradingHouseGuildId()
+        ZO_MenuBar_SetDescriptorEnabled(tradingHouse.menuBar, ZO_TRADING_HOUSE_MODE_LISTINGS, GetGuildName(guildId) ~= "")
+    end)
+
     ZO_PreHook(IngameGuildSelector, "SelectGuildByIndex", function(_, index)
         if(tradingHouseWrapper.search:IsAtTradingHouse()) then
             if(GetNumTradingHouseGuilds() > 1) then
