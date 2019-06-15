@@ -113,10 +113,12 @@ local function InitializeGuildList(saveData, kioskList, storeList, ownerList)
         MAIN_MENU_KEYBOARD:ShowScene(sceneName)
     end
 
-    local detailsGuildInfoButton = details:GetNamedChild("GuildInfoButton")
-    -- TRANSLATORS: label for the open guild info button in the detail view on the guild kiosk tab
-    detailsGuildInfoButton:SetText(gettext("Open Guild Info"))
-    detailsGuildInfoButton:SetHandler("OnClicked", function()
+    local detailsGuildInfoButton = AGS.class.SimpleIconButton:New(details:GetNamedChild("GuildInfoButton"))
+    detailsGuildInfoButton:SetSize(48)
+    detailsGuildInfoButton:SetTextureTemplate("EsoUI/Art/SkillsAdvisor/advisor_tabIcon_tutorial_%s.dds")
+    -- TRANSLATORS: tooltip text for the open guild info button in the detail view on the guild kiosk tab
+    detailsGuildInfoButton:SetTooltipText(gettext("Open Guild Info"))
+    detailsGuildInfoButton:SetClickHandler(MOUSE_BUTTON_INDEX_LEFT, function()
         if(selectedTraderData) then
             ShowGuildDetails(selectedTraderData.guild.id, GoBack)
         end

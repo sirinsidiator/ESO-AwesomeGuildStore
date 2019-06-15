@@ -386,7 +386,7 @@ local function InitializeStoreListWindow(saveData, kioskList, storeList, ownerLi
     -- TRANSLATORS: label for a context menu entry for a row on the guild kiosk tab
     local showOnMapLabel = gettext("Show On Map")
     -- TRANSLATORS: label for a context menu entry for a row on the guild kiosk tab
-    local showGuildDetailsLabel = gettext("Show Guild Details")
+    local showGuildDetailsLabel = gettext("Open Guild Info")
     local function ShowTraderContextMenu(control)
         ClearMenu()
 

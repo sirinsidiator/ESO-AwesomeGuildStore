@@ -160,7 +160,7 @@ function TradingHouseWrapper:Initialize(saveData)
         -- TODO: prevent user from selecting the guild store option again when it is already pending
         if(IsShiftKeyDown() or not saveData.skipGuildKioskDialog) then return end
         if(IsAtGuildKiosk()) then
-            logger:Debug(string.format("SelectChatterOption"))
+            logger:Debug("SelectChatterOption")
             SelectChatterOption(KIOSK_OPTION_INDEX)
         end
     end)
@@ -183,11 +183,13 @@ function TradingHouseWrapper:InitializeGuildSelector()
     local label = title:GetNamedChild("Label")
     label:SetWidth(0) -- let the guild name length determine the width
     label:SetDimensionConstraints(0, 0, 500, 0)
-    local button = CreateControlFromVirtual("$(parent)AGSGuildInfoButton", title, "ZO_DefaultButton")
-    button:SetAnchor(LEFT, label, RIGHT, 15, 0)
-    -- TRANSLATORS: label for the open guild info button in the guild store
-    button:SetText(gettext("Open Guild Info"))
-    button:SetHandler("OnClicked", function()
+    local button = AGS.class.SimpleIconButton:New("$(parent)AGSGuildInfoButton", title)
+    button:SetAnchor(LEFT, label, RIGHT, 20, 0)
+    button:SetSize(48)
+    button:SetTextureTemplate("EsoUI/Art/SkillsAdvisor/advisor_tabIcon_tutorial_%s.dds")
+    -- TRANSLATORS: tooltip text for the open guild info button in the guild store
+    button:SetTooltipText(gettext("Open Guild Info"))
+    button:SetClickHandler(MOUSE_BUTTON_INDEX_LEFT, function()
         local guildId = GetSelectedTradingHouseGuildId()
         ShowGuildDetails(guildId, GoBack)
     end)
@@ -215,7 +217,8 @@ function TradingHouseWrapper:InitializeFooter()
 
     local versionLabel = AGS.info.fullVersion
     local labelControl = footer:GetNamedChild("Version")
-    labelControl:SetText(gettext("AwesomeGuildStore - Version: <<1>> - |cFFD700|H0|hDonate|h|r", versionLabel))
+    -- TRANSLATORS: Footer text for the store interface. Place holders are for the version string and to make the Donate text clickable and colored 
+    labelControl:SetText(gettext("AwesomeGuildStore - Version: <<1>> - <<2>>Donate<<3>>", versionLabel, "|cFFD700|H0|h", "|h|r"))
     labelControl:SetHandler("OnLinkMouseUp", AwesomeGuildStore.internal.Donate)
 
     local animation = ZO_AlphaAnimation:New(labelControl)

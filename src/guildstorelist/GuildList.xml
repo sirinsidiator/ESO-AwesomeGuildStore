@@ -203,7 +203,7 @@
                 </Control>
 
                 <Control name="$(parent)Details">
-                    <Anchor point="TOPLEFT" relativeTo="$(parent)Headers" relativePoint="TOPLEFT" offsetX="300" offsetY="0" />
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)Headers" relativePoint="TOPLEFT" offsetX="300" offsetY="5" />
                     <Anchor point="BOTTOMRIGHT" offsetX="-35" offsetY="0" />
                     <Controls>
                         <Label name="$(parent)TraderName" text="-" font="ZoFontHeader4" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_SELECTED">
@@ -211,7 +211,7 @@
                         </Label>
                         <Button name="$(parent)GuildInfoButton" inherits="ZO_DefaultButton" hidden="true">
                             <Dimensions x="156" y="28" />
-                            <Anchor point="TOPRIGHT" offsetY="10" />
+                            <Anchor point="LEFT" relativeTo="$(parent)TraderName" relativePoint="RIGHT" offsetX="5" />
                         </Button>
                         <Label name="$(parent)LastVisitedLabel" font="ZoFontGameLargeBold" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_NORMAL">
                             <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$(parent)TraderName" offsetY="5" />
