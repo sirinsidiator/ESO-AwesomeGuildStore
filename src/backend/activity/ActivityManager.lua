@@ -161,7 +161,8 @@ function ActivityManager:QueueActivity(activity)
     lookup[key] = activity
     zo_callLater(self.executeNext, 0)
 
-    self:SetStatusText(gettext("<<1[No activity/One activity/$d activities]>> queued", #queue)) -- TODO
+    -- TRANSLATORS: Status text when a new activity was queued
+    self:SetStatusText(gettext("<<1[No activity/One activity/$d activities]>> queued", #queue))
     self:RefreshStatusPanel()
 
     return true
@@ -255,7 +256,8 @@ function ActivityManager:ExecuteNext()
 
         self.currentActivity = activity
         AGS.internal:FireCallbacks(AGS.callback.CURRENT_ACTIVITY_CHANGED, activity)
-        self:SetStatusText("Execute next activity") -- TODO
+        -- TRANSLATORS: Status text when the next activity can be executed
+        self:SetStatusText(gettext("Execute next activity"))
         self:ShowLoading()
 
         activity:DoExecute():Then(function(activity)
