@@ -879,7 +879,7 @@ local function InitializeGuildStoreList(globalSaveData)
     RegisterForEvent(EVENT_GUILD_SELF_LEFT_GUILD, UpdateAllKioskMemberFlags)
     RegisterForEvent(EVENT_GUILD_TRADER_HIRED_UPDATED, UpdateAllKioskMemberFlags)
 
-    local NO_TRADER_TEXT = gettext("None") -- TODO: translate
+    local NO_TRADER_TEXT = GetString(SI_GUILD_FINDER_GUILD_INFO_DEFAULT_ATTRIBUTE_VALUE)
 
     local function OnGuildDataReady(guildId, skipRefresh)
         local guildMetaData = GUILD_BROWSER_MANAGER:GetGuildData(guildId)
