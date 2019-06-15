@@ -360,7 +360,7 @@ local SUB_CATEGORY_DEFINITION = {
     [SUB_CATEGORY_ID.CONSUMABLE_TOOL] = {
         id = SUB_CATEGORY_ID.CONSUMABLE_TOOL,
         category = CATEGORY_ID.CONSUMABLE,
-        label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_ITEMTYPE", ITEMTYPE_AVA_REPAIR)),
+        label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_ITEMTYPE", ITEMTYPE_TOOL)),
         icon = "EsoUI/Art/Vendor/vendor_tabIcon_repair_%s.dds",
     },
     [SUB_CATEGORY_ID.CONSUMABLE_TROPHY] = {

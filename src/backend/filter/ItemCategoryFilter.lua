@@ -202,6 +202,7 @@ local filterDefinition = {
                 [ITEMTYPE_RACIAL_STYLE_MOTIF] = true,
                 [ITEMTYPE_CONTAINER] = true,
                 [ITEMTYPE_AVA_REPAIR] = true,
+                [ITEMTYPE_TOOL] = true,
                 [ITEMTYPE_COLLECTIBLE] = true,
                 [ITEMTYPE_FISH] = true,
                 [ITEMTYPE_TREASURE] = true,
@@ -284,6 +285,13 @@ local filterDefinition = {
             type = TRADING_HOUSE_FILTER_TYPE_ITEM,
             allowed = {
                 [ITEMTYPE_AVA_REPAIR] = true,
+                [ITEMTYPE_TOOL] = true,
+            }
+        },
+        {
+            type = ITEMFILTERTYPE_LOCAL,
+            allowed = {
+                [ITEMFILTERTYPE_CONSUMABLE] = true,
             }
         }
     },
@@ -544,6 +552,12 @@ local filterDefinition = {
             type = TRADING_HOUSE_FILTER_TYPE_ITEM,
             allowed = {
                 [ITEMTYPE_TOOL] = true,
+            }
+        },
+        {
+            type = ITEMFILTERTYPE_LOCAL,
+            allowed = {
+                [ITEMFILTERTYPE_MISCELLANEOUS] = true,
             }
         }
     },
