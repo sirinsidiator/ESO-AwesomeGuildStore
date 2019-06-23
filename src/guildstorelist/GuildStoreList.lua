@@ -851,7 +851,7 @@ local function InitializeGuildStoreList(globalSaveData)
         else
             local guildData = ownerList:GetGuildData(guildId)
             if(guildData and ownerList:GetCurrentOwner(guildData.lastKiosk) == nil) then
-                ownerList:SetCurrentOwner(kioskName)
+                ownerList:SetCurrentOwner(guildData.lastKiosk)
             end
         end
     end
