@@ -8,7 +8,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2019-03-12 04:30+0000\n"
+"PO-Revision-Date: 2019-06-18 07:16+0000\n"
 "Last-Translator: marify <neck@snow.plala.or.jp>\n"
 "Language-Team: Japanese\n"
 "Language: ja\n"
@@ -39,7 +39,7 @@ msgid ""
 "house. This defaults to true since it is the new default behavior added by "
 "ZOS."
 msgstr ""
-"有効化時、ギルド商人を訪れるとチャットウィンドウが最小化されます。これはZOSによって追加された新しいデフォルトの動作であるため、デフォルトでtrueになります。"
+"有効化時、ギルド商人を訪れるとチャットウィンドウが最小化されます。これはZOSによって追加された新しいデフォルトの動作であるため、デフォルトでtrueになります"
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: d:\projects\esoaddons\awesomeguildstore\src\settings.lua:96
@@ -135,14 +135,14 @@ msgstr "無効化時、AwesomeGuildStore固有バージョンのフィルタで�
 #. TRANSLATORS: label for an entry in the addon settings
 #: d:\projects\esoaddons\awesomeguildstore\src\settings.lua:179
 msgid "Preferred banker store tab"
-msgstr ""
+msgstr "ギルドストアのタブを優先する"
 
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: d:\projects\esoaddons\awesomeguildstore\src\settings.lua:181
 msgid ""
 "Controls which tab should be opened first when visiting the guild store at a "
 "banker."
-msgstr ""
+msgstr "銀行からギルドストアを訪れるときに最初に開くタブを制御します。"
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: d:\projects\esoaddons\awesomeguildstore\src\settings.lua:199
@@ -181,7 +181,7 @@ msgstr "このデータは、アクションを承認した後復元すること
 #. TRANSLATORS: label for an entry in the addon settings
 #: d:\projects\esoaddons\awesomeguildstore\src\settings.lua:227
 msgid "Enable guild trader list"
-msgstr ""
+msgstr "ギルド商人リストを有効にする"
 
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: d:\projects\esoaddons\awesomeguildstore\src\settings.lua:229
@@ -220,127 +220,127 @@ msgstr "ローカルフィルターを抑制"
 #. TRANSLATORS: Status text when waiting for a server response
 #: d:\projects\esoaddons\awesomeguildstore\src\backend\activity\activitymanager.lua:36
 msgid "Waiting for response"
-msgstr ""
+msgstr "レスポンス待ち"
 
 #. TRANSLATORS: Status text when a server response timed out
 #: d:\projects\esoaddons\awesomeguildstore\src\backend\activity\activitymanager.lua:43
 msgid "Request timed out"
-msgstr ""
+msgstr "リクエストがタイムアウトしました"
 
 #. TRANSLATORS: Status text when a new activity was queued
 #: d:\projects\esoaddons\awesomeguildstore\src\backend\activity\activitymanager.lua:165
 msgid "<<1[No activity/One activity/$d activities]>> queued"
-msgstr ""
+msgstr "<<1[アクティビティ無し/1件のアクティビティ/$d件のアクティビティ]>>をキューに入れました"
 
 #. TRANSLATORS: Status text when the next activity can be executed
 #: d:\projects\esoaddons\awesomeguildstore\src\backend\activity\activitymanager.lua:260
 msgid "Execute next activity"
-msgstr ""
+msgstr "次のアクティビティを実行"
 
 #. TRANSLATORS: Status text when a server request was successfully completed
 #: d:\projects\esoaddons\awesomeguildstore\src\backend\activity\activitymanager.lua:278
 msgid "Request finished"
-msgstr ""
+msgstr "リクエスト終了"
 
 #. TRANSLATORS: Alert text when an activity fails unexpectedly
 #: d:\projects\esoaddons\awesomeguildstore\src\backend\activity\activitymanager.lua:288
 msgid "Unknown Error"
-msgstr ""
+msgstr "不明なエラー"
 
 #. TRANSLATORS: Status text when a server request has failed. Placeholder is for an explanation text
 #: d:\projects\esoaddons\awesomeguildstore\src\backend\activity\activitymanager.lua:297
 msgid "Request failed: <<1>>"
-msgstr ""
+msgstr "リクエスト失敗: <<1>>"
 
 #. TRANSLATORS: error text shown to the user when a listed item could not be cancelled
 #: d:\projects\esoaddons\awesomeguildstore\src\backend\activity\cancelitemactivity.lua:53
 msgid "Could not cancel listing"
-msgstr ""
+msgstr "販売をキャンセルできませんでした。"
 
 #. TRANSLATORS: log text shown to the user for each cancel item activity. First placeholder is for the item link and second for the guild name
 #: d:\projects\esoaddons\awesomeguildstore\src\backend\activity\cancelitemactivity.lua:60
 msgid "Cancel listing of <<1>>x <<t:2>> for <<3>> in <<4>>"
-msgstr ""
+msgstr "登録をキャンセルしました。<<1>>x <<t:2>> <<3>> (<<4>>)"
 
 #. TRANSLATORS: error text shown to the user when guild items could not be fetched
 #: d:\projects\esoaddons\awesomeguildstore\src\backend\activity\fetchguilditemsactivity.lua:51
 msgid "Could not fetch guild items"
-msgstr ""
+msgstr "ギルド情報を取得できませんでした"
 
 #. TRANSLATORS: log text shown to the user for each time the guild items are fetched. Placeholder is for the guild name
 #: d:\projects\esoaddons\awesomeguildstore\src\backend\activity\fetchguilditemsactivity.lua:57
 msgid "Fetch guild items in <<1>>"
-msgstr ""
+msgstr "ギルド情報を取得 (<<1>>)"
 
 #. TRANSLATORS: error text shown to the user when an item could not be listed
 #: d:\projects\esoaddons\awesomeguildstore\src\backend\activity\postitemactivity.lua:137
 msgid "Could not list item"
-msgstr ""
+msgstr "商品がありません"
 
 #. TRANSLATORS: log text shown to the user for each post item request. Placeholders are for the stackCount, itemLink, price and guild name respectively
 #: d:\projects\esoaddons\awesomeguildstore\src\backend\activity\postitemactivity.lua:144
 msgid "Post <<1>>x <<2>> for <<3>> to <<4>>"
-msgstr ""
+msgstr "登録しました。<<1>>x <<2>> <<3>> (<<4>>)"
 
 #. TRANSLATORS: error text shown to the user when an item could not be listed
 #: d:\projects\esoaddons\awesomeguildstore\src\backend\activity\purchaseitemactivity.lua:64
 msgid "Could not purchase item"
-msgstr ""
+msgstr "商品を購入できませんでした"
 
 #. TRANSLATORS: log text shown to the user for each purchase item request. Placeholders are for the stackCount, itemLink, price, seller and guild name respectively
 #: d:\projects\esoaddons\awesomeguildstore\src\backend\activity\purchaseitemactivity.lua:72
 msgid "Purchase <<1>>x <<2>> for <<3>> from <<4>> in <<5>>"
-msgstr ""
+msgstr "購入しました。<<1>>x <<2>> <<3>> (<<4>> in <<5>>)"
 
 #. TRANSLATORS: log text shown to the user for each listings request. Placeholder is for the guild name
 #: d:\projects\esoaddons\awesomeguildstore\src\backend\activity\requestlistingsactivity.lua:48
 msgid "Request listings in <<1>>"
-msgstr ""
+msgstr "商品リストをリクエスト (<<1>>)"
 
 #. TRANSLATORS: error text shown to the user when listings could not be requested
 #: d:\projects\esoaddons\awesomeguildstore\src\backend\activity\requestlistingsactivity.lua:55
 msgid "Could not request listings"
-msgstr ""
+msgstr "登録できませんでした。"
 
 #. TRANSLATORS: log text shown to the user for each executed request of the newest search results. Placeholders are for the page and guild name
 #: d:\projects\esoaddons\awesomeguildstore\src\backend\activity\requestnewestactivity.lua:45
 msgid "Request page <<1>> of newest results in <<2>>"
-msgstr ""
+msgstr "<<1>>ページ目の最新結果をリクエスト (<<2>>)"
 
 #. TRANSLATORS: log text shown to the user for each request of the newest search results. Placeholder is for the guild name
 #: d:\projects\esoaddons\awesomeguildstore\src\backend\activity\requestnewestactivity.lua:48
 msgid "Request newest results in <<1>>"
-msgstr ""
+msgstr "最新結果をリクエスト (<<1>>)"
 
 #. TRANSLATORS: error text shown to the user when search results could not be requested
 #: d:\projects\esoaddons\awesomeguildstore\src\backend\activity\requestsearchactivity.lua:168
 msgid "Could not request search results"
-msgstr ""
+msgstr "検索結果をリクエストできませんでした"
 
 #. TRANSLATORS: log text shown to the user for an executed request of the search results. Placeholders are for the page, category and guild name
 #: d:\projects\esoaddons\awesomeguildstore\src\backend\activity\requestsearchactivity.lua:180
 msgid "Request page <<1>> of <<2>> in <<3>>"
-msgstr ""
+msgstr "<<2>> の<<1>>ページ目をリクエスト (<<3>>)"
 
 #. TRANSLATORS: log text shown to the user for a queued request of the search results. Placeholder is for the guild name
 #: d:\projects\esoaddons\awesomeguildstore\src\backend\activity\requestsearchactivity.lua:183
 msgid "Request search results in <<1>>"
-msgstr ""
+msgstr "検索結果をリクエスト (<<1>>)"
 
 #. TRANSLATORS: title of the collectible ownership filter in the left panel on the search tab
 #: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\collectibleownershipfilter.lua:25
 msgid "Collectible Ownership"
-msgstr ""
+msgstr "コレクション所持"
 
 #. TRANSLATORS: tooltip text for the collectible ownership filter
 #: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\collectibleownershipfilter.lua:29
 msgid "Uncollected"
-msgstr ""
+msgstr "コレクションしていない"
 
 #. TRANSLATORS: tooltip text for the collectible ownership filter
 #: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\collectibleownershipfilter.lua:35
 msgid "Collected"
-msgstr ""
+msgstr "コレクションしている"
 
 #. TRANSLATORS: title of the crafted item filter in the left panel on the search tab
 #: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\crafteditemfilter.lua:22
@@ -360,12 +360,12 @@ msgstr "クラフトアイテム"
 #. TRANSLATORS: label of the writ voucher filter
 #: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\furniturecategoryfilter.lua:24
 msgid "Furnishing Category"
-msgstr ""
+msgstr "家具カテゴリ"
 
 #. TRANSLATORS: label of the category filter
 #: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\itemcategoryfilter.lua:658
 msgid "Item Category"
-msgstr ""
+msgstr "商品カテゴリ"
 
 #. TRANSLATORS: title of the set item filter in the left panel on the search tab
 #: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\itemsetfilter.lua:23
@@ -375,7 +375,7 @@ msgstr "アイテムセット"
 #. TRANSLATORS: tooltip text for the set item filter
 #: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\itemsetfilter.lua:27
 msgid "Regular item"
-msgstr ""
+msgstr "通常アイテム"
 
 #. TRANSLATORS: tooltip text for the set item filter
 #: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\itemsetfilter.lua:33
@@ -385,7 +385,7 @@ msgstr "セットアイテム"
 #. TRANSLATORS: label of the level filter
 #: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\levelfilter.lua:42
 msgid "Level Range"
-msgstr ""
+msgstr "レベルの範囲"
 
 #. TRANSLATORS: title of the motif knowledge filter in the left panel on the search tab
 #: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\motifknowledgefilter.lua:23
@@ -405,12 +405,12 @@ msgstr "既知のモチーフ"
 #. TRANSLATORS: label of the price filter
 #: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\pricefilter.lua:28
 msgid "Price Range"
-msgstr ""
+msgstr "価格の範囲"
 
 #. TRANSLATORS: label of the quality filter
 #: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\qualityfilter.lua:27
 msgid "Quality Range"
-msgstr ""
+msgstr "品質の範囲"
 
 #. TRANSLATORS: title of the recipe knowledge filter in the left panel on the search tab
 #: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\recipeknowledgefilter.lua:21
@@ -445,35 +445,35 @@ msgstr "既知のルーン"
 #. TRANSLATORS: label of the recipe improvement filter
 #: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\skillrequirementsfilter.lua:22
 msgid "Skill requirements"
-msgstr ""
+msgstr "スキル要件"
 
 #. TRANSLATORS: tooltip text for the recipe skill requirement filter
 #: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\skillrequirementsfilter.lua:26
 msgid "Can craft"
-msgstr ""
+msgstr "作成できる"
 
 #. TRANSLATORS: tooltip text for the recipe skill requirement filter
 #: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\skillrequirementsfilter.lua:32
 msgid "Cannot craft"
-msgstr ""
+msgstr "作成できない"
 
 #: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\sortfilter.lua:14
 msgid "ascending"
-msgstr ""
+msgstr "昇順"
 
 #: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\sortfilter.lua:15
 msgid "descending"
-msgstr ""
+msgstr "降順"
 
 #. TRANSLATORS: label of the sort filter
 #: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\sortfilter.lua:29
 msgid "Sort By"
-msgstr ""
+msgstr "ソート順"
 
 #. TRANSLATORS: label of the text filter
 #: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\textfilter.lua:28
 msgid "Text Search"
-msgstr ""
+msgstr "テキスト検索"
 
 #. TRANSLATORS: title of the trait knowledge filter in the left panel on the search tab
 #: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\traitknowledgefilter.lua:24
@@ -493,11 +493,11 @@ msgstr "不明なトレイト"
 #. TRANSLATORS: label of the unit price filter
 #: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\unitpricefilter.lua:30
 msgid "Unit Price Range"
-msgstr ""
+msgstr "単価の範囲"
 
 #: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\valuerangefilterbase.lua:108
 msgid "exactly <<1>>"
-msgstr ""
+msgstr "<<1>> と等しい"
 
 #: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\valuerangefilterbase.lua:110
 msgid "<<1>> - <<2>>"
@@ -514,42 +514,42 @@ msgstr "未満 <<1>>"
 #. TRANSLATORS: label of the writ voucher filter
 #: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\writvoucherfilter.lua:26
 msgid "Writ Voucher Range"
-msgstr ""
+msgstr "依頼報酬の範囲"
 
 #. TRANSLATORS: label of the item name sort order
 #: d:\projects\esoaddons\awesomeguildstore\src\backend\sort\sortorderitemname.lua:18
 msgid "Item Name"
-msgstr ""
+msgstr "アイテム名"
 
 #. TRANSLATORS: label of the item quality sort order
 #: d:\projects\esoaddons\awesomeguildstore\src\backend\sort\sortorderitemquality.lua:18
 msgid "Item Quality"
-msgstr ""
+msgstr "アイテム品質"
 
 #. TRANSLATORS: label of the purchase price sort order
 #: d:\projects\esoaddons\awesomeguildstore\src\backend\sort\sortorderpurchaseprice.lua:18
 msgid "Purchase Price"
-msgstr ""
+msgstr "購入金額"
 
 #. TRANSLATORS: label of the seller name sort order
 #: d:\projects\esoaddons\awesomeguildstore\src\backend\sort\sortordersellername.lua:18
 msgid "Seller Name"
-msgstr ""
+msgstr "販売者名"
 
 #. TRANSLATORS: label of the set name sort order
 #: d:\projects\esoaddons\awesomeguildstore\src\backend\sort\sortordersetname.lua:18
 msgid "Set Name"
-msgstr ""
+msgstr "セット名"
 
 #. TRANSLATORS: label of the time left sort order
 #: d:\projects\esoaddons\awesomeguildstore\src\backend\sort\sortordertimeleft.lua:18
 msgid "Time Left"
-msgstr ""
+msgstr "残り時間"
 
 #. TRANSLATORS: label of the last seen sort order
 #: d:\projects\esoaddons\awesomeguildstore\src\backend\sort\sortorderunitprice.lua:18
 msgid "Unit Price"
-msgstr ""
+msgstr "単価"
 
 #. TRANSLATORS: title of the crafting material filter in the left panel on the search tab
 #: d:\projects\esoaddons\awesomeguildstore\src\data\craftingmaterialtypefilterdata.lua:18
@@ -609,7 +609,7 @@ msgstr "モローウィンド"
 
 #: d:\projects\esoaddons\awesomeguildstore\src\data\itemstylefilterdata.lua:45
 msgid "Summerset"
-msgstr ""
+msgstr "サマーセット"
 
 #: d:\projects\esoaddons\awesomeguildstore\src\data\itemstylefilterdata.lua:49
 msgid "New"
@@ -659,28 +659,28 @@ msgstr "武器タイプ"
 #. TRANSLATORS: title of the master writ type filter in the left panel on the search tab
 #: d:\projects\esoaddons\awesomeguildstore\src\data\writtypefilterdata.lua:37
 msgid "Writ Type"
-msgstr ""
+msgstr "依頼タイプ"
 
 #: d:\projects\esoaddons\awesomeguildstore\src\frontend\activitywindow.lua:58
 msgid "Time"
-msgstr ""
+msgstr "時間"
 
 #: d:\projects\esoaddons\awesomeguildstore\src\frontend\activitywindow.lua:59
 msgid "Message"
-msgstr ""
+msgstr "メッセージ"
 
 #: d:\projects\esoaddons\awesomeguildstore\src\frontend\activitywindow.lua:60
 msgid "Queued"
-msgstr ""
+msgstr "キュー"
 
 #: d:\projects\esoaddons\awesomeguildstore\src\frontend\activitywindow.lua:61
 msgid "Active"
-msgstr ""
+msgstr "アクティブ"
 
 #. TRANSLATORS: Text when the activity list is empty
 #: d:\projects\esoaddons\awesomeguildstore\src\frontend\activitywindow.lua:67
 msgid "No activities queued"
-msgstr ""
+msgstr "待機中のアクティビティはありません"
 
 #. TRANSLATORS: tooltip text for the reset filter buttons. will automatically insert the filter title (e.g. "Reset Weapon Type Filter")
 #: d:\projects\esoaddons\awesomeguildstore\src\frontend\filterfragment.lua:74
@@ -690,69 +690,69 @@ msgstr "<<1>> フィルタをリセット"
 #. TRANSLATORS: menu text for unpinning a filter from the filter area
 #: d:\projects\esoaddons\awesomeguildstore\src\frontend\filterfragment.lua:107
 msgid "Unpin Filter"
-msgstr ""
+msgstr "フィルターの固定解除"
 
 #. TRANSLATORS: menu text for removing a filter from the filter area
 #: d:\projects\esoaddons\awesomeguildstore\src\frontend\filterfragment.lua:112
 msgid "Remove Filter"
-msgstr ""
+msgstr "フィルターを削除"
 
 #. TRANSLATORS: menu text for pinning a filter to the filter area
 #: d:\projects\esoaddons\awesomeguildstore\src\frontend\filterfragment.lua:117
 msgid "Pin Filter"
-msgstr ""
+msgstr "フィルターの固定"
 
 #: d:\projects\esoaddons\awesomeguildstore\src\frontend\searchlist.lua:7
 msgid "Set Active"
-msgstr ""
+msgstr "アクティブにセット"
 
 #: d:\projects\esoaddons\awesomeguildstore\src\frontend\searchlist.lua:8
 msgid "Rename"
-msgstr ""
+msgstr "名前変更"
 
 #: d:\projects\esoaddons\awesomeguildstore\src\frontend\searchlist.lua:9
 msgid "Reset Label"
-msgstr ""
+msgstr "ラベルをリセット"
 
 #: d:\projects\esoaddons\awesomeguildstore\src\frontend\searchlist.lua:11
 msgid "Unlock"
-msgstr ""
+msgstr "ロック解除"
 
 #: d:\projects\esoaddons\awesomeguildstore\src\frontend\searchlist.lua:12
 msgid "Lock"
-msgstr ""
+msgstr "ロック"
 
 #: d:\projects\esoaddons\awesomeguildstore\src\frontend\searchlist.lua:13
 msgid "Duplicate"
-msgstr ""
+msgstr "複製"
 
 #: d:\projects\esoaddons\awesomeguildstore\src\frontend\searchlist.lua:14
 msgid "Move Up"
-msgstr ""
+msgstr "上に移動"
 
 #: d:\projects\esoaddons\awesomeguildstore\src\frontend\searchlist.lua:15
 msgid "Move Down"
-msgstr ""
+msgstr "下に移動"
 
 #: d:\projects\esoaddons\awesomeguildstore\src\frontend\searchlist.lua:16
 msgid "Delete"
-msgstr ""
+msgstr "削除"
 
 #: d:\projects\esoaddons\awesomeguildstore\src\frontend\searchlist.lua:25
 msgid "New Search"
-msgstr ""
+msgstr "新規検索"
 
 #: d:\projects\esoaddons\awesomeguildstore\src\frontend\searchlist.lua:47
 msgid "Rename Search"
-msgstr ""
+msgstr "検索の名前変更"
 
 #: d:\projects\esoaddons\awesomeguildstore\src\frontend\searchlist.lua:50
 msgid "Enter the new name for your search."
-msgstr ""
+msgstr "検索用の新しい名前を入力してください。"
 
 #: d:\projects\esoaddons\awesomeguildstore\src\frontend\searchlist.lua:58
 msgid "Save"
-msgstr ""
+msgstr "保存"
 
 #. TRANSLATORS: Label for the row at the end of the search result list which triggers the search for more results
 #. TRANSLATORS: Label for the keybind to show more results
@@ -764,28 +764,28 @@ msgstr "さらに結果を表示"
 #. TRANSLATORS: Label for the row at the end of the search result list when a search is already pending, but cannot start yet due to the request cooldown
 #: d:\projects\esoaddons\awesomeguildstore\src\frontend\searchresultlistwrapper.lua:39
 msgid "Waiting For Cooldown ..."
-msgstr ""
+msgstr "クールダウン待ち..."
 
 #. TRANSLATORS: Label for the row at the end of the search result list when a search is currently in progress
 #: d:\projects\esoaddons\awesomeguildstore\src\frontend\searchresultlistwrapper.lua:41
 msgid "Requesting Results ..."
-msgstr ""
+msgstr "結果をリクエストしています..."
 
 #. TRANSLATORS: Label for the result count below the search result list. First number indicates the visible results, second number the overall number of locally stored items for the current guild
 #: d:\projects\esoaddons\awesomeguildstore\src\frontend\searchresultlistwrapper.lua:43
 #, lua-format
 msgid "Items:|cffffff %d / %d"
-msgstr ""
+msgstr "アイテム:|cffffff %d / %d"
 
 #. TRANSLATORS: Seller name label in the search result list
 #: d:\projects\esoaddons\awesomeguildstore\src\frontend\searchresultlistwrapper.lua:161
 msgid "Seller:|cffffff <<1>>"
-msgstr ""
+msgstr "販売者:|cffffff <<1>>"
 
 #. TRANSLATORS: Tooltip text when hovering over the activity status line
 #: d:\projects\esoaddons\awesomeguildstore\src\frontend\statusline.lua:40
 msgid "Click for more information"
-msgstr ""
+msgstr "クリックで詳細情報"
 
 #. TRANSLATORS: tooltip text for the set to level filter's "set to level" button on the sell tab
 #: d:\projects\esoaddons\awesomeguildstore\src\frontend\filter\levelrangefilterfragment.lua:73
@@ -795,12 +795,12 @@ msgstr "キャラクタのレベルをセット"
 #. TRANSLATORS: tooltip text for removing entries in the list of a multi category filter on the search tab
 #: d:\projects\esoaddons\awesomeguildstore\src\frontend\filter\multicategoryfilterfragment.lua:14
 msgid "Click to remove"
-msgstr ""
+msgstr "クリックで削除"
 
 #. TRANSLATORS: label of button to add more values to the multi category filter
 #: d:\projects\esoaddons\awesomeguildstore\src\frontend\filter\multicategoryfilterfragment.lua:66
 msgid "Add More"
-msgstr ""
+msgstr "さらに追加"
 
 #. TRANSLATORS: sort header tooltip for the list on the guild kiosk tab
 #: d:\projects\esoaddons\awesomeguildstore\src\guildstorelist\guildlist.lua:71
@@ -869,7 +869,7 @@ msgstr "商人"
 #: d:\projects\esoaddons\awesomeguildstore\src\guildstorelist\guildstorelist.lua:389
 #: d:\projects\esoaddons\awesomeguildstore\src\wrappers\tradinghousewrapper.lua:191
 msgid "Open Guild Info"
-msgstr ""
+msgstr "ギルド情報を開く"
 
 #. TRANSLATORS: text for the last visited label in the guild list detail view. $d is a placeholder for the number of weeks
 #: d:\projects\esoaddons\awesomeguildstore\src\guildstorelist\guildlist.lua:150
@@ -1047,12 +1047,12 @@ msgstr "このアイテムは、既にあなたの物です。"
 #. TRANSLATORS: Alert message when the item data for the item id could not be found while confirming a purchase
 #: d:\projects\esoaddons\awesomeguildstore\src\wrappers\searchtabwrapper.lua:308
 msgid "Item not found in current guild."
-msgstr ""
+msgstr "このギルドでアイテムが見つかりません。"
 
 #. TRANSLATORS: the label for the listing repetition slider on the sell tab
 #: d:\projects\esoaddons\awesomeguildstore\src\wrappers\selltabwrapper.lua:194
 msgid "Listings:"
-msgstr ""
+msgstr "リスト数:"
 
 #. TRANSLATORS: tooltip text for the quantity selection buttons on the sell tab
 #: d:\projects\esoaddons\awesomeguildstore\src\wrappers\selltabwrapper.lua:220
@@ -1099,5 +1099,5 @@ msgstr "<<4>>の販売リストに<<1>>x <<t:2>>を<<3>>で追加しました。
 #. TRANSLATORS: Footer text for the store interface. Place holders are for the version string and to make the Donate text clickable and colored
 #: d:\projects\esoaddons\awesomeguildstore\src\wrappers\tradinghousewrapper.lua:221
 msgid "AwesomeGuildStore - Version: <<1>> - <<2>>Donate<<3>>"
-msgstr ""
+msgstr "AwesomeGuildStore - Version: <<1>> - <<2>>寄付する<<3>>"
 
