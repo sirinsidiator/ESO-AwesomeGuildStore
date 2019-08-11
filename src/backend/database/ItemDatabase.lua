@@ -139,6 +139,8 @@ function ItemDatabase:TryGetItemDataInCurrentGuildByUniqueId(itemUniqueId)
     if(not itemUniqueId) then return end
 
     local guildId = GetSelectedTradingHouseGuildId()
+    if(not guildId) then return end
+
     local data = self:GetOrCreateDataForGuild(guildId)
     return data[itemUniqueId], guildId
 end
