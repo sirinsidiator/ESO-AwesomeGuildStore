@@ -3,8 +3,8 @@
 ## Version: @VERSION_NUMBER@
 ## APIVersion: @API_VERSION@
 ## AddOnVersion: @BUILD_NUMBER@
-## DependsOn: LibCustomMenu LibDebugLogger LibDateTime LibAddonMenu-2.0 LibMapPing LibGPS LibPromises LibTextFilter LibGetText libCommonInventoryFilters LibRunebox
-## OptionalDependsOn: LibStub LibFilters-2.0 LibFilters-3.0 LibCustomTitles LibAnnyoingUpdateNotificationInGame CraftedPotions
+## DependsOn: LibCustomMenu>=680 LibDebugLogger>=126 LibDateTime>=8 LibAddonMenu-2.0>=29 LibMapPing>=900 LibGPS>=17 LibPromises>=10 LibTextFilter>=10 LibGetText>=10 libCommonInventoryFilters>=131 LibRunebox>=2
+## OptionalDependsOn: LibStub>=6 LibFilters-2.0>=239 LibFilters-3.0>=312 LibCustomTitles LibAnnyoingUpdateNotificationInGame CraftedPotions>=20
 ## SavedVariables: AwesomeGuildStore_Data
 ##
 ## This Add-on is not created by, affiliated with or sponsored by ZeniMax Media Inc. or its affiliates. 
