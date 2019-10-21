@@ -36,6 +36,9 @@ function GuildIdMapping:GetGuildId(guildName)
 end
 
 function GuildIdMapping:UpdateMapping(guildId, guildName)
+    if(self.map[guildId]) then
+        self.reverseMap[self.map[guildId]] = nil
+    end
     self.map[guildId] = guildName
     self.reverseMap[guildName] = guildId
 end

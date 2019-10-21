@@ -120,13 +120,22 @@ function OwnerList:SetCurrentOwner(kioskName, guildName, guildId)
         -- set entry to false when the trader is not hired
         weekData[kioskName] = false
     elseif(guildName) then
-        if(guildId) then
+        local validGuildId = (guildId and guildId > 0)
+        local validGuildName = (guildName ~= "")
+
+        if(validGuildId) then
             weekData[kioskName] = guildId
-            self.guildIdMapping:UpdateMapping(guildId, guildName)
-        else
+        elseif(validGuildName) then
             weekData[kioskName] = guildName
         end
-        self:AddTraderInfoToGuild(guildName, kioskName, week, true, guildId)
+
+        if(validGuildId and validGuildName) then
+            self.guildIdMapping:UpdateMapping(guildId, guildName)
+        end
+
+        if(weekData[kioskName]) then
+            self:AddTraderInfoToGuild(guildName, kioskName, week, true, guildId)
+        end
     end
     self.saveData[week] = weekData
 end

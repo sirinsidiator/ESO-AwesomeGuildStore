@@ -1,8 +1,7 @@
 local AGS = AwesomeGuildStore
 
-local IsUnitGuildKiosk = AGS.internal.IsUnitGuildKiosk
 local IsAtGuildKiosk = AGS.internal.IsAtGuildKiosk
-local GetUnitGuildKioskOwner = AGS.internal.GetUnitGuildKioskOwner
+local GetUnitGuildKioskOwnerInfo = AGS.internal.GetUnitGuildKioskOwnerInfo
 local IsLocationVisible = AGS.internal.IsLocationVisible
 local IsCurrentMapZoneMap = AGS.internal.IsCurrentMapZoneMap
 local GetKioskNameFromInfoText = AGS.internal.GetKioskNameFromInfoText
@@ -105,6 +104,8 @@ local IRREGULAR_TOOLTIP_HEADER = { -- TODO exceptions in other languages
     -- German
     ["Knurr'Kha-Unterschlupf"] = "Knurr'kha-Unterschlupf",
     ["Sturmfeste-Unterschlupf"] = "Sturmfeste-Unterschlupft",
+    -- Japanese
+    ["オルシニウム無法者の隠れ家"] = "オルシニウムの無法者の隠れ家",
     -- already fixed, but we keep them to correct the save data
     ["Vivec Outlaws Refuge"] = "Vivec City Outlaws Refuge",
 }
@@ -825,8 +826,7 @@ local function InitializeGuildStoreList(globalSaveData)
 
             UpdateKioskAndStore(kioskName, false)
 
-            local ownerName = GetUnitGuildKioskOwner(TARGET_UNIT_TAG)
-            local guildId = guildIdMapping:GetGuildId(ownerName)
+            local ownerName, guildId = GetUnitGuildKioskOwnerInfo(TARGET_UNIT_TAG)
             ownerList:SetCurrentOwner(kioskName, ownerName, guildId)
         end
     end

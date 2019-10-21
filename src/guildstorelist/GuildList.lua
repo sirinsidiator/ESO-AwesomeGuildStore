@@ -1,7 +1,6 @@
 local AGS = AwesomeGuildStore
 
 local IsUnitGuildKiosk = AGS.internal.IsUnitGuildKiosk
-local GetUnitGuildKioskOwner = AGS.internal.GetUnitGuildKioskOwner
 local IsLocationVisible = AGS.internal.IsLocationVisible
 local IsCurrentMapZoneMap = AGS.internal.IsCurrentMapZoneMap
 local RegisterForEvent = AGS.internal.RegisterForEvent

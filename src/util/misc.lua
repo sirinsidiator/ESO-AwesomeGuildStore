@@ -4,27 +4,25 @@ local Print = AGS.internal.Print
 local gettext = AGS.internal.gettext
 local guildKioskWithoutNameCaption = GetString(SI_GUILD_TRADER_OWNERSHIP_HEADER)
 
-local function IsUnitGuildKiosk(unitTag)
-    local caption = GetUnitCaption(unitTag)
-    if(caption) then
-        return caption:find(guildKioskWithoutNameCaption) ~= nil
-    end
-    return false
-end
 
-AGS.internal.IsUnitGuildKiosk = IsUnitGuildKiosk
+AGS.internal.IsUnitGuildKiosk = IsUnitGuildKiosk -- TODO this is now an api function. get rid of this assignment
 
 
 local guildKioskWithNamePattern = GetString(SI_GUILD_KIOSK_DISPLAY_CAPTION_WITH_OWNER):gsub("%(<<1>>%)", "%%((.+)%%)")
 
-local function GetUnitGuildKioskOwner(unitTag)
-    local caption = GetUnitCaption(unitTag)
-    if(caption) then
-        return GetUnitCaption(unitTag):match(guildKioskWithNamePattern)
+local function GetUnitGuildKioskOwnerInfo(unitTag)
+    if(IsUnitGuildKiosk(unitTag)) then
+        local guildId = GetUnitGuildKioskOwner(unitTag)
+        local caption = GetUnitCaption(unitTag)
+        if(caption and caption ~= "") then
+            return caption:match(guildKioskWithNamePattern), guildId
+        elseif(AGS.internal.guildIdMapping:HasGuildName(guildId)) then
+            return AGS.internal.guildIdMapping:GetGuildName(guildId), guildId
+        end
     end
 end
 
-AGS.internal.GetUnitGuildKioskOwner = GetUnitGuildKioskOwner
+AGS.internal.GetUnitGuildKioskOwnerInfo = GetUnitGuildKioskOwnerInfo
 
 
 local function IsLocationVisible(locationIndex)
@@ -43,6 +41,11 @@ end
 
 AGS.internal.IsCurrentMapZoneMap = IsCurrentMapZoneMap
 
+local IRREGULAR_KIOSK_NAMES = { -- TODO
+    -- English
+    ["Eafildil"] = "Rinedel",
+    ["Zagh"] = "Zagh gro-Stugh",
+}
 
 local function GetKioskNameFromInfoText(infoText)
     if(infoText) then
@@ -52,7 +55,7 @@ local function GetKioskNameFromInfoText(infoText)
             -- TRANSLATORS: chat text when a kiosk name could not be matched. <<1>> is replaced by the label on the home tab in the guild menu
             Print(gettext("Warning: Could not match kiosk name: '<<1>>' -- please report this to the author", infoText))
         end
-        return kioskName
+        return IRREGULAR_KIOSK_NAMES[kioskName] or kioskName
     end
 end
 
