@@ -189,7 +189,7 @@ local function GetKioskNamesFromLocationTooltip(locationIndex)
         if(IsMapLocationTooltipLineVisible(locationIndex, tooltipLineIndex)) then
             local tooltipIcon, kioskName = GetMapLocationTooltipLineInfo(locationIndex, tooltipLineIndex)
             if(tooltipIcon == KIOSK_TOOLTIP_ICON) then
-                kiosks[#kiosks + 1] = kioskName
+                kiosks[#kiosks + 1] = zo_strformat("<<1>>", kioskName)
             end
         end
     end
@@ -734,7 +734,7 @@ local function InitializeGuildStoreList(globalSaveData)
 
     local function UpdateKioskAndStore(kioskName, isInteracting)
         SetMapToPlayerLocation()
-        local x, y = GetMapPlayerPosition(PLAYER_UNIT_TAG) -- "interact" coordinates are identical for all traders in one spot
+        local x, y = GetMapPlayerPosition(isInteracting and PLAYER_UNIT_TAG or TARGET_UNIT_TAG) -- "reticleover" works as long as we don't interact with the store
         local locationIndex = FindNearestStoreLocation(x, y)
         local mapName = GetMapName()
         local isUnderground = IsUndergroundKiosk()
@@ -756,7 +756,7 @@ local function InitializeGuildStoreList(globalSaveData)
 
             storeList:SetConfirmedKiosk(kiosk)
         end
-        if(isInteracting and not (kiosk.x ~= -1 or kiosk.y ~= -1)) then
+        if(not isInteracting and not (kiosk.x ~= -1 or kiosk.y ~= -1)) then
             local gx, gy = libGPS:LocalToGlobal(x, y)
             kiosk.x = gx
             kiosk.y = gy
