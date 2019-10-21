@@ -1,7 +1,7 @@
 --[[
 Author: Ayantir
 Filename: LibAnnyoingUpdateNotificationInGame.lua
-Version: 5
+Version: 6
 ]]--
 
 --[[
@@ -30,19 +30,8 @@ http://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
 ]]--
 
 local libLoaded
-local LIB_NAME, VERSION = "Launig", 5
-local Launig, oldminor = LibStub:NewLibrary(LIB_NAME, VERSION)
-if not Launig then return end
-
-local GRACE_PERIOD = 86400 * 15
-local REPEAT_EVERY = 86400 * 40
-
-local UPDATE_WEBSITE = "http://www.esoui.com"
-
-local SV_HOST = ZO_Ingame_SavedVariables
-local wm = WINDOW_MANAGER
-local lang = {}
-local platform
+local libTLCInit
+local LIB_NAME, VERSION = "Launig", 6
 
 local function GetLangStrings(language)
 
@@ -55,6 +44,7 @@ local function GetLangStrings(language)
 			},
 			NOW = "Aktualisieren",
 			LATER = "Später",
+			ONLY_LOAD_ONCE = "Die Bibliothek \'" .. LIB_NAME .. "\' wurde bereits geladen!",
 		}
 	elseif language == "fr" then
 		return {
@@ -65,6 +55,7 @@ local function GetLangStrings(language)
 			},
 			NOW = "Mettre à Jour",
 			LATER = "Plus tard",
+			ONLY_LOAD_ONCE = "La bibliothèque \'" .. LIB_NAME .. "\' était déjà chargée!",
 		}
 	else
 		return {
@@ -75,10 +66,31 @@ local function GetLangStrings(language)
 			},
 			NOW = "Update",
 			LATER = "Later",
+			ONLY_LOAD_ONCE = "The library \'" .. LIB_NAME .. "\' was already loaded!",
 		}
 	end
 
 end
+local lang = {}
+local clientLang = GetCVar("Language.2")
+lang = GetLangStrings(clientLang)
+
+--Only load once
+assert(Launig == nil, d(lang.ONLY_LOAD_ONCE))
+
+local launig = {}
+launig.name =		LIB_NAME
+launig.version =	VERSION
+Launig = launig
+
+local GRACE_PERIOD = 86400 * 15 -- 	15 days
+local REPEAT_EVERY = 86400 * 40 --	40 days
+
+local UPDATE_WEBSITE = "http://www.esoui.com"
+
+local SV_HOST = ZO_Ingame_SavedVariables
+local wm = WINDOW_MANAGER
+local platform
 
 local function GetDLCTextures()
 	
@@ -173,7 +185,7 @@ end
 
 local function InitializeAnnouncement()
 
-	local tlw = wm:CreateTopLevelWindow("Launig")
+	local tlw = wm:CreateTopLevelWindow("LaunigTLW")
 	tlw:SetDrawLayer(DL_OVERLAY)
 	tlw:SetDrawTier(DT_HIGH)
 	tlw:SetAnchorFill()
@@ -181,13 +193,13 @@ local function InitializeAnnouncement()
 	
 	tlw:SetHandler("OnEffectivelyShown", PushDialog)
 	tlw:SetHandler("OnEffectivelyHidden", ReleaseDialog)
-	
+
+	launig.tlw = tlw
+
 	if IsInGamepadPreferredMode() then
 		platform = 1
-		lang = GetLangStrings(GetCVar("Language.2"))
 	else
 		platform = 2
-		lang = GetLangStrings(GetCVar("Language.2"))
 		DrawKeyboardUI(tlw)
 	end
 	
@@ -198,7 +210,7 @@ local function InitializeAnnouncement()
 			allowShowOnNextScene = true,
 			shouldShowTooltip = true,
 		},
-		customControl = tlw,
+		customControl = launig.tlw,
 		title =
 		{
 			text = lang.TITLE,
@@ -222,11 +234,17 @@ local function InitializeAnnouncement()
 			},
 		}
 	})
-	
+end
+
+function launig:Show()
+	if not libTLCInit then
+		launig:Init()
+	end
+	ZO_Dialogs_ShowPlatformDialog("LAUNIG")
 end
 
 local function ShowAnnouncement()
-	ZO_Dialogs_ShowPlatformDialog("LAUNIG")
+	launig:Show()
 end
 
 local function HaveOutdatedAddons()
@@ -236,7 +254,7 @@ local function HaveOutdatedAddons()
 	
 	for addonIndex = 1, AddOnManager:GetNumAddOns() do
 		local _, _, _, _, enabled, state, isOutOfDate = AddOnManager:GetAddOnInfo(addonIndex)
-		haveOutdatedAddons = enabled and isOutOfDate and state == ADDON_STATE_ENABLED or false -- addons can be enabled and state ~= ADDON_STATE_ENABLED
+		haveOutdatedAddons = (enabled and isOutOfDate and state == ADDON_STATE_ENABLED) or false -- addons can be enabled and state ~= ADDON_STATE_ENABLED
 		if haveOutdatedAddons then
 			return haveOutdatedAddons
 		end
@@ -253,38 +271,40 @@ local function OnPlayerActivated()
 	end
 end
 
-function Launig:Init()
-	
+function launig:Init()
+	InitializeAnnouncement()
+
 	local apiVersion = GetAPIVersion()
 	local now = GetTimeStamp()
 	if GetWorldName() ~= "PTS" then
 		if SV_HOST then
-			if not SV_HOST.Launig or apiVersion > SV_HOST.Launig.a then
-				SV_HOST.Launig = { t = now, a = apiVersion, d = false } -- time, api, displayed
+			local launigSV = SV_HOST.launig
+			if not launigSV or apiVersion > launigSV.a then
+				launigSV = { t = now, a = apiVersion, d = false } -- time, api, displayed
 			elseif HaveOutdatedAddons() then
 				local remindPeriod = GRACE_PERIOD
-				if SV_HOST.Launig.d then
+				if launigSV.d then
 					remindPeriod = REPEAT_EVERY
 				end
-				if now > SV_HOST.Launig.t + remindPeriod then
-					SV_HOST.Launig.t = now
-					SV_HOST.Launig.d = true
-					InitializeAnnouncement()
+				if now > launigSV.t + remindPeriod then
+					launigSV.t = now
+					launigSV.d = true
 					EVENT_MANAGER:RegisterForEvent(LIB_NAME, EVENT_PLAYER_ACTIVATED, OnPlayerActivated)
 				end
 			end
 		end
 	end
-	
+	libTLCInit = true
 end
 
-local function OnAddonLoaded()
+local function OnAddonLoaded(addonName)
+	if addonName ~= LIB_NAME then return end
 	if not libLoaded then
-		libLoaded = true
-		local LAUNIG = LibStub('Launig')
-		LAUNIG:Init()
+		if not libTLCInit then
+			launig:Init()
+		end
 		EVENT_MANAGER:UnregisterForEvent(LIB_NAME, EVENT_ADD_ON_LOADED)
+		libLoaded = true
 	end
 end
-
 EVENT_MANAGER:RegisterForEvent(LIB_NAME, EVENT_ADD_ON_LOADED, OnAddonLoaded)

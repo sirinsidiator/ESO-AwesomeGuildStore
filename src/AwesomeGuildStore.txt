@@ -15,7 +15,6 @@
 
 lib/LibStub/LibStub.lua
 lib/LibCustomTitles/LibCustomTitles.lua
-lib/LibAnnyoingUpdateNotificationInGame/LibAnnyoingUpdateNotificationInGame.lua
 StartUp.lua
 API.lua
 CallbackNames.lua
