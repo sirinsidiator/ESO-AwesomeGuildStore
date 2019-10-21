@@ -49,8 +49,7 @@ local IRREGULAR_KIOSK_NAMES = { -- TODO
 
 local function GetKioskNameFromInfoText(infoText)
     if(infoText) then
-        -- TRANSLATORS: patterns to match trader names from the label that is shown on the home tab in the guild menu
-        local kioskName = infoText:match(gettext("(.-) in the .-")) or infoText:match(gettext("(.-) in .-")) or infoText:match(gettext("(.-) near .-")) or infoText:match(gettext("(.-) on .-"))
+        local kioskName = infoText:match("^(.-) [%l ]+ .-$")
         if(not kioskName) then
             -- TRANSLATORS: chat text when a kiosk name could not be matched. <<1>> is replaced by the label on the home tab in the guild menu
             Print(gettext("Warning: Could not match kiosk name: '<<1>>' -- please report this to the author", infoText))
