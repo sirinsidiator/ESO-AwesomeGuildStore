@@ -6,6 +6,7 @@ local TRADER_DATA = 1
 local TRADER_ROW_HEIGHT = 30
 local TRADER_ROW_TEMPLATE = "AwesomeGuildStoreTraderRow"
 local REFRESH_FILTER_DELAY = 250
+local NO_OWNER = { name = "-" }
 
 local KIOSK_NOT_VISITED_COLOR = ZO_ColorDef:New("666666")
 local KIOSK_OUTDATED_COLOR = ZO_ColorDef:New("BCA09A")
@@ -28,6 +29,13 @@ local SORT_ORDER_DOWN = {
     [SORT_KEY_LOCATION] = ZO_SORT_ORDER_DOWN,
     [SORT_KEY_TRADER_NAME] = ZO_SORT_ORDER_DOWN,
     [SORT_KEY_OWNER] = ZO_SORT_ORDER_DOWN,
+}
+
+local GET_SORT_VALUES = {
+    [SORT_KEY_LAST_VISITED] = function(a, b) return a.data[SORT_KEY_LAST_VISITED], b.data[SORT_KEY_LAST_VISITED] end,
+    [SORT_KEY_LOCATION] = function(a, b) return a.data[SORT_KEY_LOCATION], b.data[SORT_KEY_LOCATION] end,
+    [SORT_KEY_TRADER_NAME] = function(a, b) return a.data[SORT_KEY_TRADER_NAME], b.data[SORT_KEY_TRADER_NAME] end,
+    [SORT_KEY_OWNER] = function(a, b) return a.data[SORT_KEY_OWNER].name, b.data[SORT_KEY_OWNER].name end,
 }
 
 local LTF = LibTextFilter
@@ -145,7 +153,7 @@ function TraderListControl:InitializeList(control, storeList, kioskList, ownerLi
             t = 1
         end
 
-        local value1, value2 = listEntry1.data[sortKey], listEntry2.data[sortKey]
+        local value1, value2 = GET_SORT_VALUES[sortKey](listEntry1, listEntry2)
         if(value1 == value2 and type(value1) == type(value2)) then
             return SortTraders(listEntry1, listEntry2, t)
         elseif(self.currentSortOrder == SORT_ORDER_DOWN[sortKey]) then
@@ -248,7 +256,7 @@ function TraderListControl:BuildMasterList()
                 location = string.format("%s - %s", zoneName, poi),
                 zone = zoneName,
                 poi = poi,
-                owner = owner,
+                owner = owner or NO_OWNER,
                 storeIndex = store.index,
                 lastVisited = lastVisited,
                 hasVisitedThisWeek = hasVisitedThisWeek,
