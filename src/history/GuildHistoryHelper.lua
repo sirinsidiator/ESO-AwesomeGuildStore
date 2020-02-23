@@ -2,7 +2,7 @@ local AGS = AwesomeGuildStore
 
 local WrapFunction = AGS.internal.WrapFunction
 local RegisterForEvent = AGS.internal.RegisterForEvent
-local Print = AGS.internal.Print
+local chat = AGS.internal.chat
 local GuildHistoryHelper = ZO_Object:Subclass()
 AGS.class.GuildHistoryHelper = GuildHistoryHelper
 
@@ -45,7 +45,7 @@ function GuildHistoryHelper:Initialize()
     RegisterForEvent(EVENT_GUILD_HISTORY_CATEGORY_UPDATED, function(_, guildId, category)
         if(category == GUILD_HISTORY_STORE) then
             local guildState = self.state[guildId]
-            if(not guildState) then Print("guildState not correctly initialized. Please report this to the author.") return end
+            if(not guildState) then chat:Print("guildState not correctly initialized. Please report this to the author.") return end
             local oldest, newest, endIndex = self:GetMinMaxPurchaseEventTimes(guildId, guildState.highestIndex)
             guildState.hasMore = DoesGuildHistoryCategoryHaveMoreEvents(guildId, category)
             guildState.highestIndex = endIndex

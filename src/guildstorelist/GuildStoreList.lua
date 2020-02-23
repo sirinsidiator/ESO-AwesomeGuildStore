@@ -7,7 +7,7 @@ local IsCurrentMapZoneMap = AGS.internal.IsCurrentMapZoneMap
 local GetKioskNameFromInfoText = AGS.internal.GetKioskNameFromInfoText
 local RegisterForEvent = AGS.internal.RegisterForEvent
 local ShowGuildDetails = AGS.internal.ShowGuildDetails
-local Print = AGS.internal.Print
+local chat = AGS.internal.chat
 local gettext = AGS.internal.gettext
 local osdate = os.date
 
@@ -626,7 +626,7 @@ local function InitializeGuildStoreList(globalSaveData)
         saveData.language = lang
     end
     if(lang ~= saveData.language) then
-        Print("Cannot initialize guild trader list. Either clear all data in the settings or switch back to your original language.")
+        chat:Print("Cannot initialize guild trader list. Either clear all data in the settings or switch back to your original language.")
         return
     end
 

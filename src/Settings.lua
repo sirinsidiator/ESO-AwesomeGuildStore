@@ -12,7 +12,7 @@ local function LoadSettings()
     AGS.info = info
 
     local defaultData = {
-        version = 25,
+        version = 26,
         listWithSingleClick = true,
         showTraderTooltip = true,
         augementMails = true,
@@ -27,7 +27,6 @@ local function LoadSettings()
         hasTouchedAction = {},
         guildTraderListEnabled = true,
         minimizeChatOnOpen = true,
-        shortMessagePrefix = false,
         preferredBankerStoreTab = ZO_TRADING_HOUSE_MODE_SELL
     }
 
@@ -60,19 +59,6 @@ local function LoadSettings()
         }
         local panel = LAM:RegisterAddonPanel("AwesomeGuildStoreOptions", panelData)
         local optionsData = {}
-        optionsData[#optionsData + 1] = {
-            type = "checkbox",
-            -- TRANSLATORS: label for an entry in the addon settings
-            name = gettext("Short prefix for chat messages"),
-            -- TRANSLATORS: tooltip text for an entry in the addon settings
-            tooltip = gettext("When activated, all chat messages will be prefixed with [AGS] instead of [AwesomeGuildStore]."),
-            getFunc = function() return saveData.shortMessagePrefix end,
-            setFunc = function(value)
-                saveData.shortMessagePrefix = value
-                AGS.internal.SetMessagePrefix(value)
-            end,
-            default = defaultData.shortMessagePrefix,
-        }
         optionsData[#optionsData + 1] = {
             type = "checkbox",
             -- TRANSLATORS: label for an entry in the addon settings
@@ -318,6 +304,10 @@ local function LoadSettings()
             saveData.lastGuildName = nil
             saveData.preferredBankerStoreTab = defaultData.preferredBankerStoreTab
             saveData.version = 25
+        end
+        if(saveData.version <= 25) then
+            saveData.shortMessagePrefix = nil
+            saveData.version = 26
         end
     end
 

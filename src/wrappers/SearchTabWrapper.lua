@@ -5,7 +5,7 @@ local RegisterForEvent = AGS.internal.RegisterForEvent
 local ToggleButton = AGS.class.ToggleButton
 local ClearCallLater = AGS.internal.ClearCallLater
 local GetItemLinkWritCount = AGS.internal.GetItemLinkWritCount
-local Print = AGS.internal.Print
+local chat = AGS.internal.chat
 local logger = AGS.internal.logger
 local AdjustLinkStyle = AGS.internal.AdjustLinkStyle
 
@@ -260,7 +260,7 @@ function SearchTabWrapper:PrintPurchaseMessageForEntry(entry)
     local guildName = entry.guildName
     -- TRANSLATORS: chat message when an item is bought from the store. <<1>> is replaced with the item count, <<t:2>> with the item link, <<3>> with the seller name, <<4>> with price and <<5>> with the guild store name. e.g. You have bought 1x [Rosin] from sirinsidiator for 5000g in Imperial Trading Company
     local message = gettext("You have bought <<1>>x <<t:2>> from <<3>> for <<4>> in <<5>>", count, itemLink, seller, price, guildName)
-    Print(message)
+    chat:Print(message)
 end
 
 function SearchTabWrapper:InitializePurchase(tradingHouseWrapper)

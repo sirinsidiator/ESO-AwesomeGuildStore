@@ -1,6 +1,6 @@
 local AGS = AwesomeGuildStore
 
-local Print = AGS.internal.Print
+local chat = AGS.internal.chat
 local gettext = AGS.internal.gettext
 local guildKioskWithoutNameCaption = GetString(SI_GUILD_TRADER_OWNERSHIP_HEADER)
 
@@ -53,7 +53,7 @@ local function GetKioskNameFromInfoText(infoText)
         local kioskName = infoText:match("^(.-) [%l ]+ .-$")
         if(not kioskName) then
             -- TRANSLATORS: chat text when a kiosk name could not be matched. <<1>> is replaced by the label on the home tab in the guild menu
-            Print(gettext("Warning: Could not match kiosk name: '<<1>>' -- please report this to the author", infoText))
+            chat:Print(gettext("Warning: Could not match kiosk name: '<<1>>' -- please report this to the author", infoText))
         end
         return IRREGULAR_KIOSK_NAMES[kioskName] or kioskName
     end

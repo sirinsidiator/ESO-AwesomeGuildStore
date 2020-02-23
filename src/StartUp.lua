@@ -8,6 +8,7 @@ local AGS = {
     internal = {
         callbackObject = callbackObject,
         logger = LibDebugLogger(ADDON_NAME),
+        chat = LibChatMessage(ADDON_NAME, "AGS"),
         gettext = LibGetText(ADDON_NAME).gettext
     }
 }
@@ -53,26 +54,6 @@ AGS.internal.UnregisterForEvent = UnregisterForEvent
 AGS.internal.RegisterForEvent = RegisterForEvent
 AGS.internal.WrapFunction = WrapFunction
 -----------------------------------------------------------------------------------------
-
-do
-    local LONG_PREFIX = "AwesomeGuildStore"
-    local SHORT_PREFIX = "AGS"
-
-    local prefix = LONG_PREFIX
-    local function SetMessagePrefix(isShort)
-        prefix = isShort and SHORT_PREFIX or LONG_PREFIX
-    end
-
-    local function Print(message, ...)
-        if(select("#", ...) > 0) then
-            message = message:format(...)
-        end
-        df("[%s] %s", prefix, message)
-    end
-
-    AGS.internal.Print = Print
-    AGS.internal.SetMessagePrefix = SetMessagePrefix
-end
 
 local function IsSameAction(actionName, layerIndex, categoryIndex, actionIndex)
     local targetTayerIndex, targetCategoryIndex, targetActionIndex = GetActionIndicesFromName(actionName)
@@ -242,7 +223,6 @@ OnAddonLoaded(function()
     if(not IntegrityCheck()) then return end
 
     local saveData = AGS.internal.LoadSettings()
-    AGS.internal.SetMessagePrefix(saveData.shortMessagePrefix)
     if(saveData.guildTraderListEnabled) then
         AGS.internal.InitializeGuildStoreList(saveData)
     end

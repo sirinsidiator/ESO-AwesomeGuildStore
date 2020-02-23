@@ -3,7 +3,7 @@ local AGS = AwesomeGuildStore
 local gettext = AGS.internal.gettext
 local RegisterForEvent = AGS.internal.RegisterForEvent
 local UnregisterForEvent = AGS.internal.UnregisterForEvent
-local Print = AGS.internal.Print
+local chat = AGS.internal.chat
 local ToggleButton = AGS.class.ToggleButton
 local ClearCallLater = AGS.internal.ClearCallLater
 local GetItemLinkWritCount = AGS.internal.GetItemLinkWritCount
@@ -668,7 +668,7 @@ function SellTabWrapper:InitializeListedNotification(tradingHouseWrapper)
             price = ZO_Currency_FormatPlatform(CURT_MONEY, price or 0, ZO_CURRENCY_FORMAT_AMOUNT_ICON)
             -- TRANSLATORS: chat message when a item is listed on a store. <<1>> is replaced with the item count, <<t:2>> with the item link, <<3>> with the price and <<4>> with the guild store name. e.g. You have listed 1x [Rosin] for 5000g in Imperial Trading Company
             local listedMessage = gettext("You have listed <<1>>x <<t:2>> for <<3>> in <<4>>", stackCount, itemLink, price, guildName)
-            Print(listedMessage)
+            chat:Print(listedMessage)
         end
     end)
 end

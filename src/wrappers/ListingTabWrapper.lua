@@ -3,7 +3,7 @@ local AGS = AwesomeGuildStore
 local CancelItemActivity = AGS.class.CancelItemActivity
 local gettext = AGS.internal.gettext
 local RegisterForEvent = AGS.internal.RegisterForEvent
-local Print = AGS.internal.Print
+local chat = AGS.internal.chat
 
 local TRADING_HOUSE_SORT_LISTING_NAME = 1
 local TRADING_HOUSE_SORT_LISTING_PRICE = 2
@@ -236,7 +236,7 @@ function ListingTabWrapper:InitializeCancelNotification(tradingHouseWrapper)
 
         -- TRANSLATORS: chat message when an item listing is cancelled on the listing tab. <<1>> is replaced with the item count, <<t:2>> with the item link, <<3>> with the price and <<4>> with the guild store name. e.g. You have cancelled your listing of 1x [Rosin] for 5000g in Imperial Trading Company
         local cancelMessage = gettext("You have cancelled your listing of <<1>>x <<t:2>> for <<3>> in <<4>>", stackCount, itemLink, price, guildName)
-        Print(cancelMessage)
+        chat:Print(cancelMessage)
     end)
 end
 
