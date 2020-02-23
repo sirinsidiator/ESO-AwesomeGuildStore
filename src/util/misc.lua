@@ -45,6 +45,7 @@ local IRREGULAR_KIOSK_NAMES = { -- TODO
     -- English
     ["Eafildil"] = "Rinedel",
     ["Zagh"] = "Zagh gro-Stugh",
+    ["Jaflinna"] = "Jaflinna Snow-born",
 }
 
 local function GetKioskNameFromInfoText(infoText)
