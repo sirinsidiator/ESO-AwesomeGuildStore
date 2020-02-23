@@ -391,15 +391,17 @@ local function InitializeStoreListWindow(saveData, kioskList, storeList, ownerLi
     local function ShowTraderContextMenu(control)
         ClearMenu()
 
-        AddCustomMenuItem(showDetailsLabel, function()
-            SetSelectedDetails(ZO_ScrollList_GetData(control))
-        end)
+        local data = ZO_ScrollList_GetData(control)
+        if(data.owner.name ~= "-") then
+            AddCustomMenuItem(showDetailsLabel, function()
+                AGS.internal.OpenGuildListOnGuild(data.owner)
+            end)
+        end
 
         AddCustomMenuItem(showOnMapLabel, function()
             ShowTraderOnMap(ZO_ScrollList_GetData(control))
         end)
 
-        local data = ZO_ScrollList_GetData(control)
         if(data.owner and data.owner.id) then
             AddCustomMenuItem(showGuildDetailsLabel, function()
                 ShowGuildDetails(data.owner.id, GoBack)
