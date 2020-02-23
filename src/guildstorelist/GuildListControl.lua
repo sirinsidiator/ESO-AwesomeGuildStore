@@ -237,10 +237,10 @@ function GuildListControl:GetFirstGuildEntryInList()
     end
 end
 
-function GuildListControl:GetGuildEntryInList(guildName)
+function GuildListControl:GetGuildEntryInList(guild)
     for i = 1, #self.masterList do
         local data = self.masterList[i]
-        if(data.guildName == guildName) then
+        if(data.guildId == guild.id or data.guildName == guild.name) then
             return data
         end
     end

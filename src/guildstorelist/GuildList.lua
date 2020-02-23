@@ -223,9 +223,9 @@ local function InitializeGuildList(saveData, kioskList, storeList, ownerList)
     end
     guildTradersScene.RefreshTraderList = RefreshTraderList
 
-    local function OpenListOnGuild(guildName)
+    local function OpenListOnGuild(guild)
         guildList:RefreshData()
-        local data = guildList:GetGuildEntryInList(guildName)
+        local data = guildList:GetGuildEntryInList(guild)
         if(data) then
             SetSelectedDetails(data)
         end
