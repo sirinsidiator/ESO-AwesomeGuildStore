@@ -13,8 +13,6 @@ local UnregisterForEvent = AGS.internal.UnregisterForEvent
 
 local MakeExactSearchText = ZO_TradingHouseNameSearchFeature_Shared.MakeExactSearchText
 local LTF = LibTextFilter
-local MAX_NAME_HASHES = GetMaxTradingHouseFilterExactTerms(TRADING_HOUSE_FILTER_TYPE_NAME_HASH)
-local MIN_LETTERS = GetMinLettersInTradingHouseItemNameForCurrentLanguage()
 
 local TextFilter = FilterBase:Subclass()
 AGS.class.TextFilter = TextFilter
@@ -69,7 +67,7 @@ end
 
 function TextFilter:IsSearchTextLongEnough(input)
     local length = ZoUTF8StringLength(input)
-    return length >= MIN_LETTERS
+    return length >= GetMinLettersInTradingHouseItemNameForCurrentLanguage()
 end
 
 function TextFilter:PrepareForSearch(text)
@@ -93,7 +91,7 @@ function TextFilter:ApplyToSearch(request)
     if(not self.completedItemNameMatchId) then return end
 
     local numResults = GetNumMatchTradingHouseItemNamesResults(self.completedItemNameMatchId)
-    if(not numResults or numResults == 0 or numResults > MAX_NAME_HASHES) then return end
+    if(not numResults or numResults == 0 or numResults > GetMaxTradingHouseFilterExactTerms(TRADING_HOUSE_FILTER_TYPE_NAME_HASH)) then return end
 
     logger:Info("Apply %d name hashes to search", numResults)
     local hashes = {}
