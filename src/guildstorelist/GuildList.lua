@@ -11,7 +11,7 @@ local osdate = os.date
 local REFRESH_HANDLE = "AwesomeGuildStoreListRefresh"
 local REFRESH_INTERVAL = 15000
 
-local libGPS = LibStub("LibGPS2")
+local libGPS = LibGPS2
 local LDT = LibDateTime
 
 local menu = MAIN_MENU_KEYBOARD

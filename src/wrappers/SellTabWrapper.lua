@@ -424,7 +424,7 @@ function SellTabWrapper:InitializeCraftingBag(tradingHouseWrapper)
         return false
     end
 
-    local LCM = LibStub("LibCustomMenu")
+    local LCM = LibCustomMenu
     LCM:RegisterContextMenu(UpdateSlotActions, LCM.CATEGORY_EARLY)
     LCM:RegisterKeyStripEnter(UpdateSlotActions, LCM.CATEGORY_EARLY)
 

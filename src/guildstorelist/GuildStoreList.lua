@@ -25,8 +25,8 @@ local UPDATE_INTERVAL = 0 -- we want to do it as fast as possible without produc
 local REFRESH_HANDLE = "AwesomeGuildStoreTraderListRefresh"
 local REFRESH_INTERVAL = 15000
 
-local libGPS = LibStub("LibGPS2")
-local LMP = LibStub("LibMapPing")
+local libGPS = LibGPS2
+local LMP = LibMapPing
 
 local menu = MAIN_MENU_KEYBOARD
 local category = MENU_CATEGORY_GUILDS
@@ -915,11 +915,15 @@ local function InitializeGuildStoreList(globalSaveData)
 
     local function OnGuildDataReady(guildId, skipRefresh)
         local guildMetaData = GUILD_BROWSER_MANAGER:GetGuildData(guildId)
+        AGS.internal.logger:Debug("OnGuildDataReady", guildId, guildMetaData.guildName)
         if(guildMetaData.guildName == "") then return end -- guild info was unavailable
+        AGS.internal.logger:Debug(guildMetaData.guildTraderText)
         if(guildMetaData.guildTraderText and guildMetaData.guildTraderText ~= NO_TRADER_TEXT) then
             local kioskName = GetKioskNameFromInfoText(guildMetaData.guildTraderText)
+            AGS.internal.logger:Debug("Has trader", kioskName)
             if(kioskName) then
                 local kiosk = kioskList:GetKiosk(kioskName)
+                AGS.internal.logger:Debug(kiosk)
                 if(kiosk) then -- TODO find a way to create the entry when we have not visited the kiosk yet
                     kiosk.lastVisited = GetTimeStamp()
                     kioskList:SetKiosk(kiosk)
@@ -927,6 +931,7 @@ local function InitializeGuildStoreList(globalSaveData)
                 end
             end
         else
+            AGS.internal.logger:Debug("no trader")
             local guildData = ownerList:GetGuildData(guildId)
             AGS.internal.logger:Debug(guildId, guildData, guildData and ownerList:GetCurrentOwner(guildData.lastKiosk))
             if(guildData and ownerList:GetCurrentOwner(guildData.lastKiosk) == nil) then
@@ -935,6 +940,7 @@ local function InitializeGuildStoreList(globalSaveData)
         end
 
         if(not skipRefresh and guildTradersScene:IsShowing()) then
+            AGS.internal.logger:Debug("refresh list")
             guildTradersScene.RefreshTraderList()
         end
     end
