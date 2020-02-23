@@ -319,10 +319,35 @@ local function InitializeStoreListWindow(saveData, kioskList, storeList, ownerLi
         end, 200)
     end
 
+    -- TRANSLATORS: label for a context menu entry for a row on the guild kiosk tab
+    local showDetailsLabel = gettext("Show Details")
+    local showOnMapLabel = GetString(SI_QUEST_JOURNAL_SHOW_ON_MAP)
+    -- TRANSLATORS: label for a context menu entry for a row on the guild kiosk tab
+    local showGuildDetailsLabel = gettext("Open Guild Info")
+
+    local function GoBack()
+        MAIN_MENU_KEYBOARD:ShowScene(sceneName)
+    end
+
     keybindStripDescriptor = {
         alignment = KEYBIND_STRIP_ALIGN_CENTER,
         {
-            name = GetString(SI_QUEST_JOURNAL_SHOW_ON_MAP),
+            name = showDetailsLabel,
+            keybind = "UI_SHORTCUT_PRIMARY",
+
+            callback = function()
+                AGS.internal.OpenGuildListOnGuild(selectedTraderData.owner)
+            end,
+
+            visible = function()
+                if(selectedTraderData and selectedTraderData.owner.name ~= "-") then
+                    return true
+                end
+                return false
+            end
+        },
+        {
+            name = showOnMapLabel,
             keybind = "UI_SHORTCUT_SHOW_QUEST_ON_MAP",
 
             callback = function()
@@ -331,6 +356,21 @@ local function InitializeStoreListWindow(saveData, kioskList, storeList, ownerLi
 
             visible = function()
                 if(selectedTraderData) then
+                    return true
+                end
+                return false
+            end
+        },
+        {
+            name = showGuildDetailsLabel,
+            keybind = "UI_SHORTCUT_SECONDARY",
+
+            callback = function()
+                ShowGuildDetails(selectedTraderData.owner.id, GoBack)
+            end,
+
+            visible = function()
+                if(selectedTraderData and selectedTraderData.owner and selectedTraderData.owner.id) then
                     return true
                 end
                 return false
@@ -378,16 +418,6 @@ local function InitializeStoreListWindow(saveData, kioskList, storeList, ownerLi
         end
     end)
 
-    local function GoBack()
-        MAIN_MENU_KEYBOARD:ShowScene(sceneName)
-    end
-
-    -- TRANSLATORS: label for a context menu entry for a row on the guild kiosk tab
-    local showDetailsLabel = gettext("Show Details")
-    -- TRANSLATORS: label for a context menu entry for a row on the guild kiosk tab
-    local showOnMapLabel = gettext("Show On Map")
-    -- TRANSLATORS: label for a context menu entry for a row on the guild kiosk tab
-    local showGuildDetailsLabel = gettext("Open Guild Info")
     local function ShowTraderContextMenu(control)
         ClearMenu()
 

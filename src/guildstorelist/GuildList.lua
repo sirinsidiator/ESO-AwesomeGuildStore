@@ -107,10 +107,49 @@ local function InitializeGuildList(saveData, kioskList, storeList, ownerList)
     local historyList = AGS.class.KioskHistoryControl:New(detailOwnerHistory, storeList, kioskList, ownerList)
     window.historyList = historyList
 
+    -- TRANSLATORS: label for a context menu entry for a row on the guild kiosk tab
+    local showDetailsLabel = gettext("Show Details")
+    -- TRANSLATORS: label for a context menu entry for a row on the guild kiosk tab
+    local showGuildDetailsLabel = gettext("Open Guild Info")
+
     local selectedTraderData
     local function GoBack()
         MAIN_MENU_KEYBOARD:ShowScene(sceneName)
     end
+
+    local keybindStripDescriptor = {
+        alignment = KEYBIND_STRIP_ALIGN_CENTER,
+        {
+            name = showDetailsLabel,
+            keybind = "UI_SHORTCUT_PRIMARY",
+
+            callback = function()
+                AGS.internal.OpenTraderListOnKiosk(selectedTraderData.guild.lastKiosk)
+            end,
+
+            visible = function()
+                if(selectedTraderData and selectedTraderData.guild and selectedTraderData.guild.lastKiosk) then
+                    return true
+                end
+                return false
+            end
+        },
+        {
+            name = showGuildDetailsLabel,
+            keybind = "UI_SHORTCUT_SECONDARY",
+
+            callback = function()
+                ShowGuildDetails(selectedTraderData.guildId, GoBack)
+            end,
+
+            visible = function()
+                if(selectedTraderData and selectedTraderData.guildId) then
+                    return true
+                end
+                return false
+            end
+        },
+    }
 
     local detailsGuildInfoButton = AGS.class.SimpleIconButton:New(details:GetNamedChild("GuildInfoButton"))
     detailsGuildInfoButton:SetSize(48)
@@ -125,6 +164,7 @@ local function InitializeGuildList(saveData, kioskList, storeList, ownerList)
 
     local function SetSelectedDetails(data)
         selectedTraderData = data
+        KEYBIND_STRIP:UpdateKeybindButtonGroup(keybindStripDescriptor)
 
         local guild = data.guild
         detailTraderName:SetText(guild.name)
@@ -203,9 +243,11 @@ local function InitializeGuildList(saveData, kioskList, storeList, ownerList)
 
     guildTradersScene:RegisterCallback("StateChange", function(oldState, newState)
         if(newState == SCENE_SHOWING) then
+            KEYBIND_STRIP:AddKeybindButtonGroup(keybindStripDescriptor)
             RefreshTraderList()
             RegisterListUpdate()
         elseif(newState == SCENE_HIDDEN) then
+            KEYBIND_STRIP:RemoveKeybindButtonGroup(keybindStripDescriptor)
             UnregisterListUpdate()
         end
     end)
