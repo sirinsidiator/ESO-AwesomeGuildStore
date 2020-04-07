@@ -38,15 +38,15 @@ local STYLE_CATEGORIES = {
         values = {38, 42, 53, 58, 59, 55},
     },
     {
-        label = gettext("Morrowind"),
+        label = GetCollectibleName(593), -- "Morrowind"
         values = {43, 54, 48, 49, 51, 50, 52, 61, 62, 65, 66, 69, 70, 60},
     },
     {
-        label = gettext("Summerset"),
+        label = GetCollectibleName(5107), -- "Summerset"
         values = {71, 72, 73, 74, 75, 77, 78, 79, 80, 81},
     },
     {
-        label = gettext("Elsweyr"),
+        label = GetCollectibleName(5843), -- "Elsweyr"
         values = {82, 83, 84, 85, 86},
     },
     {
