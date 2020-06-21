@@ -589,7 +589,7 @@ local function IsUndergroundKiosk()
 end
 
 local function GetMapLocationName(locationIndex)
-    local name = GetMapLocationTooltipHeader(locationIndex)
+    local name = zo_strformat("<<1>>", GetMapLocationTooltipHeader(locationIndex))
     return IRREGULAR_TOOLTIP_HEADER[name] or name
 end
 
