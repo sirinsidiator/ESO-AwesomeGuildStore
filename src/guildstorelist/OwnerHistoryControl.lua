@@ -44,7 +44,7 @@ function OwnerHistoryControl:InitializeList(control, storeList, kioskList, owner
         name:SetText(data.week)
 
         local owner = GetControl(control, "Owner")
-        owner:SetText(data.owner or "-")
+        owner:SetText(data.owner.name or "-")
     end)
     ZO_ScrollList_EnableHighlight(self.list, "ZO_ThinListHighlight")
 
@@ -58,8 +58,8 @@ function OwnerHistoryControl:InitializeList(control, storeList, kioskList, owner
             value1 = startTime1
             value2 = startTime2
         elseif(sortKey == SORT_KEY_OWNER) then
-            value1 = listEntry1.data.owner
-            value2 = listEntry2.data.owner
+            value1 = listEntry1.data.owner.name
+            value2 = listEntry2.data.owner.name
             if(value1 == value2) then
                 value1 = startTime1
                 value2 = startTime2

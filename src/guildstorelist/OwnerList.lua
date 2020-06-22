@@ -171,7 +171,8 @@ function OwnerList:GetOwnerHistory(kioskName)
     for _, week in ipairs(self.weekOrder) do
         local weekData = self:GetDataForWeek(week)
         if(weekData[kioskName]) then
-            history[week] = self:ResolveOwner(weekData[kioskName])
+            local guildNameOrId = weekData[kioskName]
+            history[week] = self.guildList[guildNameOrId]
         end
     end
     return history

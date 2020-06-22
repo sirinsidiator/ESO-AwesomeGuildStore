@@ -240,7 +240,7 @@ end
 function GuildListControl:GetGuildEntryInList(guild)
     for i = 1, #self.masterList do
         local data = self.masterList[i]
-        if(data.guildId == guild.id or data.guildName == guild.name) then
+        if(data.guild == guild) then
             return data
         end
     end
