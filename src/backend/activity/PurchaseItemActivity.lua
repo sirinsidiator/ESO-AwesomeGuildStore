@@ -55,8 +55,18 @@ function PurchaseItemActivity:FinalizePurchase()
     return promise
 end
 
+function PurchaseItemActivity:FailPurchase()
+    local promise = Promise:New()
+    if self.result == TRADING_HOUSE_RESULT_ITEM_NOT_FOUND then
+        self.itemData.soldout = true
+    end
+    AGS.internal:FireCallbacks(AGS.callback.ITEM_PURCHASE_FAILED, self.itemData)
+    promise:Reject(self)
+    return promise
+end
+
 function PurchaseItemActivity:DoExecute()
-    return self:ApplyGuildId():Then(self.SetPendingItem):Then(self.ConfirmPurchase):Then(self.FinalizePurchase)
+    return self:ApplyGuildId():Then(self.SetPendingItem):Then(self.ConfirmPurchase):Then(self.FinalizePurchase, self.FailPurchase)
 end
 
 function PurchaseItemActivity:GetErrorMessage()

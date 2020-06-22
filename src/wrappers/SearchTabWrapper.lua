@@ -325,6 +325,10 @@ function SearchTabWrapper:InitializePurchase(tradingHouseWrapper)
         self.searchResultList:RefreshVisible()
     end)
 
+    AGS:RegisterCallback(AGS.callback.ITEM_PURCHASE_FAILED, function(itemData)
+        self.searchResultList:RefreshVisible()
+    end)
+
     tradingHouseWrapper:Wrap("CanBuyItem", function(originalCanBuyItem, tradingHouse, inventorySlot)
         if(not originalCanBuyItem(tradingHouse, inventorySlot)) then
             return false

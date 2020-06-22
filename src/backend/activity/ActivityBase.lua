@@ -250,7 +250,7 @@ function ActivityBase:OnResponse(responseType, result)
             self:SetState(ActivityBase.STATE_SUCCEEDED, result)
             if(self.responsePromise) then self.responsePromise:Resolve(self) end
     else
-        self:SetState(ActivityBase.STATE_FAILED, ActivityBase.ERROR_GUILD_SELECTION_FAILED)
+        self:SetState(ActivityBase.STATE_FAILED, result)
         if(self.responsePromise) then self.responsePromise:Reject(self) end
     end
     return true

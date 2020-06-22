@@ -27,5 +27,6 @@ AGS.callback.FILTER_UPDATE = "FilterUpdate"
 AGS.callback.FILTER_PREPARED = "FilterPrepared"
 
 AGS.callback.ITEM_PURCHASED = "ItemPurchased"
+AGS.callback.ITEM_PURCHASE_FAILED = "ItemPurchaseFailed"
 AGS.callback.ITEM_CANCELLED = "ItemCancelled"
 AGS.callback.ITEM_POSTED = "ItemPosted"
