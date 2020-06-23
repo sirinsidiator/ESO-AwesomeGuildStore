@@ -11,6 +11,7 @@ local SORT_ORDER_ID = {
 -- 10 .. 99 - reserved
 
 -- external:
+    RF_MM_AGS_ORDER = 100, -- red_Freak's MasterMerchant AwesomeGuildStore Order
 }
 
 AwesomeGuildStore.data.SORT_ORDER_ID = SORT_ORDER_ID
