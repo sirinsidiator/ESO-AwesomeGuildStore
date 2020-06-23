@@ -153,6 +153,12 @@ function ActivityManager:HideLoading()
     self.statusLine:HideLoading()
 end
 
+function ActivityManager:UpdateQueuedActivityStatus()
+    -- TRANSLATORS: Status text when a new activity was queued
+    self:SetStatusText(gettext("<<1[No activity/One activity/$d activities]>> queued", #self.queue))
+    self:RefreshStatusPanel()
+end
+
 function ActivityManager:QueueActivity(activity)
     local queue, lookup = self.queue, self.lookup
     local key = activity:GetKey()
@@ -161,9 +167,7 @@ function ActivityManager:QueueActivity(activity)
     lookup[key] = activity
     zo_callLater(self.executeNext, 0)
 
-    -- TRANSLATORS: Status text when a new activity was queued
-    self:SetStatusText(gettext("<<1[No activity/One activity/$d activities]>> queued", #queue))
-    self:RefreshStatusPanel()
+    self:UpdateQueuedActivityStatus()
 
     return true
 end
@@ -173,10 +177,11 @@ function ActivityManager:ClearQueue()
         activity:OnRemove()
         self:AddActivityToStatusPanel(activity)
     end
-    self:RefreshStatusPanel()
 
     ZO_ClearTable(self.lookup)
     ZO_ClearTable(self.queue)
+
+    self:UpdateQueuedActivityStatus()
 end
 
 function ActivityManager:RemoveCurrentActivity()
@@ -202,7 +207,7 @@ function ActivityManager:RemoveActivitiesByType(activityType)
             self:AddActivityToStatusPanel(activity)
         end
     end
-    self:RefreshStatusPanel()
+    self:UpdateQueuedActivityStatus()
 end
 
 function ActivityManager:RemoveActivityByKey(key)
@@ -216,7 +221,7 @@ function ActivityManager:RemoveActivityByKey(key)
             self:AddActivityToStatusPanel(activity)
         end
     end
-    self:RefreshStatusPanel()
+    self:UpdateQueuedActivityStatus()
 end
 
 function ActivityManager:GetActivity(key)
