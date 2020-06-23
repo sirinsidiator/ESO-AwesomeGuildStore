@@ -348,6 +348,12 @@ function SearchResultListWrapper:InitializeSortHeaders(tradingHouseWrapper, sear
     unitPriceHeaderLabel:ClearAnchors()
     unitPriceHeaderLabel:SetAnchor(RIGHT)
 
+    -- need to anchor the time remaining header to the unit price header, otherwise it will overlap in Russian
+    local timeRemainingHeader = sortHeaderGroup.headerContainer:GetNamedChild("TimeRemaining")
+    timeRemainingHeader:ClearAnchors()
+    timeRemainingHeader:SetAnchor(RIGHT, unitPriceHeader, LEFT, -20, 0, ANCHOR_CONSTRAINS_X)
+    timeRemainingHeader:SetAnchor(TOP, nameHeader, TOP, 0, 0, ANCHOR_CONSTRAINS_Y)
+
     local customHeader = CreateControlFromVirtual("$(parent)Custom", nameHeader:GetParent(), "ZO_SortHeaderIcon")
     local customHeaderIcon = customHeader:GetNamedChild("Icon")
     customHeader:SetHidden(true)
