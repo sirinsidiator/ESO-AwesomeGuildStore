@@ -158,8 +158,33 @@ local filterDefinition = {
     },
     [SUB_CATEGORY_ID.ARMOR_COSTUME] = {
         {
+            type = TRADING_HOUSE_FILTER_TYPE_ITEM,
+            allowed = {
+                [ITEMTYPE_ARMOR] = true,
+                [ITEMTYPE_COSTUME] = true,
+                [ITEMTYPE_DISGUISE] = true,
+                [ITEMTYPE_TABARD] = true,
+            }
+        },
+        {
+            type = TRADING_HOUSE_FILTER_TYPE_SPECIALIZED_ITEM,
+            allowed = {
+                [SPECIALIZED_ITEMTYPE_NONE] = true,
+                [SPECIALIZED_ITEMTYPE_COSTUME] = true,
+                [SPECIALIZED_ITEMTYPE_DISGUISE] = true,
+                [SPECIALIZED_ITEMTYPE_TABARD] = true,
+            }
+        },
+        {
             type = TRADING_HOUSE_FILTER_TYPE_EQUIP,
             allowed = {
+                [EQUIP_TYPE_HEAD] = true,
+                [EQUIP_TYPE_CHEST] = true,
+                [EQUIP_TYPE_SHOULDERS] = true,
+                [EQUIP_TYPE_LEGS] = true,
+                [EQUIP_TYPE_WAIST] = true,
+                [EQUIP_TYPE_FEET] = true,
+                [EQUIP_TYPE_HAND] = true,
                 [EQUIP_TYPE_COSTUME] = true,
             }
         }
