@@ -52,7 +52,9 @@ function ItemDatabase:Initialize(tradingHouseWrapper)
 
     local function SetDirty()
         local guildId = GetSelectedTradingHouseGuildId()
-        self:GetItemView(guildId):MarkDirty()
+        if(guildId) then
+            self:GetItemView(guildId):MarkDirty()
+        end
     end
 
     AGS:RegisterCallback(AGS.callback.FILTER_VALUE_CHANGED, SetDirty)
