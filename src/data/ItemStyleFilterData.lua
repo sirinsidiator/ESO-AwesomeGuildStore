@@ -3,7 +3,7 @@ local AGS = AwesomeGuildStore
 local gettext = AGS.internal.gettext
 local logger = AGS.internal.logger
 
-local NEXT_UNASSIGNED_STYLE_ID = 97
+local NEXT_UNASSIGNED_STYLE_ID = 106
 local ICON_SIZE = "100%"
 
 local isValidStyleId = {}
@@ -14,7 +14,7 @@ for itemStyleIndex = 1, GetNumValidItemStyles() do
     end
 end
 
-local newStyles = { 89, 92, 93, 94, 95 }
+local newStyles = { 97, 98, 100, 101, 102, 103, 104, 105 }
 -- automatically fill in new styles if there are any
 for styleId = NEXT_UNASSIGNED_STYLE_ID, GetHighestItemStyleId() do
     newStyles[#newStyles + 1] = styleId
@@ -47,7 +47,7 @@ local STYLE_CATEGORIES = {
     },
     {
         label = GetCollectibleName(5843), -- "Elsweyr"
-        values = {82, 83, 84, 85, 86},
+        values = {82, 83, 84, 85, 86, 89, 92, 93, 94, 95},
     },
     {
         label = gettext("New"),
