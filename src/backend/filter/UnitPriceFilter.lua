@@ -44,6 +44,7 @@ function UnitPriceFilter:Initialize()
             [SUB_CATEGORY_ID.CONSUMABLE_MOTIF] = true,
             [SUB_CATEGORY_ID.CONSUMABLE_TOOL] = true,
             [SUB_CATEGORY_ID.CONSUMABLE_TROPHY] = true,
+            [SUB_CATEGORY_ID.CRAFTING_ALL] = true,
             [SUB_CATEGORY_ID.CRAFTING_BLACKSMITHING] = true,
             [SUB_CATEGORY_ID.CRAFTING_CLOTHIER] = true,
             [SUB_CATEGORY_ID.CRAFTING_WOODWORKING] = true,
