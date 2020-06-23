@@ -6,7 +6,6 @@ local logger = AGS.internal.logger
 local gettext = AGS.internal.gettext
 local RegisterForEvent = AGS.internal.RegisterForEvent
 local UnregisterForEvent = AGS.internal.UnregisterForEvent
-local ClearCallLater = AGS.internal.ClearCallLater
 
 local Promise = LibPromises
 local sformat = string.format
@@ -67,7 +66,7 @@ function PostItemActivity:MoveItemIfNeeded()
 
         local function CleanUp()
             UnregisterForEvent(EVENT_INVENTORY_SINGLE_SLOT_UPDATE, eventHandle)
-            ClearCallLater(timeoutHandle)
+            zo_removeCallLater(timeoutHandle)
         end
 
         eventHandle = RegisterForEvent(EVENT_INVENTORY_SINGLE_SLOT_UPDATE, function(_, bagId, slotId, isNewItem, itemSoundCategory, inventoryUpdateReason, stackCountChange)

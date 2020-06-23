@@ -62,13 +62,6 @@ end
 AGS.internal.GetKioskNameFromInfoText = GetKioskNameFromInfoText
 
 
-local function ClearCallLater(id)
-    EVENT_MANAGER:UnregisterForUpdate("CallLaterFunction"..id)
-end
-
-AGS.internal.ClearCallLater = ClearCallLater
-
-
 local function GetItemLinkWritCount(itemLink)
     local data = itemLink:match("|H.-:.-:(.-)|h.-|h")
     local writCount = select(21, zo_strsplit(":", data))

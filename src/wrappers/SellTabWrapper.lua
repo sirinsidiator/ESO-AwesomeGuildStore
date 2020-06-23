@@ -5,7 +5,6 @@ local RegisterForEvent = AGS.internal.RegisterForEvent
 local UnregisterForEvent = AGS.internal.UnregisterForEvent
 local chat = AGS.internal.chat
 local ToggleButton = AGS.class.ToggleButton
-local ClearCallLater = AGS.internal.ClearCallLater
 local GetItemLinkWritCount = AGS.internal.GetItemLinkWritCount
 
 local SellTabWrapper = ZO_Object:Subclass()

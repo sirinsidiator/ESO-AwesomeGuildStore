@@ -5,7 +5,6 @@ local RegisterForEvent = AGS.internal.RegisterForEvent
 
 local ActivityBase = AGS.class.ActivityBase
 local SearchState = AGS.class.SearchState
-local ClearCallLater = AGS.internal.ClearCallLater
 
 local FILTER_UPDATE_DELAY = 0 -- TODO do we even need this? check with profiler
 local AUTO_SEARCH_RESULT_COUNT_THRESHOLD = 20
@@ -327,7 +326,7 @@ end
 
 function SearchManager:RequestResultUpdate()
     if(self.resultUpdateCallback) then -- TODO use the delay call lib we started but never finished
-        ClearCallLater(self.resultUpdateCallback)
+        zo_removeCallLater(self.resultUpdateCallback)
     end
     self.resultUpdateCallback = zo_callLater(function()
         self.resultUpdateCallback = nil
@@ -337,7 +336,7 @@ end
 
 function SearchManager:RequestFilterUpdate()
     if(self.updateCallback) then -- TODO use the delay call lib we started but never finished
-        ClearCallLater(self.updateCallback)
+        zo_removeCallLater(self.updateCallback)
     end
     self.updateCallback = zo_callLater(function()
         self.updateCallback = nil
@@ -380,7 +379,7 @@ function SearchManager:RequestSearch(ignoreResultCount)
         if(self:HasCurrentSearchMorePages(guildId)) then
             if(self.activityManager:RequestSearchResults(guildId, ignoreResultCount)) then
                 if(self.requestNewestInterval) then
-                    ClearCallLater(self.requestNewestInterval)
+                    zo_removeCallLater(self.requestNewestInterval)
                 end
 
                 logger:Debug("Queued request search results")
@@ -397,7 +396,7 @@ end
 
 function SearchManager:RequestNewest(ignoreCooldown)
     if(self.requestNewestInterval) then
-        ClearCallLater(self.requestNewestInterval)
+        zo_removeCallLater(self.requestNewestInterval)
     end
 
     local guildId = GetSelectedTradingHouseGuildId()
