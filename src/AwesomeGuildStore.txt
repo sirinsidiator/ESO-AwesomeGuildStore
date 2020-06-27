@@ -138,6 +138,7 @@ guildstorelist/StoreData.lua
 guildstorelist/KioskList.lua
 guildstorelist/StoreList.lua
 guildstorelist/OwnerList.lua
+guildstorelist/StoreLocationHelper.lua
 guildstorelist/GuildStoreList.xml
 guildstorelist/GuildList.xml
 guildstorelist/TraderListControl.lua

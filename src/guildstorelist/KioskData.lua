@@ -28,9 +28,13 @@ end
 function KioskData:Initialize()
     self.name = ""
     self.storeIndex = ""
-    self.x = -1
-    self.y = -1
+    self.x = 0
+    self.y = 0
     self.lastVisited = 0
+end
+
+function KioskData:HasValidCoordinates()
+    return self.x ~= 0 or self.y ~= 0
 end
 
 function KioskData:Serialize()

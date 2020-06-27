@@ -7,8 +7,10 @@ local DecodeData = AGS.internal.DecodeData
 
 local ARRAY_SEPARATOR = ";"
 local COORD_MULTIPLICATOR = 100000
+local V1 = 1
+local V2 = 2
 local DATA_FORMAT = {
-    [1] = {
+    [V1] = {
         "integer", -- version
         "integer", -- zoneId
         "string", -- mapName
@@ -21,10 +23,25 @@ local DATA_FORMAT = {
         "integer", -- nearestEntranceIndex
         "boolean", -- confirmed
         "boolean", -- onZoneMap
+    },
+    [V2] = {
+        "integer", -- version
+        "integer", -- zoneId
+        "string", -- mapName
+        "integer", -- wayshrineIndex
+        "integer", -- locationIndex
+        "integer", -- x * COORD_MULTIPLICATOR
+        "integer", -- y * COORD_MULTIPLICATOR
+        "string", -- serializedKiosks
+        "string", -- serializedEntranceIndices
+        "integer", -- entranceMapId
+        "boolean", -- confirmed
+        "boolean", -- onZoneMap
+        "integer", -- mapId
     }
 }
-local VERSION = 1
-local CURRENT_DATA_FORMAT = DATA_FORMAT[VERSION]
+local CURRENT_VERSION = V2
+local CURRENT_DATA_FORMAT = DATA_FORMAT[CURRENT_VERSION]
 
 local StoreData = ZO_Object:Subclass()
 AGS.class.StoreData = StoreData
@@ -38,16 +55,21 @@ end
 function StoreData:Initialize()
     self.index = ""
     self.zoneId = 0
-    self.mapName = ""
+    self.mapId = 0
+    self.mapName = "" -- TODO remove once we can get the map name from the mapId
     self.wayshrineIndex = 0
     self.locationIndex = 0
-    self.x = -1
-    self.y = -1
+    self.x = 0
+    self.y = 0
     self.kiosks = nil
+    self.entranceMapId = nil
     self.entranceIndices = nil
-    self.nearestEntranceIndex = nil
     self.confirmed = false
     self.onZoneMap = false
+end
+
+function StoreData:HasValidCoordinates()
+    return self.x ~= 0 or self.y ~= 0
 end
 
 local function SerializeKiosks(kiosks)
@@ -76,20 +98,20 @@ local function DeserializeEntranceIndices(serializedEntranceIndices)
     return indices
 end
 
-local function SerializeNearestEntranceIndex(nearestEntranceIndex)
-    return nearestEntranceIndex or 0
+local function SerializeEntranceMapId(entranceMapId)
+    return entranceMapId or 0
 end
 
-local function DeserializeNearestEntranceIndex(serializedNearestEntranceIndex)
-    if(serializedNearestEntranceIndex ~= 0) then
-        return serializedNearestEntranceIndex
+local function DeserializeEntranceMapId(serializedEntranceMapId)
+    if(serializedEntranceMapId ~= 0) then
+        return serializedEntranceMapId
     end
     return nil
 end
 
 function StoreData:Serialize()
     local data = {
-        VERSION,
+        CURRENT_VERSION,
         self.zoneId,
         self.mapName,
         self.wayshrineIndex,
@@ -98,9 +120,10 @@ function StoreData:Serialize()
         self.y * COORD_MULTIPLICATOR,
         SerializeKiosks(self.kiosks),
         SerializeEntranceIndices(self.entranceIndices),
-        SerializeNearestEntranceIndex(self.nearestEntranceIndex),
+        SerializeEntranceMapId(self.entranceMapId),
         self.confirmed,
-        self.onZoneMap
+        self.onZoneMap,
+        self.mapId
     }
     return EncodeData(data, CURRENT_DATA_FORMAT)
 end
@@ -124,9 +147,13 @@ function StoreData:Deserialize(serializedData)
     i = i + 1
     self.entranceIndices = DeserializeEntranceIndices(data[i])
     i = i + 1
-    self.nearestEntranceIndex = DeserializeNearestEntranceIndex(data[i])
+    if data[1] >= V2 then
+        self.entranceMapId = DeserializeEntranceMapId(data[i])
+    end
     i = i + 1
     self.confirmed = data[i]
     i = i + 1
     self.onZoneMap = data[i]
+    i = i + 1
+    self.mapId = data[i] or self.mapId
 end

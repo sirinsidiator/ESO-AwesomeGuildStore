@@ -1,32 +1,20 @@
 local AGS = AwesomeGuildStore
 
+local StoreLocationHelper = AGS.class.StoreLocationHelper
 local IsAtGuildKiosk = AGS.internal.IsAtGuildKiosk
 local GetUnitGuildKioskOwnerInfo = AGS.internal.GetUnitGuildKioskOwnerInfo
-local IsLocationVisible = AGS.internal.IsLocationVisible
-local IsCurrentMapZoneMap = AGS.internal.IsCurrentMapZoneMap
 local GetKioskNameFromInfoText = AGS.internal.GetKioskNameFromInfoText
 local RegisterForEvent = AGS.internal.RegisterForEvent
 local ShowGuildDetails = AGS.internal.ShowGuildDetails
 local chat = AGS.internal.chat
+local logger = AGS.internal.logger
 local gettext = AGS.internal.gettext
 local osdate = os.date
 
-local KIOSK_ICON = "/esoui/art/icons/servicemappins/servicepin_guildkiosk.dds"
-local VENDOR_ICON = "/esoui/art/icons/servicemappins/servicepin_vendor.dds"
-local FENCE_ICON = "/esoui/art/icons/servicemappins/servicepin_fence.dds"
-local THIEVES_GUILD_ICON = "/esoui/art/icons/servicemappins/servicepin_thievesguild.dds" -- already shows the guild trader in tooltip
-local KIOSK_TOOLTIP_ICON = "/esoui/art/icons/servicetooltipicons/servicetooltipicon_guildkiosk.dds"
-
-local PLAYER_UNIT_TAG = "player"
 local INTERACT_UNIT_TAG = "interact"
 local TARGET_UNIT_TAG = "reticleover"
-local UPDATE_NAMESPACE = "AwesomeGuildStoreStoreLocationUpdate"
-local UPDATE_INTERVAL = 0 -- we want to do it as fast as possible without producing a freeze
 local REFRESH_HANDLE = "AwesomeGuildStoreTraderListRefresh"
 local REFRESH_INTERVAL = 15000
-
-local libGPS = LibGPS2
-local LMP = LibMapPing
 
 local menu = MAIN_MENU_KEYBOARD
 local category = MENU_CATEGORY_GUILDS
@@ -54,62 +42,6 @@ local function InjectGuildMenuTab(sceneName, categoryName, iconPathTemplate)
     menuBarIconData[#menuBarIconData + 1] = iconData
 end
 
-local function IsStoreLocation(locationIndex)
-    for tooltipLineIndex = 1, GetNumMapLocationTooltipLines(locationIndex) do
-        if(IsMapLocationTooltipLineVisible(locationIndex, tooltipLineIndex)) then
-            local tooltipIcon, traderName = GetMapLocationTooltipLineInfo(locationIndex, tooltipLineIndex)
-            if(tooltipIcon == KIOSK_TOOLTIP_ICON) then
-                return true
-            end
-        end
-    end
-    return false
-end
-
-local function FindNearestStoreLocation(x, y)
-    local dmin = 1
-    local index = 0
-    for locationIndex = 1, GetNumMapLocations() do
-        local icon, x_, y_ = GetMapLocationIcon(locationIndex)
-        if(IsLocationVisible(locationIndex) and IsStoreLocation(locationIndex)) then
-            local dx = x - x_
-            local dy = y - y_
-            local ds = dx * dx + dy * dy
-            if(ds < dmin) then
-                dmin = ds
-                index = locationIndex
-            end
-        end
-    end
-    return index
-end
-
-local function BuildStoreIndex(mapName, locationIndex)
-    mapName = mapName:match("(.-)^.-") or mapName
-    return string.format("%s.%d", mapName, locationIndex)
-end
-
-local function GetUnitStoreIndex(unitTag)
-    local x, y = GetMapPlayerPosition(unitTag)
-    local locationIndex = FindNearestStoreLocation(x, y)
-    local mapName = GetMapName()
-    return BuildStoreIndex(mapName, locationIndex)
-end
-
-local IRREGULAR_TOOLTIP_HEADER = { -- TODO exceptions in other languages
-    -- English
-    ["Orsinium Outlaw Refuge"] = "Orsinium Outlaws Refuge",
-    -- French
-    ["refuge des hors-la-loi d'Orsinium"] = "refuge de hors-la-loi d'Orsinium",
-    -- German
-    ["Knurr'Kha-Unterschlupf"] = "Knurr'kha-Unterschlupf",
-    ["Sturmfeste-Unterschlupf"] = "Sturmfeste-Unterschlupft",
-    -- Japanese
-    ["オルシニウム無法者の隠れ家"] = "オルシニウムの無法者の隠れ家",
-    -- already fixed, but we keep them to correct the save data
-    ["Vivec Outlaws Refuge"] = "Vivec City Outlaws Refuge",
-}
-
 local function UpdateStoreNames(saveData, oldName, newName)
     if(saveData.stores[oldName] and not saveData.stores[newName]) then
         saveData.stores[newName] = saveData.stores[oldName]:gsub(oldName, newName)
@@ -122,81 +54,41 @@ local function UpdateStoreNames(saveData, oldName, newName)
 end
 
 local function UpdateSaveData(saveData)
+    local requiresRescan = false
     if(saveData.version == 1) then
         saveData.stores = AGS.class.StoreList.UpdateStoreIds(saveData.stores)
         saveData.kiosks = AGS.class.KioskList.UpdateStoreIds(saveData.kiosks)
         saveData.version = 2
     end
     if(saveData.version < 5) then
-        for oldName, newName in pairs(IRREGULAR_TOOLTIP_HEADER) do
+        for oldName, newName in pairs(StoreLocationHelper.IRREGULAR_TOOLTIP_HEADER) do
             UpdateStoreNames(saveData, oldName, newName)
         end
         saveData.version = 5
     end
+    if(saveData.version < 6) then
+        requiresRescan = true
+        saveData.version = 6
+    end
+    return requiresRescan
 end
 
 local function InitializeSaveData(saveData)
+    local requiresRescan = false
     if(not saveData.guildStoreList) then
         saveData.guildStoreList = {
-            version = 3,
+            version = 6,
             owners = {},
             stores = {},
             kiosks = {},
         }
     else
-        UpdateSaveData(saveData.guildStoreList)
+        requiresRescan = UpdateSaveData(saveData.guildStoreList)
     end
-    return saveData.guildStoreList
+    return saveData.guildStoreList, requiresRescan
 end
 
-local function FindNearestWayshrine(zoneIndex, x, y)
-    local dmin = 1
-    local index = 0
-    for targetIndex = 1, GetNumPOIs(zoneIndex) do
-        if IsPOIWayshrine(zoneIndex, targetIndex) then
-            local x_, y_ = libGPS:LocalToGlobal(GetPOIMapInfo(zoneIndex, targetIndex))
-            local dx = x - x_
-            local dy = y - y_
-            local ds = dx * dx + dy * dy
-            if(ds < dmin) then
-                dmin = ds
-                index = targetIndex
-            end
-        end
-    end
-    return index, dmin
-end
-
-local function FindNearestWayshrineForEntrances(zoneIndex, entranceCoordinates)
-    local dmin = 1
-    local index = 0
-    local entranceIndex = 0
-    for i = 1, #entranceCoordinates do
-        local x, y, locationIndex = unpack(entranceCoordinates[i])
-        local targetIndex, ds = FindNearestWayshrine(zoneIndex, x, y)
-        if(ds < dmin) then
-            dmin = ds
-            index = targetIndex
-            entranceIndex = locationIndex
-        end
-    end
-    return index, entranceIndex, dmin
-end
-
-local function GetKioskNamesFromLocationTooltip(locationIndex)
-    local kiosks = {}
-    for tooltipLineIndex = 1, GetNumMapLocationTooltipLines(locationIndex) do
-        if(IsMapLocationTooltipLineVisible(locationIndex, tooltipLineIndex)) then
-            local tooltipIcon, kioskName = GetMapLocationTooltipLineInfo(locationIndex, tooltipLineIndex)
-            if(tooltipIcon == KIOSK_TOOLTIP_ICON) then
-                kiosks[#kiosks + 1] = zo_strformat("<<1>>", kioskName)
-            end
-        end
-    end
-    return kiosks
-end
-
-local function InitializeStoreListWindow(saveData, kioskList, storeList, ownerList)
+local function InitializeStoreListWindow(saveData, kioskList, storeList, ownerList, storeLocationHelper)
     local window = AwesomeGuildStoreGuildTraders
 
     local GetLastVisitLabel = AGS.internal.GetLastVisitLabel
@@ -286,37 +178,10 @@ local function InitializeStoreListWindow(saveData, kioskList, storeList, ownerLi
         end
     end
 
-    local HEWS_BANE_ZONE_ID = 816
-    local THE_RIFT_ZONE_ID = 103
     local function ShowTraderOnMap(data)
+        local kiosk = kioskList:GetKiosk(data.traderName)
         local store = storeList:GetStore(data.storeIndex)
-        local mapIndex = GetMapIndexByZoneId(store.zoneId)
-
-        MAIN_MENU_KEYBOARD:ShowCategory(MENU_CATEGORY_MAP)
-
-        if(not store.nearestEntranceIndex or store.mapName ~= GetMapName()) then
-            SetMapToMapListIndex(mapIndex)
-            if(not store.onZoneMap) then
-                local x, y = libGPS:GlobalToLocal(store.x, store.y)
-                -- some store coords are outside the click area
-                if(store.zoneId == HEWS_BANE_ZONE_ID) then
-                    x = x + 0.05
-                elseif(store.zoneId == THE_RIFT_ZONE_ID) then
-                    y = y - 0.02
-                end
-                ProcessMapClick(x, y)
-            end
-        else
-            SetMapToPlayerLocation()
-        end
-
-        libGPS:SetPlayerChoseCurrentMap()
-        CALLBACK_MANAGER:FireCallbacks("OnWorldMapChanged")
-
-        local x, y = libGPS:GlobalToLocal(store.x, store.y)
-        zo_callLater(function() -- delay to give the worldmap time to get ready
-            libGPS:PanToMapPosition(x, y)
-        end, 200)
+        storeLocationHelper:ShowKioskOnMap(store, kiosk)
     end
 
     -- TRANSLATORS: label for a context menu entry for a row on the guild kiosk tab
@@ -584,43 +449,8 @@ local function InitializeStoreListWindow(saveData, kioskList, storeList, ownerLi
     return guildTradersScene
 end
 
-local function IsUndergroundKiosk()
-    return GetMapContentType() == MAP_CONTENT_DUNGEON
-end
-
-local function GetMapLocationName(locationIndex)
-    local name = zo_strformat("<<1>>", GetMapLocationTooltipHeader(locationIndex))
-    return IRREGULAR_TOOLTIP_HEADER[name] or name
-end
-
-local function GetLocationEntranceIndices(mapName)
-    local entranceIndices, entranceCoordinates = {}, {}
-    for locationIndex = 1, GetNumMapLocations() do
-        if(mapName == GetMapLocationName(locationIndex)) then
-            local _, x, y = GetMapLocationIcon(locationIndex)
-            local gx, gy = libGPS:LocalToGlobal(x, y)
-            entranceIndices[#entranceIndices + 1] = locationIndex
-            entranceCoordinates[#entranceCoordinates + 1] = {x, y, locationIndex}
-        end
-    end
-
-    assert(#entranceIndices > 0, string.format("Could not match current map (%s) to entrance pins", mapName))
-    return entranceIndices, entranceCoordinates
-end
-
-local function IsUndergroundTraderLocationIcon(icon)
-    return (icon == FENCE_ICON or icon == THIEVES_GUILD_ICON)
-end
-
-local function IsTraderLocationIcon(icon)
-    return (icon == KIOSK_ICON or icon == VENDOR_ICON or IsUndergroundTraderLocationIcon(icon))
-end
-
 local function InitializeGuildStoreList(globalSaveData)
-    local KioskData = AGS.class.KioskData
-    local StoreData = AGS.class.StoreData
-
-    local saveData = InitializeSaveData(globalSaveData)
+    local saveData, requiresRescan = InitializeSaveData(globalSaveData)
     local lang = GetCVar("Language.2")
     if(not saveData.language) then
         saveData.language = lang
@@ -634,219 +464,38 @@ local function InitializeGuildStoreList(globalSaveData)
     local ownerList = AGS.class.OwnerList:New(saveData.owners, guildIdMapping)
     local storeList = AGS.class.StoreList:New(saveData.stores)
     local kioskList = AGS.class.KioskList:New(saveData.kiosks)
-    local guildTradersScene = InitializeStoreListWindow(saveData, kioskList, storeList, ownerList)
+    local storeLocationHelper = StoreLocationHelper:New(storeList, kioskList)
+    local guildTradersScene = InitializeStoreListWindow(saveData, kioskList, storeList, ownerList, storeLocationHelper)
     local guildList = AGS.internal.InitializeGuildList(saveData, kioskList, storeList, ownerList)
     AGS.internal.storeList = { -- we inject it there for now so we can debug it - until we find a better place
         ownerList = ownerList,
         storeList = storeList,
         kioskList = kioskList,
-        guildList = guildList
+        guildList = guildList,
+        storeLocationHelper = storeLocationHelper
     }
 
-    local function CollectStoresOnMap(mapName, mapIndex, zoneIndex, x, y)
-        for locationIndex = 1, GetNumMapLocations() do
-            if(IsLocationVisible(locationIndex)) then
-                local icon, lx, ly = GetMapLocationIcon(locationIndex)
-                if(IsTraderLocationIcon(icon)) then
-                    local isUnderground = IsUndergroundTraderLocationIcon(icon)
-                    local storeIndex
-
-                    if(isUnderground) then
-                        storeIndex = GetMapLocationName(locationIndex)
-                    else
-                        storeIndex = BuildStoreIndex(mapName, locationIndex)
-                    end
-
-                    local store = storeList:GetStore(storeIndex)
-
-                    if(not store) then
-                        local kiosks = GetKioskNamesFromLocationTooltip(locationIndex)
-                        if(isUnderground and #kiosks == 0) then
-                            kiosks[#kiosks + 1] = "-"
-                        end
-
-                        if(#kiosks > 0) then
-                            store = StoreData:New()
-                            store.index = storeIndex
-                            if(not isUnderground) then
-                                store.locationIndex = locationIndex
-                                store.mapName = mapName
-                            else
-                                store.mapName = storeIndex
-                            end
-
-                            store.kiosks = kiosks
-                            local onZoneMap = IsCurrentMapZoneMap()
-                            store.zoneId = GetZoneId(zoneIndex)
-
-                            if(isUnderground) then
-                                local entranceIndices, entranceCoordinates = GetLocationEntranceIndices(storeIndex)
-                                store.entranceIndices = entranceIndices
-
-                                SetMapToMapListIndex(mapIndex)
-                                store.wayshrineIndex, store.nearestEntranceIndex = FindNearestWayshrineForEntrances(zoneIndex, entranceCoordinates)
-                                ProcessMapClick(x, y)
-
-                                local _, ex, ey = GetMapLocationIcon(store.nearestEntranceIndex)
-                                local gx, gy = libGPS:LocalToGlobal(ex, ey)
-                                store.x = gx
-                                store.y = gy
-                            else
-                                local gx, gy = libGPS:LocalToGlobal(lx, ly)
-                                store.wayshrineIndex = FindNearestWayshrine(zoneIndex, gx, gy)
-                                store.x = gx
-                                store.y = gy
-                                store.onZoneMap = onZoneMap
-                            end
-
-                            storeList:SetStore(store)
-                        end
-                    end
-                end
-            end
-        end
-    end
-
     local currentVersion = GetAPIVersion()
-    if(storeList:IsEmpty() or not saveData.lastScannedVersion or saveData.lastScannedVersion < currentVersion) then
-        local visitedMaps = {}
-        local mapIndex, numMaps = 1, GetNumMaps()
-
-        -- LibGPS and LMP get thrown off by the amount of rapid map changes and will produce ping sounds,
-        -- this should be fixed in these libraries, but for now we just mute them here
-        LMP:MutePing(MAP_PIN_TYPE_PLAYER_WAYPOINT)
-        local function DoCollectStores()
-            SetMapToMapListIndex(mapIndex)
-            local zoneIndex = GetCurrentMapZoneIndex()
-            if(zoneIndex and GetMapContentType() ~= MAP_CONTENT_AVA) then
-                local mapName = GetMapName()
-                CollectStoresOnMap(mapName, mapIndex, zoneIndex)
-                visitedMaps[mapName] = true
-
-                for poiIndex = 1, GetNumPOIs(zoneIndex) do
-                    local name = GetPOIInfo(zoneIndex, poiIndex)
-                    local x, y = GetPOIMapInfo(zoneIndex, poiIndex)
-                    if(not IsPOIPublicDungeon(zoneIndex, poiIndex) and not IsPOIGroupDungeon(zoneIndex, poiIndex) and WouldProcessMapClick(x, y)) then
-                        ProcessMapClick(x, y)
-                        mapName = GetMapName()
-                        if(not visitedMaps[mapName]) then
-                            CollectStoresOnMap(mapName, mapIndex, zoneIndex, x, y)
-                            visitedMaps[mapName] = true
-                        end
-                        SetMapToMapListIndex(mapIndex)
-                    end
-                end
-            end
-
-            mapIndex = mapIndex + 1
-            if(mapIndex > numMaps) then
-                zo_callLater(function()
-                    LMP:UnmutePing(MAP_PIN_TYPE_PLAYER_WAYPOINT)
-                end, 500)
-                storeList:InitializeConfirmedKiosks(kioskList)
-                EVENT_MANAGER:UnregisterForUpdate(UPDATE_NAMESPACE)
-                saveData.lastScannedVersion = currentVersion
-            end
-        end
-        EVENT_MANAGER:RegisterForUpdate(UPDATE_NAMESPACE, UPDATE_INTERVAL, DoCollectStores)
+    if(requiresRescan or storeList:IsEmpty() or not saveData.lastScannedVersion or saveData.lastScannedVersion < currentVersion) then
+        storeLocationHelper:ScanAllMaps():Then(function()
+            storeList:InitializeConfirmedKiosks(kioskList)
+            saveData.lastScannedVersion = currentVersion
+        end)
     else
         storeList:InitializeConfirmedKiosks(kioskList)
-    end
-
-    local function SetMapToParentMap()
-        if(GetMapTileTexture() == "Art/maps/vvardenfell/vvardenfelloutlawrefuge_base_0.dds") then
-            -- when zooming out on the Vivec Outlaws Refuge map, we end up on the Vvardenfell map instead of Vivec City and cannot match the entrance pins
-            -- TODO: remove once ZOS fixes the incorrect link
-            MapZoomOut()
-            ProcessMapClick(0.476, 0.874)
-        else
-            MapZoomOut()
-        end
-    end
-
-    local function UpdateKioskAndStore(kioskName, isInteracting)
-        SetMapToPlayerLocation()
-        local x, y = GetMapPlayerPosition(isInteracting and PLAYER_UNIT_TAG or TARGET_UNIT_TAG) -- "reticleover" works as long as we don't interact with the store
-        local locationIndex = FindNearestStoreLocation(x, y)
-        local mapName = GetMapName()
-        local isUnderground = IsUndergroundKiosk()
-        local storeIndex
-
-        if(isUnderground) then
-            storeIndex = mapName:match("(.-)^.-") or mapName
-        else
-            storeIndex = BuildStoreIndex(mapName, locationIndex)
-        end
-
-        local kiosk = kioskList:GetKiosk(kioskName)
-        local store = storeList:GetStore(storeIndex)
-
-        if(not kiosk) then
-            kiosk = KioskData:New()
-            kiosk.name = kioskName
-            kiosk.storeIndex = storeIndex
-
-            storeList:SetConfirmedKiosk(kiosk)
-        end
-        if(not isInteracting and not (kiosk.x ~= -1 or kiosk.y ~= -1)) then
-            local gx, gy = libGPS:LocalToGlobal(x, y)
-            kiosk.x = gx
-            kiosk.y = gy
-        end
-        kiosk.lastVisited = GetTimeStamp()
-        kioskList:SetKiosk(kiosk)
-
-        if(not store) then
-            store = StoreData:New()
-            store.index = storeIndex
-            store.mapName = mapName
-            store.locationIndex = locationIndex
-            store.kiosks = GetKioskNamesFromLocationTooltip(locationIndex)
-
-            local onZoneMap = IsCurrentMapZoneMap()
-            local mapIndex, zoneIndex = libGPS:GetCurrentMapParentZoneIndices()
-            store.zoneId = GetZoneId(zoneIndex)
-
-            SetMapToPlayerLocation()
-            if(isUnderground) then
-                SetMapToParentMap()
-                local entranceIndices, entranceCoordinates = GetLocationEntranceIndices(storeIndex)
-                store.entranceIndices = entranceIndices
-
-                SetMapToMapListIndex(mapIndex)
-                store.wayshrineIndex, store.nearestEntranceIndex = FindNearestWayshrineForEntrances(zoneIndex, entranceCoordinates)
-
-                local _, ex, ey = GetMapLocationIcon(store.nearestEntranceIndex)
-                local gx, gy = libGPS:LocalToGlobal(ex, ey)
-                store.x = gx
-                store.y = gy
-            else
-                local gx, gy = libGPS:LocalToGlobal(x, y)
-                store.wayshrineIndex = FindNearestWayshrine(zoneIndex, gx, gy)
-                store.x = gx
-                store.y = gy
-                store.onZoneMap = onZoneMap
-            end
-
-            storeList:SetStore(store)
-        end
-
-        if(not storeList:HasConfirmedKiosk(store, kiosk)) then
-            storeList:SetConfirmedKiosk(kiosk)
-        end
     end
 
     local function CollectGuildKiosk()
         if(IsAtGuildKiosk()) then
             local kioskName = GetUnitName(INTERACT_UNIT_TAG)
             local guildId, guildName = GetCurrentTradingHouseGuildDetails()
-            UpdateKioskAndStore(kioskName, true)
+            storeLocationHelper:UpdateKioskAndStore(kioskName)
             ownerList:SetCurrentOwner(kioskName, guildName, guildId)
         end
     end
     AGS.internal.CollectGuildKiosk = CollectGuildKiosk
 
-    local REFRESH_TRESHOLD = 1 -- seconds
+    local REFRESH_TRESHOLD = 5 -- seconds
     local lastCheck = {}
 
     local function RefreshKioskOwner()
@@ -856,7 +505,7 @@ local function InitializeGuildStoreList(globalSaveData)
             if(lastCheck[kioskName] and (now - lastCheck[kioskName]) < REFRESH_TRESHOLD) then return end
             lastCheck[kioskName] = now
 
-            UpdateKioskAndStore(kioskName, false)
+            storeLocationHelper:UpdateKioskAndStore(kioskName)
 
             local ownerName, guildId = GetUnitGuildKioskOwnerInfo(TARGET_UNIT_TAG)
             ownerList:SetCurrentOwner(kioskName, ownerName, guildId)

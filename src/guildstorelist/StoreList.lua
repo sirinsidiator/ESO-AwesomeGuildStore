@@ -1,6 +1,7 @@
 local AGS = AwesomeGuildStore
 
 local StoreData = AGS.class.StoreData
+local logger = AGS.internal.logger
 
 local StoreList = ZO_Object:Subclass()
 AGS.class.StoreList = StoreList
@@ -24,11 +25,21 @@ function StoreList:Initialize(saveData)
     self.saveData = saveData
     self.store = {}
     self.confirmedKiosks = {}
+    local invalid = {}
     for storeIndex, serializedData in pairs(saveData) do
         local store = StoreData:New()
         store.index = storeIndex
         store:Deserialize(serializedData)
         self.store[storeIndex] = store
+        if not store.kiosks or #store.kiosks == 0 then
+            logger:Warn("Mark store entry '%s' for removal (no kiosks)", storeIndex)
+            invalid[#invalid + 1] = storeIndex
+        end
+    end
+    for i = 1, #invalid do
+        local storeIndex = invalid[i]
+        saveData[storeIndex] = nil
+        self.store[storeIndex] = nil
     end
 end
 

@@ -182,6 +182,7 @@ local integrityCheckList = {
     ["guildstorelist/KioskList.lua"] = function() return AGS.class.KioskList ~= nil end,
     ["guildstorelist/StoreList.lua"] = function() return AGS.class.StoreList ~= nil end,
     ["guildstorelist/OwnerList.lua"] = function() return AGS.class.OwnerList ~= nil end,
+    ["guildstorelist/StoreLocationHelper.lua"] = function() return AGS.class.StoreLocationHelper ~= nil end,
     ["guildstorelist/GuildStoreList.xml"] = function() return AGS.class.OwnerList ~= nil end,
     ["guildstorelist/GuildList.xml"] = function() return AwesomeGuildStoreGuildTraders ~= nil end,
     ["guildstorelist/TraderListControl.lua"] = function() return AGS.class.TraderListControl ~= nil end,
