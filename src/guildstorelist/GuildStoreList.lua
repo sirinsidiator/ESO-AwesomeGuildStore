@@ -269,6 +269,7 @@ local function InitializeStoreListWindow(saveData, kioskList, storeList, ownerLi
     }
 
     local function RefreshTraderList()
+        logger:Debug("RefreshTraderList - Kiosks")
         traderList:RefreshData()
         if(not selectedTraderData) then
             local data = traderList:GetFirstKioskEntryInList()
@@ -595,15 +596,15 @@ local function InitializeGuildStoreList(globalSaveData)
 
     local function OnGuildDataReady(guildId, skipRefresh)
         local guildMetaData = GUILD_BROWSER_MANAGER:GetGuildData(guildId)
-        AGS.internal.logger:Debug("OnGuildDataReady", guildId, guildMetaData.guildName)
+        logger:Debug("OnGuildDataReady", guildId, guildMetaData.guildName)
         if(guildMetaData.guildName == "") then return end -- guild info was unavailable
-        AGS.internal.logger:Debug(guildMetaData.guildTraderText)
+        logger:Debug(guildMetaData.guildTraderText)
         if(guildMetaData.guildTraderText and guildMetaData.guildTraderText ~= NO_TRADER_TEXT) then
             local kioskName = GetKioskNameFromInfoText(guildMetaData.guildTraderText)
-            AGS.internal.logger:Debug("Has trader", kioskName)
+            logger:Debug("Has trader", kioskName)
             if(kioskName) then
                 local kiosk = kioskList:GetKiosk(kioskName)
-                AGS.internal.logger:Debug(kiosk)
+                logger:Debug(kiosk)
                 if(kiosk) then -- TODO find a way to create the entry when we have not visited the kiosk yet
                     kiosk.lastVisited = GetTimeStamp()
                     kioskList:SetKiosk(kiosk)
@@ -611,16 +612,15 @@ local function InitializeGuildStoreList(globalSaveData)
                 end
             end
         else
-            AGS.internal.logger:Debug("no trader")
+            logger:Debug("no trader")
             local guildData = ownerList:GetGuildData(guildId)
-            AGS.internal.logger:Debug(guildId, guildData, guildData and ownerList:GetCurrentOwner(guildData.lastKiosk))
+            logger:Debug(guildId, guildData, guildData and ownerList:GetCurrentOwner(guildData.lastKiosk))
             if(guildData and ownerList:GetCurrentOwner(guildData.lastKiosk) == nil) then
                 ownerList:SetCurrentOwner(guildData.lastKiosk)
             end
         end
 
         if(not skipRefresh and guildTradersScene:IsShowing()) then
-            AGS.internal.logger:Debug("refresh list")
             guildTradersScene.RefreshTraderList()
         end
     end

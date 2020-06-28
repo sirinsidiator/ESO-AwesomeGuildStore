@@ -39,7 +39,7 @@ function OwnerList:AddTraderInfoToGuild(guildName, kiosk, week, isActive, guildI
     if(isActive) then
         data.hasActiveTrader = true
     end
-    if(data.lastVisitedWeek < week) then
+    if(isActive or data.lastVisitedWeek < week) then
         data.lastKiosk = kiosk
         data.lastVisitedWeek = week
     end
@@ -107,6 +107,14 @@ function OwnerList:GetDataForWeek(week)
     return self.saveData[week] or {}
 end
 
+local function ClearOwnership(weekData, targetGuildNameOrId)
+    for kioskName, guildNameOrId in pairs(weekData) do
+        if targetGuildNameOrId == guildNameOrId then
+            weekData[kioskName] = nil
+        end
+    end
+end
+
 function OwnerList:SetCurrentOwner(kioskName, guildName, guildId)
     AwesomeGuildStore.internal.logger:Debug("SetCurrentOwner", kioskName, guildName, guildId)
     local week = self:GetCurrentWeek()
@@ -124,8 +132,10 @@ function OwnerList:SetCurrentOwner(kioskName, guildName, guildId)
         local validGuildName = (guildName ~= "")
 
         if(validGuildId) then
+            ClearOwnership(weekData, guildId)
             weekData[kioskName] = guildId
         elseif(validGuildName) then
+            ClearOwnership(weekData, guildName)
             weekData[kioskName] = guildName
         end
 
