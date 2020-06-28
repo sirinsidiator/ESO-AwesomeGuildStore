@@ -81,8 +81,8 @@ local function BuildStoreIndex(mapName, locationIndex)
 end
 
 local function GetStoreIndex(mapName, locationIndex)
-    local icon = GetMapLocationIcon(locationIndex)
-    if not IsTraderLocationIcon(icon) then return end
+    local icon, x, y = GetMapLocationIcon(locationIndex)
+    if not IsTraderLocationIcon(icon) or IsCoordinateOutsideCurrentMap(x, y) then return end
 
     local storeIndex
     local isUnderground = IsUndergroundTraderLocationIcon(icon)
