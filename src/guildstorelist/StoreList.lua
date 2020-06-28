@@ -21,7 +21,7 @@ function StoreList.UpdateStoreIds(saveData)
     return newSaveData
 end
 
-function StoreList:Initialize(saveData)
+function StoreList:Initialize(saveData, kioskList)
     self.saveData = saveData
     self.store = {}
     self.confirmedKiosks = {}
@@ -34,6 +34,16 @@ function StoreList:Initialize(saveData)
         if not store.kiosks or #store.kiosks == 0 then
             logger:Warn("Mark store entry '%s' for removal (no kiosks)", storeIndex)
             invalid[#invalid + 1] = storeIndex
+        else
+            if store.confirmed then
+                for i = 1, #store.kiosks do
+                    if not kioskList:HasKiosk(store.kiosks[i]) then
+                        logger:Warn("Mark store entry '%s' as unconfirmed (invalid kiosk)", storeIndex)
+                        store.confirmed = false
+                        break
+                    end
+                end
+            end
         end
     end
     for i = 1, #invalid do
@@ -44,8 +54,29 @@ function StoreList:Initialize(saveData)
 end
 
 function StoreList:InitializeConfirmedKiosks(kioskList)
+    local invalidKiosks = {}
     for _, kiosk in pairs(kioskList:GetAllKiosks()) do
         self:SetConfirmedKiosk(kiosk)
+        if not self.store[kiosk.storeIndex] then
+            logger:Warn("Mark kiosk with invalid storeIndex", kiosk.name, kiosk.storeIndex)
+            invalidKiosks[kiosk.name] = kiosk
+        end
+    end
+
+    for storeIndex, store in pairs(self.store) do
+        for i = 1, #store.kiosks do
+            local kiosk = invalidKiosks[store.kiosks[i]]
+            if kiosk then
+                logger:Info("Update invalid storeIndex on kiosk", kiosk.name)
+                kiosk.storeIndex = storeIndex
+                kioskList:SetKiosk(kiosk)
+                invalidKiosks[kiosk.name] = nil
+            end
+        end
+    end
+
+    for kioskName, kiosk in pairs(invalidKiosks) do
+        logger:Warn("Could not fix invalid storeIndex on kiosk", kioskName)
     end
 end
 

@@ -53,6 +53,30 @@ local function UpdateStoreNames(saveData, oldName, newName)
     end
 end
 
+local function RemoveInvalidKiosks(saveData)
+    local weeksWithOwner = {}
+    for kioskName in pairs(saveData.kiosks) do
+        weeksWithOwner[kioskName] = 0
+    end
+    for week, owners in pairs(saveData.owners) do
+        for kioskName, owner in pairs(owners) do
+            if owner ~= false then
+                weeksWithOwner[kioskName] = (weeksWithOwner[kioskName] or 0) + 1
+            end
+        end
+    end
+
+    for kioskName, count in pairs(weeksWithOwner) do
+        if count == 0 then
+            logger:Warn("Remove invalid kiosk entry '%s' (no owners)", kioskName)
+            saveData.kiosks[kioskName] = nil
+            for week, owners in pairs(saveData.owners) do
+                owners[kioskName] = nil
+            end
+        end
+    end
+end
+
 local function UpdateSaveData(saveData)
     local requiresRescan = false
     if(saveData.version == 1) then
@@ -67,6 +91,7 @@ local function UpdateSaveData(saveData)
         saveData.version = 5
     end
     if(saveData.version < 6) then
+        RemoveInvalidKiosks(saveData)
         requiresRescan = true
         saveData.version = 6
     end
@@ -462,8 +487,8 @@ local function InitializeGuildStoreList(globalSaveData)
 
     local guildIdMapping = AGS.internal.guildIdMapping
     local ownerList = AGS.class.OwnerList:New(saveData.owners, guildIdMapping)
-    local storeList = AGS.class.StoreList:New(saveData.stores)
     local kioskList = AGS.class.KioskList:New(saveData.kiosks)
+    local storeList = AGS.class.StoreList:New(saveData.stores, kioskList)
     local storeLocationHelper = StoreLocationHelper:New(storeList, kioskList)
     local guildTradersScene = InitializeStoreListWindow(saveData, kioskList, storeList, ownerList, storeLocationHelper)
     local guildList = AGS.internal.InitializeGuildList(saveData, kioskList, storeList, ownerList)
@@ -474,16 +499,6 @@ local function InitializeGuildStoreList(globalSaveData)
         guildList = guildList,
         storeLocationHelper = storeLocationHelper
     }
-
-    local currentVersion = GetAPIVersion()
-    if(requiresRescan or storeList:IsEmpty() or not saveData.lastScannedVersion or saveData.lastScannedVersion < currentVersion) then
-        storeLocationHelper:ScanAllMaps():Then(function()
-            storeList:InitializeConfirmedKiosks(kioskList)
-            saveData.lastScannedVersion = currentVersion
-        end)
-    else
-        storeList:InitializeConfirmedKiosks(kioskList)
-    end
 
     local function CollectGuildKiosk()
         if(IsAtGuildKiosk()) then
@@ -505,10 +520,15 @@ local function InitializeGuildStoreList(globalSaveData)
             if(lastCheck[kioskName] and (now - lastCheck[kioskName]) < REFRESH_TRESHOLD) then return end
             lastCheck[kioskName] = now
 
-            storeLocationHelper:UpdateKioskAndStore(kioskName)
-
+            local hasKioskData = kioskList:HasKiosk(kioskName)
             local ownerName, guildId = GetUnitGuildKioskOwnerInfo(TARGET_UNIT_TAG)
-            ownerList:SetCurrentOwner(kioskName, ownerName, guildId)
+            if guildId or hasKioskData then -- prevent NPCs that aren't actual kiosks from entering the dataset
+                storeLocationHelper:UpdateKioskAndStore(kioskName)
+            end
+
+            if hasKioskData then
+                ownerList:SetCurrentOwner(kioskName, ownerName, guildId)
+            end
         end
     end
 
@@ -555,7 +575,18 @@ local function InitializeGuildStoreList(globalSaveData)
         end
     end
 
-    UpdateAllKioskMemberFlags()
+    local currentVersion = GetAPIVersion()
+    if(requiresRescan or storeList:IsEmpty() or not saveData.lastScannedVersion or saveData.lastScannedVersion < currentVersion) then
+        storeLocationHelper:ScanAllMaps():Then(function()
+            storeList:InitializeConfirmedKiosks(kioskList)
+            UpdateAllKioskMemberFlags()
+            saveData.lastScannedVersion = currentVersion
+        end)
+    else
+        storeList:InitializeConfirmedKiosks(kioskList)
+        UpdateAllKioskMemberFlags()
+    end
+
     RegisterForEvent(EVENT_GUILD_SELF_JOINED_GUILD, UpdateAllKioskMemberFlags)
     RegisterForEvent(EVENT_GUILD_SELF_LEFT_GUILD, UpdateAllKioskMemberFlags)
     RegisterForEvent(EVENT_GUILD_TRADER_HIRED_UPDATED, UpdateAllKioskMemberFlags)
