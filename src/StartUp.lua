@@ -197,7 +197,7 @@ local integrityCheckList = {
 }
 
 local libraryCheckList = {
-    ["LibAddonMenu-2.0 r28"] = function() return LibAddonMenu2 ~= nil end,
+    ["LibAddonMenu-2.0 r31"] = function() return LibAddonMenu2 ~= nil end,
 }
 
 local function IntegrityCheck()
