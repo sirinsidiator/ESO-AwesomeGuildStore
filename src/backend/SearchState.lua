@@ -95,8 +95,10 @@ function SearchState:HandleFilterChanged(filter)
 end
 
 function SearchState:Apply()
-    self.applying = true
     local searchManager = self.searchManager
+    if self ~= searchManager.activeSearch then return end
+
+    self.applying = true
     local availableFilters = searchManager:GetAvailableFilters()
     for id, filter in pairs(availableFilters) do
         if(not self.filterState:HasFilter(id) and not filter:IsDefault()) then
