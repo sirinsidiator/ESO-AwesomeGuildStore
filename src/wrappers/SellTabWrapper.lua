@@ -418,6 +418,14 @@ function SellTabWrapper:InitializeCraftingBag(tradingHouseWrapper)
                     ZO_InventorySlot_OnMouseEnter(inventorySlot)
                 end, "primary")
             end
+
+            if self.currentInventoryFragment == CRAFT_BAG_FRAGMENT then
+                slotActions:AddCustomSlotAction(SI_TRADING_HOUSE_SEARCH_FROM_ITEM, function()
+                    local bag, index = ZO_Inventory_GetBagAndIndex(inventorySlot)
+                    local itemLink = GetItemLink(bag, index)
+                    tradingHouse:SearchForItemLink(itemLink)
+                end, "secondary")
+            end
             suppressAction = true
         end
         return false
