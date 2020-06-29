@@ -6,6 +6,8 @@ local CATEGORY_DEFINITION = AGS.data.CATEGORY_DEFINITION
 local WriteToSavedVariable = AGS.internal.WriteToSavedVariable
 local ReadFromSavedVariable = AGS.internal.ReadFromSavedVariable
 
+local logger = AGS.internal.logger
+
 local SearchState = ZO_Object:Subclass()
 AGS.class.SearchState = SearchState
 
@@ -40,6 +42,7 @@ function SearchState:Reset()
     local saveData = self.saveData
     saveData.label = nil
     saveData.enabled = true
+    saveData.automatic = nil
     self.customLabel = false
 
     ZO_ClearTable(self.filterActive)
@@ -63,6 +66,23 @@ function SearchState:IsEnabled()
     return self.saveData.enabled
 end
 
+function SearchState:SetAutomatic(automatic)
+    if automatic then
+        logger:Debug("set automatic search")
+        self.saveData.automatic = true
+    else
+        if self.saveData.automatic then
+            logger:Debug("unset automatic search")
+            self.saveData.automatic = nil
+            AGS.internal:FireCallbacks(AGS.callback.SEARCH_LIST_CHANGED, true)
+        end
+    end
+end
+
+function SearchState:IsAutomatic()
+    return self.saveData.automatic == true
+end
+
 function SearchState:GetSaveData()
     return self.saveData
 end
@@ -71,7 +91,7 @@ function SearchState:GetFilterState()
     return self.filterState
 end
 
-function SearchState:HandleFilterChanged(filter)
+function SearchState:HandleFilterChanged(filter, fromSearchItem)
     local id = filter:GetId()
     local state = nil
     if(filter:IsAttached() and not filter:IsDefault()) then
@@ -90,6 +110,10 @@ function SearchState:HandleFilterChanged(filter)
         WriteToSavedVariable(self.saveData, "state", self.filterState:GetState())
         if(id == FILTER_ID.CATEGORY_FILTER) then
             self:Update()
+        end
+
+        if not fromSearchItem then
+            self:SetAutomatic(false)
         end
     end
 end

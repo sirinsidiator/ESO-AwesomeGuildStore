@@ -25,6 +25,11 @@ local ROW_HEIGHT = 38
 local ADD_NEW_LABEL = gettext("New Search")
 local ADD_NEW_ICON = "EsoUI/Art/Progression/addpoints_up.dds"
 
+local LOCKED_ICON = "EsoUI/Art/Miscellaneous/status_locked.dds"
+local LOCKED_COLOR = ZO_ColorDef:New("BC4B1A")
+local AUTOMATIC_ICON = "EsoUI/Art/MenuBar/Gamepad/gp_playerMenu_icon_submitFeedback.dds"
+local AUTOMATIC_COLOR = ZO_ColorDef:New("1A82BA")
+
 local r, g, b = ZO_TOOLTIP_DEFAULT_COLOR:UnpackRGB()
 local LINE_FORMAT = "%s: |cFFFFFF%s"
 
@@ -59,6 +64,7 @@ function SearchList:Initialize(searchManager)
                 callback =  function(dialog)
                     local label = ZO_Dialogs_GetEditBoxText(dialog)
                     dialog.data:SetLabel(label)
+                    dialog.data:SetAutomatic(false)
                     self.list:RefreshVisible()
                 end,
             },
@@ -100,7 +106,7 @@ function SearchList:Initialize(searchManager)
 
     local function SetupSearchRow(control)
         control.icon = control:GetNamedChild("Icon")
-        control.lock = control:GetNamedChild("Lock")
+        control.status = control:GetNamedChild("Status")
         control.name = control:GetNamedChild("Name")
 
         SetupHighlight(control)
@@ -124,7 +130,17 @@ function SearchList:Initialize(searchManager)
         local color = isSelected and ZO_SELECTED_TEXT or ZO_NORMAL_TEXT
 
         control.icon:SetTexture(texture)
-        control.lock:SetHidden(search:IsEnabled())
+        if not search:IsEnabled() then
+            control.status:SetTexture(LOCKED_ICON)
+            control.status:SetColor(LOCKED_COLOR:UnpackRGBA())
+            control.status:SetHidden(false)
+        elseif search:IsAutomatic() then
+            control.status:SetTexture(AUTOMATIC_ICON)
+            control.status:SetColor(AUTOMATIC_COLOR:UnpackRGBA())
+            control.status:SetHidden(false)
+        else
+            control.status:SetHidden(true)
+        end
         control.name:SetText(search:GetLabel())
         control.name:SetColor(color:UnpackRGBA())
         control.search = search
@@ -246,6 +262,7 @@ end
 
 function SearchList:HandleResetLabel(search)
     search:ResetLabel()
+    search:SetAutomatic(false)
     PlaySound("Click")
 end
 
@@ -256,6 +273,7 @@ end
 
 function SearchList:HandleSetSearchEnabled(search, enabled)
     search:SetEnabled(enabled)
+    search:SetAutomatic(false)
     PlaySound("Click")
     self.list:RefreshVisible()
     AGS.internal:FireCallbacks(AGS.callback.SEARCH_LOCK_STATE_CHANGED, search, search == self.searchManager:GetActiveSearch())
@@ -264,6 +282,7 @@ end
 function SearchList:HandleDuplicateSearch(search)
     local saveData = ZO_ShallowTableCopy(search:GetSaveData())
     saveData.enabled = true
+    saveData.automatic = nil
     local newSearch = self.searchManager:AddSearch(saveData)
 
     if(not self.searchManager:SetActiveSearch(newSearch)) then

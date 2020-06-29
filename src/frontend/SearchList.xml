@@ -19,7 +19,7 @@
                     <Anchor point="LEFT" />
                 </Texture>
 
-                <Texture name="$(parent)Lock" textureFile="EsoUI/Art/Miscellaneous/status_locked.dds" hidden="true" level="1" color="BC4B1A">
+                <Texture name="$(parent)Status" hidden="true" level="1">
                     <Dimensions x="24" y="24" />
                     <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)Icon" relativePoint="BOTTOMRIGHT" />
                 </Texture>
