@@ -9,8 +9,8 @@ local SUB_CATEGORY_ID = AGS.data.SUB_CATEGORY_ID
 local gettext = AGS.internal.gettext
 
 local function IsItemCollected(itemLink)
-    local itemId = GetItemLinkItemId(itemLink)
-    return LibRunebox:IsRuneboxCollected(itemId)
+    local collectibleId = GetItemLinkContainerCollectibleId(itemLink)
+    return IsCollectibleUnlocked(collectibleId)
 end
 
 local CollectibleOwnershipFilter = MultiChoiceFilterBase:Subclass()
