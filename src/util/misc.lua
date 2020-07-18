@@ -31,17 +31,39 @@ end
 
 AGS.internal.IsCurrentMapZoneMap = IsCurrentMapZoneMap
 
-local IRREGULAR_KIOSK_NAMES = { -- TODO
+local IRREGULAR_KIOSK_NAMES = {
     -- English
     ["Eafildil"] = "Rinedel",
     ["Zagh"] = "Zagh gro-Stugh",
     ["Jaflinna"] = "Jaflinna Snow-born",
 }
 
+local CYRILLIC_LOWER_CASE = "абвгдежзийклмнопрстуфхцчшщъыьэюя"
+local KIOSK_MATCH_FUNCTIONS = {
+    ru = function(infoText)
+        local parts = {zo_strsplit(" ", infoText)}
+        local found = false
+        for i = 1, #parts do
+            if not found then
+                local first = parts[i]:sub(1,2) -- we are looking at 2 byte wide chars
+                found = (CYRILLIC_LOWER_CASE:find(first) ~= nil)
+            end
+            if found then parts[i] = nil end
+        end
+        return table.concat(parts, " ")
+    end,
+}
+
+local DEFAULT_KIOSK_MATCH_FUNCTION = function(infoText)
+    return infoText:match("^(.-) [%l ]+ .-$")
+end
+
+local matchKioskName = KIOSK_MATCH_FUNCTIONS[GetCVar("language.2")] or DEFAULT_KIOSK_MATCH_FUNCTION
+
 local function GetKioskNameFromInfoText(infoText)
     if(infoText) then
-        local kioskName = infoText:match("^(.-) [%l ]+ .-$")
-        if(not kioskName) then
+        local kioskName = matchKioskName(infoText)
+        if(not kioskName or kioskName == "") then
             -- TRANSLATORS: chat text when a kiosk name could not be matched. <<1>> is replaced by the label on the home tab in the guild menu
             chat:Print(gettext("Warning: Could not match kiosk name: '<<1>>' -- please report this to the author", infoText))
         end
