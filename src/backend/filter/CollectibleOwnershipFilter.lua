@@ -38,7 +38,6 @@ function CollectibleOwnershipFilter:Initialize()
     })
     self:SetEnabledSubcategories({
         [SUB_CATEGORY_ID.CONSUMABLE_CONTAINER] = true,
-        [SUB_CATEGORY_ID.CONSUMABLE_TROPHY] = true,
     })
 end
 
