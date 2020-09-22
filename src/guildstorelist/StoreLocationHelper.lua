@@ -73,7 +73,7 @@ local function GetMapLocationName(locationIndex)
 end
 
 local function SafeGetMapName()
-    return zo_strformat("<<1>>", GetMapName())
+    return zo_strformat("<<1>>", GetMapName()) or "-unknown-"
 end
 
 local function BuildStoreIndex(mapName, locationIndex)
@@ -542,9 +542,9 @@ function StoreLocationHelper:UpdateKioskAndStore(kioskName)
                 GPS:PopCurrentMap()
                 return
             end
-            local entranceIndices, entranceCoordinates = GetLocationEntranceIndices(storeIndex)
-            store.entranceIndices = entranceIndices
             store.entranceMapId = GetCurrentMapId()
+            local entranceIndices, entranceCoordinates = GetLocationEntranceIndices(storeIndex, store.entranceMapId, SafeGetMapName())
+            store.entranceIndices = entranceIndices
 
             if not TrySetMapToMapListIndex(mapIndex) then
                 GPS:PopCurrentMap()
