@@ -148,17 +148,19 @@ local function LoadSettings()
             setFunc = function(value) saveData.listedNotification = value end,
             default = defaultData.listedNotification,
         }
-        optionsData[#optionsData + 1] = {
-            type = "checkbox",
-            -- TRANSLATORS: label for an entry in the addon settings
-            name = gettext("Disable custom selltab filter"),
-            -- TRANSLATORS: tooltip text for an entry in the addon settings
-            tooltip = gettext("Shows the ingame inventory filter instead of AGS own version when deactivated."),
-            getFunc = function() return saveData.disableCustomSellTabFilter end,
-            setFunc = function(value) saveData.disableCustomSellTabFilter = value end,
-            default = defaultData.disableCustomSellTabFilter,
-            requiresReload = true
-        }
+        if GetAPIVersion() < 100033 then -- TODO remove once it is live
+            optionsData[#optionsData + 1] = {
+                type = "checkbox",
+                -- TRANSLATORS: label for an entry in the addon settings
+                name = gettext("Disable custom selltab filter"),
+                -- TRANSLATORS: tooltip text for an entry in the addon settings
+                tooltip = gettext("Shows the ingame inventory filter instead of AGS own version when deactivated."),
+                getFunc = function() return saveData.disableCustomSellTabFilter end,
+                setFunc = function(value) saveData.disableCustomSellTabFilter = value end,
+                default = defaultData.disableCustomSellTabFilter,
+                requiresReload = true
+            }
+        end
         optionsData[#optionsData + 1] = {
             type = "dropdown",
             -- TRANSLATORS: label for an entry in the addon settings

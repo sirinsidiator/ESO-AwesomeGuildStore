@@ -257,7 +257,7 @@ OnAddonLoaded(function()
         CreateDefaultActionBind(actionName, defaultKey)
     end
 
-    if(LibCIF and not saveData.disableCustomSellTabFilter) then
+    if(GetAPIVersion() < 100033 and LibCIF and not saveData.disableCustomSellTabFilter) then -- TODO remove once it is live
         LibCIF:disableGuildStoreSellFilters()
     end
 end)

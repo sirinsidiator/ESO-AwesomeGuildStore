@@ -135,7 +135,7 @@ function SellTabWrapper:Initialize(saveData)
     self.lastSoldPricePerUnit = saveData.lastSoldPricePerUnit or {}
     saveData.lastSoldPricePerUnit = self.lastSoldPricePerUnit
 
-    self.customFilterDisabled = saveData.disableCustomSellTabFilter
+    self.customFilterDisabled = saveData.disableCustomSellTabFilter or GetAPIVersion() >= 100033 -- TODO remove once it is live
     self.currentInventoryFragment = INVENTORY_FRAGMENT
 end
 
