@@ -73,7 +73,9 @@ local function GetMapLocationName(locationIndex)
 end
 
 local function SafeGetMapName()
-    return zo_strformat("<<1>>", GetMapName()) or "-unknown-"
+    local name = GetMapName()
+    name = name:gsub("(%^.-)d(.-)$", "%1%2") -- filter the modifier "d" (prefixes the name with an article), as it would cause problems in German
+    return zo_strformat("<<1>>", name) or "-unknown-"
 end
 
 local function BuildStoreIndex(mapName, locationIndex)
