@@ -267,6 +267,7 @@ function SimpleInputBox:Initialize(control, currencies)
     end)
 
     control:SetHandler("OnMouseUp", function(control, button, upInside)
+        if not self.enabled then return end
         input:TakeFocus()
     end)
 end
