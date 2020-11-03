@@ -191,7 +191,6 @@ local integrityCheckList = {
     ["guildstorelist/KioskHistoryControl.lua"] = function() return AGS.class.KioskHistoryControl ~= nil end,
     ["guildstorelist/GuildList.lua"] = function() return AGS.internal.InitializeGuildList ~= nil end,
     ["guildstorelist/GuildStoreList.lua"] = function() return AGS.internal.InitializeGuildStoreList ~= nil end,
-    ["SalesCategorySelector.lua"] = function() return AGS.class.SalesCategorySelector ~= nil end,
     ["AwesomeGuildStore.xml"] = function() return AwesomeGuildStoreXmlLoaded ~= nil end,
 -- "Bindings.xml", -- TODO: how to test?
 }
@@ -255,9 +254,5 @@ OnAddonLoaded(function()
 
     if(not saveData.hasTouchedAction["AGS_SUPPRESS_LOCAL_FILTERS"]) then
         CreateDefaultActionBind(actionName, defaultKey)
-    end
-
-    if(GetAPIVersion() < 100033 and LibCIF and not saveData.disableCustomSellTabFilter) then -- TODO remove once it is live
-        LibCIF:disableGuildStoreSellFilters()
     end
 end)

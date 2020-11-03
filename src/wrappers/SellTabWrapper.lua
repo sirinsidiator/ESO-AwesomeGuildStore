@@ -135,7 +135,6 @@ function SellTabWrapper:Initialize(saveData)
     self.lastSoldPricePerUnit = saveData.lastSoldPricePerUnit or {}
     saveData.lastSoldPricePerUnit = self.lastSoldPricePerUnit
 
-    self.customFilterDisabled = saveData.disableCustomSellTabFilter or GetAPIVersion() >= 100033 -- TODO remove once it is live
     self.currentInventoryFragment = INVENTORY_FRAGMENT
 end
 
@@ -335,11 +334,6 @@ function SellTabWrapper:IsAboveVendorPrice()
     local _, _, currentProfit = GetTradingHousePostPriceInfo(self.currentSellPrice)
     local vendorProfit = self.pendingSellPrice * self.currentStackCount
     return currentProfit >= vendorProfit
-end
-
-function SellTabWrapper:InitializeCategoryFilter(tradingHouseWrapper)
-    local postItems = tradingHouseWrapper.tradingHouse.postItemPane
-    self.salesCategoryFilter = AGS.class.SalesCategorySelector:New(postItems, "AwesomeGuildStoreSalesItemCategory")
 end
 
 function SellTabWrapper:InitializeCraftingBag(tradingHouseWrapper)
@@ -680,12 +674,6 @@ function SellTabWrapper:InitializeListedNotification(tradingHouseWrapper)
     end)
 end
 
-function SellTabWrapper:ResetSalesCategoryFilter()
-    if(self.salesCategoryFilter) then
-        self.salesCategoryFilter:Reset()
-    end
-end
-
 function SellTabWrapper:SetCurrentInventory(bagId)
     self:UnsetPendingItem()
 
@@ -693,17 +681,9 @@ function SellTabWrapper:SetCurrentInventory(bagId)
     if(bagId == BAG_BACKPACK) then
         self.currentInventoryFragment = INVENTORY_FRAGMENT
         ZO_PlayerInventoryInfoBar:SetParent(ZO_PlayerInventory)
-        if(self.salesCategoryFilter) then
-            self.salesCategoryFilter:RefreshLayout()
-            self.salesCategoryFilter:Show()
-        end
     elseif(bagId == BAG_VIRTUAL) then
         self.currentInventoryFragment = CRAFT_BAG_FRAGMENT
         ZO_PlayerInventoryInfoBar:SetParent(ZO_CraftBag)
-        if(self.salesCategoryFilter) then
-            self.salesCategoryFilter:Hide()
-            self.salesCategoryFilter:SetBasicLayout()
-        end
     end
     SCENE_MANAGER:AddFragment(self.currentInventoryFragment)
 end
@@ -713,12 +693,6 @@ function SellTabWrapper:IsCraftBagActive()
 end
 
 function SellTabWrapper:OnOpen(tradingHouseWrapper)
-    if(not self.salesCategoryFilter and not self.customFilterDisabled) then
-        self:InitializeCategoryFilter(tradingHouseWrapper)
-    end
-    if(self.salesCategoryFilter) then
-        self.salesCategoryFilter:RefreshLayout()
-    end
     if(self.currentInventoryFragment == CRAFT_BAG_FRAGMENT) then
         ZO_PlayerInventoryInfoBar:SetParent(ZO_CraftBag)
         SCENE_MANAGER:RemoveFragment(INVENTORY_FRAGMENT)

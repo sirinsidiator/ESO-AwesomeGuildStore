@@ -55,13 +55,6 @@ function TradingHouseWrapper:Initialize(saveData)
             [ZO_TRADING_HOUSE_MODE_LISTINGS] = listingTab,
         }
 
-    -- we cannot wrap TRADING_HOUSE.OpenTradingHouse or RunInitialSetup as it would taint the call stack down the line
-    -- e.g. when using inventory items or withdrawing from the bank
-    -- instead we use the EVENT_OPEN_TRADING_HOUSE and hook into the first method after RunInitialSetup is called
-    RegisterForEvent(EVENT_OPEN_TRADING_HOUSE, function()
-        self:ResetSalesCategoryFilter()
-    end)
-
     local CollectGuildKiosk = AGS.internal.CollectGuildKiosk
     if(CollectGuildKiosk) then
         RegisterForEvent(EVENT_TRADING_HOUSE_STATUS_RECEIVED, function()
@@ -69,6 +62,9 @@ function TradingHouseWrapper:Initialize(saveData)
         end)
     end
 
+    -- we cannot wrap TRADING_HOUSE.OpenTradingHouse or RunInitialSetup as it would taint the call stack down the line
+    -- e.g. when using inventory items or withdrawing from the bank
+    -- instead we hook into the first method after RunInitialSetup is called
     local ranInitialSetup = false
     -- SetCurrentMode is the first method called after RunInitialSetup
     self:PreHook("SetCurrentMode", function()
@@ -226,10 +222,6 @@ function TradingHouseWrapper:InitializeFooter()
     labelControl:SetHandler("OnMouseEnter", function() animation:FadeIn(0, FOOTER_FADE_DURATION) end)
     labelControl:SetHandler("OnMouseExit", function() animation:FadeOut(0, FOOTER_FADE_DURATION) end)
     labelControl:SetAlpha(FOOTER_MIN_ALPHA)
-end
-
-function TradingHouseWrapper:ResetSalesCategoryFilter()
-    self.sellTab:ResetSalesCategoryFilter()
 end
 
 function TradingHouseWrapper:SetLoadingOverlayParent(parent)

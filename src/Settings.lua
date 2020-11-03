@@ -12,7 +12,7 @@ local function LoadSettings()
     AGS.info = info
 
     local defaultData = {
-        version = 26,
+        version = 27,
         listWithSingleClick = true,
         showTraderTooltip = true,
         augementMails = true,
@@ -22,7 +22,6 @@ local function LoadSettings()
         listedNotification = false,
         listingSortField = AGS.internal.TRADING_HOUSE_SORT_LISTING_TIME,
         listingSortOrder = ZO_SORT_ORDER_DOWN,
-        disableCustomSellTabFilter = false,
         skipGuildKioskDialog = true,
         hasTouchedAction = {},
         guildTraderListEnabled = true,
@@ -148,19 +147,6 @@ local function LoadSettings()
             setFunc = function(value) saveData.listedNotification = value end,
             default = defaultData.listedNotification,
         }
-        if GetAPIVersion() < 100033 then -- TODO remove once it is live
-            optionsData[#optionsData + 1] = {
-                type = "checkbox",
-                -- TRANSLATORS: label for an entry in the addon settings
-                name = gettext("Disable custom selltab filter"),
-                -- TRANSLATORS: tooltip text for an entry in the addon settings
-                tooltip = gettext("Shows the ingame inventory filter instead of AGS own version when deactivated."),
-                getFunc = function() return saveData.disableCustomSellTabFilter end,
-                setFunc = function(value) saveData.disableCustomSellTabFilter = value end,
-                default = defaultData.disableCustomSellTabFilter,
-                requiresReload = true
-            }
-        end
         optionsData[#optionsData + 1] = {
             type = "dropdown",
             -- TRANSLATORS: label for an entry in the addon settings
@@ -310,6 +296,10 @@ local function LoadSettings()
         if(saveData.version <= 25) then
             saveData.shortMessagePrefix = nil
             saveData.version = 26
+        end
+        if(saveData.version <= 26) then
+            saveData.disableCustomSellTabFilter = nil
+            saveData.version = 27
         end
     end
 
