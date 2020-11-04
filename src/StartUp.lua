@@ -70,7 +70,6 @@ local integrityCheckList = {
     ["util/EditControlGroup.lua"] = function() return AGS.class.EditControlGroup ~= nil end,
     ["data/ItemRequirementLevelRanges.lua"] = function() return AGS.data.ITEM_REQUIREMENT_RANGE ~= nil end,
     ["util/ItemRequirementLevel.lua"] = function() return AGS.internal.GetNormalizedLevel ~= nil end,
-    ["util/ItemEnchantSearchCategory.lua"] = function() return AGS.internal.GetItemLinkEnchantSearchCategory ~= nil end,
     ["util/ItemLinkUtils.lua"] = function() return AGS.internal.IsItemLinkCraftedAllTypes ~= nil end,
     ["templates/MinMaxRangeSlider.xml"] = function() return AwesomeGuildStoreMinMaxRangeSliderTemplateLoaded ~= nil end,
     ["templates/MinMaxRangeSlider.lua"] = function() return AGS.class.MinMaxRangeSlider ~= nil end,

@@ -24,7 +24,6 @@ util/Codec.lua
 util/EditControlGroup.lua
 data/ItemRequirementLevelRanges.lua
 util/ItemRequirementLevel.lua
-util/ItemEnchantSearchCategory.lua
 util/ItemLinkUtils.lua
 templates/MinMaxRangeSlider.xml
 templates/MinMaxRangeSlider.lua

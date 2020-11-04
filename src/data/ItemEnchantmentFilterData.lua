@@ -5,8 +5,12 @@ local SUB_CATEGORY_ID = AGS.data.SUB_CATEGORY_ID
 local FILTER_ID = AGS.data.FILTER_ID
 
 local function UnpackEnchantSearchCategory(filter, itemData)
-    local id = AGS.internal.GetItemLinkEnchantSearchCategory(itemData.itemLink) -- TODO: replace with the api function once it is available
-    return id
+    local enchantId = GetItemLinkFinalEnchantId(itemData.itemLink)
+    local searchCategory = GetEnchantSearchCategoryType(enchantId)
+    if searchCategory == ENCHANTMENT_SEARCH_CATEGORY_NONE then
+        return nil
+    end
+    return searchCategory
 end
 
 local WEAPON_ENCHANTMENT_FILTER = {
