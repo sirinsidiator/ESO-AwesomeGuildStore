@@ -174,7 +174,7 @@ end
 function SearchManager:GetFilter(filterId)
     local filter = self.availableFilters[filterId]
     if(not filter) then
-        logger:Debug(string.format("filter with id %d is not registered", filterId))
+        logger:Debug("Filter with id %d is not registered", filterId)
     end
     return filter
 end
@@ -267,14 +267,14 @@ function SearchManager:GetOrCreateAutomaticSearch()
     for i = 1, #self.searches do
         local search = self.searches[i]
         if search:IsAutomatic() then
-            logger:Debug("Found automatic search to reuse")
+            logger:Verbose("Found automatic search to reuse")
             search:Reset()
             search:SetAutomatic(true)
             return search
         end
     end
 
-    logger:Debug("Create new automatic search")
+    logger:Verbose("Create new automatic search")
     local search = self:CreateSearch()
     search:SetAutomatic(true)
     AGS.internal:FireCallbacks(AGS.callback.SEARCH_LIST_CHANGED, REQUIRES_FULL_UPDATE)
@@ -406,13 +406,13 @@ function SearchManager:RequestSearch(ignoreResultCount)
                     zo_removeCallLater(self.requestNewestInterval)
                 end
 
-                logger:Debug("Queued request search results")
+                logger:Verbose("Queued request search results")
                 return true
             else
-                logger:Debug("Could not queue request search results") -- TODO notify users somehow
+                logger:Verbose("Could not queue request search results") -- TODO notify users somehow
             end
         else
-            logger:Debug("No more pages for current state") -- TODO notify users somehow
+            logger:Verbose("No more pages for current state") -- TODO notify users somehow
         end
     end
     return false

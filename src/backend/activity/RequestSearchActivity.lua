@@ -59,10 +59,10 @@ function RequestSearchActivity:PrepareFilters()
         self.activeFilters = activeFilters
 
         if(count > 0) then
-            logger:Info("Waiting for %d filters to prepare", count)
+            logger:Debug("Waiting for %d filters to prepare", count)
             local function OnFilterPrepared(filter)
                 count = count - 1
-                logger:Info("%s ready, %d filters left to prepare", filter:GetLabel(), count)
+                logger:Debug("%s ready, %d filters left to prepare", filter:GetLabel(), count)
                 if(count == 0) then
                     AGS:UnregisterCallback(AGS.callback.FILTER_PREPARED, OnFilterPrepared)
                     promise:Resolve(self)

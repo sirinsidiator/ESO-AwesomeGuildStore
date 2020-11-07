@@ -763,7 +763,7 @@ end
 
 function ItemCategoryFilter:GetCurrentFilterDefinition(subcategory)
     if(not filterDefinition[subcategory.id]) then
-        logger:Warn(string.format("No filter definition for category %d (%s) found", subcategory.id, subcategory.label))
+        logger:Warn("No filter definition for category %d (%s) found", subcategory.id, subcategory.label)
         return {}
     end
     return filterDefinition[subcategory.id]

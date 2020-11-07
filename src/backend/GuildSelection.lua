@@ -140,6 +140,6 @@ function GuildSelection:ApplySelectedGuildId(guildId)
     local currentGuildId = self.originalGetSelectedTradingHouseGuildId()
     if(currentGuildId == guildId) then return true end
 
-    logger:Info(string.format("Set selected trading house guild to %s", tostring(guildId)))
+    logger:Debug("Set selected trading house guild to %s", tostring(guildId))
     return self.originalSelectTradingHouseGuildId(guildId)
 end

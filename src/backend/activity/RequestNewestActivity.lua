@@ -52,7 +52,7 @@ function RequestNewestActivity:GetLogEntry()
 end
 
 function RequestNewestActivity:HandleSearchResultsReceived(hasAnyResultAlreadyStored)
-    logger:Debug("handle newest results received")
+    logger:Verbose("handle newest results received")
     local page = 0
     if(not hasAnyResultAlreadyStored and self.hasMore) then
         page = self.page + 1

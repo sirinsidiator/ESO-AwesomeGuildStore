@@ -63,7 +63,7 @@ function TradingHouseWrapper:Initialize(saveData)
     end
 
     SecurePostHook(tradingHouse, "RunInitialSetup", function()
-        logger:Info("Before Initial Setup")
+        logger:Debug("Before Initial Setup")
         AGS.internal:FireCallbacks(AGS.callback.BEFORE_INITIAL_SETUP, self)
 
         for mode, tab in next, self.modeToTab do
@@ -88,7 +88,7 @@ function TradingHouseWrapper:Initialize(saveData)
         self:InitializeGuildSelector()
         self:InitializeKeybindStripWrapper()
         self:InitializeStoreTabAutoSwitch()
-        logger:Info("After Initial Setup")
+        logger:Debug("After Initial Setup")
         AGS.internal:FireCallbacks(AGS.callback.AFTER_INITIAL_SETUP, self)
     end)
 
@@ -147,7 +147,7 @@ function TradingHouseWrapper:Initialize(saveData)
         -- TODO: prevent user from selecting the guild store option again when it is already pending
         if(IsShiftKeyDown() or not saveData.skipGuildKioskDialog) then return end
         if(IsAtGuildKiosk()) then
-            logger:Debug("SelectChatterOption")
+            logger:Verbose("SelectChatterOption")
             SelectChatterOption(KIOSK_OPTION_INDEX)
         end
     end)

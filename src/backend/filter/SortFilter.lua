@@ -171,7 +171,7 @@ end
 function SortFilter:Deserialize(state)
     local id, direction = SortOrderBase.Deserialize(state)
     if(not id or direction == nil) then
-        logger:Warn(string.format("Could not deserialize sort filter state '%s'", state))
+        logger:Warn("Could not deserialize sort filter state '%s'", state)
     end
     return id, direction
 end

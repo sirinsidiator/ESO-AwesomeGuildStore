@@ -74,7 +74,7 @@ for _, category in ipairs(STYLE_CATEGORIES) do
                 sortIndex = name,
             }
         else
-            logger:Debug(string.format("Detected use of invalid style id '%d' in category '%s'", styleId, category.label))
+            logger:Debug("Detected use of invalid style id '%d' in category '%s'", styleId, category.label)
         end
         isValidStyleId[styleId] = nil
     end
@@ -82,7 +82,7 @@ for _, category in ipairs(STYLE_CATEGORIES) do
 end
 
 for styleId in pairs(isValidStyleId) do
-    logger:Debug(string.format("Detected unused style id '%d'", styleId))
+    logger:Debug("Detected unused style id '%d'", styleId)
 end
 
 AwesomeGuildStore.data.STYLE_CATEGORIES = STYLE_CATEGORIES

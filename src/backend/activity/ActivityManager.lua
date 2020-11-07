@@ -70,7 +70,7 @@ function ActivityManager:Initialize(tradingHouseWrapper, loadingIndicator, loadi
     end)
 
     RegisterForEvent(EVENT_TRADING_HOUSE_STATUS_RECEIVED, function(_)
-        logger:Debug(string.format("cooldown on status received: %d", GetTradingHouseCooldownRemaining()))
+        logger:Verbose("cooldown on status received: %d", GetTradingHouseCooldownRemaining())
         -- TODO: queue is ready to do work
         self:RefreshStatusPanel()
     end)

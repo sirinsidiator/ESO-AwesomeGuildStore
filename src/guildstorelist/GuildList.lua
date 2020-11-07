@@ -209,7 +209,7 @@ local function InitializeGuildList(saveData, kioskList, storeList, ownerList)
     end
 
     local function RefreshTraderList()
-        AGS.internal.logger:Debug("RefreshTraderList - Guilds")
+        AGS.internal.logger:Verbose("RefreshTraderList - Guilds")
         guildList:RefreshData()
         if(not selectedTraderData) then
             local data = guildList:GetFirstGuildEntryInList()

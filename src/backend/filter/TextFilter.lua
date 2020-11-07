@@ -93,7 +93,7 @@ function TextFilter:ApplyToSearch(request)
     local numResults = GetNumMatchTradingHouseItemNamesResults(self.completedItemNameMatchId)
     if(not numResults or numResults == 0 or numResults > GetMaxTradingHouseFilterExactTerms(TRADING_HOUSE_FILTER_TYPE_NAME_HASH)) then return end
 
-    logger:Info("Apply %d name hashes to search", numResults)
+    logger:Verbose("Apply %d name hashes to search", numResults)
     local hashes = {}
     for hashIndex = 1, numResults do
         local _, hash = GetMatchTradingHouseItemNamesResult(self.completedItemNameMatchId, hashIndex)

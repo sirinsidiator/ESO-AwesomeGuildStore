@@ -280,7 +280,7 @@ local function FindNearestWayshrineForEntrances(zoneIndex, entranceCoordinates)
 end
 
 local function FindNearestEntranceCoordinates(entranceIndices, x, y)
-    logger:Debug("FindNearestEntranceCoordinates")
+    logger:Verbose("FindNearestEntranceCoordinates")
     local dmin = 1
     local nx = 0
     local ny = 0
@@ -290,7 +290,7 @@ local function FindNearestEntranceCoordinates(entranceIndices, x, y)
         local dy = y - ly
         local ds = dx * dx + dy * dy
         if ds < dmin then
-            logger:Debug("new closest coordinates found")
+            logger:Verbose("new closest coordinates found")
             dmin = ds
             nx = lx
             ny = ly
@@ -410,7 +410,7 @@ function StoreLocationHelper:CollectStoresOnCurrentMap(mapId, mapName, mapIndex,
                 local store = storeList:GetStore(storeIndex)
                 if not store then
                     store = StoreData:New()
-                    logger:Debug("Creating data for", storeIndex)
+                    logger:Verbose("Creating data for", storeIndex)
                 else
                     if store.kiosks and #store.kiosks ~= #kiosks then
                         logger:Warn("Number of kiosks has changed for", storeIndex)
@@ -434,7 +434,7 @@ function StoreLocationHelper:CollectStoresOnCurrentMap(mapId, mapName, mapIndex,
                     store.index = storeIndex
                     store.kiosks = kiosks
                     store.zoneId = zoneId
-                    logger:Debug("Collecting data for", storeIndex)
+                    logger:Verbose("Collecting data for", storeIndex)
 
                     if isUnderground then
                         store.mapName = storeIndex
@@ -494,7 +494,7 @@ function StoreLocationHelper:UpdateKioskAndStore(kioskName)
 
     local kiosk = kioskList:GetKiosk(kioskName)
     if not kiosk then
-        logger:Debug("Create new KioskData for", kioskName, storeIndex)
+        logger:Verbose("Create new KioskData for", kioskName, storeIndex)
         kiosk = KioskData:New()
         kiosk.name = kioskName
         kiosk.storeIndex = storeIndex
@@ -510,7 +510,7 @@ function StoreLocationHelper:UpdateKioskAndStore(kioskName)
     local isNewStore = false
     local store = storeList:GetStore(storeIndex)
     if not store then
-        logger:Debug("Create new StoreData for", storeIndex)
+        logger:Verbose("Create new StoreData for", storeIndex)
         store = StoreData:New()
         store.index = storeIndex
         store.mapName = mapName
@@ -529,7 +529,7 @@ function StoreLocationHelper:UpdateKioskAndStore(kioskName)
         store.mapId = GetCurrentMapId()
         store.x, store.y = GetGlobalCoordinatesForLocation(locationIndex)
         if not isNewStore then
-            logger:Debug("Update coordinates for", storeIndex)
+            logger:Verbose("Update coordinates for", storeIndex)
             storeList:SetStore(store)
         end
     end
@@ -575,11 +575,11 @@ function StoreLocationHelper:CalculatePingCoordinates(store, kiosk, isOnStoreMap
         if IsCoordinateOutsideCurrentMap(x, y) then
             x, y = GetPOIMapInfo(GetZoneIndex(store.zoneId), store.wayshrineIndex)
         end
-        logger:Debug("return entrance coordinates")
+        logger:Verbose("return entrance coordinates")
         return FindNearestEntranceCoordinates(store.entranceIndices, x, y)
     elseif not kiosk then
         if isOnStoreMap and (store.locationIndex == 0 or not store:HasValidCoordinates()) then
-            logger:Debug("find and return store location")
+            logger:Verbose("find and return store location")
             store.locationIndex = FindNearestStoreLocation(0.5, 0.5)
             store.kiosks = GetKioskNamesFromLocationTooltip(store.locationIndex)
             local _, lx, ly = GetMapLocationIcon(store.locationIndex)
@@ -588,17 +588,17 @@ function StoreLocationHelper:CalculatePingCoordinates(store, kiosk, isOnStoreMap
             self.storeList:SetStore(store)
             return lx, ly
         else
-            logger:Debug("return store coordinates")
+            logger:Verbose("return store coordinates")
             return GPS:GlobalToLocal(store.x, store.y)
         end
     else
-        logger:Debug("return kiosk coordinates")
+        logger:Verbose("return kiosk coordinates")
         return GPS:GlobalToLocal(kiosk.x, kiosk.y)
     end
 end
 
 function StoreLocationHelper:ShowKioskOnMap(store, kiosk, secondTry)
-    logger:Info("ShowKioskOnMap")
+    logger:Verbose("ShowKioskOnMap")
     if not store then return end
 
     if not secondTry then ZO_WorldMap_ShowWorldMap() end
@@ -614,11 +614,11 @@ function StoreLocationHelper:ShowKioskOnMap(store, kiosk, secondTry)
     GPS:SetPlayerChoseCurrentMap()
     CALLBACK_MANAGER:FireCallbacks("OnWorldMapChanged")
 
-    logger:Debug("Wait for map to settle")
+    logger:Verbose("Wait for map to settle")
     zo_callLater(function()
         local actualMapId = GetCurrentMapId()
         if expectedMapId == actualMapId then
-            logger:Debug("Focus and ping kiosk")
+            logger:Verbose("Focus and ping kiosk")
             panAndZoomManager:PanToNormalizedPosition(x, y)
             pinManager:CreatePin(MAP_PIN_TYPE_AUTO_MAP_NAVIGATION_PING, "pings", x, y)
         else

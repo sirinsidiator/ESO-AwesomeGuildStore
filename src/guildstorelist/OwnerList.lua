@@ -116,7 +116,7 @@ local function ClearOwnership(weekData, targetGuildNameOrId)
 end
 
 function OwnerList:SetCurrentOwner(kioskName, guildName, guildId)
-    AwesomeGuildStore.internal.logger:Debug("SetCurrentOwner", kioskName, guildName, guildId)
+    AwesomeGuildStore.internal.logger:Verbose("SetCurrentOwner", kioskName, guildName, guildId)
     local week = self:GetCurrentWeek()
     if(not week) then return end -- happens when the guild system is down
     if(not self:HasDataForWeek(week)) then

@@ -68,11 +68,11 @@ end
 
 function SearchState:SetAutomatic(automatic)
     if automatic then
-        logger:Debug("set automatic search")
+        logger:Verbose("set automatic search")
         self.saveData.automatic = true
     else
         if self.saveData.automatic then
-            logger:Debug("unset automatic search")
+            logger:Verbose("unset automatic search")
             self.saveData.automatic = nil
             AGS.internal:FireCallbacks(AGS.callback.SEARCH_LIST_CHANGED, true)
         end
