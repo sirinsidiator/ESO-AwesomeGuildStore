@@ -62,14 +62,8 @@ function TradingHouseWrapper:Initialize(saveData)
         end)
     end
 
-    -- we cannot wrap TRADING_HOUSE.OpenTradingHouse or RunInitialSetup as it would taint the call stack down the line
-    -- e.g. when using inventory items or withdrawing from the bank
-    -- instead we hook into the first method after RunInitialSetup is called
-    local ranInitialSetup = false
-    -- SetCurrentMode is the first method called after RunInitialSetup
-    self:PreHook("SetCurrentMode", function()
-        if(ranInitialSetup) then return end
-
+    SecurePostHook(tradingHouse, "RunInitialSetup", function()
+        logger:Info("Before Initial Setup")
         AGS.internal:FireCallbacks(AGS.callback.BEFORE_INITIAL_SETUP, self)
 
         for mode, tab in next, self.modeToTab do
@@ -94,9 +88,8 @@ function TradingHouseWrapper:Initialize(saveData)
         self:InitializeGuildSelector()
         self:InitializeKeybindStripWrapper()
         self:InitializeStoreTabAutoSwitch()
+        logger:Info("After Initial Setup")
         AGS.internal:FireCallbacks(AGS.callback.AFTER_INITIAL_SETUP, self)
-
-        ranInitialSetup = true
     end)
 
     -- we hook into this function in order to disable the ingame search features
@@ -112,7 +105,6 @@ function TradingHouseWrapper:Initialize(saveData)
 
     local currentTab
     self:Wrap("HandleTabSwitch", function(originalHandleTabSwitch, tradingHouse, tabData)
-        if(not ranInitialSetup) then return end
         local oldTab = currentTab
         if currentTab then
             currentTab:OnClose(self)
@@ -140,7 +132,6 @@ function TradingHouseWrapper:Initialize(saveData)
     end)
 
     RegisterForEvent(EVENT_CLOSE_TRADING_HOUSE, function()
-        if(not ranInitialSetup) then return end
         self:HideLoadingIndicator()
         self:HideLoadingOverlay()
         if currentTab then
@@ -213,7 +204,7 @@ function TradingHouseWrapper:InitializeFooter()
 
     local versionLabel = AGS.info.fullVersion
     local labelControl = footer:GetNamedChild("Version")
-    -- TRANSLATORS: Footer text for the store interface. Place holders are for the version string and to make the Donate text clickable and colored 
+    -- TRANSLATORS: Footer text for the store interface. Place holders are for the version string and to make the Donate text clickable and colored
     labelControl:SetText(gettext("AwesomeGuildStore - Version: <<1>> - <<2>>Donate<<3>>", versionLabel, "|cFFD700|H0|h", "|h|r"))
     labelControl:SetHandler("OnLinkMouseUp", AwesomeGuildStore.internal.Donate)
 
