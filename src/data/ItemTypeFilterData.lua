@@ -113,27 +113,27 @@ local DRINK_TYPE_FILTER = {
         {
             id = SPECIALIZED_ITEMTYPE_DRINK_ALCOHOLIC,
             label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_DRINK_ALCOHOLIC)),
-            icon = "/EsoUI/Art/TreeIcons/provisioner_indexIcon_beer_%s.dds",
+            icon = "EsoUI/Art/TreeIcons/provisioner_indexIcon_beer_%s.dds",
         },
         {
             id = SPECIALIZED_ITEMTYPE_DRINK_TEA,
             label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_DRINK_TEA)),
-            icon = "/EsoUI/Art/WorldMap/map_indexIcon_filters_%s.dds",
+            icon = "EsoUI/Art/WorldMap/map_indexIcon_filters_%s.dds",
         },
         {
             id = SPECIALIZED_ITEMTYPE_DRINK_TONIC,
             label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_DRINK_TONIC)),
-            icon =  "EsoUI/Art/Crafting/alchemy_tabIcon_solvent_%s.dds",
+            icon = "EsoUI/Art/Crafting/alchemy_tabIcon_solvent_%s.dds",
         },
         {
             id = SPECIALIZED_ITEMTYPE_DRINK_LIQUEUR,
             label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_DRINK_LIQUEUR)),
-            icon = "/EsoUI/Art/TreeIcons/provisioner_indexIcon_spirits_%s.dds",
+            icon = "EsoUI/Art/TreeIcons/provisioner_indexIcon_spirits_%s.dds",
         },
         {
             id = SPECIALIZED_ITEMTYPE_DRINK_TINCTURE,
             label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_DRINK_TINCTURE)),
-            icon = "/EsoUI/Art/TreeIcons/provisioner_indexIcon_wine_%s.dds",
+            icon = "EsoUI/Art/TreeIcons/provisioner_indexIcon_wine_%s.dds",
         },
         {
             id = SPECIALIZED_ITEMTYPE_DRINK_CORDIAL_TEA,
@@ -148,7 +148,7 @@ local DRINK_TYPE_FILTER = {
         {
             id = SPECIALIZED_ITEMTYPE_DRINK_UNIQUE,
             label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_FOOD_UNIQUE)), -- SPECIALIZED_ITEMTYPE_DRINK_UNIQUE is labeled as "Drink", so we use this for now
-            icon = "/EsoUI/Art/TreeIcons/collection_indexIcon_dyes_%s.dds",
+            icon = "EsoUI/Art/TreeIcons/collection_indexIcon_dyes_%s.dds",
         },
     }
 }

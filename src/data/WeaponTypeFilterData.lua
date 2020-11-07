@@ -24,22 +24,22 @@ local ONE_HANDED_WEAPON_TYPE_FILTER = {
         {
             id = WEAPONTYPE_AXE,
             label = GetString("SI_WEAPONTYPE", WEAPONTYPE_AXE),
-            icon = "AwesomeGuildStore/images/weapon/axe_%s.dds",
+            icon = "EsoUI/Art/TradingHouse/Tradinghouse_Weapons_1h_Axe_%s.dds",
         },
         {
             id = WEAPONTYPE_HAMMER,
             label = GetString("SI_WEAPONTYPE", WEAPONTYPE_HAMMER),
-            icon = "AwesomeGuildStore/images/weapon/mace_%s.dds",
+            icon = "EsoUI/Art/TradingHouse/Tradinghouse_Weapons_1h_Mace_%s.dds",
         },
         {
             id = WEAPONTYPE_SWORD,
             label = GetString("SI_WEAPONTYPE", WEAPONTYPE_SWORD),
-            icon = "AwesomeGuildStore/images/weapon/twohand_%s.dds",
+            icon = "EsoUI/Art/TradingHouse/Tradinghouse_Weapons_1h_Sword_%s.dds",
         },
         {
             id = WEAPONTYPE_DAGGER,
             label = GetString("SI_WEAPONTYPE", WEAPONTYPE_DAGGER),
-            icon = "AwesomeGuildStore/images/weapon/dagger_%s.dds",
+            icon = "EsoUI/Art/TradingHouse/Tradinghouse_Weapons_1h_Dagger_%s.dds",
         },
     }
 }
@@ -56,17 +56,17 @@ local TWO_HANDED_WEAPON_TYPE_FILTER = {
         {
             id = WEAPONTYPE_TWO_HANDED_AXE,
             label = GetString("SI_WEAPONTYPE", WEAPONTYPE_TWO_HANDED_AXE),
-            icon = "AwesomeGuildStore/images/weapon/axe_%s.dds",
+            icon = "EsoUI/Art/TradingHouse/Tradinghouse_Weapons_2h_Axe_%s.dds",
         },
         {
             id = WEAPONTYPE_TWO_HANDED_HAMMER,
             label = GetString("SI_WEAPONTYPE", WEAPONTYPE_TWO_HANDED_HAMMER),
-            icon = "AwesomeGuildStore/images/weapon/mace_%s.dds",
+            icon = "EsoUI/Art/TradingHouse/Tradinghouse_Weapons_2h_Mace_%s.dds",
         },
         {
             id = WEAPONTYPE_TWO_HANDED_SWORD,
             label = GetString("SI_WEAPONTYPE", WEAPONTYPE_TWO_HANDED_SWORD),
-            icon = "AwesomeGuildStore/images/weapon/twohand_%s.dds",
+            icon = "EsoUI/Art/TradingHouse/Tradinghouse_Weapons_2h_Sword_%s.dds",
         },
     }
 }
@@ -83,17 +83,17 @@ local STAFF_WEAPON_TYPE_FILTER = {
         {
             id = WEAPONTYPE_FIRE_STAFF,
             label = GetString("SI_WEAPONTYPE", WEAPONTYPE_FIRE_STAFF),
-            icon = "AwesomeGuildStore/images/weapon/fire_%s.dds",
+            icon = "EsoUI/Art/TradingHouse/Tradinghouse_Weapons_Staff_Flame_%s.dds",
         },
         {
             id = WEAPONTYPE_FROST_STAFF,
             label = GetString("SI_WEAPONTYPE", WEAPONTYPE_FROST_STAFF),
-            icon = "AwesomeGuildStore/images/weapon/ice_%s.dds",
+            icon = "EsoUI/Art/TradingHouse/Tradinghouse_Weapons_Staff_Frost_%s.dds",
         },
         {
             id = WEAPONTYPE_LIGHTNING_STAFF,
             label = GetString("SI_WEAPONTYPE", WEAPONTYPE_LIGHTNING_STAFF),
-            icon = "AwesomeGuildStore/images/weapon/lightning_%s.dds",
+            icon = "EsoUI/Art/TradingHouse/Tradinghouse_Weapons_Staff_Lightning_%s.dds",
         },
     }
 }

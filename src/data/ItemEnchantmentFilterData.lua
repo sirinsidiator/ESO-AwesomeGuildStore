@@ -31,17 +31,17 @@ local WEAPON_ENCHANTMENT_FILTER = {
         {
             id = ENCHANTMENT_SEARCH_CATEGORY_FIERY_WEAPON, -- deals x flame damage
             label = GetString("SI_ENCHANTMENTSEARCHCATEGORYTYPE", ENCHANTMENT_SEARCH_CATEGORY_FIERY_WEAPON),
-            icon = "AwesomeGuildStore/images/weapon/fire_%s.dds",
+            icon = "EsoUI/Art/TradingHouse/Tradinghouse_Weapons_Staff_Flame_%s.dds",
         },
         {
             id = ENCHANTMENT_SEARCH_CATEGORY_FROZEN_WEAPON, -- deals x cold damage
             label = GetString("SI_ENCHANTMENTSEARCHCATEGORYTYPE", ENCHANTMENT_SEARCH_CATEGORY_FROZEN_WEAPON),
-            icon = "AwesomeGuildStore/images/weapon/ice_%s.dds",
+            icon = "EsoUI/Art/TradingHouse/Tradinghouse_Weapons_Staff_Frost_%s.dds",
         },
         {
             id = ENCHANTMENT_SEARCH_CATEGORY_CHARGED_WEAPON, -- deals x shock damage
             label = GetString("SI_ENCHANTMENTSEARCHCATEGORYTYPE", ENCHANTMENT_SEARCH_CATEGORY_CHARGED_WEAPON),
-            icon = "AwesomeGuildStore/images/weapon/lightning_%s.dds",
+            icon = "EsoUI/Art/TradingHouse/Tradinghouse_Weapons_Staff_Lightning_%s.dds",
         },
         {
             id = ENCHANTMENT_SEARCH_CATEGORY_POISONED_WEAPON, -- deals x poison damage
@@ -153,12 +153,12 @@ local JEWELRY_ENCHANTMENT_FILTER = {
         {
             id = ENCHANTMENT_SEARCH_CATEGORY_FIRE_RESISTANT, -- adds x flame resistance
             label = GetString("SI_ENCHANTMENTSEARCHCATEGORYTYPE", ENCHANTMENT_SEARCH_CATEGORY_FIRE_RESISTANT),
-            icon = "AwesomeGuildStore/images/weapon/fire_%s.dds",
+            icon = "EsoUI/Art/TradingHouse/Tradinghouse_Weapons_Staff_Flame_%s.dds",
         },
         {
             id = ENCHANTMENT_SEARCH_CATEGORY_FROST_RESISTANT, -- adds x cold resistance
             label = GetString("SI_ENCHANTMENTSEARCHCATEGORYTYPE", ENCHANTMENT_SEARCH_CATEGORY_FROST_RESISTANT),
-            icon = "AwesomeGuildStore/images/weapon/ice_%s.dds",
+            icon = "EsoUI/Art/TradingHouse/Tradinghouse_Weapons_Staff_Frost_%s.dds",
         },
         {
             id = ENCHANTMENT_SEARCH_CATEGORY_SHOCK_RESISTANT, -- adds x shock resistance
@@ -188,7 +188,7 @@ local JEWELRY_ENCHANTMENT_FILTER = {
         {
             id = ENCHANTMENT_SEARCH_CATEGORY_INCREASE_SPELL_DAMAGE, -- adds x spell damage
             label = GetString("SI_ENCHANTMENTSEARCHCATEGORYTYPE", ENCHANTMENT_SEARCH_CATEGORY_INCREASE_SPELL_DAMAGE),
-            icon = "AwesomeGuildStore/images/weapon/lightning_%s.dds",
+            icon = "EsoUI/Art/TradingHouse/Tradinghouse_Weapons_Staff_Lightning_%s.dds",
         },
         {
             id = ENCHANTMENT_SEARCH_CATEGORY_INCREASE_PHYSICAL_DAMAGE, -- adds x weapon damage
@@ -198,7 +198,7 @@ local JEWELRY_ENCHANTMENT_FILTER = {
         {
             id = ENCHANTMENT_SEARCH_CATEGORY_INCREASE_BASH_DAMAGE, -- increase bash damage by x
             label = GetString("SI_ENCHANTMENTSEARCHCATEGORYTYPE", ENCHANTMENT_SEARCH_CATEGORY_INCREASE_BASH_DAMAGE),
-            icon = "AwesomeGuildStore/images/armor/shield_%s.dds",
+            icon = "EsoUI/Art/Inventory/inventory_tabIcon_shield_%s.dds",
         },
         {
             id = ENCHANTMENT_SEARCH_CATEGORY_INCREASE_POTION_EFFECTIVENESS, -- increase the effect of restoration potions by x

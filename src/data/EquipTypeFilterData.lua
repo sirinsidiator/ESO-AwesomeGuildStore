@@ -25,37 +25,37 @@ local ARMOR_EQUIP_TYPE_FILTER = {
         {
             id = EQUIP_TYPE_HEAD,
             label = GetString("SI_EQUIPTYPE", EQUIP_TYPE_HEAD),
-            icon = "EsoUI/Art/Inventory/inventory_tabIcon_armor_%s.dds",
+            icon = "EsoUI/Art/TradingHouse/Tradinghouse_Apparel_Head_%s.dds",
         },
         {
             id = EQUIP_TYPE_CHEST,
             label = GetString("SI_EQUIPTYPE", EQUIP_TYPE_CHEST),
-            icon = "AwesomeGuildStore/images/armor/chest_%s.dds",
+            icon = "EsoUI/Art/TradingHouse/Tradinghouse_Apparel_Chest_%s.dds",
         },
         {
             id = EQUIP_TYPE_SHOULDERS,
             label = GetString("SI_EQUIPTYPE", EQUIP_TYPE_SHOULDERS),
-            icon = "AwesomeGuildStore/images/armor/shoulders_%s.dds",
+            icon = "EsoUI/Art/TradingHouse/Tradinghouse_Apparel_Shoulders_%s.dds",
         },
         {
             id = EQUIP_TYPE_WAIST,
             label = GetString("SI_EQUIPTYPE", EQUIP_TYPE_WAIST),
-            icon = "AwesomeGuildStore/images/armor/belt_%s.dds",
+            icon = "EsoUI/Art/TradingHouse/Tradinghouse_Apparel_Waist_%s.dds",
         },
         {
             id = EQUIP_TYPE_LEGS,
             label = GetString("SI_EQUIPTYPE", EQUIP_TYPE_LEGS),
-            icon = "AwesomeGuildStore/images/armor/legs_%s.dds",
+            icon = "EsoUI/Art/TradingHouse/Tradinghouse_Apparel_Legs_%s.dds",
         },
         {
             id = EQUIP_TYPE_FEET,
             label = GetString("SI_EQUIPTYPE", EQUIP_TYPE_FEET),
-            icon = "AwesomeGuildStore/images/armor/feet_%s.dds",
+            icon = "EsoUI/Art/TradingHouse/Tradinghouse_Apparel_Feet_%s.dds",
         },
         {
             id = EQUIP_TYPE_HAND,
             label = GetString("SI_EQUIPTYPE", EQUIP_TYPE_HAND),
-            icon = "AwesomeGuildStore/images/armor/hands_%s.dds",
+            icon = "EsoUI/Art/TradingHouse/Tradinghouse_Apparel_Hands_%s.dds",
         },
     }
 }

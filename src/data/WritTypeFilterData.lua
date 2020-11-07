@@ -76,8 +76,8 @@ local MASTER_WRIT_TYPE_FILTER = {
         },
         {
             id = MASTER_WRIT_TYPE.OTHER,
-            label = GetString("SI_ENCHANTMENTSEARCHCATEGORYTYPE", ENCHANTMENT_SEARCH_CATEGORY_OTHER),
-            icon = "EsoUI/Art/Inventory/inventory_tabIcon_misc_%s.dds",
+            label = GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_HOLIDAY_WRIT),
+            icon = "EsoUI/Art/TradingHouse/Tradinghouse_Holiday_Writ_%s.dds",
         },
     }
 }
