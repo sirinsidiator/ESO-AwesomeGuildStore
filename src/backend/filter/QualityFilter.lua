@@ -31,32 +31,26 @@ function QualityFilter:Initialize()
             {
                 id = ITEM_QUALITY_TRASH,
                 label = GetString("SI_ITEMQUALITY", ITEM_QUALITY_TRASH),
-                icon = "AwesomeGuildStore/images/qualitybuttons/trash_%s.dds",
             },
             {
                 id = ITEM_QUALITY_NORMAL,
                 label = GetString("SI_ITEMQUALITY", ITEM_QUALITY_NORMAL),
-                icon = "AwesomeGuildStore/images/qualitybuttons/normal_%s.dds",
             },
             {
                 id = ITEM_QUALITY_MAGIC,
                 label = GetString("SI_ITEMQUALITY", ITEM_QUALITY_MAGIC),
-                icon = "AwesomeGuildStore/images/qualitybuttons/magic_%s.dds",
             },
             {
                 id = ITEM_QUALITY_ARCANE,
                 label = GetString("SI_ITEMQUALITY", ITEM_QUALITY_ARCANE),
-                icon = "AwesomeGuildStore/images/qualitybuttons/arcane_%s.dds",
             },
             {
                 id = ITEM_QUALITY_ARTIFACT,
                 label = GetString("SI_ITEMQUALITY", ITEM_QUALITY_ARTIFACT),
-                icon = "AwesomeGuildStore/images/qualitybuttons/artifact_%s.dds",
             },
             {
                 id = ITEM_QUALITY_LEGENDARY,
                 label = GetString("SI_ITEMQUALITY", ITEM_QUALITY_LEGENDARY),
-                icon = "AwesomeGuildStore/images/qualitybuttons/legendary_%s.dds",
             }
         },
         requiresStepConversion = true,
@@ -66,6 +60,7 @@ function QualityFilter:Initialize()
     for i = 1, #self.config.steps do
         local step = self.config.steps[i]
         local color = GetItemQualityColor(step.id)
+        step.color = color
         step.colorizedLabel = color:Colorize(step.label)
         qualityById[step.id] = step
     end

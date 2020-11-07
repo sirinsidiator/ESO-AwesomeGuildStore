@@ -81,5 +81,17 @@
                 </Label>
             </Controls>
         </Control>
+
+        <Button name="AwesomeGuildStoreQualityButtonTemplate" mouseOverBlendMode="ADD" inherits="ZO_ButtonBehaviorClickSound" virtual="true">
+            <ButtonState state="PRESSED" />
+            <Dimensions x="32" y="32" />
+
+            <Controls>
+                <Texture name="$(parent)Color">
+                    <Anchor point="TOPLEFT" offsetX="9" offsetY="9" />
+                    <Anchor point="BOTTOMRIGHT" offsetX="-9" offsetY="-9" />
+                </Texture>
+            </Controls>
+        </Button>
     </Controls>
 </GuiXml>

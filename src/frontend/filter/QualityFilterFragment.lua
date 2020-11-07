@@ -7,7 +7,7 @@ local BUTTON_SIZE = 36
 local BUTTON_OFFSET_X = -12
 local BUTTON_OFFSET_Y = 2
 
-local QUALITY_BUTTON_OVER_ICON = "AwesomeGuildStore/images/qualitybuttons/over.dds"
+local QUALITY_BUTTON_ICON = "AwesomeGuildStore/images/qualitybuttons/qualitybutton_%s.dds"
 
 local QualityFilterFragment = ValueRangeFilterFragmentBase:Subclass()
 AGS.class.QualityFilterFragment = QualityFilterFragment
@@ -51,15 +51,25 @@ function QualityFilterFragment:Initialize(filterId)
     self.buttons = buttons
 end
 
+function QualityFilterFragment:OnValueChanged(min, max)
+    ValueRangeFilterFragmentBase.OnValueChanged(self, min, max)
+    local buttons = self.buttons
+    local isDefault = self:IsDefault(min, max)
+    for i = 1, #buttons do
+        local value = buttons[i].value
+        local deselected = isDefault or value < min or value > max
+        buttons[i]:SetState(not deselected, false)
+    end
+end
+
 function QualityFilterFragment:CreateButton(container, i, data)
-    local control = CreateControl("$(parent)Button" .. i, container, CT_BUTTON)
+    local control = WINDOW_MANAGER:CreateControlFromVirtual("$(parent)Button", container, "AwesomeGuildStoreQualityButtonTemplate", i)
     local button = SimpleIconButton:New(control)
-    button:SetClickSound(SOUNDS.DEFAULT_CLICK)
     button:SetSize(BUTTON_SIZE)
     button:SetTooltipText(data.label)
-    button:SetTextureTemplate(data.icon)
-    button:SetMouseOverTexture(QUALITY_BUTTON_OVER_ICON)
+    button:SetTextureTemplate(QUALITY_BUTTON_ICON)
     button.value = data.id
+    control:GetNamedChild("Color"):SetColor(data.color:UnpackRGBA())
     return button
 end
 
