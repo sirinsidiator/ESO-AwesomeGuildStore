@@ -1,7 +1,7 @@
 {
     "id": 141,
 	"name": "AwesomeGuildStore",
-	"version": "1.4.0-beta",
+	"version": "1.5.0",
 	"tier": 1,
-	"file": "target/AwesomeGuildStore_1_4_0-beta.zip"
+	"file": "target/AwesomeGuildStore_1_5_0.zip"
 }
