@@ -74,6 +74,13 @@ local filterDefinition = {
     },
     [SUB_CATEGORY_ID.ARMOR_ALL] = {
         {
+            type = TRADING_HOUSE_FILTER_TYPE_SPECIALIZED_ITEM,
+            allowed = {
+                [SPECIALIZED_ITEMTYPE_WEAPON] = true,
+                [SPECIALIZED_ITEMTYPE_ARMOR] = true,
+            }
+        },
+        {
             type = TRADING_HOUSE_FILTER_TYPE_EQUIP,
             allowed = {
                 [EQUIP_TYPE_HEAD] = true,
@@ -84,7 +91,6 @@ local filterDefinition = {
                 [EQUIP_TYPE_FEET] = true,
                 [EQUIP_TYPE_HAND] = true,
                 [EQUIP_TYPE_OFF_HAND] = true,
-                [EQUIP_TYPE_COSTUME] = true,
             }
         }
     },
@@ -156,39 +162,6 @@ local filterDefinition = {
             }
         },
     },
-    [SUB_CATEGORY_ID.ARMOR_COSTUME] = {
-        {
-            type = TRADING_HOUSE_FILTER_TYPE_ITEM,
-            allowed = {
-                [ITEMTYPE_ARMOR] = true,
-                [ITEMTYPE_COSTUME] = true,
-                [ITEMTYPE_DISGUISE] = true,
-                [ITEMTYPE_TABARD] = true,
-            }
-        },
-        {
-            type = TRADING_HOUSE_FILTER_TYPE_SPECIALIZED_ITEM,
-            allowed = {
-                [SPECIALIZED_ITEMTYPE_NONE] = true,
-                [SPECIALIZED_ITEMTYPE_COSTUME] = true,
-                [SPECIALIZED_ITEMTYPE_DISGUISE] = true,
-                [SPECIALIZED_ITEMTYPE_TABARD] = true,
-            }
-        },
-        {
-            type = TRADING_HOUSE_FILTER_TYPE_EQUIP,
-            allowed = {
-                [EQUIP_TYPE_HEAD] = true,
-                [EQUIP_TYPE_CHEST] = true,
-                [EQUIP_TYPE_SHOULDERS] = true,
-                [EQUIP_TYPE_LEGS] = true,
-                [EQUIP_TYPE_WAIST] = true,
-                [EQUIP_TYPE_FEET] = true,
-                [EQUIP_TYPE_HAND] = true,
-                [EQUIP_TYPE_COSTUME] = true,
-            }
-        }
-    },
     [SUB_CATEGORY_ID.JEWELRY_ALL] = {
         {
             type = TRADING_HOUSE_FILTER_TYPE_EQUIP,
@@ -232,6 +205,7 @@ local filterDefinition = {
                 [ITEMTYPE_FISH] = true,
                 [ITEMTYPE_TREASURE] = true,
                 [ITEMTYPE_TROPHY] = true,
+                [ITEMTYPE_TRASH] = true,
             }
         },
         {
@@ -328,6 +302,7 @@ local filterDefinition = {
                 [ITEMTYPE_FISH] = true,
                 [ITEMTYPE_TREASURE] = true,
                 [ITEMTYPE_TROPHY] = true,
+                [ITEMTYPE_TRASH] = true,
             }
         },
         {
@@ -518,23 +493,86 @@ local filterDefinition = {
     },
     [SUB_CATEGORY_ID.MISCELLANEOUS_ALL] = {
         {
-            type = TRADING_HOUSE_FILTER_TYPE_ITEM,
+            type = TRADING_HOUSE_FILTER_TYPE_SPECIALIZED_ITEM,
             allowed = {
-                [ITEMTYPE_GLYPH_WEAPON] = true,
-                [ITEMTYPE_GLYPH_JEWELRY] = true,
-                [ITEMTYPE_GLYPH_ARMOR] = true,
-                [ITEMTYPE_SOUL_GEM] = true,
-                [ITEMTYPE_SIEGE] = true,
-                [ITEMTYPE_LURE] = true,
-                [ITEMTYPE_TOOL] = true,
-                [ITEMTYPE_TROPHY] = true,
-                [ITEMTYPE_COLLECTIBLE] = true,
+                [SPECIALIZED_ITEMTYPE_NONE] = true,
+                [SPECIALIZED_ITEMTYPE_COLLECTIBLE_RARE_FISH] = true,
+                [SPECIALIZED_ITEMTYPE_COLLECTIBLE_MONSTER_TROPHY] = true,
+                [SPECIALIZED_ITEMTYPE_TROPHY_TREASURE_MAP] = true,
+                [SPECIALIZED_ITEMTYPE_TROPHY_SURVEY_REPORT] = true,
+                [SPECIALIZED_ITEMTYPE_TROPHY_KEY_FRAGMENT] = true,
+                [SPECIALIZED_ITEMTYPE_TROPHY_MUSEUM_PIECE] = true,
+                [SPECIALIZED_ITEMTYPE_TROPHY_SCROLL] = true,
+                [SPECIALIZED_ITEMTYPE_TROPHY_KEY] = true,
+                [SPECIALIZED_ITEMTYPE_TROPHY_DUNGEON_BUFF_INGREDIENT] = true,
+                [SPECIALIZED_ITEMTYPE_SIEGE_TREBUCHET] = true,
+                [SPECIALIZED_ITEMTYPE_SIEGE_BALLISTA] = true,
+                [SPECIALIZED_ITEMTYPE_SIEGE_RAM] = true,
+                [SPECIALIZED_ITEMTYPE_SIEGE_CATAPULT] = true,
+                [SPECIALIZED_ITEMTYPE_SIEGE_GRAVEYARD] = true,
+                [SPECIALIZED_ITEMTYPE_SIEGE_MONSTER] = true,
+                [SPECIALIZED_ITEMTYPE_SIEGE_OIL] = true,
+                [SPECIALIZED_ITEMTYPE_SIEGE_LANCER] = true,
+                [SPECIALIZED_ITEMTYPE_TOOL] = true,
+                [SPECIALIZED_ITEMTYPE_DISGUISE] = true,
+                [SPECIALIZED_ITEMTYPE_TABARD] = true,
+                [SPECIALIZED_ITEMTYPE_LURE] = true,
+                [SPECIALIZED_ITEMTYPE_SOUL_GEM] = true,
+                [SPECIALIZED_ITEMTYPE_GLYPH_WEAPON] = true,
+                [SPECIALIZED_ITEMTYPE_GLYPH_ARMOR] = true,
+                [SPECIALIZED_ITEMTYPE_GLYPH_JEWELRY] = true,
+                [SPECIALIZED_ITEMTYPE_TRASH] = true,
+                [SPECIALIZED_ITEMTYPE_TREASURE] = true,
+            }
+        },
+        {
+            type = TRADING_HOUSE_FILTER_TYPE_EQUIP,
+            allowed = {
+                [EQUIP_TYPE_INVALID] = true,
+                [EQUIP_TYPE_CHEST] = true,
+                [EQUIP_TYPE_LEGS] = true,
+                [EQUIP_TYPE_FEET] = true,
+                [EQUIP_TYPE_HAND] = true,
+                [EQUIP_TYPE_COSTUME] = true,
             }
         },
         {
             type = ITEMFILTERTYPE_LOCAL,
             allowed = {
                 [ITEMFILTERTYPE_MISCELLANEOUS] = true,
+            }
+        }
+    },
+    [SUB_CATEGORY_ID.MISCELLANEOUS_COSTUME] = {
+        {
+            type = TRADING_HOUSE_FILTER_TYPE_ITEM,
+            allowed = {
+                [ITEMTYPE_ARMOR] = true,
+                [ITEMTYPE_COSTUME] = true,
+                [ITEMTYPE_DISGUISE] = true,
+                [ITEMTYPE_TABARD] = true,
+            }
+        },
+        {
+            type = TRADING_HOUSE_FILTER_TYPE_SPECIALIZED_ITEM,
+            allowed = {
+                [SPECIALIZED_ITEMTYPE_NONE] = true,
+                [SPECIALIZED_ITEMTYPE_COSTUME] = true,
+                [SPECIALIZED_ITEMTYPE_DISGUISE] = true,
+                [SPECIALIZED_ITEMTYPE_TABARD] = true,
+            }
+        },
+        {
+            type = TRADING_HOUSE_FILTER_TYPE_EQUIP,
+            allowed = {
+                [EQUIP_TYPE_HEAD] = true,
+                [EQUIP_TYPE_CHEST] = true,
+                [EQUIP_TYPE_SHOULDERS] = true,
+                [EQUIP_TYPE_LEGS] = true,
+                [EQUIP_TYPE_WAIST] = true,
+                [EQUIP_TYPE_FEET] = true,
+                [EQUIP_TYPE_HAND] = true,
+                [EQUIP_TYPE_COSTUME] = true,
             }
         }
     },
@@ -592,6 +630,35 @@ local filterDefinition = {
             allowed = {
                 [ITEMTYPE_TROPHY] = true,
                 [ITEMTYPE_COLLECTIBLE] = true,
+                [ITEMTYPE_TREASURE] = true,
+            }
+        },
+        {
+            type = ITEMFILTERTYPE_LOCAL,
+            allowed = {
+                [ITEMFILTERTYPE_MISCELLANEOUS] = true,
+            }
+        }
+    },
+    [SUB_CATEGORY_ID.MISCELLANEOUS_TRASH] = {
+        {
+            type = TRADING_HOUSE_FILTER_TYPE_ITEM,
+            allowed = {
+                [ITEMTYPE_TRASH] = true,
+            }
+        },
+        {
+            type = ITEMFILTERTYPE_LOCAL,
+            allowed = {
+                [ITEMFILTERTYPE_MISCELLANEOUS] = true,
+            }
+        }
+    },
+    [SUB_CATEGORY_ID.MISCELLANEOUS_MISC] = {
+        {
+            type = TRADING_HOUSE_FILTER_TYPE_ITEM,
+            allowed = {
+                [ITEMTYPE_NONE] = true,
             }
         },
         {
@@ -660,7 +727,7 @@ local function GetSubcategoryFromItem(itemLink)
                     break
                 end
             end
-    
+
             if(isMatch and (subcategory.id == SUB_CATEGORY_ID.ALL or not SUB_CATEGORY_DEFINITION[subcategoryId].isDefault)) then
                 subcategory = SUB_CATEGORY_DEFINITION[subcategoryId]
                 local category = CATEGORY_DEFINITION[subcategory.category]

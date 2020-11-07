@@ -126,7 +126,8 @@ function SearchList:Initialize(searchManager)
         end
 
         local isSelected = (search == searchManager:GetActiveSearch())
-        local texture = search:GetIcon():format(isSelected and "down" or "up")
+        local icons = search:GetIcons()
+        local texture = isSelected and icons.down or icons.up
         local color = isSelected and ZO_SELECTED_TEXT or ZO_NORMAL_TEXT
 
         control.icon:SetTexture(texture)

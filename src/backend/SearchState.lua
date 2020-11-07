@@ -148,7 +148,7 @@ end
 
 function SearchState:Update()
     local label = self.label
-    local icon = self.icon
+    local icons = self.icons
 
     local subcategory = self.filterState:GetSubcategory()
     local category = CATEGORY_DEFINITION[subcategory.category]
@@ -162,12 +162,12 @@ function SearchState:Update()
     end
 
     if(subcategory.isDefault) then
-        self.icon = category.icon
+        self.icons = category.icons
     else
-        self.icon = subcategory.icon
+        self.icons = subcategory.icons
     end
 
-    if(label ~= self.label or icon ~= self.icon) then
+    if(label ~= self.label or icons ~= self.icons) then
         AGS.internal:FireCallbacks(AGS.callback.SEARCH_LIST_CHANGED)
     end
 end
@@ -193,8 +193,8 @@ function SearchState:HasCustomLabel()
     return self.customLabel
 end
 
-function SearchState:GetIcon()
-    return self.icon
+function SearchState:GetIcons()
+    return self.icons
 end
 
 function SearchState:GetDataEntry(type)

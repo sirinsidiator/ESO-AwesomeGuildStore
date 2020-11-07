@@ -102,7 +102,9 @@ function CategorySelector:CreateCategoryButton(parent, index, size, previousButt
 end
 
 function CategorySelector:ApplyCategory(button, category)
-    button:SetTextureTemplate(category.icon)
+    button:SetNormalTexture(category.icons.up)
+    button:SetPressedTexture(category.icons.down)
+    button:SetMouseOverTexture(category.icons.over)
     button:SetTooltipText(category.label)
     button.category = category.id
 end
