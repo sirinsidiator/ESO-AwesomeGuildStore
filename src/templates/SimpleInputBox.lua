@@ -374,6 +374,10 @@ function SimpleInputBox:HasFocus()
     return self.input:HasFocus()
 end
 
+function SimpleInputBox:SetMaxInputChars(maxChars)
+    return self.input:SetMaxInputChars(maxChars)
+end
+
 function SimpleInputBox:SetEnabled(enabled)
     self.enabled = enabled
     local input = self.input

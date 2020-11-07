@@ -33,6 +33,7 @@ function TextFilterFragment:InitializeControls()
     autoComplete:SetAnchor(TOPLEFT, inputContainer, BOTTOMLEFT, 4, 10)
 
     self.input = SimpleInputBox:New(inputContainer:GetNamedChild("Input"))
+    self.input:SetMaxInputChars(30000)
 
     self.nameSearchAutoComplete = ZO_TradingHouseNameSearchAutoComplete:New(autoComplete, self.input)
     RegisterForEvent(EVENT_MATCH_TRADING_HOUSE_ITEM_NAMES_COMPLETE, function(_, ...)
