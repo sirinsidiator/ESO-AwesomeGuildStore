@@ -8,11 +8,9 @@ local SUB_CATEGORY_ID = AGS.data.SUB_CATEGORY_ID
 
 local gettext = AGS.internal.gettext
 
-local function IsSetItemCollected(itemLink, setId)
+local function IsSetItemCollected(itemLink)
     if not IsItemLinkSetCollectionPiece(itemLink) then return nil end
-    local setId = select(6, GetItemLinkSetInfo(itemLink, false))
-    local slot = GetItemLinkItemSetCollectionSlot(itemLink)
-    return IsItemSetCollectionSlotUnlocked(setId, slot)
+    return IsItemSetCollectionPieceUnlocked(GetItemLinkItemId(itemLink))
 end
 
 local function IsContainerCollected(itemLink)
