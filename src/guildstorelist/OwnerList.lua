@@ -58,6 +58,8 @@ function OwnerList:Initialize(saveData, guildIdMapping)
     self.guildList = {}
     local currentWeek = self:GetCurrentWeek()
     saveData[197001] = nil -- get rid of invalid data that previously could be stored during times when the guild system is down
+    if not saveData[202053] then saveData[202053] = saveData[202153] end -- fix incorrect iso week
+    saveData[202153] = nil
     for week, traders in pairs(saveData) do
         weekOrder[#weekOrder + 1] = week
         for kiosk, guildNameOrId in pairs(traders) do
