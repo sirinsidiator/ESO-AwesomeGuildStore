@@ -137,7 +137,9 @@ function TradingHouseWrapper:Initialize(saveData)
         if currentTab then
             currentTab:OnClose(self)
         end
-        tradingHouse:ClearPendingPost()
+        if GetNumGuilds() > 0 then
+            tradingHouse:ClearPendingPost()
+        end
     end)
 
     local INTERACT_WINDOW_SHOWN = "Shown"
