@@ -121,6 +121,10 @@ function TradingHouseWrapper:Initialize(saveData)
         -- TODO: remove once we have our own history feature
         originalUpdateFragments(tradingHouse)
         SCENE_MANAGER:RemoveFragment(TRADING_HOUSE_SEARCH_HISTORY_KEYBOARD_FRAGMENT)
+
+        if TRADING_HOUSE_SCENE:IsShowing() and tradingHouse:IsInSellMode() then
+            sellTab:UpdateFragments()
+        end
     end)
 
     ZO_PreHook(ITEM_PREVIEW_KEYBOARD, "PreviewTradingHouseSearchResultAsFurniture", function(self, tradingHouseIndex)
