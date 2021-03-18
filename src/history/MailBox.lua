@@ -11,6 +11,12 @@ AGS.internal.InitializeAugmentedMails = function(saveData)
 	local negativeColor = ZO_ColorDef:New("FF0000")
 	local neutralColor = ZO_ColorDef:New("FFFFFF")
 
+	local HELP_ICON_MOUSE_OVER_ALPHA = 1
+	local HELP_ICON_MOUSE_EXIT_ALPHA = 0.4
+	local HELP_ICON_SIZE = 23
+	local SIGN_NEGATIVE = "-"
+	local SIGN_POSITIVE = "+"
+
 	local nextId = 1
 	local hasData = false
 	local currentMailTime = 0
@@ -71,9 +77,9 @@ AGS.internal.InitializeAugmentedMails = function(saveData)
 
 	local function SetValue(line, value)
 		local valueControl, sign = line.value, line.sign
-		if(sign == "+" and value ~= 0) then
+		if(sign == SIGN_POSITIVE and value ~= 0) then
 			valueControl:SetColor(positiveColor:UnpackRGBA())
-		elseif(sign == "-" and value ~= 0) then
+		elseif(sign == SIGN_NEGATIVE and value ~= 0) then
 			valueControl:SetColor(negativeColor:UnpackRGBA())
 		else
 			valueControl:SetColor(neutralColor:UnpackRGBA())
@@ -95,23 +101,41 @@ AGS.internal.InitializeAugmentedMails = function(saveData)
 		return line
 	end
 
-	local function CreateLine(container, label, sign)
+	local function CreateLine(container, label, tooltipText, sign)
 		local line = CreateLineContainer(container, 20)
-		local name = line:GetName()
 
-		local labelControl = line:CreateControl(name .. "Label", CT_LABEL)
+		local labelControl = line:CreateControl("$(parent)Label", CT_LABEL)
 		labelControl:SetFont("ZoFontWinH4")
 		labelControl:SetColor(ZO_NORMAL_TEXT:UnpackRGBA())
-		labelControl:SetAnchor(TOPLEFT, line, TOPLEFT, 0, 0)
+		labelControl:SetAnchor(TOPLEFT, line, TOPLEFT, HELP_ICON_SIZE, 0)
 		labelControl:SetText(zo_strformat("<<1>>:", label))
 
-		local valueControl = line:CreateControl(name .. "Value", CT_LABEL)
+		local valueControl = line:CreateControl("$(parent)Value", CT_LABEL)
 		valueControl:SetFont("ZoFontWinH4")
 		valueControl:SetColor(neutralColor:UnpackRGBA())
 		valueControl:SetAnchor(TOPRIGHT, line, TOPRIGHT, 0, 0)
 		line.sign = sign
 		line.value = valueControl
 
+		if tooltipText then
+			local helpControl = line:CreateControl("$(parent)Help", CT_TEXTURE)
+			helpControl:SetTexture("EsoUI/Art/miscellaneous/help_icon.dds")
+			helpControl:SetDimensions(HELP_ICON_SIZE, HELP_ICON_SIZE)
+			helpControl:SetColor(neutralColor:UnpackRGBA())
+			helpControl:SetAlpha(HELP_ICON_MOUSE_EXIT_ALPHA)
+			helpControl:SetAnchor(RIGHT, labelControl, LEFT, 0, 0)
+			helpControl:SetMouseEnabled(true)
+			helpControl:SetHandler("OnMouseEnter", function()
+				InitializeTooltip(InformationTooltip, helpControl, BOTTOMLEFT, 0, -2, TOPLEFT)
+				SetTooltipText(InformationTooltip, tooltipText)
+				helpControl:SetAlpha(HELP_ICON_MOUSE_OVER_ALPHA)
+			end)
+			helpControl:SetHandler("OnMouseExit", function()
+				ClearTooltip(InformationTooltip)
+				helpControl:SetAlpha(HELP_ICON_MOUSE_EXIT_ALPHA)
+			end)
+		end
+	
 		line.SetValue = SetValue
 		return line
 	end
@@ -133,18 +157,44 @@ AGS.internal.InitializeAugmentedMails = function(saveData)
 		container:SetHidden(true)
 		container.previousLine = container
 
-		container.sellValue = CreateLine(container, GetString(SI_TRADING_HOUSE_POSTING_PRICE_TOTAL):gsub(":", ""))
+		local sellValueLabel = GetString(SI_TRADING_HOUSE_POSTING_PRICE_TOTAL):gsub(":", "")
+		-- TRANSLATORS: help text for the listing price in the guild store sell mail invoice
+		local sellValueTooltipText = gettext("The price the item was listed for")
+		container.sellValue = CreateLine(container, sellValueLabel, sellValueTooltipText)
+
 		CreateDivider(container)
-		container.listingFee = CreateLine(container, GetString(SI_TRADING_HOUSE_POSTING_LISTING_FEE), "-")
-		container.guildBank = CreateLine(container, GetString(SI_TRADING_HOUSE_POSTING_TH_CUT), "-")
+
+		local guildBankLabel = GetString(SI_TRADING_HOUSE_POSTING_TH_CUT)
+		-- TRANSLATORS: help text for the tax amount in the guild store sell mail invoice
+		local guildBankTooltipText = gettext("The amount that was deposited into the guild bank as tax")
+		container.guildBank = CreateLine(container, guildBankLabel, guildBankTooltipText, SIGN_NEGATIVE)
+
 		-- TRANSLATORS: label for the commission line in the guild store sell mail invoice
-		container.commission = CreateLine(container, gettext("Commission"), "-")
+		local commissionLabel = gettext("Commission")
+		-- TRANSLATORS: help text for the commission in the guild store sell mail invoice
+		local commissionTooltipText = gettext("The amount that disappeared into the void")
+		container.commission = CreateLine(container, commissionLabel, commissionTooltipText, SIGN_NEGATIVE)
+
 		CreateDivider(container)
-		container.profit = CreateLine(container, GetString(SI_TRADING_HOUSE_POSTING_PROFIT))
-        -- TRANSLATORS: suffix for the refunded listing fee line in the guild store sell mail invoice. The other part of the string is taken from the ingame translation. The result is something like "Listing Fee (refund)"
-		container.listingFeeRefund = CreateLine(container, GetString(SI_TRADING_HOUSE_POSTING_LISTING_FEE) .. gettext(" (refund)"), "+")
+
+		local receivedLabel = GetString(SI_MAIL_READ_SENT_GOLD_LABEL):gsub(":", "")
+		-- TRANSLATORS: help text for the received gold in the guild store sell mail invoice
+		local receivedTooltipText = gettext("The gold attached to this mail")
+		container.received = CreateLine(container, receivedLabel, receivedTooltipText)
+
 		CreateDivider(container)
-		container.received = CreateLine(container, GetString(SI_MAIL_READ_SENT_GOLD_LABEL):gsub(":", ""))
+
+		local listingFeeLabel = GetString(SI_TRADING_HOUSE_POSTING_LISTING_FEE)
+		-- TRANSLATORS: help text for the listing fee in the guild store sell mail invoice
+		local listingFeeTooltipText = gettext("The fee that was taken from the inventory when the item was listed in the store")
+		container.listingFee = CreateLine(container, listingFeeLabel, listingFeeTooltipText, SIGN_NEGATIVE)
+
+		CreateDivider(container)
+
+		local profitLabel = GetString(SI_TRADING_HOUSE_POSTING_PROFIT)
+		-- TRANSLATORS: help text for the profit in the guild store sell mail invoice
+		local profitTooltipText = gettext("The resulting profit after subtracting all the fees")
+		container.profit = CreateLine(container, profitLabel, profitTooltipText)
 
 		return container
 	end
@@ -202,12 +252,11 @@ AGS.internal.InitializeAugmentedMails = function(saveData)
 				hasData = true
 				local saleData = mailData.eventData
 				invoice.sellValue:SetValue(saleData.sellPrice)
-				invoice.listingFee:SetValue(saleData.listingFee)
 				invoice.guildBank:SetValue(saleData.tax)
 				invoice.commission:SetValue(saleData.houseCut - saleData.tax)
-				invoice.profit:SetValue(saleData.profit)
-				invoice.listingFeeRefund:SetValue(saleData.listingFee)
 				invoice.received:SetValue(saleData.profit + saleData.listingFee)
+				invoice.listingFee:SetValue(saleData.listingFee)
+				invoice.profit:SetValue(saleData.profit)
 				button:SetHidden(true)
 				invoice:SetHidden(not saveData.mailAugmentationShowInvoice)
 			else
