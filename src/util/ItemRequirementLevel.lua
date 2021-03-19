@@ -45,9 +45,9 @@ local function GetNormalizedLevel(level, type)
     if(not level) then return nil end
 
     if(type == RANGE_TYPE_CHAMPION_POINTS) then
-        return level + MAX_LEVEL
+        return math.min(level + MAX_LEVEL, MAX_NORMALIZED_LEVEL)
     end
-    return level
+    return math.min(level, MAX_LEVEL)
 end
 
 local function GetLevelAndType(normalizedLevel)

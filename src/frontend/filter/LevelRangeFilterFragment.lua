@@ -47,6 +47,9 @@ function LevelRangeFilterFragment:Initialize(filterId) -- TODO: extract base Val
         if(self.fromFilter) then return end
         local min, max = self:GetInputValues()
         self.filter:SetValues(min, max)
+        if min ~= minLevel:GetValue() or max ~= maxLevel:GetValue() then
+            self:OnValueChanged(min, max)
+        end
     end
     minLevel.OnValueChanged = OnInputChanged
     maxLevel.OnValueChanged = OnInputChanged
@@ -102,10 +105,13 @@ end
 
 function LevelRangeFilterFragment:OnValueChanged(min, max)
     self.fromFilter = true
-    self.slider:SetRangeValue(min, max)
 
-    if(max == self.max) then max = nil end
+    if(max and max >= self.max) then max = nil end
+    if(min and min >= self.max) then min = self.max end
     if(not max and min == self.min) then min = nil end
+    if(max and not min) then min = 1 end
+
+    self.slider:SetRangeValue(min, max)
     self:SetInputValues(min, max)
 
     self.fromFilter = false

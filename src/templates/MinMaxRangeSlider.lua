@@ -216,7 +216,7 @@ function MinMaxRangeSlider:SetWidth(width)
 end
 
 function MinMaxRangeSlider:SetMinValue(value)
-    if(value < self.min) then
+    if(not value or value < self.min) then
         value = self.min
     elseif(value > self.maxSlider.value - self.minRange) then
         value = self.maxSlider.value - self.minRange
@@ -230,7 +230,7 @@ function MinMaxRangeSlider:SetMinValue(value)
 end
 
 function MinMaxRangeSlider:SetMaxValue(value)
-    if(value > self.max) then
+    if(not value or value > self.max) then
         value = self.max
     elseif(value < self.minSlider.value + self.minRange) then
         value = self.minSlider.value + self.minRange
