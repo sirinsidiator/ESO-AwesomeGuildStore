@@ -127,13 +127,7 @@ function TradingHouseWrapper:Initialize(saveData)
         end
     end)
 
-    ZO_PreHook(ITEM_PREVIEW_KEYBOARD, "PreviewTradingHouseSearchResultAsFurniture", function(self, tradingHouseIndex)
-        local item = itemDatabase:TryGetItemDataInCurrentGuildByUniqueId(tradingHouseIndex)
-        if(item) then
-            ITEM_PREVIEW_KEYBOARD:PreviewTradingHouseSearchResultItemLinkAsFurniture(item.itemLink)
-            return true
-        end
-    end)
+    self.previewHelper = AGS.class.ItemPreviewHelper:New(itemDatabase)
 
     RegisterForEvent(EVENT_CLOSE_TRADING_HOUSE, function()
         self:HideLoadingIndicator()

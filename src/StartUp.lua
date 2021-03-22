@@ -79,6 +79,7 @@ local integrityCheckList = {
     ["util/ButtonGroup.lua"] = function() return AGS.class.ButtonGroup ~= nil end,
     ["util/ToggleButton.lua"] = function() return AGS.class.ToggleButton ~= nil end,
     ["util/LoadingOverlay.lua"] = function() return AGS.class.LoadingIcon ~= nil end,
+    ["util/ItemPreviewHelper.lua"] = function() return AGS.class.ItemPreviewHelper ~= nil end,
     ["history/GuildHistoryHelper.lua"] = function() return AGS.class.GuildHistoryHelper ~= nil end,
     ["history/MailBox.lua"] = function() return AGS.internal.InitializeAugmentedMails ~= nil end,
     ["guildselector/HiredTraderTooltip.lua"] = function() return AGS.class.HiredTraderTooltip ~= nil end,

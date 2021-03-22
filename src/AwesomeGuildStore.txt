@@ -33,6 +33,7 @@ templates/SimpleInputBox.lua
 util/ButtonGroup.lua
 util/ToggleButton.lua
 util/LoadingOverlay.lua
+util/ItemPreviewHelper.lua
 history/GuildHistoryHelper.lua
 history/MailBox.lua
 guildselector/HiredTraderTooltip.lua
