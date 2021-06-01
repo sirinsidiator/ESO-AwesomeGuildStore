@@ -87,6 +87,11 @@ local WEAPON_TRAIT_FILTER = {
             label = GetString("SI_ITEMTRAITTYPE", ITEM_TRAIT_TYPE_WEAPON_NIRNHONED),
             icon = "EsoUI/Art/WorldMap/map_ava_tabIcon_resourceProduction_%s.dds",
         },
+        {
+            id = ITEM_TRAIT_TYPE_NONE,
+            label = GetString("SI_ITEMTRAITTYPE", ITEM_TRAIT_TYPE_NONE),
+            icon = "EsoUI/Art/Collections/collections_categoryicon_locked_%s.dds",
+        },
     }
 }
 
@@ -159,6 +164,11 @@ local ARMOR_TRAIT_FILTER = {
             label = GetString("SI_ITEMTRAITTYPE", ITEM_TRAIT_TYPE_ARMOR_NIRNHONED),
             icon = "EsoUI/Art/WorldMap/map_ava_tabIcon_resourceProduction_%s.dds",
         },
+        {
+            id = ITEM_TRAIT_TYPE_NONE,
+            label = GetString("SI_ITEMTRAITTYPE", ITEM_TRAIT_TYPE_NONE),
+            icon = "EsoUI/Art/Collections/collections_categoryicon_locked_%s.dds",
+        },
     }
 }
 
@@ -229,6 +239,11 @@ local JEWELRY_TRAIT_FILTER = {
             id = ITEM_TRAIT_TYPE_JEWELRY_INFUSED,
             label = GetString("SI_ITEMTRAITTYPE", ITEM_TRAIT_TYPE_JEWELRY_INFUSED),
             icon = "EsoUI/Art/Progression/progression_tabIcon_combatSkills_%s.dds",
+        },
+        {
+            id = ITEM_TRAIT_TYPE_NONE,
+            label = GetString("SI_ITEMTRAITTYPE", ITEM_TRAIT_TYPE_NONE),
+            icon = "EsoUI/Art/Collections/collections_categoryicon_locked_%s.dds",
         },
     }
 }
