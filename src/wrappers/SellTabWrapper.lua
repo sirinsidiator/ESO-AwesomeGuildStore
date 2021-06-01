@@ -70,10 +70,7 @@ end
 local function GetMasterMerchantPrice(itemLink)
     if(not MasterMerchant) then return end
 
-    local itemId = string.match(itemLink, '|H.-:item:(.-):')
-    local itemData = MasterMerchant.makeIndexFromLink(itemLink)
-
-    local postedStats = MasterMerchant:toolTipStats(tonumber(itemId), itemData)
+    local postedStats = MasterMerchant:itemStats(itemLink, false)
     return postedStats.avgPrice
 end
 
@@ -83,8 +80,7 @@ local function GetMasterMerchantLastUsedPrice(itemLink)
     local settings = MasterMerchant:ActiveSettings()
     if(not settings.pricingData) then return end
 
-    local itemId = string.match(itemLink, '|H.-:item:(.-):')
-    itemId = tonumber(itemId)
+    local itemId = GetItemLinkItemId(itemLink)
     if(not settings.pricingData[itemId]) then return end
 
     local itemIndex = MasterMerchant.makeIndexFromLink(itemLink)
