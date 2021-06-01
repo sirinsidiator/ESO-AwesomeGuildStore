@@ -5,6 +5,7 @@ local EncodeValue = AGS.internal.EncodeValue
 local DecodeValue = AGS.internal.DecodeValue
 
 local SILENT = true
+local COMMA_BYTE = string.byte(",")
 
 local MultiChoiceFilterBase = FilterBase:Subclass()
 AGS.class.MultiChoiceFilterBase = MultiChoiceFilterBase
@@ -145,18 +146,17 @@ function MultiChoiceFilterBase:Serialize(selection)
 end
 
 function MultiChoiceFilterBase:Deserialize(state)
-    local selection = {}
-    local ids
-    if(self.encoding == "boolean") then
-        -- boolean uses an empty string to express false, which is ignored by zo_strsplit
-        if(string.find(state, ",")) then
-            ids = {string.match(state, "^(.-),(.-)$")}
-        else
-            ids = {state}
+    -- integer and boolean use an empty string to represent a value, which is ignored by zo_strsplit
+    if(self.encoding == "integer" or self.encoding == "boolean") then
+        if state == "" then
+            state = "0"
+        elseif string.byte(state) == COMMA_BYTE then
+            state = "0" .. state
         end
-    else
-        ids = {zo_strsplit("," , state)}
     end
+
+    local selection = {}
+    local ids = {zo_strsplit("," , state)}
 
     for _, value in pairs(self.valueById) do
         selection[value] = false

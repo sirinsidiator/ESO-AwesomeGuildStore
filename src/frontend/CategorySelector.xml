@@ -9,7 +9,7 @@
             <Controls>
                 <Control name="$(parent)MainCategories" resizeToFitDescendents="true">
                     <Anchor point="TOPLEFT" />
-                    <Anchor point="TOPRIGHT" offsetX="-80" />
+                    <Anchor point="TOPRIGHT" offsetX="-50" />
                 </Control>
 
                 <Label name="$(parent)Label" font="ZoFontWinH3" wrapMode="ELLIPSIS" modifyTextType="UPPERCASE">

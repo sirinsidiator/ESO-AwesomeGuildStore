@@ -7,6 +7,7 @@ local CATEGORY_ID = {
     CRAFTING = 6,
     FURNISHING = 7,
     MISCELLANEOUS = 8,
+    COMPANION = 9,
 }
 
 local SUB_CATEGORY_ID = {
@@ -63,6 +64,10 @@ local SUB_CATEGORY_ID = {
     MISCELLANEOUS_TROPHY = 51,
     MISCELLANEOUS_TRASH = 52,
     MISCELLANEOUS_MISC = 53,
+    COMPANION_ALL = 54,
+    COMPANION_WEAPONS = 55,
+    COMPANION_ARMOR = 56,
+    COMPANION_JEWELRY = 57,
 }
 
 local CATEGORY_MAPPING = {
@@ -159,6 +164,15 @@ local CATEGORY_MAPPING = {
             SUB_CATEGORY_ID.MISCELLANEOUS_MISC,
         },
     },
+    {
+        category = CATEGORY_ID.COMPANION,
+        subcategories = {
+            SUB_CATEGORY_ID.COMPANION_ALL,
+            SUB_CATEGORY_ID.COMPANION_WEAPONS,
+            SUB_CATEGORY_ID.COMPANION_ARMOR,
+            SUB_CATEGORY_ID.COMPANION_JEWELRY,
+        },
+    },
 }
 
 local CATEGORY_DEFINITION = {
@@ -194,15 +208,12 @@ local CATEGORY_DEFINITION = {
     [CATEGORY_ID.MISCELLANEOUS] = {
         id = CATEGORY_ID.MISCELLANEOUS,
         filterKey = ITEM_TYPE_DISPLAY_CATEGORY_MISCELLANEOUS,
-    }
+    },
+    [CATEGORY_ID.COMPANION] = {
+        id = CATEGORY_ID.COMPANION,
+        filterKey = ITEM_TYPE_DISPLAY_CATEGORY_COMPANION,
+    },
 }
-
-for id, data in pairs(CATEGORY_DEFINITION) do
-    local filterData = ZO_ItemFilterUtils.GetItemTypeDisplayCategoryFilterDisplayInfo(data.filterKey)
-    data.filterData = filterData
-    data.label = filterData.filterString
-    data.icons = filterData.icons
-end
 
 local SUB_CATEGORY_DEFINITION = {
     [SUB_CATEGORY_ID.ALL] =  {
@@ -478,14 +489,27 @@ local SUB_CATEGORY_DEFINITION = {
         category = CATEGORY_ID.MISCELLANEOUS,
         filterKey = ITEM_TYPE_DISPLAY_CATEGORY_MISCELLANEOUS,
     },
+    [SUB_CATEGORY_ID.COMPANION_ALL] = {
+        id = SUB_CATEGORY_ID.COMPANION_ALL,
+        category = CATEGORY_ID.COMPANION,
+        filterKey = ITEM_TYPE_DISPLAY_CATEGORY_ALL,
+    },
+    [SUB_CATEGORY_ID.COMPANION_WEAPONS] = {
+        id = SUB_CATEGORY_ID.COMPANION_WEAPONS,
+        category = CATEGORY_ID.COMPANION,
+        filterKey = ITEM_TYPE_DISPLAY_CATEGORY_WEAPONS,
+    },
+    [SUB_CATEGORY_ID.COMPANION_ARMOR] = {
+        id = SUB_CATEGORY_ID.COMPANION_ARMOR,
+        category = CATEGORY_ID.COMPANION,
+        filterKey = ITEM_TYPE_DISPLAY_CATEGORY_ARMOR,
+    },
+    [SUB_CATEGORY_ID.COMPANION_JEWELRY] = {
+        id = SUB_CATEGORY_ID.COMPANION_JEWELRY,
+        category = CATEGORY_ID.COMPANION,
+        filterKey = ITEM_TYPE_DISPLAY_CATEGORY_JEWELRY,
+    },
 }
-for id, data in pairs(SUB_CATEGORY_DEFINITION) do
-    local categoryData = CATEGORY_DEFINITION[data.category]
-    local filterData = ZO_ItemFilterUtils.GetSearchFilterData(categoryData.filterKey, data.filterKey)
-    data.filterData = filterData
-    data.label = filterData.filterString
-    data.icons = filterData.icons
-end
 
 local DEFAULT_CATEGORY_ID = CATEGORY_ID.ALL
 local DEFAULT_SUB_CATEGORY_ID = {
@@ -496,8 +520,24 @@ local DEFAULT_SUB_CATEGORY_ID = {
     [CATEGORY_ID.CONSUMABLE] = SUB_CATEGORY_ID.CONSUMABLE_ALL,
     [CATEGORY_ID.CRAFTING] = SUB_CATEGORY_ID.CRAFTING_ALL,
     [CATEGORY_ID.FURNISHING] = SUB_CATEGORY_ID.FURNISHING_ALL,
-    [CATEGORY_ID.MISCELLANEOUS] = SUB_CATEGORY_ID.MISCELLANEOUS_ALL
+    [CATEGORY_ID.MISCELLANEOUS] = SUB_CATEGORY_ID.MISCELLANEOUS_ALL,
+    [CATEGORY_ID.COMPANION] = SUB_CATEGORY_ID.COMPANION_ALL,
 }
+
+for id, data in pairs(CATEGORY_DEFINITION) do
+    local filterData = ZO_ItemFilterUtils.GetItemTypeDisplayCategoryFilterDisplayInfo(data.filterKey)
+    data.filterData = filterData
+    data.label = filterData.filterString
+    data.icons = filterData.icons
+end
+
+for id, data in pairs(SUB_CATEGORY_DEFINITION) do
+    local categoryData = CATEGORY_DEFINITION[data.category]
+    local filterData = ZO_ItemFilterUtils.GetSearchFilterData(categoryData.filterKey, data.filterKey)
+    data.filterData = filterData
+    data.label = filterData.filterString
+    data.icons = filterData.icons
+end
 
 local AGS = AwesomeGuildStore
 AGS.data.CATEGORY_ID = CATEGORY_ID

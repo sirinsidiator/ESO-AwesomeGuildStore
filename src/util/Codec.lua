@@ -96,7 +96,7 @@ local decoders = {
         return tostring(value) or ""
     end,
     ["boolean"] = function(value)
-        if(not value or value == "") then return false end
+        if(not value or value == "" or value == "0") then return false end
         return true
     end,
     ["number"] = function(value)

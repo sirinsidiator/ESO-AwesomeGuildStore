@@ -15,6 +15,50 @@ local logger = AGS.internal.logger
 local EncodeValue = AGS.internal.EncodeValue
 local DecodeValue = AGS.internal.DecodeValue
 
+local PLAYER_WEAPON_TRAITS = {
+    [ITEM_TRAIT_TYPE_WEAPON_POWERED] = true,
+    [ITEM_TRAIT_TYPE_WEAPON_CHARGED] = true,
+    [ITEM_TRAIT_TYPE_WEAPON_PRECISE] = true,
+    [ITEM_TRAIT_TYPE_WEAPON_INFUSED] = true,
+    [ITEM_TRAIT_TYPE_WEAPON_DEFENDING] = true,
+    [ITEM_TRAIT_TYPE_WEAPON_TRAINING] = true,
+    [ITEM_TRAIT_TYPE_WEAPON_SHARPENED] = true,
+    [ITEM_TRAIT_TYPE_WEAPON_DECISIVE] = true,
+    [ITEM_TRAIT_TYPE_WEAPON_ORNATE] = true,
+    [ITEM_TRAIT_TYPE_WEAPON_INTRICATE] = true,
+    [ITEM_TRAIT_TYPE_WEAPON_NIRNHONED] = true,
+    [ITEM_TRAIT_TYPE_NONE] = true,
+}
+
+local PLAYER_ARMOR_TRAITS = {
+    [ITEM_TRAIT_TYPE_ARMOR_STURDY] = true,
+    [ITEM_TRAIT_TYPE_ARMOR_IMPENETRABLE] = true,
+    [ITEM_TRAIT_TYPE_ARMOR_REINFORCED] = true,
+    [ITEM_TRAIT_TYPE_ARMOR_WELL_FITTED] = true,
+    [ITEM_TRAIT_TYPE_ARMOR_TRAINING] = true,
+    [ITEM_TRAIT_TYPE_ARMOR_INFUSED] = true,
+    [ITEM_TRAIT_TYPE_ARMOR_PROSPEROUS] = true,
+    [ITEM_TRAIT_TYPE_ARMOR_DIVINES] = true,
+    [ITEM_TRAIT_TYPE_ARMOR_ORNATE] = true,
+    [ITEM_TRAIT_TYPE_ARMOR_INTRICATE] = true,
+    [ITEM_TRAIT_TYPE_ARMOR_NIRNHONED] = true,
+    [ITEM_TRAIT_TYPE_NONE] = true,
+}
+
+local PLAYER_JEWELRY_TRAITS = {
+    [ITEM_TRAIT_TYPE_JEWELRY_HEALTHY] = true,
+    [ITEM_TRAIT_TYPE_JEWELRY_ARCANE] = true,
+    [ITEM_TRAIT_TYPE_JEWELRY_ROBUST] = true,
+    [ITEM_TRAIT_TYPE_JEWELRY_ORNATE] = true,
+    [ITEM_TRAIT_TYPE_JEWELRY_INTRICATE] = true,
+    [ITEM_TRAIT_TYPE_JEWELRY_SWIFT] = true,
+    [ITEM_TRAIT_TYPE_JEWELRY_HARMONY] = true,
+    [ITEM_TRAIT_TYPE_JEWELRY_TRIUNE] = true,
+    [ITEM_TRAIT_TYPE_JEWELRY_BLOODTHIRSTY] = true,
+    [ITEM_TRAIT_TYPE_JEWELRY_PROTECTIVE] = true,
+    [ITEM_TRAIT_TYPE_JEWELRY_INFUSED] = true,
+    [ITEM_TRAIT_TYPE_NONE] = true,
+}
 
 local ITEMFILTERTYPE_LOCAL = "itemFilterType"
 local filterDefinition = {
@@ -26,6 +70,17 @@ local filterDefinition = {
                 [EQUIP_TYPE_ONE_HAND] = true,
                 [EQUIP_TYPE_TWO_HAND] = true,
             }
+        },
+        {
+            type = TRADING_HOUSE_FILTER_TYPE_TRAIT,
+            allowed = PLAYER_WEAPON_TRAITS
+        },
+        {
+            type = ITEMFILTERTYPE_LOCAL,
+            allowed = {
+                [ITEMFILTERTYPE_WEAPONS] = true,
+                checkLastReturnOnly = true -- this is a hack as companion items return multiple types
+            }
         }
     },
     [SUB_CATEGORY_ID.WEAPONS_ONE_HANDED] = {
@@ -33,6 +88,17 @@ local filterDefinition = {
             type = TRADING_HOUSE_FILTER_TYPE_EQUIP,
             allowed = {
                 [EQUIP_TYPE_ONE_HAND] = true,
+            }
+        },
+        {
+            type = TRADING_HOUSE_FILTER_TYPE_TRAIT,
+            allowed = PLAYER_WEAPON_TRAITS
+        },
+        {
+            type = ITEMFILTERTYPE_LOCAL,
+            allowed = {
+                [ITEMFILTERTYPE_WEAPONS] = true,
+                checkLastReturnOnly = true
             }
         }
     },
@@ -44,6 +110,17 @@ local filterDefinition = {
                 [WEAPONTYPE_TWO_HANDED_SWORD] = true,
                 [WEAPONTYPE_TWO_HANDED_HAMMER] = true,
             }
+        },
+        {
+            type = TRADING_HOUSE_FILTER_TYPE_TRAIT,
+            allowed = PLAYER_WEAPON_TRAITS
+        },
+        {
+            type = ITEMFILTERTYPE_LOCAL,
+            allowed = {
+                [ITEMFILTERTYPE_WEAPONS] = true,
+                checkLastReturnOnly = true
+            }
         }
     },
     [SUB_CATEGORY_ID.WEAPONS_BOW] = {
@@ -51,6 +128,17 @@ local filterDefinition = {
             type = TRADING_HOUSE_FILTER_TYPE_WEAPON,
             allowed = {
                 [WEAPONTYPE_BOW] = true,
+            }
+        },
+        {
+            type = TRADING_HOUSE_FILTER_TYPE_TRAIT,
+            allowed = PLAYER_WEAPON_TRAITS
+        },
+        {
+            type = ITEMFILTERTYPE_LOCAL,
+            allowed = {
+                [ITEMFILTERTYPE_WEAPONS] = true,
+                checkLastReturnOnly = true
             }
         }
     },
@@ -62,6 +150,17 @@ local filterDefinition = {
                 [WEAPONTYPE_FROST_STAFF] = true,
                 [WEAPONTYPE_LIGHTNING_STAFF] = true,
             }
+        },
+        {
+            type = TRADING_HOUSE_FILTER_TYPE_TRAIT,
+            allowed = PLAYER_WEAPON_TRAITS
+        },
+        {
+            type = ITEMFILTERTYPE_LOCAL,
+            allowed = {
+                [ITEMFILTERTYPE_WEAPONS] = true,
+                checkLastReturnOnly = true
+            }
         }
     },
     [SUB_CATEGORY_ID.WEAPONS_RESTORATION_STAFF] = {
@@ -69,6 +168,17 @@ local filterDefinition = {
             type = TRADING_HOUSE_FILTER_TYPE_WEAPON,
             allowed = {
                 [WEAPONTYPE_HEALING_STAFF] = true,
+            }
+        },
+        {
+            type = TRADING_HOUSE_FILTER_TYPE_TRAIT,
+            allowed = PLAYER_WEAPON_TRAITS
+        },
+        {
+            type = ITEMFILTERTYPE_LOCAL,
+            allowed = {
+                [ITEMFILTERTYPE_WEAPONS] = true,
+                checkLastReturnOnly = true
             }
         }
     },
@@ -92,6 +202,17 @@ local filterDefinition = {
                 [EQUIP_TYPE_HAND] = true,
                 [EQUIP_TYPE_OFF_HAND] = true,
             }
+        },
+        {
+            type = TRADING_HOUSE_FILTER_TYPE_TRAIT,
+            allowed = PLAYER_ARMOR_TRAITS
+        },
+        {
+            type = ITEMFILTERTYPE_LOCAL,
+            allowed = {
+                [ITEMFILTERTYPE_ARMOR] = true,
+                checkLastReturnOnly = true
+            }
         }
     },
     [SUB_CATEGORY_ID.ARMOR_HEAVY] = {
@@ -111,6 +232,17 @@ local filterDefinition = {
                 [EQUIP_TYPE_LEGS] = true,
                 [EQUIP_TYPE_FEET] = true,
                 [EQUIP_TYPE_HAND] = true,
+            }
+        },
+        {
+            type = TRADING_HOUSE_FILTER_TYPE_TRAIT,
+            allowed = PLAYER_ARMOR_TRAITS
+        },
+        {
+            type = ITEMFILTERTYPE_LOCAL,
+            allowed = {
+                [ITEMFILTERTYPE_ARMOR] = true,
+                checkLastReturnOnly = true
             }
         }
     },
@@ -132,6 +264,17 @@ local filterDefinition = {
                 [EQUIP_TYPE_FEET] = true,
                 [EQUIP_TYPE_HAND] = true,
             }
+        },
+        {
+            type = TRADING_HOUSE_FILTER_TYPE_TRAIT,
+            allowed = PLAYER_ARMOR_TRAITS
+        },
+        {
+            type = ITEMFILTERTYPE_LOCAL,
+            allowed = {
+                [ITEMFILTERTYPE_ARMOR] = true,
+                checkLastReturnOnly = true
+            }
         }
     },
     [SUB_CATEGORY_ID.ARMOR_LIGHT] = {
@@ -152,6 +295,17 @@ local filterDefinition = {
                 [EQUIP_TYPE_FEET] = true,
                 [EQUIP_TYPE_HAND] = true,
             }
+        },
+        {
+            type = TRADING_HOUSE_FILTER_TYPE_TRAIT,
+            allowed = PLAYER_ARMOR_TRAITS
+        },
+        {
+            type = ITEMFILTERTYPE_LOCAL,
+            allowed = {
+                [ITEMFILTERTYPE_ARMOR] = true,
+                checkLastReturnOnly = true
+            }
         }
     },
     [SUB_CATEGORY_ID.ARMOR_SHIELD] = {
@@ -161,6 +315,17 @@ local filterDefinition = {
                 [WEAPONTYPE_SHIELD] = true,
             }
         },
+        {
+            type = TRADING_HOUSE_FILTER_TYPE_TRAIT,
+            allowed = PLAYER_ARMOR_TRAITS
+        },
+        {
+            type = ITEMFILTERTYPE_LOCAL,
+            allowed = {
+                [ITEMFILTERTYPE_ARMOR] = true,
+                checkLastReturnOnly = true
+            }
+        }
     },
     [SUB_CATEGORY_ID.JEWELRY_ALL] = {
         {
@@ -168,6 +333,17 @@ local filterDefinition = {
             allowed = {
                 [EQUIP_TYPE_RING] = true,
                 [EQUIP_TYPE_NECK] = true,
+            }
+        },
+        {
+            type = TRADING_HOUSE_FILTER_TYPE_TRAIT,
+            allowed = PLAYER_JEWELRY_TRAITS
+        },
+        {
+            type = ITEMFILTERTYPE_LOCAL,
+            allowed = {
+                [ITEMFILTERTYPE_JEWELRY] = true,
+                checkLastReturnOnly = true
             }
         }
     },
@@ -177,6 +353,17 @@ local filterDefinition = {
             allowed = {
                 [EQUIP_TYPE_RING] = true,
             }
+        },
+        {
+            type = TRADING_HOUSE_FILTER_TYPE_TRAIT,
+            allowed = PLAYER_JEWELRY_TRAITS
+        },
+        {
+            type = ITEMFILTERTYPE_LOCAL,
+            allowed = {
+                [ITEMFILTERTYPE_JEWELRY] = true,
+                checkLastReturnOnly = true
+            }
         }
     },
     [SUB_CATEGORY_ID.JEWELRY_NECK] = {
@@ -184,6 +371,17 @@ local filterDefinition = {
             type = TRADING_HOUSE_FILTER_TYPE_EQUIP,
             allowed = {
                 [EQUIP_TYPE_NECK] = true,
+            }
+        },
+        {
+            type = TRADING_HOUSE_FILTER_TYPE_TRAIT,
+            allowed = PLAYER_JEWELRY_TRAITS
+        },
+        {
+            type = ITEMFILTERTYPE_LOCAL,
+            allowed = {
+                [ITEMFILTERTYPE_JEWELRY] = true,
+                checkLastReturnOnly = true
             }
         }
     },
@@ -668,6 +866,157 @@ local filterDefinition = {
             }
         }
     },
+    [SUB_CATEGORY_ID.COMPANION_ALL] = {
+        {
+            type = TRADING_HOUSE_FILTER_TYPE_ITEM,
+            allowed = {
+                [ITEMTYPE_WEAPON] = true,
+                [ITEMTYPE_ARMOR] = true,
+            }
+        },
+        {
+            type = TRADING_HOUSE_FILTER_TYPE_TRAIT,
+            allowed = {
+                [ITEM_TRAIT_TYPE_NONE] = true,
+                [ITEM_TRAIT_TYPE_WEAPON_AGGRESSIVE] = true,
+                [ITEM_TRAIT_TYPE_WEAPON_AUGMENTED] = true,
+                [ITEM_TRAIT_TYPE_WEAPON_BOLSTERED] = true,
+                [ITEM_TRAIT_TYPE_WEAPON_FOCUSED] = true,
+                [ITEM_TRAIT_TYPE_WEAPON_PROLIFIC] = true,
+                [ITEM_TRAIT_TYPE_WEAPON_QUICKENED] = true,
+                [ITEM_TRAIT_TYPE_WEAPON_SHATTERING] = true,
+                [ITEM_TRAIT_TYPE_WEAPON_SOOTHING] = true,
+                [ITEM_TRAIT_TYPE_WEAPON_VIGOROUS] = true,
+                [ITEM_TRAIT_TYPE_ARMOR_AGGRESSIVE] = true,
+                [ITEM_TRAIT_TYPE_ARMOR_AUGMENTED] = true,
+                [ITEM_TRAIT_TYPE_ARMOR_BOLSTERED] = true,
+                [ITEM_TRAIT_TYPE_ARMOR_FOCUSED] = true,
+                [ITEM_TRAIT_TYPE_ARMOR_PROLIFIC] = true,
+                [ITEM_TRAIT_TYPE_ARMOR_QUICKENED] = true,
+                [ITEM_TRAIT_TYPE_ARMOR_SHATTERING] = true,
+                [ITEM_TRAIT_TYPE_ARMOR_SOOTHING] = true,
+                [ITEM_TRAIT_TYPE_ARMOR_VIGOROUS] = true,
+                [ITEM_TRAIT_TYPE_JEWELRY_AGGRESSIVE] = true,
+                [ITEM_TRAIT_TYPE_JEWELRY_AUGMENTED] = true,
+                [ITEM_TRAIT_TYPE_JEWELRY_BOLSTERED] = true,
+                [ITEM_TRAIT_TYPE_JEWELRY_FOCUSED] = true,
+                [ITEM_TRAIT_TYPE_JEWELRY_PROLIFIC] = true,
+                [ITEM_TRAIT_TYPE_JEWELRY_QUICKENED] = true,
+                [ITEM_TRAIT_TYPE_JEWELRY_SHATTERING] = true,
+                [ITEM_TRAIT_TYPE_JEWELRY_SOOTHING] = true,
+                [ITEM_TRAIT_TYPE_JEWELRY_VIGOROUS] = true,
+            }
+        },
+        {
+            type = ITEMFILTERTYPE_LOCAL,
+            allowed = {
+                [ITEMFILTERTYPE_COMPANION] = true,
+            }
+        }
+    },
+    [SUB_CATEGORY_ID.COMPANION_WEAPONS] = {
+        {
+            type = TRADING_HOUSE_FILTER_TYPE_EQUIP,
+            allowed = {
+                [EQUIP_TYPE_ONE_HAND] = true,
+                [EQUIP_TYPE_TWO_HAND] = true,
+            }
+        },
+        {
+            type = TRADING_HOUSE_FILTER_TYPE_TRAIT,
+            allowed = {
+                [ITEM_TRAIT_TYPE_NONE] = true,
+                [ITEM_TRAIT_TYPE_WEAPON_AGGRESSIVE] = true,
+                [ITEM_TRAIT_TYPE_WEAPON_AUGMENTED] = true,
+                [ITEM_TRAIT_TYPE_WEAPON_BOLSTERED] = true,
+                [ITEM_TRAIT_TYPE_WEAPON_FOCUSED] = true,
+                [ITEM_TRAIT_TYPE_WEAPON_PROLIFIC] = true,
+                [ITEM_TRAIT_TYPE_WEAPON_QUICKENED] = true,
+                [ITEM_TRAIT_TYPE_WEAPON_SHATTERING] = true,
+                [ITEM_TRAIT_TYPE_WEAPON_SOOTHING] = true,
+                [ITEM_TRAIT_TYPE_WEAPON_VIGOROUS] = true,
+            }
+        },
+        {
+            type = ITEMFILTERTYPE_LOCAL,
+            allowed = {
+                [ITEMFILTERTYPE_COMPANION] = true,
+            }
+        }
+    },
+    [SUB_CATEGORY_ID.COMPANION_ARMOR] = {
+        {
+            type = TRADING_HOUSE_FILTER_TYPE_SPECIALIZED_ITEM,
+            allowed = {
+                [SPECIALIZED_ITEMTYPE_WEAPON] = true,
+                [SPECIALIZED_ITEMTYPE_ARMOR] = true,
+            }
+        },
+        {
+            type = TRADING_HOUSE_FILTER_TYPE_EQUIP,
+            allowed = {
+                [EQUIP_TYPE_HEAD] = true,
+                [EQUIP_TYPE_CHEST] = true,
+                [EQUIP_TYPE_SHOULDERS] = true,
+                [EQUIP_TYPE_WAIST] = true,
+                [EQUIP_TYPE_LEGS] = true,
+                [EQUIP_TYPE_FEET] = true,
+                [EQUIP_TYPE_HAND] = true,
+                [EQUIP_TYPE_OFF_HAND] = true,
+            }
+        },
+        {
+            type = TRADING_HOUSE_FILTER_TYPE_TRAIT,
+            allowed = {
+                [ITEM_TRAIT_TYPE_NONE] = true,
+                [ITEM_TRAIT_TYPE_ARMOR_AGGRESSIVE] = true,
+                [ITEM_TRAIT_TYPE_ARMOR_AUGMENTED] = true,
+                [ITEM_TRAIT_TYPE_ARMOR_BOLSTERED] = true,
+                [ITEM_TRAIT_TYPE_ARMOR_FOCUSED] = true,
+                [ITEM_TRAIT_TYPE_ARMOR_PROLIFIC] = true,
+                [ITEM_TRAIT_TYPE_ARMOR_QUICKENED] = true,
+                [ITEM_TRAIT_TYPE_ARMOR_SHATTERING] = true,
+                [ITEM_TRAIT_TYPE_ARMOR_SOOTHING] = true,
+                [ITEM_TRAIT_TYPE_ARMOR_VIGOROUS] = true,
+            }
+        },
+        {
+            type = ITEMFILTERTYPE_LOCAL,
+            allowed = {
+                [ITEMFILTERTYPE_COMPANION] = true,
+            }
+        }
+    },
+    [SUB_CATEGORY_ID.COMPANION_JEWELRY] = {
+        {
+            type = TRADING_HOUSE_FILTER_TYPE_EQUIP,
+            allowed = {
+                [EQUIP_TYPE_RING] = true,
+                [EQUIP_TYPE_NECK] = true,
+            }
+        },
+        {
+            type = TRADING_HOUSE_FILTER_TYPE_TRAIT,
+            allowed = {
+                [ITEM_TRAIT_TYPE_NONE] = true,
+                [ITEM_TRAIT_TYPE_JEWELRY_AGGRESSIVE] = true,
+                [ITEM_TRAIT_TYPE_JEWELRY_AUGMENTED] = true,
+                [ITEM_TRAIT_TYPE_JEWELRY_BOLSTERED] = true,
+                [ITEM_TRAIT_TYPE_JEWELRY_FOCUSED] = true,
+                [ITEM_TRAIT_TYPE_JEWELRY_PROLIFIC] = true,
+                [ITEM_TRAIT_TYPE_JEWELRY_QUICKENED] = true,
+                [ITEM_TRAIT_TYPE_JEWELRY_SHATTERING] = true,
+                [ITEM_TRAIT_TYPE_JEWELRY_SOOTHING] = true,
+                [ITEM_TRAIT_TYPE_JEWELRY_VIGOROUS] = true,
+            }
+        },
+        {
+            type = ITEMFILTERTYPE_LOCAL,
+            allowed = {
+                [ITEMFILTERTYPE_COMPANION] = true,
+            }
+        }
+    }
 }
 
 local filterFunctions = {
@@ -687,6 +1036,10 @@ local filterFunctions = {
         local itemType = GetItemLinkItemType(itemLink)
         return allowedTypes[itemType]
     end,
+    [TRADING_HOUSE_FILTER_TYPE_TRAIT] = function(itemLink, allowedTypes)
+        local traitType = GetItemLinkTraitInfo(itemLink)
+        return allowedTypes[traitType]
+    end,
     [TRADING_HOUSE_FILTER_TYPE_SPECIALIZED_ITEM] = function(itemLink, allowedTypes)
         local _, specializedItemType = GetItemLinkItemType(itemLink)
         return allowedTypes[specializedItemType]
@@ -702,8 +1055,17 @@ local filterFunctions = {
         return allowedTypes[subcategory]
     end,
     [ITEMFILTERTYPE_LOCAL] = function(itemLink, allowedTypes)
-        local itemFilterType = GetItemLinkFilterTypeInfo(itemLink)
-        return allowedTypes[itemFilterType]
+        local itemFilterTypes = {GetItemLinkFilterTypeInfo(itemLink)}
+        if allowedTypes.checkLastReturnOnly then
+            return allowedTypes[itemFilterTypes[#itemFilterTypes]]
+        else
+            for i = 1, #itemFilterTypes do
+                if allowedTypes[itemFilterTypes[i]] then
+                    return true
+                end
+            end
+        end
+        return false
     end,
 }
 
@@ -713,6 +1075,7 @@ local function GetSubcategoryFromItem(itemLink)
     temp[TRADING_HOUSE_FILTER_TYPE_EQUIP] = GetItemLinkEquipType(itemLink)
     temp[TRADING_HOUSE_FILTER_TYPE_WEAPON] = GetItemLinkWeaponType(itemLink)
     temp[TRADING_HOUSE_FILTER_TYPE_ARMOR] = GetItemLinkArmorType(itemLink)
+    temp[TRADING_HOUSE_FILTER_TYPE_TRAIT] = GetItemLinkTraitInfo(itemLink)
     temp[TRADING_HOUSE_FILTER_TYPE_ITEM], temp[TRADING_HOUSE_FILTER_TYPE_SPECIALIZED_ITEM] = GetItemLinkItemType(itemLink)
     temp[TRADING_HOUSE_FILTER_TYPE_FURNITURE_CATEGORY], temp[TRADING_HOUSE_FILTER_TYPE_FURNITURE_SUBCATEGORY] = GetFurnitureDataInfo(GetItemLinkFurnitureDataId(itemLink))
     temp[ITEMFILTERTYPE_LOCAL] = GetItemLinkFilterTypeInfo(itemLink)
