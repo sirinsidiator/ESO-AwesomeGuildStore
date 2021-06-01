@@ -697,18 +697,10 @@ local function IsCraftBagItemSellableOnTradingHouse(slot)
 end
 
 function SellTabWrapper:SetupCraftBag()
-    self.originalCraftBagAdditionalFilter = PLAYER_INVENTORY.inventories[INVENTORY_CRAFT_BAG].additionalFilter
-    PLAYER_INVENTORY.inventories[INVENTORY_CRAFT_BAG].additionalFilter = function(...)
-        if not IsCraftBagItemSellableOnTradingHouse(...) then return false end
-        if self.originalCraftBagAdditionalFilter then return self.originalCraftBagAdditionalFilter(...) end
-        return true
-    end
     -- no need to set the craft bag here, since UpdateFragments will be called right after OnOpen anyway
 end
 
 function SellTabWrapper:TeardownCraftBag()
-    PLAYER_INVENTORY.inventories[INVENTORY_CRAFT_BAG].additionalFilter = self.originalCraftBagAdditionalFilter
-    self.originalCraftBagAdditionalFilter = nil
     if(self.currentInventoryFragment == CRAFT_BAG_FRAGMENT) then
         ZO_PlayerInventoryInfoBar:SetParent(ZO_PlayerInventory)
         SCENE_MANAGER:RemoveFragment(CRAFT_BAG_FRAGMENT)
