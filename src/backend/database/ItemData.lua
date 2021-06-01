@@ -55,13 +55,6 @@ function ItemData:UpdateFromStore(slotIndex, guildId, guildName)
     self.guildId = guildId
     self.lastSeen = GetTimeStamp()
     self.itemLink = GetTradingHouseSearchResultItemLink(slotIndex, LINK_STYLE_DEFAULT)
-
-    -- TODO remove once we got functions to get the info from itemLinks
-    local variations = {}
-    for i = 1, GetNumTradingHouseSearchResultItemPreviewVariations(slotIndex) do
-        variations[i] = GetTradingHouseSearchResultItemPreviewVariationDisplayName(slotIndex, i)
-    end
-    self.variations = variations
 end
 
 function ItemData:UpdateFromGuildSpecificItem(index, guildId, guildName)

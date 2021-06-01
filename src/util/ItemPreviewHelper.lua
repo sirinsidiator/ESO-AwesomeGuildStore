@@ -43,15 +43,15 @@ function ItemPreviewHelper:Apply(previewType, variationIndex)
 end
 
 function ItemPreviewHelper:GetNumVariations(originalFunc, previewType)
-    if previewType.item.variations then
-        return #previewType.item.variations
+    if previewType.item then
+        return GetNumItemLinkPreviewVariations(previewType.item.itemLink)
     end
     return originalFunc(previewType)
 end
 
 function ItemPreviewHelper:GetVariationName(originalFunc, previewType, variationIndex)
-    if previewType.item.variations then
-        return previewType.item.variations[variationIndex] or ""
+    if previewType.item then
+        return GetItemLinkPreviewVariationDisplayName(previewType.item.itemLink, variationIndex)
     end
     return originalFunc(previewType)
 end
