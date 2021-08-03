@@ -265,6 +265,11 @@ local CONSUMABLE_TROPHY_TYPE_FILTER = {
             icon = "EsoUI/Art/tradinghouse/tradinghouse_trophy_recipe_fragment_%s.dds",
         },
         {
+            id = SPECIALIZED_ITEMTYPE_COLLECTIBLE_STYLE_PAGE,
+            label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_COLLECTIBLE_STYLE_PAGE)),
+            icon = "EsoUI/Art/tradinghouse/tradinghouse_racial_style_motif_book_%s.dds",
+        },
+        {
             id = SPECIALIZED_ITEMTYPE_TROPHY_RUNEBOX_FRAGMENT,
             label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_TROPHY_RUNEBOX_FRAGMENT)),
             icon = "EsoUI/Art/tradinghouse/tradinghouse_trophy_runebox_fragment_%s.dds",
@@ -277,7 +282,7 @@ local CONSUMABLE_TROPHY_TYPE_FILTER = {
         {
             id = SPECIALIZED_ITEMTYPE_FURNISHING_ATTUNABLE_STATION,
             label = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetString("SI_SPECIALIZEDITEMTYPE", SPECIALIZED_ITEMTYPE_FURNISHING_ATTUNABLE_STATION)),
-        icon = "EsoUI/Art/Inventory/inventory_tabIcon_crafting_%s.dds",
+            icon = "EsoUI/Art/Inventory/inventory_tabIcon_crafting_%s.dds",
         },
         {
             id = SPECIALIZED_ITEMTYPE_FISH,

@@ -64,6 +64,7 @@ function CollectibleOwnershipFilter:Initialize()
         [SUB_CATEGORY_ID.JEWELRY_RING] = true,
         [SUB_CATEGORY_ID.JEWELRY_NECK] = true,
         [SUB_CATEGORY_ID.CONSUMABLE_CONTAINER] = true,
+        [SUB_CATEGORY_ID.CONSUMABLE_TROPHY] = true,
     })
 end
 
