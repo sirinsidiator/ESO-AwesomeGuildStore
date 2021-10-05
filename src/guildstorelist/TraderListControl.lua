@@ -51,7 +51,12 @@ end
 AGS.internal.GetLastVisitLabel = GetLastVisitLabel
 
 local function GetZoneLabel(store)
-    local zoneIndex = GetZoneIndex(store.zoneId)
+    local zoneId = store.zoneId
+    if zoneId == 1283 then
+        -- Fargrave is a bit of a pain, since it contains 2 subzones on the main map and we actually get the less desired one from GetCurrentMapParentZoneIndices
+        zoneId = 1282
+    end
+    local zoneIndex = GetZoneIndex(zoneId)
     return zo_strformat("<<1>>", GetZoneNameByIndex(zoneIndex))
 end
 AGS.internal.GetZoneLabel = GetZoneLabel

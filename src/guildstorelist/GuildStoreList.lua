@@ -77,6 +77,21 @@ local function RemoveInvalidKiosks(saveData)
     end
 end
 
+local function RemoveIncorrectFargraveStoreLocation(saveData)
+    local FARGRAVE_CITY_DISTRICT_MAP_ID_PATTERN = ".+wP$" -- ends with encoded id 2035
+    local storesToRemove = {}
+    for locationIndex, storeData in pairs(saveData.stores) do
+        if storeData:find(FARGRAVE_CITY_DISTRICT_MAP_ID_PATTERN) then
+            storesToRemove[#storesToRemove + 1] = locationIndex
+        end
+    end
+
+    for i = 1, #storesToRemove do
+        logger:Warn("Remove incorrect store location entry '%s' for Fargrave", storesToRemove[i])
+        saveData.stores[storesToRemove[i]] = nil
+    end
+end
+
 local function UpdateSaveData(saveData)
     local requiresRescan = false
     if(saveData.version == 1) then
@@ -95,6 +110,13 @@ local function UpdateSaveData(saveData)
         requiresRescan = true
         saveData.version = 6
     end
+    if GetAPIVersion() >= 101032 then -- TODO run without check after update
+        if(saveData.version < 7) then
+            RemoveIncorrectFargraveStoreLocation(saveData)
+            saveData.version = 7
+            requiresRescan = true
+        end
+    end
     return requiresRescan
 end
 
@@ -102,7 +124,7 @@ local function InitializeSaveData(saveData)
     local requiresRescan = false
     if(not saveData.guildStoreList) then
         saveData.guildStoreList = {
-            version = 6,
+            version = 7,
             owners = {},
             stores = {},
             kiosks = {},

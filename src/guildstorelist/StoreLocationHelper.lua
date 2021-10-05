@@ -44,11 +44,18 @@ local SPECIAL_MAP_CLICK_TARGETS = { -- Some maps return 0/0 for all POIs under s
     [1719] = { 0.56, 0.38 }, -- Western Skyrim - on first login with a char after the update
 }
 
+local FARGRAVE_CITY_DISTRICT_MAP_ID = 2035
+local FARGRAVE_THE_BAZAAR_ID = 2136
+
 local function IsCoordinateOutsideCurrentMap(x, y)
     return x <= 0 or x > 1 or y <= 0 or y > 1
 end
 
 local function IsUndergroundKiosk()
+    if GetCurrentMapId() == FARGRAVE_THE_BAZAAR_ID then
+        -- The Bazaar is a sub map of Fargrave City District, but has no entrance pins
+        return false
+    end
     return GetMapContentType() == MAP_CONTENT_DUNGEON
 end
 
@@ -110,6 +117,14 @@ local function TrySetMapToMapListIndex(mapIndex)
         return true
     end
     logger:Warn("Could not set map to mapIndex", mapIndex)
+    return false
+end
+
+local function TrySetMapToMapId(mapId)
+    if SetMapToMapId(mapId) ~= SET_MAP_RESULT_FAILED then
+        return true
+    end
+    logger:Warn("Could not set map to mapId", mapId)
     return false
 end
 
@@ -353,7 +368,18 @@ function StoreLocationHelper:ScanAllMaps()
                             if not visitedMaps[mapId] then
                                 visitedMaps[mapId] = true
                                 mapName = SafeGetMapName()
-                                self:CollectStoresOnCurrentMap(mapId, mapName, mapIndex, zoneIndex)
+
+                                local isFargraveCityDistrict = mapId == FARGRAVE_CITY_DISTRICT_MAP_ID
+                                -- we only collect refuge kiosk on the Fargrave City District map and swap to
+                                -- The Bazaar submap manually as it's not reachable by clicks
+
+                                self:CollectStoresOnCurrentMap(mapId, mapName, mapIndex, zoneIndex, isFargraveCityDistrict)
+
+                                if isFargraveCityDistrict and not visitedMaps[FARGRAVE_THE_BAZAAR_ID] and TrySetMapToMapId(FARGRAVE_THE_BAZAAR_ID) then
+                                    visitedMaps[FARGRAVE_THE_BAZAAR_ID] = true
+                                    mapName = SafeGetMapName()
+                                    self:CollectStoresOnCurrentMap(FARGRAVE_THE_BAZAAR_ID, mapName, mapIndex, zoneIndex)
+                                end
                             end
                             if not TrySetMapToMapListIndex(mapIndex) then break end
                         end
@@ -386,7 +412,7 @@ function StoreLocationHelper:ScanAllMaps()
     return promise
 end
 
-function StoreLocationHelper:CollectStoresOnCurrentMap(mapId, mapName, mapIndex, zoneIndex)
+function StoreLocationHelper:CollectStoresOnCurrentMap(mapId, mapName, mapIndex, zoneIndex, ignoreRegularKiosks)
     logger:Debug("Collect guild stores on map", mapName)
     local zoneId = GetZoneId(zoneIndex)
     local needsWayshrine = {}
@@ -396,7 +422,7 @@ function StoreLocationHelper:CollectStoresOnCurrentMap(mapId, mapName, mapIndex,
     local storeList = self.storeList
     for locationIndex = 1, GetNumMapLocations() do
         local storeIndex, isUnderground = GetStoreIndex(mapName, locationIndex)
-        if storeIndex and not scannedStores[storeIndex] then
+        if storeIndex and not scannedStores[storeIndex] and not (ignoreRegularKiosks and not isUnderground) then
             scannedStores[storeIndex] = true
             local kiosks = GetKioskNamesFromLocationTooltip(locationIndex)
             if isUnderground and #kiosks == 0 then
