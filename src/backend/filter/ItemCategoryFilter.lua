@@ -15,51 +15,6 @@ local logger = AGS.internal.logger
 local EncodeValue = AGS.internal.EncodeValue
 local DecodeValue = AGS.internal.DecodeValue
 
-local PLAYER_WEAPON_TRAITS = {
-    [ITEM_TRAIT_TYPE_WEAPON_POWERED] = true,
-    [ITEM_TRAIT_TYPE_WEAPON_CHARGED] = true,
-    [ITEM_TRAIT_TYPE_WEAPON_PRECISE] = true,
-    [ITEM_TRAIT_TYPE_WEAPON_INFUSED] = true,
-    [ITEM_TRAIT_TYPE_WEAPON_DEFENDING] = true,
-    [ITEM_TRAIT_TYPE_WEAPON_TRAINING] = true,
-    [ITEM_TRAIT_TYPE_WEAPON_SHARPENED] = true,
-    [ITEM_TRAIT_TYPE_WEAPON_DECISIVE] = true,
-    [ITEM_TRAIT_TYPE_WEAPON_ORNATE] = true,
-    [ITEM_TRAIT_TYPE_WEAPON_INTRICATE] = true,
-    [ITEM_TRAIT_TYPE_WEAPON_NIRNHONED] = true,
-    [ITEM_TRAIT_TYPE_NONE] = true,
-}
-
-local PLAYER_ARMOR_TRAITS = {
-    [ITEM_TRAIT_TYPE_ARMOR_STURDY] = true,
-    [ITEM_TRAIT_TYPE_ARMOR_IMPENETRABLE] = true,
-    [ITEM_TRAIT_TYPE_ARMOR_REINFORCED] = true,
-    [ITEM_TRAIT_TYPE_ARMOR_WELL_FITTED] = true,
-    [ITEM_TRAIT_TYPE_ARMOR_TRAINING] = true,
-    [ITEM_TRAIT_TYPE_ARMOR_INFUSED] = true,
-    [ITEM_TRAIT_TYPE_ARMOR_PROSPEROUS] = true,
-    [ITEM_TRAIT_TYPE_ARMOR_DIVINES] = true,
-    [ITEM_TRAIT_TYPE_ARMOR_ORNATE] = true,
-    [ITEM_TRAIT_TYPE_ARMOR_INTRICATE] = true,
-    [ITEM_TRAIT_TYPE_ARMOR_NIRNHONED] = true,
-    [ITEM_TRAIT_TYPE_NONE] = true,
-}
-
-local PLAYER_JEWELRY_TRAITS = {
-    [ITEM_TRAIT_TYPE_JEWELRY_HEALTHY] = true,
-    [ITEM_TRAIT_TYPE_JEWELRY_ARCANE] = true,
-    [ITEM_TRAIT_TYPE_JEWELRY_ROBUST] = true,
-    [ITEM_TRAIT_TYPE_JEWELRY_ORNATE] = true,
-    [ITEM_TRAIT_TYPE_JEWELRY_INTRICATE] = true,
-    [ITEM_TRAIT_TYPE_JEWELRY_SWIFT] = true,
-    [ITEM_TRAIT_TYPE_JEWELRY_HARMONY] = true,
-    [ITEM_TRAIT_TYPE_JEWELRY_TRIUNE] = true,
-    [ITEM_TRAIT_TYPE_JEWELRY_BLOODTHIRSTY] = true,
-    [ITEM_TRAIT_TYPE_JEWELRY_PROTECTIVE] = true,
-    [ITEM_TRAIT_TYPE_JEWELRY_INFUSED] = true,
-    [ITEM_TRAIT_TYPE_NONE] = true,
-}
-
 local ITEMFILTERTYPE_LOCAL = "itemFilterType"
 local filterDefinition = {
     [SUB_CATEGORY_ID.ALL] = {},
@@ -72,14 +27,9 @@ local filterDefinition = {
             }
         },
         {
-            type = TRADING_HOUSE_FILTER_TYPE_TRAIT,
-            allowed = PLAYER_WEAPON_TRAITS
-        },
-        {
-            type = ITEMFILTERTYPE_LOCAL,
+            type = TRADING_HOUSE_FILTER_TYPE_GAMEPLAY_ACTOR_CATEGORY,
             allowed = {
-                [ITEMFILTERTYPE_WEAPONS] = true,
-                checkLastReturnOnly = true -- this is a hack as companion items return multiple types
+                [GAMEPLAY_ACTOR_CATEGORY_PLAYER] = true,
             }
         }
     },
@@ -91,14 +41,9 @@ local filterDefinition = {
             }
         },
         {
-            type = TRADING_HOUSE_FILTER_TYPE_TRAIT,
-            allowed = PLAYER_WEAPON_TRAITS
-        },
-        {
-            type = ITEMFILTERTYPE_LOCAL,
+            type = TRADING_HOUSE_FILTER_TYPE_GAMEPLAY_ACTOR_CATEGORY,
             allowed = {
-                [ITEMFILTERTYPE_WEAPONS] = true,
-                checkLastReturnOnly = true
+                [GAMEPLAY_ACTOR_CATEGORY_PLAYER] = true,
             }
         }
     },
@@ -112,14 +57,9 @@ local filterDefinition = {
             }
         },
         {
-            type = TRADING_HOUSE_FILTER_TYPE_TRAIT,
-            allowed = PLAYER_WEAPON_TRAITS
-        },
-        {
-            type = ITEMFILTERTYPE_LOCAL,
+            type = TRADING_HOUSE_FILTER_TYPE_GAMEPLAY_ACTOR_CATEGORY,
             allowed = {
-                [ITEMFILTERTYPE_WEAPONS] = true,
-                checkLastReturnOnly = true
+                [GAMEPLAY_ACTOR_CATEGORY_PLAYER] = true,
             }
         }
     },
@@ -131,14 +71,9 @@ local filterDefinition = {
             }
         },
         {
-            type = TRADING_HOUSE_FILTER_TYPE_TRAIT,
-            allowed = PLAYER_WEAPON_TRAITS
-        },
-        {
-            type = ITEMFILTERTYPE_LOCAL,
+            type = TRADING_HOUSE_FILTER_TYPE_GAMEPLAY_ACTOR_CATEGORY,
             allowed = {
-                [ITEMFILTERTYPE_WEAPONS] = true,
-                checkLastReturnOnly = true
+                [GAMEPLAY_ACTOR_CATEGORY_PLAYER] = true,
             }
         }
     },
@@ -152,14 +87,9 @@ local filterDefinition = {
             }
         },
         {
-            type = TRADING_HOUSE_FILTER_TYPE_TRAIT,
-            allowed = PLAYER_WEAPON_TRAITS
-        },
-        {
-            type = ITEMFILTERTYPE_LOCAL,
+            type = TRADING_HOUSE_FILTER_TYPE_GAMEPLAY_ACTOR_CATEGORY,
             allowed = {
-                [ITEMFILTERTYPE_WEAPONS] = true,
-                checkLastReturnOnly = true
+                [GAMEPLAY_ACTOR_CATEGORY_PLAYER] = true,
             }
         }
     },
@@ -171,14 +101,9 @@ local filterDefinition = {
             }
         },
         {
-            type = TRADING_HOUSE_FILTER_TYPE_TRAIT,
-            allowed = PLAYER_WEAPON_TRAITS
-        },
-        {
-            type = ITEMFILTERTYPE_LOCAL,
+            type = TRADING_HOUSE_FILTER_TYPE_GAMEPLAY_ACTOR_CATEGORY,
             allowed = {
-                [ITEMFILTERTYPE_WEAPONS] = true,
-                checkLastReturnOnly = true
+                [GAMEPLAY_ACTOR_CATEGORY_PLAYER] = true,
             }
         }
     },
@@ -204,14 +129,9 @@ local filterDefinition = {
             }
         },
         {
-            type = TRADING_HOUSE_FILTER_TYPE_TRAIT,
-            allowed = PLAYER_ARMOR_TRAITS
-        },
-        {
-            type = ITEMFILTERTYPE_LOCAL,
+            type = TRADING_HOUSE_FILTER_TYPE_GAMEPLAY_ACTOR_CATEGORY,
             allowed = {
-                [ITEMFILTERTYPE_ARMOR] = true,
-                checkLastReturnOnly = true
+                [GAMEPLAY_ACTOR_CATEGORY_PLAYER] = true,
             }
         }
     },
@@ -235,14 +155,9 @@ local filterDefinition = {
             }
         },
         {
-            type = TRADING_HOUSE_FILTER_TYPE_TRAIT,
-            allowed = PLAYER_ARMOR_TRAITS
-        },
-        {
-            type = ITEMFILTERTYPE_LOCAL,
+            type = TRADING_HOUSE_FILTER_TYPE_GAMEPLAY_ACTOR_CATEGORY,
             allowed = {
-                [ITEMFILTERTYPE_ARMOR] = true,
-                checkLastReturnOnly = true
+                [GAMEPLAY_ACTOR_CATEGORY_PLAYER] = true,
             }
         }
     },
@@ -266,14 +181,9 @@ local filterDefinition = {
             }
         },
         {
-            type = TRADING_HOUSE_FILTER_TYPE_TRAIT,
-            allowed = PLAYER_ARMOR_TRAITS
-        },
-        {
-            type = ITEMFILTERTYPE_LOCAL,
+            type = TRADING_HOUSE_FILTER_TYPE_GAMEPLAY_ACTOR_CATEGORY,
             allowed = {
-                [ITEMFILTERTYPE_ARMOR] = true,
-                checkLastReturnOnly = true
+                [GAMEPLAY_ACTOR_CATEGORY_PLAYER] = true,
             }
         }
     },
@@ -297,14 +207,9 @@ local filterDefinition = {
             }
         },
         {
-            type = TRADING_HOUSE_FILTER_TYPE_TRAIT,
-            allowed = PLAYER_ARMOR_TRAITS
-        },
-        {
-            type = ITEMFILTERTYPE_LOCAL,
+            type = TRADING_HOUSE_FILTER_TYPE_GAMEPLAY_ACTOR_CATEGORY,
             allowed = {
-                [ITEMFILTERTYPE_ARMOR] = true,
-                checkLastReturnOnly = true
+                [GAMEPLAY_ACTOR_CATEGORY_PLAYER] = true,
             }
         }
     },
@@ -316,14 +221,9 @@ local filterDefinition = {
             }
         },
         {
-            type = TRADING_HOUSE_FILTER_TYPE_TRAIT,
-            allowed = PLAYER_ARMOR_TRAITS
-        },
-        {
-            type = ITEMFILTERTYPE_LOCAL,
+            type = TRADING_HOUSE_FILTER_TYPE_GAMEPLAY_ACTOR_CATEGORY,
             allowed = {
-                [ITEMFILTERTYPE_ARMOR] = true,
-                checkLastReturnOnly = true
+                [GAMEPLAY_ACTOR_CATEGORY_PLAYER] = true,
             }
         }
     },
@@ -336,14 +236,9 @@ local filterDefinition = {
             }
         },
         {
-            type = TRADING_HOUSE_FILTER_TYPE_TRAIT,
-            allowed = PLAYER_JEWELRY_TRAITS
-        },
-        {
-            type = ITEMFILTERTYPE_LOCAL,
+            type = TRADING_HOUSE_FILTER_TYPE_GAMEPLAY_ACTOR_CATEGORY,
             allowed = {
-                [ITEMFILTERTYPE_JEWELRY] = true,
-                checkLastReturnOnly = true
+                [GAMEPLAY_ACTOR_CATEGORY_PLAYER] = true,
             }
         }
     },
@@ -355,14 +250,9 @@ local filterDefinition = {
             }
         },
         {
-            type = TRADING_HOUSE_FILTER_TYPE_TRAIT,
-            allowed = PLAYER_JEWELRY_TRAITS
-        },
-        {
-            type = ITEMFILTERTYPE_LOCAL,
+            type = TRADING_HOUSE_FILTER_TYPE_GAMEPLAY_ACTOR_CATEGORY,
             allowed = {
-                [ITEMFILTERTYPE_JEWELRY] = true,
-                checkLastReturnOnly = true
+                [GAMEPLAY_ACTOR_CATEGORY_PLAYER] = true,
             }
         }
     },
@@ -374,14 +264,9 @@ local filterDefinition = {
             }
         },
         {
-            type = TRADING_HOUSE_FILTER_TYPE_TRAIT,
-            allowed = PLAYER_JEWELRY_TRAITS
-        },
-        {
-            type = ITEMFILTERTYPE_LOCAL,
+            type = TRADING_HOUSE_FILTER_TYPE_GAMEPLAY_ACTOR_CATEGORY,
             allowed = {
-                [ITEMFILTERTYPE_JEWELRY] = true,
-                checkLastReturnOnly = true
+                [GAMEPLAY_ACTOR_CATEGORY_PLAYER] = true,
             }
         }
     },
@@ -875,42 +760,9 @@ local filterDefinition = {
             }
         },
         {
-            type = TRADING_HOUSE_FILTER_TYPE_TRAIT,
+            type = TRADING_HOUSE_FILTER_TYPE_GAMEPLAY_ACTOR_CATEGORY,
             allowed = {
-                [ITEM_TRAIT_TYPE_NONE] = true,
-                [ITEM_TRAIT_TYPE_WEAPON_AGGRESSIVE] = true,
-                [ITEM_TRAIT_TYPE_WEAPON_AUGMENTED] = true,
-                [ITEM_TRAIT_TYPE_WEAPON_BOLSTERED] = true,
-                [ITEM_TRAIT_TYPE_WEAPON_FOCUSED] = true,
-                [ITEM_TRAIT_TYPE_WEAPON_PROLIFIC] = true,
-                [ITEM_TRAIT_TYPE_WEAPON_QUICKENED] = true,
-                [ITEM_TRAIT_TYPE_WEAPON_SHATTERING] = true,
-                [ITEM_TRAIT_TYPE_WEAPON_SOOTHING] = true,
-                [ITEM_TRAIT_TYPE_WEAPON_VIGOROUS] = true,
-                [ITEM_TRAIT_TYPE_ARMOR_AGGRESSIVE] = true,
-                [ITEM_TRAIT_TYPE_ARMOR_AUGMENTED] = true,
-                [ITEM_TRAIT_TYPE_ARMOR_BOLSTERED] = true,
-                [ITEM_TRAIT_TYPE_ARMOR_FOCUSED] = true,
-                [ITEM_TRAIT_TYPE_ARMOR_PROLIFIC] = true,
-                [ITEM_TRAIT_TYPE_ARMOR_QUICKENED] = true,
-                [ITEM_TRAIT_TYPE_ARMOR_SHATTERING] = true,
-                [ITEM_TRAIT_TYPE_ARMOR_SOOTHING] = true,
-                [ITEM_TRAIT_TYPE_ARMOR_VIGOROUS] = true,
-                [ITEM_TRAIT_TYPE_JEWELRY_AGGRESSIVE] = true,
-                [ITEM_TRAIT_TYPE_JEWELRY_AUGMENTED] = true,
-                [ITEM_TRAIT_TYPE_JEWELRY_BOLSTERED] = true,
-                [ITEM_TRAIT_TYPE_JEWELRY_FOCUSED] = true,
-                [ITEM_TRAIT_TYPE_JEWELRY_PROLIFIC] = true,
-                [ITEM_TRAIT_TYPE_JEWELRY_QUICKENED] = true,
-                [ITEM_TRAIT_TYPE_JEWELRY_SHATTERING] = true,
-                [ITEM_TRAIT_TYPE_JEWELRY_SOOTHING] = true,
-                [ITEM_TRAIT_TYPE_JEWELRY_VIGOROUS] = true,
-            }
-        },
-        {
-            type = ITEMFILTERTYPE_LOCAL,
-            allowed = {
-                [ITEMFILTERTYPE_COMPANION] = true,
+                [GAMEPLAY_ACTOR_CATEGORY_COMPANION] = true,
             }
         }
     },
@@ -923,24 +775,9 @@ local filterDefinition = {
             }
         },
         {
-            type = TRADING_HOUSE_FILTER_TYPE_TRAIT,
+            type = TRADING_HOUSE_FILTER_TYPE_GAMEPLAY_ACTOR_CATEGORY,
             allowed = {
-                [ITEM_TRAIT_TYPE_NONE] = true,
-                [ITEM_TRAIT_TYPE_WEAPON_AGGRESSIVE] = true,
-                [ITEM_TRAIT_TYPE_WEAPON_AUGMENTED] = true,
-                [ITEM_TRAIT_TYPE_WEAPON_BOLSTERED] = true,
-                [ITEM_TRAIT_TYPE_WEAPON_FOCUSED] = true,
-                [ITEM_TRAIT_TYPE_WEAPON_PROLIFIC] = true,
-                [ITEM_TRAIT_TYPE_WEAPON_QUICKENED] = true,
-                [ITEM_TRAIT_TYPE_WEAPON_SHATTERING] = true,
-                [ITEM_TRAIT_TYPE_WEAPON_SOOTHING] = true,
-                [ITEM_TRAIT_TYPE_WEAPON_VIGOROUS] = true,
-            }
-        },
-        {
-            type = ITEMFILTERTYPE_LOCAL,
-            allowed = {
-                [ITEMFILTERTYPE_COMPANION] = true,
+                [GAMEPLAY_ACTOR_CATEGORY_COMPANION] = true,
             }
         }
     },
@@ -966,24 +803,9 @@ local filterDefinition = {
             }
         },
         {
-            type = TRADING_HOUSE_FILTER_TYPE_TRAIT,
+            type = TRADING_HOUSE_FILTER_TYPE_GAMEPLAY_ACTOR_CATEGORY,
             allowed = {
-                [ITEM_TRAIT_TYPE_NONE] = true,
-                [ITEM_TRAIT_TYPE_ARMOR_AGGRESSIVE] = true,
-                [ITEM_TRAIT_TYPE_ARMOR_AUGMENTED] = true,
-                [ITEM_TRAIT_TYPE_ARMOR_BOLSTERED] = true,
-                [ITEM_TRAIT_TYPE_ARMOR_FOCUSED] = true,
-                [ITEM_TRAIT_TYPE_ARMOR_PROLIFIC] = true,
-                [ITEM_TRAIT_TYPE_ARMOR_QUICKENED] = true,
-                [ITEM_TRAIT_TYPE_ARMOR_SHATTERING] = true,
-                [ITEM_TRAIT_TYPE_ARMOR_SOOTHING] = true,
-                [ITEM_TRAIT_TYPE_ARMOR_VIGOROUS] = true,
-            }
-        },
-        {
-            type = ITEMFILTERTYPE_LOCAL,
-            allowed = {
-                [ITEMFILTERTYPE_COMPANION] = true,
+                [GAMEPLAY_ACTOR_CATEGORY_COMPANION] = true,
             }
         }
     },
@@ -996,24 +818,9 @@ local filterDefinition = {
             }
         },
         {
-            type = TRADING_HOUSE_FILTER_TYPE_TRAIT,
+            type = TRADING_HOUSE_FILTER_TYPE_GAMEPLAY_ACTOR_CATEGORY,
             allowed = {
-                [ITEM_TRAIT_TYPE_NONE] = true,
-                [ITEM_TRAIT_TYPE_JEWELRY_AGGRESSIVE] = true,
-                [ITEM_TRAIT_TYPE_JEWELRY_AUGMENTED] = true,
-                [ITEM_TRAIT_TYPE_JEWELRY_BOLSTERED] = true,
-                [ITEM_TRAIT_TYPE_JEWELRY_FOCUSED] = true,
-                [ITEM_TRAIT_TYPE_JEWELRY_PROLIFIC] = true,
-                [ITEM_TRAIT_TYPE_JEWELRY_QUICKENED] = true,
-                [ITEM_TRAIT_TYPE_JEWELRY_SHATTERING] = true,
-                [ITEM_TRAIT_TYPE_JEWELRY_SOOTHING] = true,
-                [ITEM_TRAIT_TYPE_JEWELRY_VIGOROUS] = true,
-            }
-        },
-        {
-            type = ITEMFILTERTYPE_LOCAL,
-            allowed = {
-                [ITEMFILTERTYPE_COMPANION] = true,
+                [GAMEPLAY_ACTOR_CATEGORY_COMPANION] = true,
             }
         }
     }
@@ -1054,6 +861,10 @@ local filterFunctions = {
         local _, subcategory = GetFurnitureDataInfo(furnitureDataId)
         return allowedTypes[subcategory]
     end,
+    [TRADING_HOUSE_FILTER_TYPE_GAMEPLAY_ACTOR_CATEGORY] = function(itemLink, allowedTypes)
+        local actorCategory = GetItemLinkActorCategory(itemLink)
+        return allowedTypes[actorCategory]
+    end,
     [ITEMFILTERTYPE_LOCAL] = function(itemLink, allowedTypes)
         local itemFilterTypes = {GetItemLinkFilterTypeInfo(itemLink)}
         if allowedTypes.checkLastReturnOnly then
@@ -1078,6 +889,7 @@ local function GetSubcategoryFromItem(itemLink)
     temp[TRADING_HOUSE_FILTER_TYPE_TRAIT] = GetItemLinkTraitInfo(itemLink)
     temp[TRADING_HOUSE_FILTER_TYPE_ITEM], temp[TRADING_HOUSE_FILTER_TYPE_SPECIALIZED_ITEM] = GetItemLinkItemType(itemLink)
     temp[TRADING_HOUSE_FILTER_TYPE_FURNITURE_CATEGORY], temp[TRADING_HOUSE_FILTER_TYPE_FURNITURE_SUBCATEGORY] = GetFurnitureDataInfo(GetItemLinkFurnitureDataId(itemLink))
+    temp[TRADING_HOUSE_FILTER_TYPE_GAMEPLAY_ACTOR_CATEGORY] = GetItemLinkActorCategory(itemLink)
     temp[ITEMFILTERTYPE_LOCAL] = GetItemLinkFilterTypeInfo(itemLink)
 
     for subcategoryId, filters in pairs(filterDefinition) do
