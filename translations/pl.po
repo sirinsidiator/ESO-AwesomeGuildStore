@@ -1,0 +1,592 @@
+# by generaluploads - https://www.esoui.com/forums/member.php?u=41643
+msgid "Minimize chat on open"
+msgstr "Zminimalizuj czat po otwarciu"
+
+msgid "When activated, the chat window will get minimized when visiting a trading house. This defaults to true since it is the new default behavior added by ZOS."
+msgstr "Po włączeniu tej opcji okno czatu zostanie zminimalizowane podczas wizyty w domu handlowym. Ustawienie jest włączone, ponieważ jest to nowe domyślne rozwiązanie dodane przez ZOS."
+
+msgid "Single click item listing"
+msgstr "Wybór przedmiotu jednym kliknięciem"
+
+msgid "Select items for sale with a single click in the sell tab."
+msgstr "Wybierz przedmioty do sprzedaży za pomocą jednego kliknięcia w zakładce sprzedaży."
+
+msgid "Trader Tooltips"
+msgstr "Podpowiedzi kupca"
+
+msgid "Show the currently hired trader for a guild that you are a member of, when hovering over the name or an entry in the drop down menu"
+msgstr "Pokazuje aktualnie zatrudnionego handlarza dla gildii, której jesteś członkiem, po najechaniu kursorem myszy na nazwę lub pozycję w rozwijanym menu."
+
+msgid "Mail augmentation"
+msgstr "Rozszerzenie poczty"
+
+msgid "Adds more detailed information about a transaction to an incoming Guild Store Mail if the data is available in the Guild Activity Log."
+msgstr "Dodaje bardziej szczegółowe informacje o transakcji do przychodzącej poczty ze Sklepu Gildii, jeśli dane te są dostępne w Dzienniku Aktywności Gildii."
+
+msgid "Show invoice on mails"
+msgstr "Pokaż fakturę w wiadomości"
+
+msgid "Adds a detailed invoice to the mail which lists all deductions."
+msgstr "Dodaje do wiadomości szczegółową fakturę z wyszczególnieniem wszystkich odliczeń."
+
+msgid "Purchase notifications"
+msgstr "Powiadomienia o kupnie"
+
+msgid "Shows a message in chat after you have purchased an item in a guild store"
+msgstr "Wyświetla wiadomość na czacie po zakupie przedmiotu w sklepie gildii."
+
+msgid "Cancel notifications"
+msgstr "Anuluj powiadomienia"
+
+msgid "Shows a message in chat after you have cancelled an item listing from a guild store"
+msgstr "Wyświetla wiadomość na czacie po anulowaniu oferty przedmiotu w sklepie gildii."
+
+msgid "Listed item notifications"
+msgstr "Powiadomienia o ofercie przedmiotu"
+
+msgid "Shows a message in chat after you have created a new item listing in a guild store"
+msgstr "Wyświetla wiadomość na czacie po utworzeniu nowej oferty przedmiotu w sklepie gildii."
+
+msgid "Preferred banker store tab"
+msgstr "Preferowana zakładka sklepu bankiera"
+
+msgid "Controls which tab should be opened first when visiting the guild store at a banker."
+msgstr "Kontroluje, która zakładka ma być otwarta jako pierwsza podczas wizyty w sklepie gildii u bankiera."
+
+msgid "Skip guild kiosk dialog"
+msgstr "Pomiń okno dialogowe stoiska gildii"
+
+msgid "When activated, the dialog at guild traders (not at banks) is skipped and the store opened automatically. This can be suppressed by holding the shift key when talking to a trader."
+msgstr "Po włączeniu tej opcji, dialog z kupcami gildii (nie z bankierami) jest pomijany i sklep otwiera się automatycznie. Można to wyłączyć poprzez przytrzymanie klawisza Shift podczas rozmowy z handlarzem."
+
+msgid "Clear sell price cache"
+msgstr "Wyczyść zap. ceny"
+
+msgid "Pressing this button will remove all stored quantity and price values for the sell tab from your save data. While Master Merchant is active, it will take the last sell price from there when selecting an item if no data was found in AwesomeGuildStore's own data"
+msgstr "Naciśnięcie tego przycisku usunie wszystkie informacje o ilości i cenach dla zakładki sprzedaży z twoich danych. Gdy Master Merchant jest aktywny, to przy wyborze przedmiotu zostanie pobrana ostatnia cena sprzedaży, jeśli nie ma danych w AwesomeGuildStore."
+
+msgid "The data cannot be restored after you have confirmed the action"
+msgstr "Po zatwierdzeniu tego działania nie można przywrócić danych."
+
+msgid "Enable guild trader list"
+msgstr "Włącz listę kupców gildii"
+
+msgid "When activated, the guild menu will show a new tab with a list of all kiosks in Tamriel. The list will get updated with the owning guilds whenever you visit a kiosk."
+msgstr "Po włączeniu, w menu gildii pojawi się nowa zakładka z listą wszystkich stoisk w Tamriel. Lista ta będzie aktualizowana o gildie, które je posiadają, za każdym razem, gdy odwiedzisz stoisko."
+
+msgid "Clear guild trader list"
+msgstr "Wyczyść listę kupców"
+
+msgid "Pressing this button will remove all stored data related to the guild trader list"
+msgstr "Naciśnięcie tego przycisku spowoduje usunięcie wszystkich zapisanych danych związanych z listą kupców gildii."
+
+msgid "The UI will reload and the data cannot be restored after you have confirmed the action"
+msgstr "Po zatwierdzeniu tej akcji interfejs użytkownika zostanie przeładowany i nie będzie można przywrócić danych."
+
+msgid "Suppress Local Filters"
+msgstr "Wyciszanie filtrów lokalnych"
+
+msgid "Waiting for response"
+msgstr "Oczekiwanie na odpowiedź"
+
+msgid "Request timed out"
+msgstr "Żądanie zostało przerwane"
+
+msgid "<<1[No activity/One activity/$d activities]>> queued"
+msgstr "<<1[Brak aktywności/Jedna aktywność/$d aktywności]>> w kolejce"
+
+msgid "Execute next activity"
+msgstr "Wykonaj kolejną czynność"
+
+msgid "Request finished"
+msgstr "Żądanie zakończone"
+
+msgid "Unknown Error"
+msgstr "Nieznany błąd"
+
+msgid "Request failed: <<1>>"
+msgstr "Żądanie nie powiodło się: <<1>>"
+
+msgid "Could not cancel listing"
+msgstr "Nie udało się anulować oferty"
+
+msgid "Cancel listing of <<1>>x <<t:2>> for <<3>> in <<4>>"
+msgstr "Anuluj ofertę <<1>>x <<t:2>> za <<3>> w <<4>>"
+
+msgid "Could not fetch guild items"
+msgstr "Nie udało się pobrać przedmiotów z gildii"
+
+msgid "Fetch guild items in <<1>>"
+msgstr "Pobieranie przedmiotów gildii w <<1>>"
+
+msgid "Could not list item"
+msgstr "Nie udało się wystawić przedmiotu"
+
+msgid "Post <<1>>x <<2>> for <<3>> to <<4>>"
+msgstr "Wystaw <<1>>x <<2>> za <<3>> do <<4>>"
+
+msgid "Could not purchase item"
+msgstr "Nie udało się nabyć przedmiotu"
+
+msgid "Purchase <<1>>x <<2>> for <<3>> from <<4>> in <<5>>"
+msgstr "Kup <<1>>x <<2>> za <<3>> od <<4>> w <<5>>"
+
+msgid "Request listings in <<1>>"
+msgstr "Poproś o listę w <<1>>"
+
+msgid "Could not request listings"
+msgstr "Nie udało się uzyskać listy"
+
+msgid "Request page <<1>> of newest results in <<2>>"
+msgstr "Prośba o stronę <<1>> najnowszych wyników w <<2>>"
+
+msgid "Request newest results in <<1>>"
+msgstr "Sprawdź najnowsze wyniki w <<1>>"
+
+msgid "Could not request search results"
+msgstr "Nie można uzyskać wyników wyszukiwania"
+
+msgid "Request page <<1>> of <<2>> in <<3>>"
+msgstr "Prośba o stronę <<1>> z <<2>> w <<3>>"
+
+msgid "Request search results in <<1>>"
+msgstr "Wyniki wyszukiwania w <<1>>"
+
+msgid "Collectible Ownership"
+msgstr "Posiadane w kolekcji"
+
+msgid "Crafting"
+msgstr "Rzemiosło"
+
+msgid "Looted item"
+msgstr "Zdobyty przedmiot"
+
+msgid "Crafted item"
+msgstr "Wytworzony przedmiot"
+
+msgid "Furnishing Category"
+msgstr "Kategoria mebli"
+
+msgid "Item Category"
+msgstr "Kategoria przedmiotu"
+
+msgid "Itemset"
+msgstr "Zestaw przedmiotu"
+
+msgid "Regular item"
+msgstr "Normalny przedmiot"
+
+msgid "Set item"
+msgstr "Przedmiot z zestawu"
+
+msgid "Level Range"
+msgstr "Zakres poziomu"
+
+msgid "Motif Knowledge"
+msgstr "Znajomość motywu"
+
+msgid "Unknown Motifs"
+msgstr "Nieznane motywy"
+
+msgid "Known Motifs"
+msgstr "Znane motywy"
+
+msgid "Price Range"
+msgstr "Zakres ceny"
+
+msgid "Quality Range"
+msgstr "Zakres jakości"
+
+msgid "Recipe Knowledge"
+msgstr "Znajomość przepisu"
+
+msgid "Unknown Recipes"
+msgstr "Nieznane przepisy"
+
+msgid "Known Recipes"
+msgstr "Znane przepisy"
+
+msgid "Rune Knowledge"
+msgstr "Znajomość runy"
+
+msgid "Unknown Rune"
+msgstr "Nieznana runa"
+
+msgid "Known Rune"
+msgstr "Znana runa"
+
+msgid "Skill requirements"
+msgstr "Wymagana umiejętność"
+
+msgid "Can craft"
+msgstr "Można wytworzyć"
+
+msgid "Cannot craft"
+msgstr "Nie można wytworzyć"
+
+msgid "ascending"
+msgstr "rosnąco"
+
+msgid "descending"
+msgstr "malejąco"
+
+msgid "Sort By"
+msgstr "Sortuj według"
+
+msgid "Text Search"
+msgstr "Szukany tekst"
+
+msgid "Trait Knowledge"
+msgstr "Znajomość cechy"
+
+msgid "Known Trait"
+msgstr "Znana cecha"
+
+msgid "Unknown Trait"
+msgstr "Nieznana cecha"
+
+msgid "Unit Price Range"
+msgstr "Zakres ceny jednostkowej"
+
+msgid "exactly <<1>>"
+msgstr "dokładnie <<1>>"
+
+msgid "<<1>> - <<2>>"
+msgstr "<<1>> - <<2>>"
+
+msgid "over <<1>>"
+msgstr "powyżej <<1>>"
+
+msgid "under <<1>>"
+msgstr "poniżej <<1>>"
+
+msgid "Writ Voucher Range"
+msgstr "Zakres talonów za zlecenia"
+
+msgid "Item Name"
+msgstr "Nazwa przedmiotu"
+
+msgid "Item Quality"
+msgstr "Jakość przedmiotu"
+
+msgid "Purchase Price"
+msgstr "Cena kupna"
+
+msgid "Seller Name"
+msgstr "Imię sprzedawcy"
+
+msgid "Set Name"
+msgstr "Nazwa zestawu"
+
+msgid "Time Left"
+msgstr "Pozostały czas"
+
+msgid "Unit Price"
+msgstr "Cena jednostkowa"
+
+msgid "Material Type"
+msgstr "Rodzaj materiału"
+
+msgid "Ingredient Type"
+msgstr "Rodzaj składnika"
+
+msgid "Rune Type"
+msgstr "Rodzaj runy"
+
+msgid "Armor Type"
+msgstr "Rodzaj pancerza"
+
+msgid "Weapon Enchantment"
+msgstr "Zaklęcie broni"
+
+msgid "Armor Enchantment"
+msgstr "Zaklęcie pancerza"
+
+msgid "Jewelry Enchantment"
+msgstr "Zaklęcie biżuterii"
+
+msgid "Racial"
+msgstr "Rasowe"
+
+msgid "Uncommon"
+msgstr "Nietypowe"
+
+msgid "Organizations"
+msgstr "Organizacje"
+
+msgid "Events"
+msgstr "Wydarzenia"
+
+msgid "New"
+msgstr "Nowe"
+
+msgid "Jewelry Trait"
+msgstr "Cecha biżuterii"
+
+msgid "Glyph Type"
+msgstr "Typ glifu"
+
+msgid "Recipe Type"
+msgstr "Typ przepisu"
+
+msgid "Drink Type"
+msgstr "Typ napoju"
+
+msgid "Food Type"
+msgstr "Typ jedzenia"
+
+msgid "Siege Type"
+msgstr "Typ machin oblężniczych"
+
+msgid "Trophy Type"
+msgstr "Typ trofeum"
+
+msgid "Weapon Type"
+msgstr "Typ broni"
+
+msgid "Writ Type"
+msgstr "Typ zlecenia"
+
+msgid "Time"
+msgstr "Czas"
+
+msgid "Message"
+msgstr "Wiadomość"
+
+msgid "Queued"
+msgstr "W kolejce"
+
+msgid "Active"
+msgstr "Aktywne"
+
+msgid "No activities queued"
+msgstr "Brak działań w kolejce"
+
+msgid "Reset <<1>> Filter"
+msgstr "Zresetuj filtr: <<1>>"
+
+msgid "Unpin Filter"
+msgstr "Odepnij filtr"
+
+msgid "Remove Filter"
+msgstr "Usuń filtr"
+
+msgid "Pin Filter"
+msgstr "Przypnij filtr"
+
+msgid "Set Active"
+msgstr "Ustaw jako aktywny"
+
+msgid "Rename"
+msgstr "Zmień nazwę"
+
+msgid "Reset Label"
+msgstr "Zresetuj etykietę"
+
+msgid "Unlock"
+msgstr "Odblokuj"
+
+msgid "Lock"
+msgstr "Zablokuj"
+
+msgid "Duplicate"
+msgstr "Duplikuj"
+
+msgid "Move Up"
+msgstr "Przesuń w górę"
+
+msgid "Move Down"
+msgstr "Przesuń w dół"
+
+msgid "Delete"
+msgstr "Usuń"
+
+msgid "New Search"
+msgstr "Nowe wyszukiwanie"
+
+msgid "Rename Search"
+msgstr "Zmień nazwę wyszukiwania"
+
+msgid "Enter the new name for your search."
+msgstr "Wprowadź nową nazwę dla wyszukiwania."
+
+msgid "Save"
+msgstr "Zapisz"
+
+msgid "Show More Results"
+msgstr "Pokaż więcej wyników"
+
+msgid "Waiting For Cooldown ..."
+msgstr "Oczekiwanie na czas odnowienia..."
+
+msgid "Requesting Results ..."
+msgstr "Zapytanie o wyniki..."
+
+msgid "Items:|cffffff %d / %d"
+msgstr "Przedmioty:|cffffff %d / %d"
+
+msgid "Seller:|cffffff <<1>>"
+msgstr "Sprzedawca:|cffffff <<1>>"
+
+msgid "Click for more information"
+msgstr "Kliknij, aby uzyskać więcej informacji"
+
+msgid "Set To Character Level"
+msgstr "Ustaw na poziom postaci"
+
+msgid "Click to remove"
+msgstr "Kliknij, aby usunąć"
+
+msgid "Add More"
+msgstr "Dodaj więcej"
+
+msgid "Number of weeks since last seen on a trader"
+msgstr "Liczba tygodni, które upłynęły od ostatniej wizyty u kupca"
+
+msgid "Number of weeks with a kiosk"
+msgstr "Liczba tygodni ze stoiskiem"
+
+msgid "Guild"
+msgstr "Gildia"
+
+msgid "Last Visited"
+msgstr "Ostatnia wizyta"
+
+msgid "Zone"
+msgstr "Region"
+
+msgid "Location"
+msgstr "Lokacja"
+
+msgid "Weeks w/ kiosk"
+msgstr "Tygodnie ze stoiskiem"
+
+msgid "History"
+msgstr "Historia"
+
+msgid "Week"
+msgstr "Tydzień"
+
+msgid "Trader"
+msgstr "Kupiec"
+
+msgid "Show Details"
+msgstr "Pokaż szczegóły"
+
+msgid "Open Guild Info"
+msgstr "Otwórz informacje o gildii"
+
+msgid "<<1[this week/1 week ago/$d weeks ago]>>"
+msgstr "<<1[ten tydzień/1 tydzień temu/$d tygodni(e) temu]>>"
+
+msgid "never"
+msgstr "nigdy"
+
+msgid "|cffffff<<1>>|r guilds visited this week"
+msgstr "Liczba gildii odwiedzonych w tym tygodniu: |cffffff<<1>>|r"
+
+msgid "|cffffff<<1>>|r guilds visited all time"
+msgstr "Liczba gildii odwiedzonych od początku: |cffffff<<1>>|r"
+
+msgid "|cffffff<<1>>|r guilds stored"
+msgstr "Liczba zapisanych gildii: |cffffff<<1>>|r"
+
+msgid "Trader database is not initialized yet."
+msgstr "Baza danych kupca nie została jeszcze zainicjowana."
+
+msgid "No results match your filter text."
+msgstr "Brak wyników pasujących do twojego tekstu filtrującego."
+
+msgid "Filter By:"
+msgstr "Filtruj według:"
+
+msgid "Current:"
+msgstr "Obecnie:"
+
+msgid "Visited:"
+msgstr "Odwiedzone:"
+
+msgid "Overall:"
+msgstr "Ogólnie:"
+
+msgid "You are a member of this guild."
+msgstr "Jesteś członkiem tej gildii."
+
+msgid "|cffffff<<1>>|r stores visited this week"
+msgstr "Sklepy odwiedzone w tym tygodniu: |cffffff<<1>>|r"
+
+msgid "|cffffff<<1>>|r stores visited all time"
+msgstr "Sklepy odwiedzone od początku: |cffffff<<1>>|r"
+
+msgid "|cffffff<<1>>|r stores detected in |cffffff<<2>>|r locations"
+msgstr "Wykryte sklepy: |cffffff<<1>>|r w |cffffff<<2>>|r lokacjach"
+
+msgid "No history data stored."
+msgstr "Brak zapisanych danych."
+
+msgid "joined"
+msgstr "dołączono"
+
+msgid "Item Sold"
+msgstr "Przedmiot sprzedany"
+
+msgid "Commission"
+msgstr "Prowizja"
+
+msgid " (refund)"
+msgstr " (zwrot)"
+
+msgid "Load Details"
+msgstr "Załaduj szczegóły"
+
+msgid "You sold <<2>> <<t:1>> to <<3>> for <<4>>."
+msgstr "Sprzedano <<2>> <<t:1>> dla <<3>> za <<4>>."
+
+msgid "Warning: Could not match kiosk name: '<<1>>' -- please report this to the author"
+msgstr "Uwaga: Nie udało się dopasować nazwy stoiska: '<<1>>' -- proszę zgłosić to do autora"
+
+msgid "You have cancelled your listing of <<1>>x <<t:2>> for <<3>> in <<4>>"
+msgstr "Wycofano ofertę <<1>>x <<t:2>> za <<3>> w <<4>>"
+
+msgid "Overall Price: <<1>>"
+msgstr "Cena całkowita: <<1>>"
+
+msgid "You have bought <<1>>x <<t:2>> from <<3>> for <<4>> in <<5>>"
+msgstr "Kupiono <<1>>x <<t:2>> od <<3>> za <<4>> w <<5>>"
+
+msgid "Item is already in your possession."
+msgstr "Przedmiot jest już w twoim posiadaniu."
+
+msgid "Item not found in current guild."
+msgstr "W tej gildii nie ma takiego przedmiotu."
+
+msgid "Listings:"
+msgstr "Oferty:"
+
+msgid "Select Full Quantity"
+msgstr "Wybierz pełną ilość"
+
+msgid "Select Last Sold Quantity"
+msgstr "Wybierz ostatnio sprzedaną ilość"
+
+msgid "Unit Price:"
+msgstr "Cena jednostkowa:"
+
+msgid "Select Default Price"
+msgstr "Wybierz cenę domyślną"
+
+msgid "Select Last Sell Price"
+msgstr "Wybierz ostatnią cenę sprzedaży"
+
+msgid "Select Master Merchant Price"
+msgstr "Wybierz cenę z Master Merchant"
+
+msgid "Profit is below vendor price. You'll get more out of selling this item to a merchant."
+msgstr "Zysk jest poniżej ceny u sprzedawcy. Więcej zyskasz sprzedając ten przedmiot handlarzowi."
+
+msgid "You have listed <<1>>x <<t:2>> for <<3>> in <<4>>"
+msgstr "Wystawiono <<1>>x <<t:2>> za <<3>> w <<4>>"
+
+msgid "AwesomeGuildStore - Version: <<1>> - <<2>>Donate<<3>>"
+msgstr "AwesomeGuildStore - Wersja: <<1>> - <<2>>Dotacja<<3>>"
+
