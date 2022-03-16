@@ -60,7 +60,9 @@ function SearchTabWrapper:InitializeFilters(tradingHouseWrapper)
     self.searchManager = searchManager
 
     self.categorySelector = AGS.class.CategorySelector:New(tradingHouse.itemPane, searchManager) -- TODO pass the category filter to it
-    tradingHouse.searchSortHeadersControl:SetAnchor(TOPRIGHT, self.categorySelector:GetControl(), BOTTOMRIGHT)
+    local selectorControl = self.categorySelector:GetControl()
+    tradingHouse.searchSortHeadersControl:SetAnchor(TOPRIGHT, selectorControl, BOTTOMRIGHT)
+    tradingHouse.searchSortHeadersControl:SetAnchor(TOPLEFT, selectorControl, BOTTOMLEFT)
 
     self.filterArea = AGS.class.FilterArea:New(tradingHouse.browseItemsLeftPane, searchManager)
 
