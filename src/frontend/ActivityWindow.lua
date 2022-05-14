@@ -69,6 +69,7 @@ function ActivityWindow:Initialize(tradingHouseWrapper)
     local TOOLTIP_LINE_TEMPLATE = "%s: |cFFFFFF%s|r"
     local function EnterRow(control)
         local data = ZO_ScrollList_GetData(control)
+        if not data then return end
         local output = {}
         data:AddTooltipText(output)
         local text = table.concat(output, "\n")
