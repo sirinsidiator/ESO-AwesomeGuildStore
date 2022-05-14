@@ -160,6 +160,10 @@ function ItemDatabase:GetItemView(guildId)
     return view
 end
 
+function ItemDatabase:ClearItemViewCache()
+    ZO_ClearTable(self.viewCache)
+end
+
 function ItemDatabase:GetFilteredView(guildId, filterState)
     local view = self:GetItemView(guildId)
     local groups = filterState:GetGroups()

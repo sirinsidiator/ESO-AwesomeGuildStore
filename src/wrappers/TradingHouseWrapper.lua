@@ -137,6 +137,7 @@ function TradingHouseWrapper:Initialize(saveData)
         if GetNumGuilds() > 0 then
             tradingHouse:ClearPendingPost()
         end
+        itemDatabase:ClearItemViewCache()
     end)
 
     local INTERACT_WINDOW_SHOWN = "Shown"
