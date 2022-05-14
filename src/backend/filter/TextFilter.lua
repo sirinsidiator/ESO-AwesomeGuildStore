@@ -22,12 +22,12 @@ function TextFilter:New(...)
     return FilterBase.New(self, ...)
 end
 
-function TextFilter:Initialize()
+function TextFilter:Initialize(searchManager)
     -- TRANSLATORS: label of the text filter
     FilterBase.Initialize(self, FILTER_ID.TEXT_FILTER, FilterBase.GROUP_SERVER, gettext("Text Search"))
     self.text = ""
     self.haystack = {}
-    self.matcher = ItemNameMatcher:New()
+    self.matcher = ItemNameMatcher:New(searchManager)
 end
 
 function TextFilter:SetText(text)
@@ -80,7 +80,7 @@ function TextFilter:PrepareForSearch(text)
         self.result = nil
         logger:Debug("Failed to prepare name hashes for TextFilter:", ItemNameMatcher.GetErrorMessage(errorCode))
         AGS.internal:FireCallbacks(AGS.callback.FILTER_PREPARED, self)
-    end):Then(nil, function(e) logger:Warn(e) end)
+    end)
     return true
 end
 

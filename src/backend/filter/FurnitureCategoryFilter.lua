@@ -45,6 +45,10 @@ function FurnitureCategoryFilter:IsLocal()
     return false
 end
 
+function FurnitureCategoryFilter:IsAffectingTextFilter()
+    return true
+end
+
 function FurnitureCategoryFilter:PrepareForSearch(selection)
     local selectedCategoryId, selectedSubcategoryId
     local firstValue = true

@@ -1,5 +1,7 @@
 local AGS = AwesomeGuildStore
 
+local FilterRequest = AGS.class.FilterRequest
+
 local logger = AGS.internal.logger
 local RegisterForEvent = AGS.internal.RegisterForEvent
 
@@ -20,7 +22,9 @@ ItemNameMatcher.GetErrorMessage = function(code)
     return "Unhandled error code (" .. tostring(code) .. ")"
 end
 
-function ItemNameMatcher:Initialize()
+function ItemNameMatcher:Initialize(searchManager)
+    self.searchManager = searchManager
+
     RegisterForEvent(EVENT_MATCH_TRADING_HOUSE_ITEM_NAMES_COMPLETE, function(_, id, numResults)
         local promise = self.pendingMatch
         if promise and promise.taskId == id then
@@ -37,6 +41,14 @@ function ItemNameMatcher:IsSearchTextLongEnough(text)
     return length >= GetMinLettersInTradingHouseItemNameForCurrentLanguage()
 end
 
+function ItemNameMatcher:SetRelevantFilters()
+    local filterState = self.searchManager:GetActiveSearch():GetFilterState()
+    return self.searchManager:PrepareActiveFilters(filterState, true):Then(function(activeFilters)
+        self.appliedValues = FilterRequest:New()
+        self.appliedValues:Apply(activeFilters)
+    end)
+end
+
 function ItemNameMatcher:MatchText(text)
     if not self.pendingMatch or self.pendingMatch.text ~= text then
         self:CancelPendingMatch()
@@ -45,8 +57,10 @@ function ItemNameMatcher:MatchText(text)
         promise.text = text
 
         if self:IsSearchTextLongEnough(text) then
-            ClearAllTradingHouseSearchTerms() -- TODO set current filter state
-            promise.taskId = MatchTradingHouseItemNames(text)
+            self:SetRelevantFilters():Then()
+            self.searchManager:PrepareActiveFilters():Then(function()
+                promise.taskId = MatchTradingHouseItemNames(text)
+            end)
         else
             promise:Reject(ItemNameMatcher.ERROR_INPUT_TOO_SHORT)
         end

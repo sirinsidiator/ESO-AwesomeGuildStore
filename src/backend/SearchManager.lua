@@ -6,6 +6,8 @@ local RegisterForEvent = AGS.internal.RegisterForEvent
 local ActivityBase = AGS.class.ActivityBase
 local SearchState = AGS.class.SearchState
 
+local Promise = LibPromises
+
 local FILTER_UPDATE_DELAY = 0 -- TODO do we even need this? check with profiler
 local AUTO_SEARCH_RESULT_COUNT_THRESHOLD = 20
 local SILENT = true
@@ -332,6 +334,50 @@ end
 
 function SearchManager:GetActiveFilters()
     return self.activeFilters
+end
+
+function SearchManager:PrepareActiveFilters(filterState, forTextFilter)
+    local promise = Promise:New()
+
+    local count = 0
+    local subcategory = filterState:GetSubcategory()
+    local activeFilters = {}
+    for _, filter in ipairs(self.activeFilters) do
+        local id = filter:GetId()
+        if not filter:IsLocal()
+            and filter:CanFilter(subcategory)
+            and filterState:HasFilter(id)
+            and (
+                not forTextFilter 
+                or (
+                    forTextFilter
+                    and filter:IsAffectingTextFilter()
+                )
+            ) then
+            if filter:PrepareForSearch(filterState:GetFilterValues(id)) then
+                count = count + 1
+            end
+            activeFilters[#activeFilters + 1] = filter
+        end
+    end
+
+    if count > 0 then
+        logger:Debug("Waiting for %d filters to prepare", count)
+        local function OnFilterPrepared(filter)
+            count = count - 1
+            logger:Debug("%s ready, %d filters left to prepare", filter:GetLabel(), count)
+            if count == 0 then
+                AGS:UnregisterCallback(AGS.callback.FILTER_PREPARED, OnFilterPrepared)
+                promise:Resolve(activeFilters)
+            end
+        end
+
+        AGS:RegisterCallback(AGS.callback.FILTER_PREPARED, OnFilterPrepared)
+    else
+        promise:Resolve(activeFilters)
+    end
+
+    return promise
 end
 
 function SearchManager:UpdateSearchResults()

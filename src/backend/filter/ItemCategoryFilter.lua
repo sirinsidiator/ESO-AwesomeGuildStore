@@ -948,6 +948,10 @@ function ItemCategoryFilter:IsLocal()
     return false
 end
 
+function ItemCategoryFilter:IsAffectingTextFilter()
+    return true
+end
+
 function ItemCategoryFilter:PrepareForSearch(subcategory)
     self.serverSubcategory = subcategory
 end

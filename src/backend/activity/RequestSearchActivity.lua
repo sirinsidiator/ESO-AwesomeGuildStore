@@ -1,6 +1,7 @@
 local AGS = AwesomeGuildStore
 
 local ActivityBase = AGS.class.ActivityBase
+local FilterRequest = AGS.class.FilterRequest
 local SortOrderBase = AGS.class.SortOrderBase
 
 local logger = AGS.internal.logger
@@ -42,37 +43,11 @@ function RequestSearchActivity:PrepareFilters()
     self.pendingPage = page
     self.pendingFilterState = filterState
 
-    if(page) then
-        local count = 0
-        local subcategory = filterState:GetSubcategory()
-        local filters = searchManager:GetActiveFilters()
-        local activeFilters = {}
-        for _, filter in ipairs(filters) do
-            local id = filter:GetId()
-            if(not filter:IsLocal() and filter:CanFilter(subcategory) and filterState:HasFilter(id)) then
-                if(filter:PrepareForSearch(filterState:GetFilterValues(id))) then
-                    count = count + 1
-                end
-                activeFilters[#activeFilters + 1] = filter
-            end
-        end
-        self.activeFilters = activeFilters
-
-        if(count > 0) then
-            logger:Debug("Waiting for %d filters to prepare", count)
-            local function OnFilterPrepared(filter)
-                count = count - 1
-                logger:Debug("%s ready, %d filters left to prepare", filter:GetLabel(), count)
-                if(count == 0) then
-                    AGS:UnregisterCallback(AGS.callback.FILTER_PREPARED, OnFilterPrepared)
-                    promise:Resolve(self)
-                end
-            end
-
-            AGS:RegisterCallback(AGS.callback.FILTER_PREPARED, OnFilterPrepared)
-        else
+    if page then
+        searchManager:PrepareActiveFilters(filterState):Then(function(activeFilters)
+            self.activeFilters = activeFilters
             promise:Resolve(self)
-        end
+        end)
     else
         self:SetState(ActivityBase.STATE_SUCCEEDED, ActivityBase.RESULT_PAGE_ALREADY_LOADED)
         promise:Resolve(self)
@@ -86,17 +61,6 @@ function RequestSearchActivity:GetPendingCategories()
     return CATEGORY_DEFINITION[subcategory.category], subcategory
 end
 
-function RequestSearchActivity:SetFilterValues(type, ...)
-    self.appliedValues[type] = {...}
-end
-
-function RequestSearchActivity:SetFilterRange(type, min, max)
-    local values = self.appliedValues[type] or {}
-    values.min = min
-    values.max = max
-    self.appliedValues[type] = values
-end
-
 function RequestSearchActivity:SetSortOrder(field, order)
     self.sortField = field
     self.sortOrder = order
@@ -106,22 +70,8 @@ function RequestSearchActivity:RequestSearch()
     if(not self.responsePromise) then
         self.responsePromise = Promise:New()
         if(self.state ~= ActivityBase.STATE_SUCCEEDED) then
-            self.appliedValues = {}
-            ClearAllTradingHouseSearchTerms()
-
-            local filters = self.activeFilters
-            for _, filter in ipairs(filters) do
-                filter:ApplyToSearch(self)
-            end
-
-            for type, values in pairs(self.appliedValues) do
-                if(values.min) then
-                    SetTradingHouseFilterRange(type, values.min, values.max)
-                else
-                    SetTradingHouseFilter(type, unpack(values))
-                end
-            end
-
+            self.appliedValues = FilterRequest:New()
+            self.appliedValues:Apply(self.activeFilters)
             ExecuteTradingHouseSearch(self.pendingPage, self.sortField, self.sortOrder)
         else
             self.responsePromise:Resolve(self)

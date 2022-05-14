@@ -96,7 +96,7 @@ function SearchTabWrapper:InitializeFilters(tradingHouseWrapper)
     AGS:RegisterFilter(AGS.class.QualityFilter:New())
     AGS:RegisterFilterFragment(AGS.class.QualityFilterFragment:New(FILTER_ID.QUALITY_FILTER))
 
-    AGS:RegisterFilter(AGS.class.TextFilter:New())
+    AGS:RegisterFilter(AGS.class.TextFilter:New(searchManager))
     AGS:RegisterFilterFragment(AGS.class.TextFilterFragment:New(FILTER_ID.TEXT_FILTER))
 
     AGS:RegisterFilter(AGS.class.ItemStyleFilter:New())
