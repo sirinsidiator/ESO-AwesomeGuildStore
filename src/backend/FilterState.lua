@@ -3,6 +3,7 @@ local AGS = AwesomeGuildStore
 local FilterBase = AGS.class.FilterBase
 
 local FILTER_ID = AGS.data.FILTER_ID
+local CATEGORY_DEFINITION = AGS.data.CATEGORY_DEFINITION
 local DEFAULT_SUBCATEGORY = AGS.data.SUB_CATEGORY_DEFINITION[AGS.data.DEFAULT_SUB_CATEGORY_ID[AGS.data.DEFAULT_CATEGORY_ID]]
 
 local FilterState = ZO_Object:Subclass()
@@ -100,6 +101,11 @@ end
 -- returns the subcategory object for this filter state
 function FilterState:GetSubcategory()
     return self.subcategory
+end
+
+function FilterState:GetPendingCategories()
+    local subcategory = self.subcategory
+    return CATEGORY_DEFINITION[subcategory.category], subcategory
 end
 
 -- return an object containing {filterId, values, state}

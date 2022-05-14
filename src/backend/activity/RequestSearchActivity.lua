@@ -45,7 +45,7 @@ function RequestSearchActivity:PrepareFilters()
 
     if page then
         searchManager:PrepareActiveFilters(filterState):Then(function(activeFilters)
-            self.activeFilters = activeFilters
+            self.appliedValues = FilterRequest:New(filterState, activeFilters)
             promise:Resolve(self)
         end)
     else
@@ -54,11 +54,6 @@ function RequestSearchActivity:PrepareFilters()
     end
 
     return promise
-end
-
-function RequestSearchActivity:GetPendingCategories()
-    local subcategory = self.pendingFilterState:GetSubcategory()
-    return CATEGORY_DEFINITION[subcategory.category], subcategory
 end
 
 function RequestSearchActivity:SetSortOrder(field, order)
@@ -70,8 +65,7 @@ function RequestSearchActivity:RequestSearch()
     if(not self.responsePromise) then
         self.responsePromise = Promise:New()
         if(self.state ~= ActivityBase.STATE_SUCCEEDED) then
-            self.appliedValues = FilterRequest:New()
-            self.appliedValues:Apply(self.activeFilters)
+            self.appliedValues:Apply()
             ExecuteTradingHouseSearch(self.pendingPage, self.sortField, self.sortOrder)
         else
             self.responsePromise:Resolve(self)
@@ -121,7 +115,7 @@ end
 function RequestSearchActivity:GetLogEntry()
     if(not self.logEntry) then -- TODO: show filter state too
         if(self.pendingFilterState and self.pendingPage) then
-            local category, subcategory = self:GetPendingCategories()
+            local category, subcategory = self.pendingFilterState:GetPendingCategories()
             local categoryLabel = category.label
             if(not subcategory.isDefault) then
                 categoryLabel = string.format("%s > %s", category.label, subcategory.label)

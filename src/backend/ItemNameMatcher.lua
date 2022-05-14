@@ -44,7 +44,7 @@ end
 function ItemNameMatcher:SetRelevantFilters()
     local filterState = self.searchManager:GetActiveSearch():GetFilterState()
     return self.searchManager:PrepareActiveFilters(filterState, true):Then(function(activeFilters)
-        self.appliedValues = FilterRequest:New()
+        self.appliedValues = FilterRequest:New(filterState, activeFilters)
         self.appliedValues:Apply(activeFilters)
     end)
 end

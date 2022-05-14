@@ -338,10 +338,15 @@ end
 
 function SearchManager:PrepareActiveFilters(filterState, forTextFilter)
     local promise = Promise:New()
+    local activeFilters = {}
+
+    if not filterState then
+        promise:Resolve(activeFilters)
+        return promise
+    end
 
     local count = 0
     local subcategory = filterState:GetSubcategory()
-    local activeFilters = {}
     for _, filter in ipairs(self.activeFilters) do
         local id = filter:GetId()
         if not filter:IsLocal()

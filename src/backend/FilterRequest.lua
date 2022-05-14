@@ -2,11 +2,18 @@ local AGS = AwesomeGuildStore
 
 local logger = AGS.internal.logger
 
+
 local FilterRequest = ZO_InitializingObject:Subclass()
 AGS.class.FilterRequest = FilterRequest
 
-function FilterRequest:Initialize()
+function FilterRequest:Initialize(filterState, activeFilters)
+    self.filterState = filterState
+    self.activeFilters = activeFilters
     self.values = {}
+end
+
+function FilterRequest:GetPendingCategories()
+    return self.filterState:GetPendingCategories()
 end
 
 function FilterRequest:SetFilterValues(type, ...)
@@ -20,8 +27,9 @@ function FilterRequest:SetFilterRange(type, min, max)
     self.values[type] = values
 end
 
-function FilterRequest:Apply(activeFilters)
-    logger:Verbose("apply %d active filters", #activeFilters)
+function FilterRequest:Apply()
+    local activeFilters = self.activeFilters
+    logger:Verbose("Apply %d active filters", #activeFilters)
     for _, filter in ipairs(activeFilters) do
         filter:ApplyToSearch(self)
     end
