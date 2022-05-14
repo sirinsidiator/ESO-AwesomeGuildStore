@@ -1,68 +1,66 @@
 local AGS = AwesomeGuildStore
 
+local logger = AGS.internal.logger
 local RegisterForEvent = AGS.internal.RegisterForEvent
 
 local Promise = LibPromises
 
-local MIN_LETTERS = GetMinLettersInTradingHouseItemNameForCurrentLanguage()
-
-local ItemNameMatcher = ZO_Object:Subclass()
+local ItemNameMatcher = ZO_InitializingObject:Subclass()
 AGS.class.ItemNameMatcher = ItemNameMatcher
 
 ItemNameMatcher.ERROR_INPUT_TOO_SHORT = -1
 ItemNameMatcher.ERROR_TASK_CANCELLED = -2
-ItemNameMatcher.ERROR_NO_MATCHES = -3
 
-function ItemNameMatcher:New(...)
-    local object = ZO_Object.New(self)
-    object:Initialize(...)
-    return object
+ItemNameMatcher.GetErrorMessage = function(code)
+    if code == ItemNameMatcher.ERROR_INPUT_TOO_SHORT then
+        return "Input was too short"
+    elseif code == ItemNameMatcher.ERROR_TASK_CANCELLED then
+        return "Task was cancelled"
+    end
+    return "Unhandled error code (" .. tostring(code) .. ")"
 end
 
 function ItemNameMatcher:Initialize()
     RegisterForEvent(EVENT_MATCH_TRADING_HOUSE_ITEM_NAMES_COMPLETE, function(_, id, numResults)
         local promise = self.pendingMatch
-        if(promise and promise.taskId == id) then
-            self.pendingMatch = nil
-            if(numResults > 0) then
-                local hashes = {}
-                for i = 1, numResults do
-                    local _, hash = GetMatchTradingHouseItemNamesResult(id, i)
-                    hashes[#hashes + 1] = hash
-                end
-                promise:Resolve(hashes)
-            else
-                promise:Reject(ItemNameMatcher.ERROR_NO_MATCHES)
-            end
+        if promise and promise.taskId == id then
+            promise:Resolve({
+                id = id,
+                count = numResults
+            })
         end
     end)
 end
 
-function ItemNameMatcher:MatchItemLink(itemLink)
-    local text = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetItemLinkName(itemLink))
-    return self:MatchText(text)
+function ItemNameMatcher:IsSearchTextLongEnough(text)
+    local length = ZoUTF8StringLength(text)
+    return length >= GetMinLettersInTradingHouseItemNameForCurrentLanguage()
 end
 
 function ItemNameMatcher:MatchText(text)
-    local promise = Promise:New()
+    if not self.pendingMatch or self.pendingMatch.text ~= text then
+        self:CancelPendingMatch()
 
-    self:CancelPendingMatch()
-
-    if(ZoUTF8StringLength(text) > MIN_LETTERS) then
+        local promise = Promise:New()
         promise.text = text
-        promise.taskId = MatchTradingHouseItemNames(text)
-        self.pendingMatch = promise
-    else
-        promise:Reject(ItemNameMatcher.ERROR_INPUT_TOO_SHORT)
-    end
 
-    return promise
+        if self:IsSearchTextLongEnough(text) then
+            ClearAllTradingHouseSearchTerms() -- TODO set current filter state
+            promise.taskId = MatchTradingHouseItemNames(text)
+        else
+            promise:Reject(ItemNameMatcher.ERROR_INPUT_TOO_SHORT)
+        end
+
+        self.pendingMatch = promise
+        return promise
+    else
+        return self.pendingMatch
+    end
 end
 
 function ItemNameMatcher:CancelPendingMatch()
     local promise = self.pendingMatch
-    if(promise) then
-        CancelMatchTradingHouseItemNames(promise.taskId)
-        promise:Reject(ItemNameMatcher.ERROR_TASK_CANCELLED)
-    end
+    if not promise or not promise.taskId or promise.value ~= nil then return end
+    CancelMatchTradingHouseItemNames(promise.taskId)
+    promise:Reject(ItemNameMatcher.ERROR_TASK_CANCELLED)
 end

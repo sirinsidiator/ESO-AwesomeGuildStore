@@ -1,6 +1,7 @@
 local AGS = AwesomeGuildStore
 
 local FilterBase = AGS.class.FilterBase
+local ItemNameMatcher = AGS.class.ItemNameMatcher
 
 local FILTER_ID = AGS.data.FILTER_ID
 
@@ -26,6 +27,7 @@ function TextFilter:Initialize()
     FilterBase.Initialize(self, FILTER_ID.TEXT_FILTER, FilterBase.GROUP_SERVER, gettext("Text Search"))
     self.text = ""
     self.haystack = {}
+    self.matcher = ItemNameMatcher:New()
 end
 
 function TextFilter:SetText(text)
@@ -65,38 +67,31 @@ function TextFilter:IsLocal()
     return false
 end
 
-function TextFilter:IsSearchTextLongEnough(input)
-    local length = ZoUTF8StringLength(input)
-    return length >= GetMinLettersInTradingHouseItemNameForCurrentLanguage()
-end
-
 function TextFilter:PrepareForSearch(text)
-    self.completedItemNameMatchId = nil
-    if(self:IsDefault(text) or not self:IsSearchTextLongEnough(text)) then return false end
+    if(self:IsDefault(text) or not self.matcher:IsSearchTextLongEnough(text)) then
+        self.result = nil
+        return false 
+    end
 
-    local pendingId, eventHandle
-    eventHandle = RegisterForEvent(EVENT_MATCH_TRADING_HOUSE_ITEM_NAMES_COMPLETE, function(_, id, numResults)
-        if(pendingId == id) then
-            UnregisterForEvent(EVENT_MATCH_TRADING_HOUSE_ITEM_NAMES_COMPLETE, eventHandle)
-            self.completedItemNameMatchId = id
-            AGS.internal:FireCallbacks(AGS.callback.FILTER_PREPARED, self)
-        end
-    end)
-    ClearAllTradingHouseSearchTerms()
-    pendingId = MatchTradingHouseItemNames(self.text)
+    self.matcher:MatchText(text):Then(function(result)
+        self.result = result
+        AGS.internal:FireCallbacks(AGS.callback.FILTER_PREPARED, self)
+    end, function(errorCode)
+        self.result = nil
+        logger:Debug("Failed to prepare name hashes for TextFilter:", ItemNameMatcher.GetErrorMessage(errorCode))
+        AGS.internal:FireCallbacks(AGS.callback.FILTER_PREPARED, self)
+    end):Then(nil, function(e) logger:Warn(e) end)
     return true
 end
 
 function TextFilter:ApplyToSearch(request)
-    if(not self.completedItemNameMatchId) then return end
+    local result = self.result
+    if not result or result.count == 0 or result.count > GetMaxTradingHouseFilterExactTerms(TRADING_HOUSE_FILTER_TYPE_NAME_HASH) then return end
 
-    local numResults = GetNumMatchTradingHouseItemNamesResults(self.completedItemNameMatchId)
-    if(not numResults or numResults == 0 or numResults > GetMaxTradingHouseFilterExactTerms(TRADING_HOUSE_FILTER_TYPE_NAME_HASH)) then return end
-
-    logger:Verbose("Apply %d name hashes to search", numResults)
+    logger:Verbose("Apply %d name hashes to search", result.count)
     local hashes = {}
-    for hashIndex = 1, numResults do
-        local _, hash = GetMatchTradingHouseItemNamesResult(self.completedItemNameMatchId, hashIndex)
+    for hashIndex = 1, result.count do
+        local _, hash = GetMatchTradingHouseItemNamesResult(result.id, hashIndex)
         hashes[hashIndex] = hash
     end
     request:SetFilterValues(TRADING_HOUSE_FILTER_TYPE_NAME_HASH, unpack(hashes))

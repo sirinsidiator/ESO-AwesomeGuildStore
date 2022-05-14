@@ -35,7 +35,6 @@ function TradingHouseWrapper:Initialize(saveData)
     self.loadingIndicator:SetAnchor(BOTTOMLEFT, tradingHouse.control, BOTTOMLEFT, 15, 20)
     local itemDatabase = ItemDatabase:New(self)
     self.itemDatabase = itemDatabase
-    self.itemNameMatcher = AGS.class.ItemNameMatcher:New()
     local activityManager = AGS.class.ActivityManager:New(self, self.loadingIndicator, self.loadingOverlay)
     self.activityManager = activityManager
     local searchManager = AGS.class.SearchManager:New(self, saveData.searchManager)

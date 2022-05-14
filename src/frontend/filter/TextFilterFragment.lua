@@ -3,9 +3,8 @@ local AGS = AwesomeGuildStore
 local FilterFragment = AGS.class.FilterFragment
 local SimpleInputBox = AGS.class.SimpleInputBox
 
+local logger = AGS.internal.logger
 local RegisterForEvent = AGS.internal.RegisterForEvent
-
-local MIN_LETTERS = GetMinLettersInTradingHouseItemNameForCurrentLanguage()
 
 local TextFilterFragment = FilterFragment:Subclass()
 AGS.class.TextFilterFragment = TextFilterFragment
@@ -36,9 +35,6 @@ function TextFilterFragment:InitializeControls()
     self.input:SetMaxInputChars(30000)
 
     self.nameSearchAutoComplete = ZO_TradingHouseNameSearchAutoComplete:New(autoComplete, self.input)
-    RegisterForEvent(EVENT_MATCH_TRADING_HOUSE_ITEM_NAMES_COMPLETE, function(_, ...)
-        self:OnNameMatchComplete(...)
-    end)
 end
 
 function TextFilterFragment:InitializeHandlers()
@@ -50,11 +46,16 @@ function TextFilterFragment:InitializeHandlers()
         self.filter:SetText(value)
     end
 
+    local function HandleResult(result)
+        self.nameSearchAutoComplete:ShowListForNameSearch(result.id, result.count)
+    end
+
+    local function HandleError(errorCode)
+        self.nameSearchAutoComplete:ShowListForNameSearch(nil, 0)
+    end
+
     local function OnTextChanged(input, text)
-        self:CancelPendingNameMatch()
-        if(self.filter:IsSearchTextLongEnough(text)) then
-            self:StartNameMatch(text)
-        end
+        self.filter.matcher:MatchText(text):Then(HandleResult, HandleError)
     end
 
     local function OnFilterChanged(self, text)
@@ -81,23 +82,4 @@ end
 function TextFilterFragment:SetEnabled(enabled)
     FilterFragment.SetEnabled(self, enabled)
     self.input:SetEnabled(enabled)
-end
-
-function TextFilterFragment:StartNameMatch(text)
-    ClearAllTradingHouseSearchTerms()
-    self.pendingItemNameMatchId = MatchTradingHouseItemNames(text)
-end
-
-function TextFilterFragment:CancelPendingNameMatch()
-    if self.pendingItemNameMatchId then
-        CancelMatchTradingHouseItemNames(self.pendingItemNameMatchId)
-        self.pendingItemNameMatchId = nil
-    end
-end
-
-function TextFilterFragment:OnNameMatchComplete(id, numResults)
-    if id == self.pendingItemNameMatchId then
-        self.pendingItemNameMatchId = nil
-        self.nameSearchAutoComplete:ShowListForNameSearch(id, numResults)
-    end
 end
