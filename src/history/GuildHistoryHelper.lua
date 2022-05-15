@@ -8,6 +8,7 @@ local GuildHistoryHelper = ZO_InitializingObject:Subclass()
 AGS.class.GuildHistoryHelper = GuildHistoryHelper
 
 function GuildHistoryHelper:Initialize()
+    self.state = {}
     RegisterForEvent(EVENT_GUILD_HISTORY_CATEGORY_UPDATED, function(_, guildId, category)
         if category == GUILD_HISTORY_STORE then
             local guildState = self:GetOrInitializeGuildState(guildId)
