@@ -28,7 +28,7 @@ local function GetFormattedCategoryName(collectibleId)
     return zo_strformat("<<1>>", GetCollectibleName(collectibleId))
 end
 
-local STYLE_CATEGORIES = {
+local styleCategories = {
     {
         label = gettext("Racial"),
         values = {
@@ -196,7 +196,8 @@ local STYLE_CATEGORIES = {
     },
 }
 
-for _, category in ipairs(STYLE_CATEGORIES) do
+local STYLE_CATEGORIES = {}
+for _, category in ipairs(styleCategories) do
     local validStyles = {}
     for _, styleId in ipairs(category.values) do
         if(isValidStyleId[styleId]) then
@@ -211,15 +212,18 @@ for _, category in ipairs(STYLE_CATEGORIES) do
                 sortIndex = name,
             }
         else
-            logger:Debug("Detected use of invalid style id '%d' in category '%s'", styleId, category.label)
+            logger:Debug("Detected use of invalid style id '%d' (%s) in category '%s'", styleId, GetItemStyleName(styleId), category.label)
         end
         isValidStyleId[styleId] = nil
     end
     category.values = validStyles
+    if #validStyles > 0 then
+        STYLE_CATEGORIES[#STYLE_CATEGORIES + 1] = category
+    end
 end
 
 for styleId in pairs(isValidStyleId) do
-    logger:Debug("Detected unused style id '%d'", styleId)
+    logger:Debug("Detected unused style id '%d' (%s)", styleId, GetItemStyleName(styleId))
 end
 
 AwesomeGuildStore.data.STYLE_CATEGORIES = STYLE_CATEGORIES
