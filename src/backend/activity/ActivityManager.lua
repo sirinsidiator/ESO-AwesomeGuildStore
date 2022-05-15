@@ -31,32 +31,46 @@ function ActivityManager:Initialize(tradingHouseWrapper, loadingIndicator, loadi
     self.tradingHouse = tradingHouseWrapper.tradingHouse
 
     RegisterForEvent(EVENT_TRADING_HOUSE_AWAITING_RESPONSE, function(_, responseType)
-        if(self.currentActivity and self.currentActivity:OnAwaitingResponse(responseType)) then
+        logger:Verbose("EVENT_TRADING_HOUSE_AWAITING_RESPONSE", ActivityBase.RESULT_TO_STRING[responseType], responseType)
+        if self:IsExpectedResponse(responseType) then
+            self.currentActivity:OnResponse()
             -- TRANSLATORS: Status text when waiting for a server response
             self:SetStatusText(gettext("Waiting for response"))
         end
     end)
 
-    local function OnTimeout(_, responseType)
-        if(self.currentActivity and self.currentActivity:OnTimeout(responseType)) then
-            -- TRANSLATORS: Status text when a server response timed out
+    RegisterForEvent(EVENT_TRADING_HOUSE_OPERATION_TIME_OUT, function(_, responseType)
+        logger:Verbose("EVENT_TRADING_HOUSE_OPERATION_TIME_OUT", ActivityBase.RESULT_TO_STRING[responseType], responseType)
+        if self:IsExpectedResponse(responseType) then
+            self.currentActivity:OnError(ActivityBase.ERROR_OPERATION_TIMEOUT)
+            -- TRANSLATORS: Status text when a server request timed out
             self:SetStatusText(gettext("Request timed out"))
         end
-    end
-    RegisterForEvent(EVENT_TRADING_HOUSE_RESPONSE_TIMEOUT, OnTimeout)
-    RegisterForEvent(EVENT_TRADING_HOUSE_OPERATION_TIME_OUT, OnTimeout)
+    end)
+
+    RegisterForEvent(EVENT_TRADING_HOUSE_RESPONSE_TIMEOUT, function(_, responseType)
+        logger:Verbose("EVENT_TRADING_HOUSE_RESPONSE_TIMEOUT", ActivityBase.RESULT_TO_STRING[responseType], responseType)
+        if self:IsExpectedResponse(responseType) then
+            self.currentActivity:OnError(ActivityBase.ERROR_RESPONSE_TIMEOUT)
+            -- TRANSLATORS: Status text when a server response timed out
+            self:SetStatusText(gettext("Response timed out"))
+        end
+    end)
 
     RegisterForEvent(EVENT_TRADING_HOUSE_ERROR, function(_, errorCode)
-        if(self.currentActivity) then
-            local responseType = self.currentActivity.expectedResponseType
-            self.currentActivity:OnResponse(responseType, errorCode)
+        logger:Verbose("EVENT_TRADING_HOUSE_ERROR", ActivityBase.RESULT_TO_STRING[errorCode], errorCode)
+        if self:IsExpectedResponse(errorCode) then
+            self.currentActivity:OnError(ActivityBase.ERROR_API_ERROR)
+            -- TRANSLATORS: Status text when a server request failed
+            self:SetStatusText(gettext("Request failed"))
         end
     end)
 
     -- need to prehook this in order to update the itemdatabase before anything else happens
     tradingHouseWrapper:PreHook("OnResponseReceived", function(_, responseType, result)
-        if(self.currentActivity) then
-            self.currentActivity:OnResponse(responseType, result)
+        logger:Verbose("OnResponseReceived", ActivityBase.RESULT_TO_STRING[responseType], responseType, ActivityBase.RESULT_TO_STRING[result], result)
+        if self:IsExpectedResponse(responseType) then
+            self.currentActivity:OnResponse(result)
         end
     end)
 
@@ -75,13 +89,14 @@ function ActivityManager:Initialize(tradingHouseWrapper, loadingIndicator, loadi
         self:RefreshStatusPanel()
     end)
 
+    RegisterForEvent(EVENT_OPEN_TRADING_HOUSE, function(_)
+        logger:Verbose("EVENT_OPEN_TRADING_HOUSE")
+    end)
+
     RegisterForEvent(EVENT_CLOSE_TRADING_HOUSE, function(_)
-        if(self.currentActivity) then
-            local activity = self.currentActivity
-            self:RemoveCurrentActivity()
-            activity.result = ActivityBase.ERROR_TRADING_HOUSE_CLOSED
-        end
-        self:ClearQueue()
+        logger:Verbose("EVENT_CLOSE_TRADING_HOUSE")
+        self:RemoveCurrentActivity(ActivityBase.ERROR_TRADING_HOUSE_CLOSED)
+        self:ClearQueue(ActivityBase.ERROR_TRADING_HOUSE_CLOSED)
         self:RefreshStatusPanel()
     end)
 
@@ -117,6 +132,10 @@ function ActivityManager:Initialize(tradingHouseWrapper, loadingIndicator, loadi
             self:RequestListings(guildData.guildId)
         end
     end)
+end
+
+function ActivityManager:IsExpectedResponse(responseType)
+    return self.currentActivity and self.currentActivity:GetExpectedResponseType() == responseType
 end
 
 -- TODO: these functions should be removed and we should react to callbacks instead
@@ -172,9 +191,9 @@ function ActivityManager:QueueActivity(activity)
     return true
 end
 
-function ActivityManager:ClearQueue()
+function ActivityManager:ClearQueue(reason)
     for _, activity in pairs(self.queue) do
-        activity:OnRemove()
+        activity:OnRemove(reason)
         self:AddActivityToStatusPanel(activity)
     end
 
@@ -184,9 +203,9 @@ function ActivityManager:ClearQueue()
     self:UpdateQueuedActivityStatus()
 end
 
-function ActivityManager:RemoveCurrentActivity()
+function ActivityManager:RemoveCurrentActivity(reason)
     if(self.currentActivity) then
-        self.currentActivity:OnRemove()
+        self.currentActivity:OnRemove(reason)
         self:AddActivityToStatusPanel(self.currentActivity)
         self.lookup[self.currentActivity:GetKey()] = nil
         local oldActivity = self.currentActivity

@@ -26,8 +26,10 @@ ActivityBase.STATE_CANCELLED = 6 -- this is for when a queued request is cancell
 
 ActivityBase.ERROR_GUILD_SELECTION_FAILED = -1
 ActivityBase.ERROR_OPERATION_TIMEOUT = -2
-ActivityBase.ERROR_USER_CANCELLED = -3 -- this is for when a user stops an already running request
-ActivityBase.ERROR_TRADING_HOUSE_CLOSED = -4
+ActivityBase.ERROR_RESPONSE_TIMEOUT = -3
+ActivityBase.ERROR_API_ERROR = -4
+ActivityBase.ERROR_USER_CANCELLED = -5 -- this is for when a user stops an already running request
+ActivityBase.ERROR_TRADING_HOUSE_CLOSED = -6
 ActivityBase.RESULT_PAGE_ALREADY_LOADED = -100
 ActivityBase.RESULT_LISTINGS_ALREADY_LOADED = -101
 
@@ -64,25 +66,33 @@ local RESULT_TO_STRING = {
     [TRADING_HOUSE_RESULT_CANT_AFFORD_POST_FEE] = "TRADING_HOUSE_RESULT_CANT_AFFORD_POST_FEE",
     [TRADING_HOUSE_RESULT_CANT_BUY_YOUR_OWN_POSTS] = "TRADING_HOUSE_RESULT_CANT_BUY_YOUR_OWN_POSTS",
     [TRADING_HOUSE_RESULT_CANT_POST_BOUND] = "TRADING_HOUSE_RESULT_CANT_POST_BOUND",
+    [TRADING_HOUSE_RESULT_CANT_POST_FROM_THAT_BAG] = "TRADING_HOUSE_RESULT_CANT_POST_FROM_THAT_BAG",
     [TRADING_HOUSE_RESULT_CANT_POST_LOCKED] = "TRADING_HOUSE_RESULT_CANT_POST_LOCKED",
     [TRADING_HOUSE_RESULT_CANT_POST_STOLEN] = "TRADING_HOUSE_RESULT_CANT_POST_STOLEN",
     [TRADING_HOUSE_RESULT_CANT_SELL_FOR_FREE] = "TRADING_HOUSE_RESULT_CANT_SELL_FOR_FREE",
     [TRADING_HOUSE_RESULT_CANT_SELL_FOR_OVER_MAX_AMOUNT] = "TRADING_HOUSE_RESULT_CANT_SELL_FOR_OVER_MAX_AMOUNT",
     [TRADING_HOUSE_RESULT_CANT_SWITCH_GUILDS_WHILE_AWAITING_RESPONSE] = "TRADING_HOUSE_RESULT_CANT_SWITCH_GUILDS_WHILE_AWAITING_RESPONSE",
-    [TRADING_HOUSE_RESULT_CANT_POST_FROM_THAT_BAG] = "TRADING_HOUSE_RESULT_CANT_POST_FROM_THAT_BAG",
     [TRADING_HOUSE_RESULT_GUILD_TOO_SMALL] = "TRADING_HOUSE_RESULT_GUILD_TOO_SMALL",
     [TRADING_HOUSE_RESULT_INVALID_GUILD_ID] = "TRADING_HOUSE_RESULT_INVALID_GUILD_ID",
     [TRADING_HOUSE_RESULT_ITEM_NOT_FOUND] = "TRADING_HOUSE_RESULT_ITEM_NOT_FOUND",
+    [TRADING_HOUSE_RESULT_LISTINGS_PENDING] = "TRADING_HOUSE_RESULT_LISTINGS_PENDING",
+    [TRADING_HOUSE_RESULT_NAME_MATCH_PENDING] = "TRADING_HOUSE_RESULT_NAME_MATCH_PENDING",
     [TRADING_HOUSE_RESULT_NOT_A_MEMBER] = "TRADING_HOUSE_RESULT_NOT_A_MEMBER",
     [TRADING_HOUSE_RESULT_NOT_IN_A_GUILD] = "TRADING_HOUSE_RESULT_NOT_IN_A_GUILD",
     [TRADING_HOUSE_RESULT_NOT_OPEN] = "TRADING_HOUSE_RESULT_NOT_OPEN",
     [TRADING_HOUSE_RESULT_NO_NAME_SEARCH_DATA] = "TRADING_HOUSE_RESULT_NO_NAME_SEARCH_DATA",
     [TRADING_HOUSE_RESULT_NO_PERMISSION] = "TRADING_HOUSE_RESULT_NO_PERMISSION",
+    [TRADING_HOUSE_RESULT_POST_PENDING] = "TRADING_HOUSE_RESULT_POST_PENDING",
+    [TRADING_HOUSE_RESULT_PURCHASE_PENDING] = "TRADING_HOUSE_RESULT_PURCHASE_PENDING",
+    [TRADING_HOUSE_RESULT_QUEUED_POST] = "TRADING_HOUSE_RESULT_QUEUED_POST",
+    [TRADING_HOUSE_RESULT_SEARCH_PENDING] = "TRADING_HOUSE_RESULT_SEARCH_PENDING",
     [TRADING_HOUSE_RESULT_SEARCH_RATE_EXCEEDED] = "TRADING_HOUSE_RESULT_SEARCH_RATE_EXCEEDED",
     [TRADING_HOUSE_RESULT_SUCCESS] = "TRADING_HOUSE_RESULT_SUCCESS",
     [TRADING_HOUSE_RESULT_TOO_MANY_POSTS] = "TRADING_HOUSE_RESULT_TOO_MANY_POSTS",
     [ActivityBase.ERROR_GUILD_SELECTION_FAILED] = "ERROR_GUILD_SELECTION_FAILED",
     [ActivityBase.ERROR_OPERATION_TIMEOUT] = "ERROR_OPERATION_TIMEOUT",
+    [ActivityBase.ERROR_RESPONSE_TIMEOUT] = "ERROR_RESPONSE_TIMEOUT",
+    [ActivityBase.ERROR_API_ERROR] = "ERROR_API_ERROR",
     [ActivityBase.ERROR_USER_CANCELLED] = "ERROR_USER_CANCELLED",
     [ActivityBase.ERROR_TRADING_HOUSE_CLOSED] = "ERROR_TRADING_HOUSE_CLOSED",
     [ActivityBase.RESULT_PAGE_ALREADY_LOADED] = "RESULT_PAGE_ALREADY_LOADED",
@@ -227,35 +237,22 @@ function ActivityBase:OnPendingPurchaseChanged()
 -- overwrite if needed
 end
 
-function ActivityBase:OnAwaitingResponse(responseType)
-    if(responseType == self.expectedResponseType) then
-        self:SetState(ActivityBase.STATE_AWAITING_RESPONSE)
-        return true
-    end
-    return false
+function ActivityBase:GetExpectedResponseType()
+    return self.expectedResponseType
 end
 
-function ActivityBase:OnTimeout(responseType)
-    if(responseType == self.expectedResponseType) then
-        self:SetState(ActivityBase.STATE_FAILED, ActivityBase.ERROR_OPERATION_TIMEOUT)
-        if(self.responsePromise) then self.responsePromise:Reject(self) end
-        return true
-    end
-    return false
-end
-
-function ActivityBase:OnResponse(responseType, result)
-    if(responseType == self.expectedResponseType and responseType ~= result) then -- TODO: the second condition is a hack to ignore the error that occurs the first time we request listings during a session. for some reason it sends an error where the errorCode is TRADING_HOUSE_RESULT_LISTINGS_PENDING which happens to be the same as the requestType in our handler
-        if(result == TRADING_HOUSE_RESULT_SUCCESS) then
-            self:SetState(ActivityBase.STATE_SUCCEEDED, result)
-            if(self.responsePromise) then self.responsePromise:Resolve(self) end
+function ActivityBase:OnResponse(result)
+    if(result == TRADING_HOUSE_RESULT_SUCCESS) then
+        self:SetState(ActivityBase.STATE_SUCCEEDED, result)
+        if(self.responsePromise) then self.responsePromise:Resolve(self) end
     else
-        self:SetState(ActivityBase.STATE_FAILED, result)
-        if(self.responsePromise) then self.responsePromise:Reject(self) end
+        self:SetState(ActivityBase.STATE_AWAITING_RESPONSE, result)
     end
-    return true
-    end
-    return false
+end
+
+function ActivityBase:OnError(reason)
+    self:SetState(ActivityBase.STATE_FAILED, reason)
+    if(self.responsePromise) then self.responsePromise:Reject(self) end
 end
 
 function ActivityBase:OnSearchResults(guildId, numItems, page, hasMore)
@@ -263,11 +260,11 @@ function ActivityBase:OnSearchResults(guildId, numItems, page, hasMore)
     return false
 end
 
-function ActivityBase:OnRemove()
+function ActivityBase:OnRemove(reason)
     if(self.state == ActivityBase.STATE_QUEUED) then
-        self:SetState(ActivityBase.STATE_CANCELLED, self.result)
+        self:SetState(ActivityBase.STATE_CANCELLED, reason or self.result)
     elseif(self.state ~= ActivityBase.STATE_FAILED and self.state ~= ActivityBase.STATE_SUCCEEDED) then
-        self:SetState(ActivityBase.STATE_FAILED, ActivityBase.ERROR_USER_CANCELLED)
+        self:SetState(ActivityBase.STATE_FAILED, reason or ActivityBase.ERROR_USER_CANCELLED)
         if(self.responsePromise) then self.responsePromise:Reject(self) end
     end
 end

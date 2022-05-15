@@ -78,25 +78,16 @@ function RequestSearchActivity:DoExecute()
     return self:ApplyGuildId():Then(self.PrepareFilters):Then(self.RequestSearch)
 end
 
-function RequestSearchActivity:OnResponse(responseType, result)
-    if(responseType == self.expectedResponseType) then
-        if(result == TRADING_HOUSE_RESULT_SUCCESS and self.responsePromise) then
-            self.numItems, self.page, self.hasMore = GetTradingHouseSearchResultsInfo()
-            self:SetState(ActivityBase.STATE_SUCCEEDED, result)
-            local hasAnyResultAlreadyStored = self.itemDatabase:Update(self.guildId, self.pendingGuildName, self.numItems)
+function RequestSearchActivity:OnResponse(result)
+    if(result == TRADING_HOUSE_RESULT_SUCCESS) then
+        self.numItems, self.page, self.hasMore = GetTradingHouseSearchResultsInfo()
+        local hasAnyResultAlreadyStored = self.itemDatabase:Update(self.guildId, self.pendingGuildName, self.numItems)
 
-            self:HandleSearchResultsReceived(hasAnyResultAlreadyStored)
+        self:HandleSearchResultsReceived(hasAnyResultAlreadyStored)
 
-            AGS.internal:FireCallbacks(AGS.callback.SEARCH_RESULTS_RECEIVED, self.pendingGuildName, self.numItems, self.page, self.hasMore, self.guildId)
-
-            self.responsePromise:Resolve(self)
-        else
-            self:SetState(ActivityBase.STATE_FAILED, result)
-            if(self.responsePromise) then self.responsePromise:Reject(self) end
-        end
-        return true
+        AGS.internal:FireCallbacks(AGS.callback.SEARCH_RESULTS_RECEIVED, self.pendingGuildName, self.numItems, self.page, self.hasMore, self.guildId)
     end
-    return false
+    ActivityBase.OnResponse(self, result)
 end
 
 function RequestSearchActivity:HandleSearchResultsReceived(hasAnyResultAlreadyStored)
