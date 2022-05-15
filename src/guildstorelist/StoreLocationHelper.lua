@@ -44,6 +44,11 @@ local SPECIAL_MAP_CLICK_TARGETS = { -- Some maps return 0/0 for all POIs under s
     [1719] = { 0.56, 0.38 }, -- Western Skyrim - on first login with a char after the update
 }
 
+local SPECIAL_PARENT_MAP_ID = { -- Some maps zoom out to the zone map instead of the expected parent map
+    [1245] = 1287, -- "Vivec Outlaws Refuge" switches to "Vvardenfell" instead of "Vivec City"
+    [2170] = 2163 -- "Gonfalon Bay Outlaws Refuge" switches to "High Isle and Amenos" instead of "Gonfalon Bay"
+}
+
 local FARGRAVE_CITY_DISTRICT_MAP_ID = 2035
 local FARGRAVE_THE_BAZAAR_ID = 2136
 
@@ -162,19 +167,17 @@ end
 
 local function TrySetMapToParentMap()
     if not TrySetMapToPlayerLocation() then return false end
-    if MapZoomOut() ~= SET_MAP_RESULT_MAP_CHANGED then
-        logger:Warn("Could not zoom map out")
-        return false
-    end
 
-    if GetCurrentMapId() == 1245 then
-        -- when zooming out on the Vivec Outlaws Refuge map, we end up on the Vvardenfell map instead of Vivec City and cannot match the entrance pins
-        -- TODO: remove once ZOS fixes the incorrect link
-        if ProcessMapClick(0.476, 0.874) == SET_MAP_RESULT_FAILED or GetCurrentMapId() ~= 1287 then
-            logger:Warn("Could not open Vivec City map")
+    local currentMapId = GetCurrentMapId()
+    if SPECIAL_PARENT_MAP_ID[currentMapId] then
+        if not TrySetMapToMapId(SPECIAL_PARENT_MAP_ID[currentMapId]) then return false end
+    else
+        if MapZoomOut() ~= SET_MAP_RESULT_MAP_CHANGED then
+            logger:Warn("Could not zoom map out")
             return false
         end
     end
+
     return true
 end
 
