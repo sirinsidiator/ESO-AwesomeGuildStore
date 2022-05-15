@@ -213,12 +213,12 @@ local JEWELRY_TRAIT_FILTER = {
         {
             id = ITEM_TRAIT_TYPE_JEWELRY_SWIFT,
             label = GetString("SI_ITEMTRAITTYPE", ITEM_TRAIT_TYPE_JEWELRY_SWIFT),
-            icon = "EsoUI/Art/Emotes/emotes_indexIcon_physical_%s.dds",
+            icon = "EsoUI/Art/Icons/Emotes/Keyboard/emoteCategoryIcon_physical_%s.dds",
         },
         {
             id = ITEM_TRAIT_TYPE_JEWELRY_HARMONY,
             label = GetString("SI_ITEMTRAITTYPE", ITEM_TRAIT_TYPE_JEWELRY_HARMONY),
-            icon = "EsoUI/Art/Emotes/emotes_indexIcon_perpetual_%s.dds",
+            icon = "EsoUI/Art/Icons/Emotes/Keyboard/emoteCategoryIcon_perpetual_%s.dds",
         },
         {
             id = ITEM_TRAIT_TYPE_JEWELRY_TRIUNE,
