@@ -12,6 +12,7 @@ local KIOSK_OPTION_INDEX = AGS.internal.KIOSK_OPTION_INDEX
 local FOOTER_MIN_ALPHA = 0.6
 local FOOTER_MAX_ALPHA = 1
 local FOOTER_FADE_DURATION = 300
+local GUILD_INFO_SCENE_NAME = "AGS_guildInfo"
 
 local TradingHouseWrapper = ZO_Object:Subclass()
 AGS.class.TradingHouseWrapper = TradingHouseWrapper
@@ -162,8 +163,9 @@ function TradingHouseWrapper:InitializeGuildSelector()
     self.guildSelection = AGS.class.GuildSelection:New(self)
     self.guildSelector = AGS.class.GuildSelector:New(self)
 
+    self:InitializeGuildInfoScene()
     local function GoBack()
-        SCENE_MANAGER:HideCurrentScene()
+        SCENE_MANAGER:PopScenes(1)
     end
 
     local title = self.tradingHouse.control:GetNamedChild("Title")
@@ -178,8 +180,33 @@ function TradingHouseWrapper:InitializeGuildSelector()
     button:SetTooltipText(gettext("Open Guild Info"))
     button:SetClickHandler(MOUSE_BUTTON_INDEX_LEFT, function()
         local guildId = GetSelectedTradingHouseGuildId()
-        ShowGuildDetails(guildId, GoBack)
+        GUILD_BROWSER_GUILD_INFO_KEYBOARD.closeCallback = GoBack
+        GUILD_BROWSER_GUILD_INFO_KEYBOARD:SetGuildToShow(guildId)
+        SCENE_MANAGER:Push(GUILD_INFO_SCENE_NAME)
     end)
+end
+
+function TradingHouseWrapper:InitializeGuildInfoScene()
+    local guildInfoScene = ZO_InteractScene:New(GUILD_INFO_SCENE_NAME, SCENE_MANAGER, ZO_TRADING_HOUSE_INTERACTION)
+    guildInfoScene:RegisterCallback("StateChange", function(oldState, state)
+        if state == SCENE_SHOWING then
+            GUILD_BROWSER_GUILD_INFO_KEYBOARD:RefreshInfoPanel()
+        elseif state == SCENE_HIDDEN then
+            GUILD_BROWSER_GUILD_INFO_KEYBOARD:OnInfoSceneHidden()
+        end
+    end)
+
+    guildInfoScene:AddFragmentGroup(FRAGMENT_GROUP.MOUSE_DRIVEN_UI_WINDOW)
+    guildInfoScene:AddFragmentGroup(FRAGMENT_GROUP.FRAME_TARGET_STANDARD_RIGHT_PANEL)
+    guildInfoScene:AddFragmentGroup(FRAGMENT_GROUP.PLAYER_PROGRESS_BAR_KEYBOARD_CURRENT)
+    guildInfoScene:AddFragment(RIGHT_BG_FRAGMENT)
+    guildInfoScene:AddFragment(TREE_UNDERLAY_FRAGMENT)
+    guildInfoScene:AddFragment(TITLE_FRAGMENT)
+    guildInfoScene:AddFragment(GUILD_LINK_TITLE_FRAGMENT)
+    guildInfoScene:AddFragment(DISPLAY_NAME_FRAGMENT)
+    guildInfoScene:AddFragment(KEYBOARD_GUILD_BROWSER_GUILD_INFO_FRAGMENT)
+    guildInfoScene:AddFragment(FRAME_EMOTE_FRAGMENT_SOCIAL)
+    self.guildInfoScene = guildInfoScene
 end
 
 function TradingHouseWrapper:InitializeKeybindStripWrapper()
