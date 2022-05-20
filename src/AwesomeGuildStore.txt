@@ -55,6 +55,7 @@ frontend/ActivityWindow.lua
 frontend/StatusLine.xml
 frontend/StatusLine.lua
 backend/activity/ActivityManager.lua
+util/InteractionHelper.lua
 data/FilterIds.lua
 data/SortOrderIds.lua
 data/FurnitureCategoryFilterData.lua

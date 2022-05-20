@@ -39,8 +39,10 @@ function GuildSelection:Initialize(tradingHouseWrapper)
     end
 
     RegisterForEvent(EVENT_TRADING_HOUSE_STATUS_RECEIVED, function()
-        self:UpdateGuildData()
-        self:TryReselectLastGuildId()
+        if not tradingHouseWrapper.activityManager:IsReturningFromBank() then
+            self:UpdateGuildData()
+            self:TryReselectLastGuildId()
+        end
     end)
 
     local function UpdateGuildData()

@@ -89,17 +89,6 @@ function ActivityManager:Initialize(tradingHouseWrapper, loadingIndicator, loadi
         self:RefreshStatusPanel()
     end)
 
-    RegisterForEvent(EVENT_OPEN_TRADING_HOUSE, function(_)
-        logger:Verbose("EVENT_OPEN_TRADING_HOUSE")
-    end)
-
-    RegisterForEvent(EVENT_CLOSE_TRADING_HOUSE, function(_)
-        logger:Verbose("EVENT_CLOSE_TRADING_HOUSE")
-        self:RemoveCurrentActivity(ActivityBase.ERROR_TRADING_HOUSE_CLOSED)
-        self:ClearQueue(ActivityBase.ERROR_TRADING_HOUSE_CLOSED)
-        self:RefreshStatusPanel()
-    end)
-
     RegisterForEvent(EVENT_TRADING_HOUSE_CONFIRM_ITEM_PURCHASE, function(_, index)
         if(self.currentActivity) then
             self.currentActivity:OnPendingPurchaseChanged()
@@ -132,6 +121,12 @@ function ActivityManager:Initialize(tradingHouseWrapper, loadingIndicator, loadi
             self:RequestListings(guildData.guildId)
         end
     end)
+end
+
+function ActivityManager:OnCloseTradingHouse()
+    self:RemoveCurrentActivity(ActivityBase.ERROR_TRADING_HOUSE_CLOSED)
+    self:ClearQueue(ActivityBase.ERROR_TRADING_HOUSE_CLOSED)
+    self:RefreshStatusPanel()
 end
 
 function ActivityManager:IsExpectedResponse(responseType)
@@ -261,6 +256,13 @@ end
 
 function ActivityManager:GetCurrentActivity()
     return self.currentActivity
+end
+
+function ActivityManager:IsReturningFromBank()
+    if self.currentActivity and self.currentActivity.IsClosingBank and self.currentActivity:IsClosingBank() then
+        return true
+    end
+    return false
 end
 
 function ActivityManager:ExecuteNext()

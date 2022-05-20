@@ -101,6 +101,7 @@ local integrityCheckList = {
     ["frontend/StatusLine.xml"] = function() return AwesomeGuildStoreActivityStatusLineTemplateLoaded ~= nil end,
     ["frontend/StatusLine.lua"] = function() return AGS.class.StatusLine ~= nil end,
     ["backend/activity/ActivityManager.lua"] = function() return AGS.class.ActivityManager ~= nil end,
+    ["util/InteractionHelper.lua"] = function() return AGS.class.InteractionHelper ~= nil end,
     ["data/FilterIds.lua"] = function() return AGS.data.FILTER_ID ~= nil end,
     ["data/SortOrderIds.lua"] = function() return AGS.data.SORT_ORDER_ID ~= nil end,
     ["data/FurnitureCategoryFilterData.lua"] = function() return AGS.data.FURNITURE_CATEGORIES ~= nil end,

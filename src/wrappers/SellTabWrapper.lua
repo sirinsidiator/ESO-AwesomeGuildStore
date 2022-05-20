@@ -24,6 +24,7 @@ local LAST_SELL_PRICE_TEXTURE = "EsoUI/Art/Campaign/campaign_tabIcon_history_%s.
 local AVERAGE_PRICE_TEXTURE = "EsoUI/Art/Guild/tabIcon_roster_%s.dds"
 local INVENTORY_TEXTURE = "EsoUI/Art/Inventory/inventory_tabIcon_items_%s.dds"
 local CRAFTING_BAG_TEXTURE = "EsoUI/Art/Inventory/inventory_tabIcon_Craftbag_%s.dds"
+local BANK_BAG_TEXTURE = "EsoUI/Art/Bank/bank_tabIcon_withdraw_%s.dds"
 
 local function ShowSlider(self)
     self:SetHidden(false)
@@ -338,13 +339,15 @@ function SellTabWrapper:InitializeCraftingBag(tradingHouseWrapper)
 
     local container = postItemPane:CreateControl("AwesomeGuildStoreSellTabButtons", CT_CONTROL)
     container:SetAnchor(BOTTOM, postItemPane, TOP, 0, 10)
-    container:SetDimensions(INVENTORY_BUTTON_SIZE * 2, INVENTORY_BUTTON_SIZE)
+    container:SetDimensions(INVENTORY_BUTTON_SIZE * 3, INVENTORY_BUTTON_SIZE)
     local inventoryButton = ToggleButton:New(container, "$(parent)InventoryButton", INVENTORY_TEXTURE, 0, 0, INVENTORY_BUTTON_SIZE, INVENTORY_BUTTON_SIZE, zo_strformat(GetString(SI_INVENTORY_MENU_INVENTORY)), SOUNDS.MENU_BAR_CLICK)
     local craftbagButton = ToggleButton:New(container, "$(parent)CraftingBagButton", CRAFTING_BAG_TEXTURE, INVENTORY_BUTTON_SIZE, 0, INVENTORY_BUTTON_SIZE, INVENTORY_BUTTON_SIZE, zo_strformat(GetString(SI_GAMEPAD_INVENTORY_CRAFT_BAG_HEADER)), SOUNDS.MENU_BAR_CLICK)
+    local bankButton = ToggleButton:New(container, "$(parent)BankButton", BANK_BAG_TEXTURE, INVENTORY_BUTTON_SIZE * 2, 0, INVENTORY_BUTTON_SIZE, INVENTORY_BUTTON_SIZE, zo_strformat(GetString(SI_INTERACT_OPTION_BANK)), SOUNDS.MENU_BAR_CLICK)
     inventoryButton:Press()
     inventoryButton.HandlePress = function(button)
         if(not button:IsPressed()) then
             craftbagButton:Release(true)
+            bankButton:Release(true)
             self:SetCurrentInventory(BAG_BACKPACK)
             return true
         end
@@ -353,14 +356,30 @@ function SellTabWrapper:InitializeCraftingBag(tradingHouseWrapper)
     craftbagButton.HandlePress = function(button)
         if(not button:IsPressed()) then
             inventoryButton:Release(true)
+            bankButton:Release(true)
             self:SetCurrentInventory(BAG_VIRTUAL)
             return true
         end
     end
     craftbagButton.HandleRelease = function(button, doRelease) return doRelease end
+    bankButton.HandlePress = function(button)
+        if(not button:IsPressed()) then
+            inventoryButton:Release(true)
+            craftbagButton:Release(true)
+            self:SetCurrentInventory(BAG_BANK)
+            return true
+        end
+    end
+    bankButton.HandleRelease = function(button, doRelease) return doRelease end
 
     local function TryInitiatingItemPost(bag, index)
         self:UnsetPendingItem()
+
+        if tradingHouseWrapper.interactionHelper:IsBankBag(bag) and not tradingHouseWrapper.interactionHelper:IsBankAvailable() then
+            -- TRANSLATORS: alert text when trying to list an item from the bank while not at a banker NPC
+            ZO_Alert(UI_ALERT_CATEGORY_ERROR, SOUNDS.NEGATIVE_CLICK, gettext("Bank items can only be listed while at a banker NPC"))
+            return
+        end
 
         PLAYER_INVENTORY:OnInventorySlotLocked(bag, index)
         self:SetPendingItem(bag, index)
@@ -471,18 +490,30 @@ function SellTabWrapper:InitializeCraftingBag(tradingHouseWrapper)
         end
     end
 
-    ZO_PreHook(PLAYER_INVENTORY, "OnInventorySlotLocked", HandleSlotEvent)
-    ZO_PreHook(PLAYER_INVENTORY, "OnInventorySlotUnlocked", HandleSlotEvent)
+    local function SuppressNextInventorySlotEventIfNeeded(bag)
+        self.suppressNextInventorySlotEvent = bag == BAG_BACKPACK
+    end
 
+    ZO_PreHook(ZO_InventoryManager, "OnInventorySlotLocked", HandleSlotEvent)
+    ZO_PreHook(ZO_InventoryManager, "OnInventorySlotUnlocked", HandleSlotEvent)
+
+    local draggedBagId, draggedSlotIndex = 0, 0
     ZO_PreHook("ZO_InventorySlot_OnDragStart", function(inventorySlot)
         if(self.isOpen and GetCursorContentType() == MOUSE_CONTENT_EMPTY) then
             local inventorySlotButton = ZO_InventorySlot_GetInventorySlotComponents(inventorySlot)
             if(ZO_InventorySlot_GetStackCount(inventorySlotButton) > 0) then
                 local bag, index = ZO_Inventory_GetBagAndIndex(inventorySlotButton)
+                draggedBagId, draggedSlotIndex = bag, index
                 PLAYER_INVENTORY:OnInventorySlotLocked(bag, index)
 
-                self.suppressNextInventorySlotEvent = (bag == BAG_BACKPACK)
-                CallSecureProtected("PickupInventoryItem", bag, index)
+                SuppressNextInventorySlotEventIfNeeded(bag)
+                if tradingHouseWrapper.interactionHelper:IsBankBag(bag) then
+                    -- for some reason we cannot pick up items from the bank while the bank is not open,
+                    -- so we abuse an emote as a placeholder instead and store the dragged bag and index ourselves
+                    CallSecureProtected("PickupEmoteById", 1)
+                else
+                    CallSecureProtected("PickupInventoryItem", bag, index)
+                end
 
                 if(inventorySlotButton.slotType == SLOT_TYPE_TRADING_HOUSE_POST_ITEM) then
                     tradingHouse:OnPendingPostItemUpdated(0, false)
@@ -495,7 +526,7 @@ function SellTabWrapper:InitializeCraftingBag(tradingHouseWrapper)
 
     ZO_PreHook("ZO_InventorySlot_OnReceiveDrag", function(inventorySlot)
         if(self.isOpen and GetCursorContentType() ~= MOUSE_CONTENT_EMPTY) then
-            local bag, index = GetCursorBagId(), GetCursorSlotIndex()
+            local bag, index = draggedBagId, draggedSlotIndex
 
             if(inventorySlot.slotType == SLOT_TYPE_TRADING_HOUSE_POST_ITEM) then
                 -- small hack so the quick click handler doesn't clear the item right away
@@ -506,9 +537,11 @@ function SellTabWrapper:InitializeCraftingBag(tradingHouseWrapper)
                 PLAYER_INVENTORY:OnInventorySlotUnlocked(bag, index)
             end
 
-            self.suppressNextInventorySlotEvent = (bag == BAG_BACKPACK)
+            SuppressNextInventorySlotEventIfNeeded(bag)
             self.dragFinalized = true
             ClearCursor()
+            draggedBagId = 0
+            draggedSlotIndex = 0
             return true
         end
     end)
@@ -523,9 +556,12 @@ function SellTabWrapper:InitializeCraftingBag(tradingHouseWrapper)
         if(self.isOpen and not self.dragFinalized) then
             self.dragFinalized = true
             local pendingBagId, pendingSlotIndex = ZO_Inventory_GetBagAndIndex(tradingHouse.pendingItem)
-            self.suppressNextInventorySlotEvent = (bag == BAG_BACKPACK)
+            SuppressNextInventorySlotEventIfNeeded(bag)
             if(bag ~= pendingBagId or index ~= pendingSlotIndex) then
                 PLAYER_INVENTORY:OnInventorySlotUnlocked(bag, index)
+            end
+            if(draggedBagId ~= pendingBagId or draggedSlotIndex ~= pendingSlotIndex) then
+                PLAYER_INVENTORY:OnInventorySlotUnlocked(draggedBagId, draggedSlotIndex)
             end
         end
     end)
@@ -675,45 +711,45 @@ function SellTabWrapper:SetCurrentInventory(bagId)
 
     if(bagId == BAG_BACKPACK) then
         self.currentInventoryFragment = INVENTORY_FRAGMENT
+    elseif(bagId == BAG_BANK) then
+        self.currentInventoryFragment = BANK_FRAGMENT
     elseif(bagId == BAG_VIRTUAL) then
         self.currentInventoryFragment = CRAFT_BAG_FRAGMENT
     end
     self:UpdateFragments()
 end
 
-function SellTabWrapper:IsCraftBagActive()
-    return self.currentInventoryFragment == CRAFT_BAG_FRAGMENT
+function SellTabWrapper:GetParentForInfoBar()
+    if self.currentInventoryFragment == CRAFT_BAG_FRAGMENT then
+        return ZO_CraftBag
+    elseif self.currentInventoryFragment == BANK_FRAGMENT then
+        return ZO_PlayerBank
+    else
+        return ZO_PlayerInventory
+    end
 end
 
 function SellTabWrapper:UpdateFragments()
     SCENE_MANAGER:RemoveFragment(INVENTORY_FRAGMENT)
+    SCENE_MANAGER:RemoveFragment(BANK_FRAGMENT)
     SCENE_MANAGER:RemoveFragment(CRAFT_BAG_FRAGMENT)
-    ZO_PlayerInventoryInfoBar:SetParent(self:IsCraftBagActive() and ZO_CraftBag or ZO_PlayerInventory)
+    ZO_PlayerInventoryInfoBar:SetParent(self:GetParentForInfoBar())
     SCENE_MANAGER:AddFragment(self.currentInventoryFragment)
 end
 
-local function IsCraftBagItemSellableOnTradingHouse(slot)
-    return not IsItemBound(slot.bagId, slot.slotIndex)
-end
-
-function SellTabWrapper:SetupCraftBag()
-    -- no need to set the craft bag here, since UpdateFragments will be called right after OnOpen anyway
-end
-
-function SellTabWrapper:TeardownCraftBag()
-    if(self.currentInventoryFragment == CRAFT_BAG_FRAGMENT) then
-        ZO_PlayerInventoryInfoBar:SetParent(ZO_PlayerInventory)
-        SCENE_MANAGER:RemoveFragment(CRAFT_BAG_FRAGMENT)
-    end
-end
-
 function SellTabWrapper:OnOpen(tradingHouseWrapper)
-    self:SetupCraftBag()
     self.isOpen = true
+    ZO_PlayerBankInfoBar:SetHidden(true)
 end
 
 function SellTabWrapper:OnClose(tradingHouseWrapper)
-    self:TeardownCraftBag()
+    if self.currentInventoryFragment == CRAFT_BAG_FRAGMENT then
+        SCENE_MANAGER:RemoveFragment(CRAFT_BAG_FRAGMENT)
+    elseif self.currentInventoryFragment == BANK_FRAGMENT then
+        SCENE_MANAGER:RemoveFragment(BANK_FRAGMENT)
+    end
+    ZO_PlayerInventoryInfoBar:SetParent(ZO_PlayerInventory)
+    ZO_PlayerBankInfoBar:SetHidden(false)
     self:UnsetPendingItem()
     self.isOpen = false
     self.suppressNextInventorySlotEvent = false

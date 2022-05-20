@@ -8,7 +8,6 @@ local RegisterForEvent = AGS.internal.RegisterForEvent
 local IsAtGuildKiosk = AGS.internal.IsAtGuildKiosk
 local ShowGuildDetails = AGS.internal.ShowGuildDetails
 
-local KIOSK_OPTION_INDEX = AGS.internal.KIOSK_OPTION_INDEX
 local FOOTER_MIN_ALPHA = 0.6
 local FOOTER_MAX_ALPHA = 1
 local FOOTER_FADE_DURATION = 300
@@ -36,6 +35,8 @@ function TradingHouseWrapper:Initialize(saveData)
     self.loadingIndicator:SetAnchor(BOTTOMLEFT, tradingHouse.control, BOTTOMLEFT, 15, 20)
     local itemDatabase = ItemDatabase:New(self)
     self.itemDatabase = itemDatabase
+    local interactionHelper = AGS.class.InteractionHelper:New(self, saveData)
+    self.interactionHelper = interactionHelper
     local activityManager = AGS.class.ActivityManager:New(self, self.loadingIndicator, self.loadingOverlay)
     self.activityManager = activityManager
     local searchManager = AGS.class.SearchManager:New(self, saveData.searchManager)
@@ -103,18 +104,17 @@ function TradingHouseWrapper:Initialize(saveData)
         return true
     end)
 
-    local currentTab
     self:Wrap("HandleTabSwitch", function(originalHandleTabSwitch, tradingHouse, tabData)
-        local oldTab = currentTab
-        if currentTab then
-            currentTab:OnClose(self)
+        local oldTab = self.currentTab
+        if self.currentTab then
+            self.currentTab:OnClose(self)
         end
         originalHandleTabSwitch(tradingHouse, tabData)
-        currentTab = self.modeToTab[tabData.descriptor]
-        if currentTab then
-            currentTab:OnOpen(self)
+        self.currentTab = self.modeToTab[tabData.descriptor]
+        if self.currentTab then
+            self.currentTab:OnOpen(self)
         end
-        AGS.internal:FireCallbacks(AGS.callback.STORE_TAB_CHANGED, oldTab, currentTab)
+        AGS.internal:FireCallbacks(AGS.callback.STORE_TAB_CHANGED, oldTab, self.currentTab)
     end)
 
     self:Wrap("UpdateFragments", function(originalUpdateFragments, tradingHouse)
@@ -130,28 +130,21 @@ function TradingHouseWrapper:Initialize(saveData)
     self.previewHelper = AGS.class.ItemPreviewHelper:New(itemDatabase)
 
     RegisterForEvent(EVENT_CLOSE_TRADING_HOUSE, function()
-        self:HideLoadingIndicator()
-        self:HideLoadingOverlay()
-        if currentTab then
-            currentTab:OnClose(self)
-        end
-        if GetNumGuilds() > 0 then
-            tradingHouse:ClearPendingPost()
-        end
-        itemDatabase:ClearItemViewCache()
+        self:OnCloseTradingHouse()
     end)
+end
 
-    local INTERACT_WINDOW_SHOWN = "Shown"
-    INTERACT_WINDOW:RegisterCallback(INTERACT_WINDOW_SHOWN, function()
-        -- TODO: find a way to prevent the long wait time that happens sometimes
-        -- ResetChatter, IsInteractionPending, EndPendingInteraction
-        -- TODO: prevent user from selecting the guild store option again when it is already pending
-        if(IsShiftKeyDown() or not saveData.skipGuildKioskDialog) then return end
-        if(IsAtGuildKiosk()) then
-            logger:Verbose("SelectChatterOption")
-            SelectChatterOption(KIOSK_OPTION_INDEX)
-        end
-    end)
+function TradingHouseWrapper:OnCloseTradingHouse()
+    self:HideLoadingIndicator()
+    self:HideLoadingOverlay()
+    if self.currentTab then
+        self.currentTab:OnClose(self)
+    end
+    if GetNumGuilds() > 0 then
+        self.tradingHouse:ClearPendingPost()
+    end
+    self.itemDatabase:ClearItemViewCache()
+    self.activityManager:OnCloseTradingHouse()
 end
 
 function TradingHouseWrapper:RegisterTabWrapper(mode, tab)

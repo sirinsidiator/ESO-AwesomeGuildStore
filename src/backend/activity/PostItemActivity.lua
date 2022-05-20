@@ -14,14 +14,18 @@ local sformat = string.format
 local MOVE_ITEM_TIMEOUT = 10000
 
 local STEP_BEGIN_EXECUTION = 1
-local STEP_MOVE_ITEM = 2
-local STEP_SET_PENDING = 3
-local STEP_POST_ITEM = 4
-local STEP_FINALIZE_POSTING = 5
+local STEP_OPEN_BANK = 2
+local STEP_MOVE_ITEM = 3
+local STEP_CLOSE_BANK = 4
+local STEP_SET_PENDING = 5
+local STEP_POST_ITEM = 6
+local STEP_FINALIZE_POSTING = 7
 
 local STEP_TO_STRING = {
     [STEP_BEGIN_EXECUTION] = "STEP_BEGIN_EXECUTION",
+    [STEP_OPEN_BANK] = "STEP_OPEN_BANK",
     [STEP_MOVE_ITEM] = "STEP_MOVE_ITEM",
+    [STEP_CLOSE_BANK] = "STEP_CLOSE_BANK",
     [STEP_SET_PENDING] = "STEP_SET_PENDING",
     [STEP_POST_ITEM] = "STEP_POST_ITEM",
     [STEP_FINALIZE_POSTING] = "STEP_FINALIZE_POSTING",
@@ -44,10 +48,17 @@ function PostItemActivity:Initialize(tradingHouseWrapper, guildId, bagId, slotIn
     self.stackCount = stackCount
     self.price = price
     self.itemLink = GetItemLink(bagId, slotIndex, LINK_STYLE_DEFAULT)
+    self.interactionHelper = tradingHouseWrapper.interactionHelper
 end
 
 function PostItemActivity:Update()
     self.canExecute = self.guildSelection:IsAppliedGuildId(self.guildId) or (GetTradingHouseCooldownRemaining() == 0)
+end
+function PostItemActivity:OnRemove(reason)
+    if self.CleanUp then
+        self.CleanUp()
+    end
+    ActivityBase.OnRemove(self, reason)
 end
 
 local function GetItemStackCount(bagId, slotIndex)
@@ -58,36 +69,63 @@ end
 function PostItemActivity:MoveItemIfNeeded()
     local promise = Promise:New()
 
-    if(self.bagId ~= BAG_BACKPACK or self.stackCount ~= GetItemStackCount(self.bagId, self.slotIndex)) then
-        self.step = STEP_MOVE_ITEM
-        self.effectiveSlotIndex = FindFirstEmptySlotInBag(BAG_BACKPACK)
-
-        local eventHandle, timeoutHandle
-
-        local function CleanUp()
-            UnregisterForEvent(EVENT_INVENTORY_SINGLE_SLOT_UPDATE, eventHandle)
-            zo_removeCallLater(timeoutHandle)
+    if self.bagId ~= BAG_BACKPACK or self.stackCount ~= GetItemStackCount(self.bagId, self.slotIndex) then
+        if self.interactionHelper:IsBankBag(self.bagId) then
+            promise = self:OpenBank():Then(self.DoMoveItem):Then(self.CloseBank)
+        else
+            promise = self:DoMoveItem()
         end
-
-        eventHandle = RegisterForEvent(EVENT_INVENTORY_SINGLE_SLOT_UPDATE, function(_, bagId, slotId, isNewItem, itemSoundCategory, inventoryUpdateReason, stackCountChange)
-            if(bagId == BAG_BACKPACK and slotId == self.effectiveSlotIndex) then
-                CleanUp()
-                promise:Resolve(self)
-            end
-        end)
-        timeoutHandle = zo_callLater(function()
-            CleanUp()
-            self:SetState(ActivityBase.STATE_FAILED, ActivityBase.ERROR_OPERATION_TIMEOUT)
-            promise:Reject(self)
-        end, MOVE_ITEM_TIMEOUT)
-
-        CallSecureProtected("RequestMoveItem", self.bagId, self.slotIndex, BAG_BACKPACK, self.effectiveSlotIndex, self.stackCount)
     else
         self.effectiveSlotIndex = self.slotIndex
         promise:Resolve(self)
     end
 
     return promise
+end
+
+function PostItemActivity:DoMoveItem()
+    local promise = Promise:New()
+
+    self.step = STEP_MOVE_ITEM
+    self.effectiveSlotIndex = FindFirstEmptySlotInBag(BAG_BACKPACK)
+
+    local eventHandle, timeoutHandle
+
+    local function CleanUp()
+        self.CleanUp = nil
+        UnregisterForEvent(EVENT_INVENTORY_SINGLE_SLOT_UPDATE, eventHandle)
+        zo_removeCallLater(timeoutHandle)
+    end
+    self.CleanUp = CleanUp
+
+    eventHandle = RegisterForEvent(EVENT_INVENTORY_SINGLE_SLOT_UPDATE, function(_, bagId, slotId, isNewItem, itemSoundCategory, inventoryUpdateReason, stackCountChange)
+        if bagId == BAG_BACKPACK and slotId == self.effectiveSlotIndex then
+            CleanUp()
+            promise:Resolve(self)
+        end
+    end)
+    timeoutHandle = zo_callLater(function()
+        CleanUp()
+        self:SetState(ActivityBase.STATE_FAILED, ActivityBase.ERROR_OPERATION_TIMEOUT)
+        promise:Reject(self)
+    end, MOVE_ITEM_TIMEOUT)
+
+    CallSecureProtected("RequestMoveItem", self.bagId, self.slotIndex, BAG_BACKPACK, self.effectiveSlotIndex, self.stackCount)
+    return promise
+end
+
+function PostItemActivity:OpenBank()
+    self.step = STEP_OPEN_BANK
+    return self.interactionHelper:OpenBank(self)
+end
+
+function PostItemActivity:CloseBank()
+    self.step = STEP_CLOSE_BANK
+    return self.interactionHelper:CloseBank(self)
+end
+
+function PostItemActivity:IsClosingBank()
+    return self.step == STEP_CLOSE_BANK
 end
 
 function PostItemActivity:SetPending()
