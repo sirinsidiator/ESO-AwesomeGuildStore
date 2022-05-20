@@ -30,6 +30,7 @@ ActivityBase.ERROR_RESPONSE_TIMEOUT = -3
 ActivityBase.ERROR_API_ERROR = -4
 ActivityBase.ERROR_USER_CANCELLED = -5 -- this is for when a user stops an already running request
 ActivityBase.ERROR_TRADING_HOUSE_CLOSED = -6
+ActivityBase.ERROR_INVALID_STATE = -7
 ActivityBase.RESULT_PAGE_ALREADY_LOADED = -100
 ActivityBase.RESULT_LISTINGS_ALREADY_LOADED = -101
 
@@ -57,6 +58,15 @@ local FINISHED_STATES = {
     [ActivityBase.STATE_FAILED] = true,
     [ActivityBase.STATE_SUCCEEDED] = true,
     [ActivityBase.STATE_CANCELLED] = true,
+}
+
+local RESULT_IS_PENDING = {
+    [TRADING_HOUSE_RESULT_CANCEL_SALE_PENDING] = true,
+    [TRADING_HOUSE_RESULT_LISTINGS_PENDING] = true,
+    [TRADING_HOUSE_RESULT_NAME_MATCH_PENDING] = true,
+    [TRADING_HOUSE_RESULT_POST_PENDING] = true,
+    [TRADING_HOUSE_RESULT_PURCHASE_PENDING] = true,
+    [TRADING_HOUSE_RESULT_SEARCH_PENDING] = true,
 }
 
 local RESULT_TO_STRING = {
@@ -95,6 +105,7 @@ local RESULT_TO_STRING = {
     [ActivityBase.ERROR_API_ERROR] = "ERROR_API_ERROR",
     [ActivityBase.ERROR_USER_CANCELLED] = "ERROR_USER_CANCELLED",
     [ActivityBase.ERROR_TRADING_HOUSE_CLOSED] = "ERROR_TRADING_HOUSE_CLOSED",
+    [ActivityBase.ERROR_INVALID_STATE] = "ERROR_INVALID_STATE",
     [ActivityBase.RESULT_PAGE_ALREADY_LOADED] = "RESULT_PAGE_ALREADY_LOADED",
     [ActivityBase.RESULT_LISTINGS_ALREADY_LOADED] = "RESULT_LISTINGS_ALREADY_LOADED",
 }
@@ -241,12 +252,18 @@ function ActivityBase:GetExpectedResponseType()
     return self.expectedResponseType
 end
 
+function ActivityBase:OnAwaitingResponse(result)
+    self:SetState(ActivityBase.STATE_AWAITING_RESPONSE, result)
+end
+
 function ActivityBase:OnResponse(result)
-    if(result == TRADING_HOUSE_RESULT_SUCCESS) then
+    if result == TRADING_HOUSE_RESULT_SUCCESS then
         self:SetState(ActivityBase.STATE_SUCCEEDED, result)
         if(self.responsePromise) then self.responsePromise:Resolve(self) end
+    elseif RESULT_IS_PENDING[result] then
+        self:SetState(ActivityBase.STATE_PENDING, result)
     else
-        self:SetState(ActivityBase.STATE_AWAITING_RESPONSE, result)
+        self:OnError(result)
     end
 end
 

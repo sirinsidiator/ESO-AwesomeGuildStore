@@ -33,7 +33,7 @@ function ActivityManager:Initialize(tradingHouseWrapper, loadingIndicator, loadi
     RegisterForEvent(EVENT_TRADING_HOUSE_AWAITING_RESPONSE, function(_, responseType)
         logger:Verbose("EVENT_TRADING_HOUSE_AWAITING_RESPONSE", ActivityBase.RESULT_TO_STRING[responseType], responseType)
         if self:IsExpectedResponse(responseType) then
-            self.currentActivity:OnResponse()
+            self.currentActivity:OnAwaitingResponse()
             -- TRANSLATORS: Status text when waiting for a server response
             self:SetStatusText(gettext("Waiting for response"))
         end
@@ -316,13 +316,13 @@ function ActivityManager:OnFailure(activity)
         logger:Warn(message)
     end
 
+    self:HideLoading()
+    self:RemoveCurrentActivity()
+
     if(self.tradingHouseWrapper.search:IsAtTradingHouse()) then
         -- TRANSLATORS: Status text when a server request has failed. Placeholder is for an explanation text
         self:SetStatusText(gettext("Request failed: <<1>>", message))
         ZO_Alert(UI_ALERT_CATEGORY_ERROR, SOUNDS.NEGATIVE_CLICK, message)
-
-        self:HideLoading()
-        self:RemoveCurrentActivity()
         self:ExecuteNext()
     end
 end
