@@ -202,19 +202,24 @@ local libraryCheckList = {
 }
 
 local function IntegrityCheck()
-    local chat = AGS.internal.chat
+    local internal = AGS.internal
+    local chat = internal.chat
+    local logger = internal.logger
+    local gettext = internal.gettext
     for fileName, check in pairs(integrityCheckList) do
         if(not check()) then
+            logger:Warn("Detected missing file:", fileName)
             -- TRANSLATORS: Chat message when the addon was not installed correctly and some files are missing. Placeholder is for the filename.
-            local message = AGS.internal.gettext("The file '<<1>>' is missing. Please reinstall AwesomeGuildStore.", fileName)
+            local message = gettext("The file '<<1>>' is missing. Please reinstall AwesomeGuildStore.", fileName)
             chat:Print(message)
             return false
         end
     end
     for libName, check in pairs(libraryCheckList) do
         if(not check()) then
+            logger:Warn("Detected outdated library:", libName)
             -- TRANSLATORS: Chat message when a dependency does not fulfill the minimal version requirement. Placeholder is for the required library name and version.
-            local message = AGS.internal.gettext("Cannot start due to an outdated library. Please install <<1>> or newer.", libName)
+            local message = gettext("Cannot start due to an outdated library. Please install <<1>> or newer.", libName)
             chat:Print(message)
             return false
         end
