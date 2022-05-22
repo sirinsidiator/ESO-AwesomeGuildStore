@@ -130,6 +130,7 @@ end
 
 function PostItemActivity:SetPending()
     local promise = Promise:New()
+    self.responsePromise = promise
     self.step = STEP_SET_PENDING
 
     local eventHandle
@@ -146,11 +147,9 @@ function PostItemActivity:SetPending()
 end
 
 function PostItemActivity:PostItem()
-    if(not self.responsePromise) then
-        self.step = STEP_POST_ITEM
-        self.responsePromise = Promise:New()
-        RequestPostItemOnTradingHouse(BAG_BACKPACK, self.effectiveSlotIndex, self.stackCount, self.price)
-    end
+    self.step = STEP_POST_ITEM
+    self.responsePromise = Promise:New()
+    RequestPostItemOnTradingHouse(BAG_BACKPACK, self.effectiveSlotIndex, self.stackCount, self.price)
     return self.responsePromise
 end
 

@@ -59,8 +59,8 @@ function ActivityManager:Initialize(tradingHouseWrapper, loadingIndicator, loadi
 
     RegisterForEvent(EVENT_TRADING_HOUSE_ERROR, function(_, errorCode)
         logger:Verbose("EVENT_TRADING_HOUSE_ERROR", ActivityBase.RESULT_TO_STRING[errorCode], errorCode)
-        if self:IsExpectedResponse(errorCode) then
-            self.currentActivity:OnError(ActivityBase.ERROR_API_ERROR)
+        if self.currentActivity then
+            self.currentActivity:OnError(errorCode)
             -- TRANSLATORS: Status text when a server request failed
             self:SetStatusText(gettext("Request failed"))
         end
