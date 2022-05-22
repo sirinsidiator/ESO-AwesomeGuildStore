@@ -42,14 +42,8 @@ local SHOW_MORE_LOADING_LABEL = gettext("Requesting Results ...")
 -- TRANSLATORS: Label for the result count below the search result list. First number indicates the visible results, second number the overall number of locally stored items for the current guild
 local ITEM_COUNT_TEMPLATE = gettext("Items:|cffffff %d / %d")
 
-local SearchResultListWrapper = ZO_Object:Subclass()
+local SearchResultListWrapper = ZO_InitializingObject:Subclass()
 AGS.class.SearchResultListWrapper = SearchResultListWrapper
-
-function SearchResultListWrapper:New(...)
-    local object = ZO_Object.New(self)
-    object:Initialize(...)
-    return object
-end
 
 -- the search result list is very old and doesn't follow the expected name scheme
 -- in order to use it with ZO_SortFilterList, we create a proxy that takes care of the differences
@@ -57,7 +51,7 @@ local function CreateProxyControl(resultList)
     local itemPane =  resultList:GetParent()
     return {
         GetNamedChild = function(self, suffix)
-            if(suffix == "List") then
+            if suffix == "List" then
                 return resultList
             end
         end,
@@ -67,6 +61,7 @@ local function CreateProxyControl(resultList)
 end
 
 function SearchResultListWrapper:Initialize(tradingHouseWrapper, searchManager)
+    self.tradingHouseWrapper = tradingHouseWrapper
     self.activityManager = tradingHouseWrapper.activityManager
 
     self:InitializeResultList(tradingHouseWrapper, searchManager)
@@ -98,14 +93,18 @@ function SearchResultListWrapper:InitializeResultList(tradingHouseWrapper, searc
             scrollData[i] = searchResults[i]:GetDataEntry()
         end
 
-        if(#searchResults > 0 and searchManager:HasMorePages()) then
+        if #searchResults > 0 and searchManager:HasMorePages() then
             scrollData[#scrollData + 1] = ZO_ScrollList_CreateDataEntry(SHOW_MORE_DATA_TYPE, {})
         end
 
         local guildId = GetSelectedTradingHouseGuildId()
-        local items = itemDatabase:GetItemView(guildId):GetItems()
-        resultCount:SetHidden(false)
-        resultCount:SetText(ITEM_COUNT_TEMPLATE:format(#searchResults, #items))
+        if guildId then
+            local items = itemDatabase:GetItemView(guildId):GetItems()
+            resultCount:SetHidden(false)
+            resultCount:SetText(ITEM_COUNT_TEMPLATE:format(#searchResults, #items))
+        else
+            resultCount:SetHidden(true)
+        end
     end
 
     function list:SortScrollList() -- TODO should this also happen in the database?
@@ -125,6 +124,10 @@ function SearchResultListWrapper:InitializeResultList(tradingHouseWrapper, searc
 
     AGS:RegisterCallback(AGS.callback.SEARCH_RESULT_UPDATE, function(searchResults, hasMore)
         list:RefreshFilters()
+    end)
+
+    AGS:RegisterCallback(AGS.callback.TRADING_HOUSE_STATUS_CHANGED, function()
+        self:UpdateShowMoreRowState()
     end)
 
     local function AdjustRowLayout(rowControl)
@@ -165,7 +168,7 @@ function SearchResultListWrapper:InitializeResultList(tradingHouseWrapper, searc
     local originalSearchResultSetupCallback = searchResultDataType.setupCallback
     searchResultDataType.setupCallback = function(rowControl, result)
         originalSearchResultSetupCallback(rowControl, result)
-        if(not rowControl.__AGS_INIT) then
+        if not rowControl.__AGS_INIT then
             AdjustRowLayout(rowControl)
             rowControl.__AGS_INIT = true
         end
@@ -177,7 +180,7 @@ function SearchResultListWrapper:InitializeResultList(tradingHouseWrapper, searc
         sellPriceControl:ClearAnchors()
         local offset = 0
         local hidden = true
-        if(result:GetStackCount() > 1) then
+        if result:GetStackCount() > 1 then
             ZO_CurrencyControl_SetSimpleCurrency(rowControl.perItemPrice, result.currencyType, result.purchasePricePerUnit, PER_UNIT_PRICE_CURRENCY_OPTIONS, nil, tradingHouse.playerMoney[result.currencyType] < result.purchasePrice)
             perItemPrice:SetText("@" .. perItemPrice:GetText():gsub("|t.-:.-:", "|t14:14:"))
             perItemPrice:SetFont("ZoFontWinT2")
@@ -190,12 +193,12 @@ function SearchResultListWrapper:InitializeResultList(tradingHouseWrapper, searc
 
         local background = rowControl:GetNamedChild("Bg")
         local timeRemaining = rowControl:GetNamedChild("TimeRemaining")
-        if(result.purchased) then
+        if result.purchased then
             background:SetTexture(PURCHASED_BG_TEXTURE)
             background:SetTextureCoords(unpack(PURCHASED_VERTEX_COORDS))
             background:SetColor(ZO_ColorDef:New("aa00ff00"):UnpackRGBA())
             timeRemaining:SetText("|c00ff00" .. zo_iconFormatInheritColor(PURCHASED_TEXTURE, 40, 40))
-        elseif(result.soldout) then
+        elseif result.soldout then
             background:SetTexture(PURCHASED_BG_TEXTURE)
             background:SetTextureCoords(unpack(PURCHASED_VERTEX_COORDS))
             background:SetColor(ZO_ColorDef:New("aaff0000"):UnpackRGBA())
@@ -211,7 +214,7 @@ function SearchResultListWrapper:InitializeResultList(tradingHouseWrapper, searc
     local originalGuildItemSetupCallback = guildItemDataType.setupCallback
     guildItemDataType.setupCallback = function(rowControl, result)
         originalGuildItemSetupCallback(rowControl, result)
-        if(not rowControl.__AGS_INIT) then
+        if not rowControl.__AGS_INIT then
             AdjustRowLayout(rowControl)
             rowControl.perItemPrice:SetHidden(true)
             rowControl.sellPriceControl:SetAnchor(RIGHT, rowControl, RIGHT, -5, 0)
@@ -243,9 +246,9 @@ function SearchResultListWrapper:InitializeShowMoreRow(tradingHouseWrapper, sear
         end)
 
         rowControl:SetHandler("OnMouseUp", function(control, button, isInside)
-            if(rowControl.enabled and button == MOUSE_BUTTON_INDEX_LEFT and isInside) then
+            if rowControl.enabled and button == MOUSE_BUTTON_INDEX_LEFT and isInside then
                 PlaySound("Click")
-                if(searchManager:RequestSearch(IGNORE_RESULT_COUNT)) then
+                if searchManager:RequestSearch(IGNORE_RESULT_COUNT) then
                     PlaySound(SOUNDS.TRADING_HOUSE_SEARCH_INITIATED)
                     self:UpdateShowMoreRowState()
                 end
@@ -263,7 +266,7 @@ function SearchResultListWrapper:InitializeShowMoreRow(tradingHouseWrapper, sear
     end
 
     ZO_ScrollList_AddDataType(tradingHouse.searchResultsList, SHOW_MORE_DATA_TYPE, "AwesomeGuildStoreShowMoreRowTemplate", 32, function(rowControl, entry)
-        if(not rowControl.label) then
+        if not rowControl.label then
             SetupShowMoreRow(rowControl, entry)
         end
         rowControl.entry = entry
@@ -279,21 +282,21 @@ function SearchResultListWrapper:InitializeShowMoreRow(tradingHouseWrapper, sear
 
     local searchResultsMessageLabel = tradingHouse.searchResultsMessageLabel
     AGS:RegisterCallback(AGS.callback.CURRENT_ACTIVITY_CHANGED, function(activity)
-        if(self.showMoreEntry) then
+        if self.showMoreEntry then
             self:UpdateShowMoreRowState()
         end
 
         local hasSearchActivity = false
-        if(activity and activity:GetType() == ActivityBase.ACTIVITY_TYPE_REQUEST_SEARCH) then
+        if activity and activity:GetType() == ActivityBase.ACTIVITY_TYPE_REQUEST_SEARCH then
             hasSearchActivity = true
         else
             local searchActivities = self.activityManager:GetActivitiesByType(ActivityBase.ACTIVITY_TYPE_REQUEST_SEARCH)
             hasSearchActivity = (#searchActivities > 0)
         end
 
-        if(searchManager:GetNumVisibleResults() == 0) then
+        if searchManager:GetNumVisibleResults() == 0 then
             searchResultsMessageLabel:SetHidden(false)
-            if(hasSearchActivity) then
+            if hasSearchActivity then
                 searchResultsMessageLabel:SetText(GetString("SI_TRADINGHOUSESEARCHSTATE", TRADING_HOUSE_SEARCH_STATE_WAITING))
             else
                 searchResultsMessageLabel:SetText(GetString("SI_TRADINGHOUSESEARCHOUTCOME", TRADING_HOUSE_SEARCH_OUTCOME_NO_RESULTS))
@@ -367,7 +370,7 @@ function SearchResultListWrapper:InitializeSortHeaders(tradingHouseWrapper, sear
     sortHeaderGroup:ReplaceKey(TRADING_HOUSE_SORT_EXPIRY_TIME, SORT_ORDER_ID.TIME_LEFT_ORDER)
 
     sortHeaderGroup:RegisterCallback(ZO_SortHeaderGroup.HEADER_CLICKED, function(sortOrderId, direction)
-        if(sortOrderId == "custom") then
+        if sortOrderId == "custom" then
             sortOrderId = sortFilter:GetCurrentSortOrder():GetId()
         end
         sortFilter:SetCurrentSortOrder(sortOrderId, direction)
@@ -378,10 +381,10 @@ function SearchResultListWrapper:InitializeSortHeaders(tradingHouseWrapper, sear
     self.customHeaderIcon = customHeaderIcon
 
     AGS:RegisterCallback(AGS.callback.FILTER_VALUE_CHANGED, function(id, sortOrder)
-        if(id ~= sortFilter:GetId()) then return end
+        if id ~= sortFilter:GetId() then return end
 
         local header = sortHeaderGroup:HeaderForKey(sortOrder:GetId())
-        if(not header) then
+        if not header then
             header = customHeader
             ZO_SortHeader_SetTooltip(customHeader, sortOrder:GetLabel())
             customHeader:SetHidden(false)
@@ -392,7 +395,7 @@ function SearchResultListWrapper:InitializeSortHeaders(tradingHouseWrapper, sear
     end)
 
     AGS:RegisterCallback(AGS.callback.SEARCH_LOCK_STATE_CHANGED, function(search, isActiveSearch)
-        if(not isActiveSearch) then return end
+        if not isActiveSearch then return end
         self:SetHeaderEnabled(search:IsEnabled())
     end)
 
@@ -402,7 +405,7 @@ function SearchResultListWrapper:InitializeSortHeaders(tradingHouseWrapper, sear
 end
 
 function SearchResultListWrapper:UpdateShowMoreRowState()
-    if(not self.showMoreEntry) then return end
+    if not self.showMoreEntry then return end
     local showMoreEntry = self.showMoreEntry
     local activityManager = self.activityManager
     -- TODO consolidate into one function together with the keybind strip handler
@@ -410,11 +413,11 @@ function SearchResultListWrapper:UpdateShowMoreRowState()
     local activity = activityManager:GetCurrentActivity()
     local text
     local inProgress = true
-    if(activity and activity:GetType() == ActivityBase.ACTIVITY_TYPE_REQUEST_SEARCH) then
+    if activity and activity:GetType() == ActivityBase.ACTIVITY_TYPE_REQUEST_SEARCH then
         text = SHOW_MORE_LOADING_LABEL
     else
         local searchActivities = activityManager:GetActivitiesByType(ActivityBase.ACTIVITY_TYPE_REQUEST_SEARCH)
-        if(#searchActivities > 0) then
+        if #searchActivities > 0 then
             text = SHOW_MORE_COOLDOWN_LABEL
         else
             text = SHOW_MORE_READY_LABEL
@@ -422,7 +425,7 @@ function SearchResultListWrapper:UpdateShowMoreRowState()
         end
     end
     label:SetText(text)
-    showMoreEntry:SetEnabled(not inProgress)
+    showMoreEntry:SetEnabled(self.tradingHouseWrapper:IsConnected() and not inProgress)
 end
 
 function SearchResultListWrapper:RefreshVisible()

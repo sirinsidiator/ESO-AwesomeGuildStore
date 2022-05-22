@@ -3,14 +3,8 @@ local AGS = AwesomeGuildStore
 local HiredTraderTooltip = AGS.class.HiredTraderTooltip
 local IngameGuildSelector = GuildSelector
 
-local GuildSelector = ZO_Object:Subclass()
+local GuildSelector = ZO_InitializingObject:Subclass()
 AGS.class.GuildSelector = GuildSelector
-
-function GuildSelector:New(...)
-    local selector = ZO_Object.New(self)
-    selector:Initialize(...)
-    return selector
-end
 
 function GuildSelector:Initialize(tradingHouseWrapper)
     self.tradingHouseWrapper = tradingHouseWrapper
@@ -43,7 +37,7 @@ function GuildSelector:Initialize(tradingHouseWrapper)
 
     AGS:RegisterCallback(AGS.callback.GUILD_SELECTION_CHANGED, function(guildData)
         local focused = WINDOW_MANAGER:GetFocusControl()
-        if(focused) then focused:LoseFocus() end
+        if focused then focused:LoseFocus() end
 
         self.selectedGuildData = guildData
         self.comboBox:SetSelectedItem(guildData.guildName)
@@ -51,15 +45,13 @@ function GuildSelector:Initialize(tradingHouseWrapper)
         tradingHouse:UpdateForGuildChange() -- TODO: disable all the unnecessary stuff in there
     end)
 
-    tradingHouseWrapper:Wrap("UpdateForGuildChange", function(originalUpdateForGuildChange, tradingHouse) -- TODO remove once fixed in the game code
-        originalUpdateForGuildChange(tradingHouse)
-        local guildId = GetSelectedTradingHouseGuildId()
-        ZO_MenuBar_SetDescriptorEnabled(tradingHouse.menuBar, ZO_TRADING_HOUSE_MODE_LISTINGS, GetGuildName(guildId) ~= "")
+    tradingHouseWrapper:PreHook("UpdateForGuildChange", function()
+        if not GetSelectedTradingHouseGuildId() then return true end
     end)
 
     ZO_PreHook(IngameGuildSelector, "SelectGuildByIndex", function(_, index)
-        if(tradingHouseWrapper.search:IsAtTradingHouse()) then
-            if(GetNumTradingHouseGuilds() > 1) then
+        if tradingHouseWrapper.search:IsAtTradingHouse() then
+            if GetNumTradingHouseGuilds() > 1 then
                 SelectTradingHouseGuildId(GetGuildId(index))
             end
             return true
@@ -82,22 +74,22 @@ function GuildSelector:InitializeComboBox(comboBoxControl, comboBox)
         local buyMode = tradingHouse:IsInSearchMode()
 
         repeat
-            if(delta < 0) then
+            if delta < 0 then
                 newData = newData.next
-            elseif(delta > 0) then
+            elseif delta > 0 then
                 newData = newData.previous
             end
 
             -- break out of the loop if the new guild can be used in the current mode
             -- TODO: remove this. just don't kick us out of the sell tab
-            if(buyMode and newData.canBuy) then
+            if buyMode and newData.canBuy then
                 break
-            elseif(not buyMode and newData.canSell) then
+            elseif not buyMode and newData.canSell then
                 break
             end
         until newData == currentData
 
-        if(newData ~= currentData) then
+        if newData ~= currentData then
             SelectTradingHouseGuildId(newData.guildId)
         end
     end)
@@ -107,7 +99,7 @@ function GuildSelector:InitializeHiredTraderTooltip(comboBoxControl, comboBox)
     local traderTooltip = HiredTraderTooltip:New(self.tradingHouseWrapper.saveData)
     local function GuildSelectorShowTooltip(control)
         local guildId = self.guildIdByMenuIndex[control.menuIndex]
-        if(not guildId) then
+        if not guildId then
             guildId = self.selectedGuildData.guildId
         end
         traderTooltip:Show(control, guildId)
@@ -119,7 +111,7 @@ function GuildSelector:InitializeHiredTraderTooltip(comboBoxControl, comboBox)
     local hooked = false
     local originalZO_Menu_EnterItem, originalZO_Menu_ExitItem
     ZO_PreHook(comboBox, "ShowDropdownInternal", function(comboBox)
-        if(not hooked) then
+        if not hooked then
             hooked = true
             originalZO_Menu_EnterItem = ZO_Menu_EnterItem
             originalZO_Menu_ExitItem = ZO_Menu_ExitItem
@@ -129,7 +121,7 @@ function GuildSelector:InitializeHiredTraderTooltip(comboBoxControl, comboBox)
     end)
 
     ZO_PreHook(comboBox, "HideDropdownInternal", function(comboBox)
-        if(hooked) then
+        if hooked then
             hooked = false
             ZO_Menu_EnterItem = originalZO_Menu_EnterItem
             ZO_Menu_ExitItem = originalZO_Menu_ExitItem

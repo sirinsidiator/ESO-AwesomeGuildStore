@@ -52,13 +52,7 @@ function PostItemActivity:Initialize(tradingHouseWrapper, guildId, bagId, slotIn
 end
 
 function PostItemActivity:Update()
-    self.canExecute = self.guildSelection:IsAppliedGuildId(self.guildId) or (GetTradingHouseCooldownRemaining() == 0)
-end
-function PostItemActivity:OnRemove(reason)
-    if self.CleanUp then
-        self.CleanUp()
-    end
-    ActivityBase.OnRemove(self, reason)
+    self.canExecute = self.tradingHouseWrapper:IsConnected() and self.guildSelection:IsAppliedGuildId(self.guildId) or (GetTradingHouseCooldownRemaining() == 0)
 end
 
 local function GetItemStackCount(bagId, slotIndex)
@@ -135,7 +129,7 @@ function PostItemActivity:SetPending()
 
     local eventHandle
     eventHandle = RegisterForEvent(EVENT_TRADING_HOUSE_PENDING_ITEM_UPDATE, function(_, slotId, isPending)
-        if(isPending and slotId == self.effectiveSlotIndex) then
+        if isPending and slotId == self.effectiveSlotIndex then
             UnregisterForEvent(EVENT_TRADING_HOUSE_PENDING_ITEM_UPDATE, eventHandle)
             promise:Resolve(self)
         end
@@ -174,7 +168,7 @@ function PostItemActivity:GetErrorMessage()
 end
 
 function PostItemActivity:GetLogEntry()
-    if(not self.logEntry) then
+    if not self.logEntry then
         local price = ZO_Currency_FormatPlatform(CURT_MONEY, self.price, ZO_CURRENCY_FORMAT_AMOUNT_ICON)
         -- TRANSLATORS: log text shown to the user for each post item request. Placeholders are for the stackCount, itemLink, price and guild name respectively
         self.logEntry = gettext("Post <<1>>x <<2>> for <<3>> to <<4>>", self.stackCount, self.itemLink, price, GetGuildName(self.guildId))
@@ -184,7 +178,7 @@ end
 
 function PostItemActivity:AddTooltipText(output)
     ActivityBase.AddTooltipText(self, output)
-    if(self.step) then -- TODO translate
+    if self.step then -- TODO translate
         output[#output + 1] = ActivityBase.TOOLTIP_LINE_TEMPLATE:format("Step", STEP_TO_STRING[self.step])
     end
 end
@@ -195,7 +189,7 @@ end
 
 function PostItemActivity.CreateKey()
     -- post requests can always be queued, so we just generate random keys, yet we want to keep one until it really gets used to avoid problems
-    if(not PostItemActivity.nextKey) then
+    if not PostItemActivity.nextKey then
         PostItemActivity.nextKey = sformat("%d_%d_%f", ActivityBase.ACTIVITY_TYPE_POST_ITEM, GetTimeStamp(), math.random())
     end
     return PostItemActivity.nextKey

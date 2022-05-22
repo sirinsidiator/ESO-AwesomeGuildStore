@@ -5,22 +5,16 @@ local gettext = AGS.internal.gettext
 
 local ItemDatabase = AGS.class.ItemDatabase
 local RegisterForEvent = AGS.internal.RegisterForEvent
-local IsAtGuildKiosk = AGS.internal.IsAtGuildKiosk
 local ShowGuildDetails = AGS.internal.ShowGuildDetails
+local TradingHouseStatus = AGS.internal.TradingHouseStatus
 
 local FOOTER_MIN_ALPHA = 0.6
 local FOOTER_MAX_ALPHA = 1
 local FOOTER_FADE_DURATION = 300
 local GUILD_INFO_SCENE_NAME = "AGS_guildInfo"
 
-local TradingHouseWrapper = ZO_Object:Subclass()
+local TradingHouseWrapper = ZO_InitializingObject:Subclass()
 AGS.class.TradingHouseWrapper = TradingHouseWrapper
-
-function TradingHouseWrapper:New(...)
-    local wrapper = ZO_Object.New(self)
-    wrapper:Initialize(...)
-    return wrapper
-end
 
 function TradingHouseWrapper:Initialize(saveData)
     self.saveData = saveData
@@ -56,41 +50,68 @@ function TradingHouseWrapper:Initialize(saveData)
             [ZO_TRADING_HOUSE_MODE_LISTINGS] = listingTab,
         }
 
-    local CollectGuildKiosk = AGS.internal.CollectGuildKiosk
-    if(CollectGuildKiosk) then
-        RegisterForEvent(EVENT_TRADING_HOUSE_STATUS_RECEIVED, function()
-            zo_callLater(CollectGuildKiosk, 0) -- need to wait a frame, otherwise the guild info is incorrect
-        end)
-    end
+    -- no need to have the game process this. we handle it ourselves
+    EVENT_MANAGER:UnregisterForEvent(ZO_TRADING_HOUSE_SYSTEM_NAME, EVENT_OPEN_TRADING_HOUSE)
+    EVENT_MANAGER:UnregisterForEvent(ZO_TRADING_HOUSE_SYSTEM_NAME, EVENT_CLOSE_TRADING_HOUSE)
+    ZO_TRADING_HOUSE_INTERACTION.OnInteractSwitch = nil
+
+    -- we need to re-add it in order to ensure that BACKPACK_TRADING_HOUSE_LAYOUT_FRAGMENT is processed first
+    -- otherwise the sell tab has trouble with filtering the bank inventory correctly
+    TRADING_HOUSE_SCENE:RemoveFragment(TRADING_HOUSE_FRAGMENT)
+    TRADING_HOUSE_SCENE:AddFragment(TRADING_HOUSE_FRAGMENT)
+
+    self.ignoreModeChanges = false
+    self:PreHook("OpenTradingHouse", function()
+        self.ignoreModeChanges = true
+    end)
+
+    TRADING_HOUSE_FRAGMENT:RegisterCallback("StateChange", function(oldState, newState)
+        if self:IsGuildInfoSceneTransition() then return end
+
+        if newState == SCENE_SHOWING then
+            tradingHouse:OpenTradingHouse()
+        elseif newState == SCENE_HIDDEN then
+            tradingHouse:CloseTradingHouse()
+        end
+    end)
+
+    AGS:RegisterCallback(AGS.callback.TRADING_HOUSE_STATUS_CHANGED, function(newStatus, oldStatus)
+        if newStatus == TradingHouseStatus.CONNECTED then
+            self:ConnectTradingHouse()
+        end
+    end)
 
     SecurePostHook(tradingHouse, "RunInitialSetup", function()
         logger:Debug("Before Initial Setup")
         AGS.internal:FireCallbacks(AGS.callback.BEFORE_INITIAL_SETUP, self)
 
+        ZO_PreHook(tradingHouse.menuBar.m_object, "SelectDescriptor", function(_, descriptor, skipAnimation, reselectIfSelected)
+            if self.ignoreModeChanges then return true end
+        end)
+
         for mode, tab in next, self.modeToTab do
             tab:RunInitialSetup(self)
         end
 
-        if(not saveData.minimizeChatOnOpen) then
+        if not saveData.minimizeChatOnOpen then
             TRADING_HOUSE_SCENE:RemoveFragment(MINIMIZE_CHAT_FRAGMENT)
         end
 
         self:InitializeFooter()
-
-        self.activityWindow = AGS.class.ActivityWindow:New(self)
-        self.statusLine = AGS.class.StatusLine:New(self)
-
-        TRADING_HOUSE_SCENE:AddFragment(self.activityWindow)
-        TRADING_HOUSE_SCENE:AddFragment(self.statusLine)
-
-        self.activityManager:SetActivityWindow(self.activityWindow)
-        self.activityManager:SetStatusLine(self.statusLine)
-
+        self:InitializeStatusDisplay()
         self:InitializeGuildSelector()
         self:InitializeKeybindStripWrapper()
-        self:InitializeStoreTabAutoSwitch()
+        activityManager:SetReady()
         logger:Debug("After Initial Setup")
         AGS.internal:FireCallbacks(AGS.callback.AFTER_INITIAL_SETUP, self)
+    end)
+
+    SecurePostHook(tradingHouse, "OpenTradingHouse", function()
+        self:OpenTradingHouse()
+    end)
+
+    SecurePostHook(tradingHouse, "CloseTradingHouse", function()
+        self:CloseTradingHouse()
     end)
 
     -- we hook into this function in order to disable the ingame search features
@@ -130,26 +151,70 @@ function TradingHouseWrapper:Initialize(saveData)
     self.previewHelper = AGS.class.ItemPreviewHelper:New(itemDatabase)
 
     RegisterForEvent(EVENT_CLOSE_TRADING_HOUSE, function()
-        self:OnCloseTradingHouse()
+        self:DisconnectTradingHouse()
     end)
 end
 
-function TradingHouseWrapper:OnCloseTradingHouse()
+function TradingHouseWrapper:OpenTradingHouse()
+    logger:Debug("OpenTradingHouse")
+    self.ignoreModeChanges = false
+    if self.interactionHelper:IsBankAvailable() then
+        -- change to the configured tab when at a banker
+        ZO_MenuBar_SelectDescriptor(self.tradingHouse.menuBar, self.saveData.preferredBankerStoreTab)
+    else
+        ZO_MenuBar_SelectDescriptor(self.tradingHouse.menuBar, ZO_TRADING_HOUSE_MODE_BROWSE)
+    end
+end
+
+function TradingHouseWrapper:CloseTradingHouse()
+    logger:Debug("CloseTradingHouse")
+    self:DisconnectTradingHouse()
     self:HideLoadingIndicator()
     self:HideLoadingOverlay()
     if self.currentTab then
         self.currentTab:OnClose(self)
+        self.currentTab = nil
     end
+    self.itemDatabase:ClearItemViewCache()
+    self.interactionHelper:EndInteraction()
+end
+
+function TradingHouseWrapper:ConnectTradingHouse()
+    logger:Debug("ConnectTradingHouse")
+    if AGS.internal.CollectGuildKiosk then
+        AGS.internal.CollectGuildKiosk()
+    end
+end
+
+function TradingHouseWrapper:DisconnectTradingHouse()
+    if not self:IsConnected() then return end
+    logger:Debug("DisconnectTradingHouse")
+    self.interactionHelper:SetStatus(TradingHouseStatus.DISCONNECTING)
     if GetNumGuilds() > 0 then
         self.tradingHouse:ClearPendingPost()
     end
-    self.itemDatabase:ClearItemViewCache()
-    self.activityManager:OnCloseTradingHouse()
+    self.activityManager:OnDisconnectTradingHouse()
+    self.interactionHelper:SetStatus(TradingHouseStatus.DISCONNECTED)
+end
+
+function TradingHouseWrapper:IsConnected()
+    return self.interactionHelper:IsConnected()
 end
 
 function TradingHouseWrapper:RegisterTabWrapper(mode, tab)
     assert(self.modeToTab[mode] == nil)
     self.modeToTab[mode] = tab
+end
+
+function TradingHouseWrapper:InitializeStatusDisplay()
+    self.activityWindow = AGS.class.ActivityWindow:New(self)
+    self.statusLine = AGS.class.StatusLine:New(self)
+
+    TRADING_HOUSE_SCENE:AddFragment(self.activityWindow)
+    TRADING_HOUSE_SCENE:AddFragment(self.statusLine)
+
+    self.activityManager:SetActivityWindow(self.activityWindow)
+    self.activityManager:SetStatusLine(self.statusLine)
 end
 
 function TradingHouseWrapper:InitializeGuildSelector()
@@ -173,9 +238,11 @@ function TradingHouseWrapper:InitializeGuildSelector()
     button:SetTooltipText(gettext("Open Guild Info"))
     button:SetClickHandler(MOUSE_BUTTON_INDEX_LEFT, function()
         local guildId = GetSelectedTradingHouseGuildId()
-        GUILD_BROWSER_GUILD_INFO_KEYBOARD.closeCallback = GoBack
-        GUILD_BROWSER_GUILD_INFO_KEYBOARD:SetGuildToShow(guildId)
-        SCENE_MANAGER:Push(GUILD_INFO_SCENE_NAME)
+        if guildId then
+            GUILD_BROWSER_GUILD_INFO_KEYBOARD.closeCallback = GoBack
+            GUILD_BROWSER_GUILD_INFO_KEYBOARD:SetGuildToShow(guildId)
+            SCENE_MANAGER:Push(GUILD_INFO_SCENE_NAME)
+        end
     end)
 end
 
@@ -202,18 +269,17 @@ function TradingHouseWrapper:InitializeGuildInfoScene()
     self.guildInfoScene = guildInfoScene
 end
 
-function TradingHouseWrapper:InitializeKeybindStripWrapper()
-    self.keybindStrip = AGS.class.KeybindStripWrapper:New(self)
+function TradingHouseWrapper:IsGuildInfoSceneTransition()
+    if SCENE_MANAGER:IsShowingNext(GUILD_INFO_SCENE_NAME) then
+        return true
+    elseif SCENE_MANAGER:GetPreviousSceneName() == GUILD_INFO_SCENE_NAME and not SCENE_MANAGER:GetNextScene() then
+        return true
+    end
+    return false
 end
 
-function TradingHouseWrapper:InitializeStoreTabAutoSwitch()
-    local tradingHouse = self.tradingHouse
-    RegisterForEvent(EVENT_TRADING_HOUSE_STATUS_RECEIVED, function()
-        -- change to the configured tab when at a banker
-        if(not IsAtGuildKiosk()) then
-            ZO_MenuBar_SelectDescriptor(tradingHouse.menuBar, self.saveData.preferredBankerStoreTab)
-        end
-    end)
+function TradingHouseWrapper:InitializeKeybindStripWrapper()
+    self.keybindStrip = AGS.class.KeybindStripWrapper:New(self)
 end
 
 function TradingHouseWrapper:InitializeFooter()
@@ -266,7 +332,7 @@ end
 function TradingHouseWrapper:Wrap(methodName, call)
     local tradingHouse = self.tradingHouse
     local originalFunction = tradingHouse[methodName]
-    if((originalFunction ~= nil) and (type(originalFunction) == "function")) then
+    if originalFunction ~= nil and type(originalFunction) == "function" then
         tradingHouse[methodName] = function(...)
             return call(originalFunction, ...)
         end
@@ -275,7 +341,7 @@ end
 
 function TradingHouseWrapper:GetTradingGuildName(guildId)
     local guildName = GetGuildName(guildId)
-    if(guildName == "") then -- TODO find a better way
+    if guildName == "" then -- TODO find a better way
         guildName = select(2, GetCurrentTradingHouseGuildDetails())
     end
     return guildName

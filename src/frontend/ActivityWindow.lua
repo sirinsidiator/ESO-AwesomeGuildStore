@@ -37,6 +37,10 @@ function ActivityWindow:Initialize(tradingHouseWrapper)
     local window = AwesomeGuildStoreActivityWindow -- TODO translate title
     self.window = window
 
+    AGS:RegisterCallback(AGS.callback.ACTIVITY_STATE_CHANGED, function(state, result, oldState, oldResult)
+        self:Refresh()
+    end)
+
     ZO_SimpleSceneFragment.Initialize(self, window)
 
     -- TODO: find a way around these 3 methods
@@ -76,7 +80,7 @@ function ActivityWindow:Initialize(tradingHouseWrapper)
 
         InitializeTooltip(InformationTooltip, control, LEFT, 0, 0)
         SetTooltipText(InformationTooltip, text)
-        if(control.cancel) then
+        if control.cancel then
             control.cancel:SetHidden(false)
         end
         list:EnterRow(control)
@@ -84,7 +88,7 @@ function ActivityWindow:Initialize(tradingHouseWrapper)
 
     local function ExitRow(control)
         ClearTooltip(InformationTooltip)
-        if(control.cancel) then
+        if control.cancel then
             control.cancel:SetHidden(true)
         end
         list:ExitRow(control)
@@ -100,7 +104,7 @@ function ActivityWindow:Initialize(tradingHouseWrapper)
         control:SetHandler("OnMouseExit", ExitRow)
         local iconControl = control:GetNamedChild("Icon")
         iconControl:SetTexture(icon)
-        if(iconColor) then
+        if iconColor then
             iconControl:SetColor(iconColor:UnpackRGBA())
         end
 
@@ -122,7 +126,7 @@ function ActivityWindow:Initialize(tradingHouseWrapper)
         executionTimeControl:SetText(executionTime)
         executionTimeControl:SetColor(textColor:UnpackRGBA())
 
-        if(Zgoo) then
+        if Zgoo then
             control:SetHandler("OnMouseUp", function() Zgoo(data) end)
         end
     end
@@ -139,7 +143,7 @@ function ActivityWindow:Initialize(tradingHouseWrapper)
     local LOG_ICON_FAILURE = "EsoUI/Art/hud/gamepad/gp_radialicon_cancel_down.dds"
     ZO_ScrollList_AddDataType(list.list, QUEUED_DATA, "AwesomeGuildStoreActivityListQueuedRowTemplate", 24, function(control, data)
         SetupBaseRow(control, data, LOG_ICON_QUEUED, LOG_COLOR_QUEUED)
-        if(not control.cancel) then
+        if not control.cancel then
             local cancel = SimpleIconButton:New(control:GetNamedChild("Cancel"))
             cancel:SetTextureTemplate("EsoUI/Art/Buttons/cancel_%s.dds")
             cancel:SetClickHandler(MOUSE_BUTTON_INDEX_LEFT, function(button)
@@ -153,7 +157,7 @@ function ActivityWindow:Initialize(tradingHouseWrapper)
     end)
     ZO_ScrollList_AddDataType(list.list, ACTIVE_DATA, "AwesomeGuildStoreActivityListRowTemplate", 24, function(control, data)
         SetupBaseRow(control, data, LOG_ICON_ACTIVE, LOG_COLOR_ACTIVE)
-        if(not control.animation) then
+        if not control.animation then
             control.animation = ANIMATION_MANAGER:CreateTimelineFromVirtual("LoadIconAnimation", GetControl(control, "Icon"))
             control.animation:PlayForward()
         end
@@ -161,10 +165,10 @@ function ActivityWindow:Initialize(tradingHouseWrapper)
     ZO_ScrollList_AddDataType(list.list, FINISHED_DATA, "AwesomeGuildStoreActivityListRowTemplate", 24, function(control, data)
         local icon = LOG_ICON_FAILURE
         local color = LOG_COLOR_CLEARED
-        if(data.state == ActivityBase.STATE_SUCCEEDED) then
+        if data.state == ActivityBase.STATE_SUCCEEDED then
             icon = LOG_ICON_SUCCESS
             color = LOG_COLOR_SUCCESS
-        elseif(data.state == ActivityBase.STATE_FAILED) then
+        elseif data.state == ActivityBase.STATE_FAILED then
             color = LOG_COLOR_FAILURE
         end
         SetupBaseRow(control, data, icon, color, color)
@@ -185,7 +189,7 @@ function ActivityWindow:Initialize(tradingHouseWrapper)
             scrollData[#scrollData + 1] = CreateEntry(queue[i], QUEUED_DATA)
         end
 
-        if(activityManager.currentActivity) then
+        if activityManager.currentActivity then
             scrollData[#scrollData + 1] = CreateEntry(activityManager.currentActivity, ACTIVE_DATA)
         end
 
@@ -229,7 +233,7 @@ function ActivityWindow:HideWindow()
 end
 
 function ActivityWindow:ToggleWindow()
-    if(self.window:IsHidden()) then
+    if self.window:IsHidden() then
         self:ShowWindow()
     else
         self:HideWindow()
@@ -238,13 +242,13 @@ end
 
 function ActivityWindow:AddActivity(activity)
     table.insert(self.activitylog, 1, activity)
-    if(#self.activitylog > 40) then -- TODO config value
+    if #self.activitylog > 40 then -- TODO config value
         table.remove(self.activitylog)
     end
 end
 
 function ActivityWindow:Refresh()
-    if(not self.window:IsHidden()) then
+    if not self.window:IsHidden() then
         self.list:RefreshFilters()
     end
 end

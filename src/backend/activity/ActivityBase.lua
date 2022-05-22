@@ -2,16 +2,17 @@ local AGS = AwesomeGuildStore
 
 local Promise = LibPromises
 
-local ActivityBase = ZO_Object:Subclass()
+local ActivityBase = ZO_InitializingObject:Subclass()
 AGS.class.ActivityBase = ActivityBase
 
-ActivityBase.ACTIVITY_TYPE_REQUEST_SEARCH = 1
-ActivityBase.ACTIVITY_TYPE_REQUEST_NEWEST = 2
-ActivityBase.ACTIVITY_TYPE_REQUEST_LISTINGS = 3
-ActivityBase.ACTIVITY_TYPE_PURCHASE_ITEM = 4
-ActivityBase.ACTIVITY_TYPE_POST_ITEM = 5
-ActivityBase.ACTIVITY_TYPE_CANCEL_ITEM = 6
-ActivityBase.ACTIVITY_TYPE_FETCH_GUILD_ITEMS = 7
+ActivityBase.ACTIVITY_TYPE_STORE_STATE = 1
+ActivityBase.ACTIVITY_TYPE_REQUEST_SEARCH = 2
+ActivityBase.ACTIVITY_TYPE_REQUEST_NEWEST = 3
+ActivityBase.ACTIVITY_TYPE_REQUEST_LISTINGS = 4
+ActivityBase.ACTIVITY_TYPE_PURCHASE_ITEM = 5
+ActivityBase.ACTIVITY_TYPE_POST_ITEM = 6
+ActivityBase.ACTIVITY_TYPE_CANCEL_ITEM = 7
+ActivityBase.ACTIVITY_TYPE_FETCH_GUILD_ITEMS = 8
 
 ActivityBase.PRIORITY_LOW = 3
 ActivityBase.PRIORITY_MEDIUM = 2
@@ -111,15 +112,8 @@ ActivityBase.RESULT_TO_STRING = RESULT_TO_STRING
 
 local startTime = GetTimeStamp() * 1000 - GetGameTimeMilliseconds()
 
-function ActivityBase:New(...)
-    local selector = ZO_Object.New(self)
-    selector:Initialize(...)
-    return selector
-end
-
 function ActivityBase:Initialize(tradingHouseWrapper, key, priority, guildId)
     self.tradingHouseWrapper = tradingHouseWrapper
-    self.activityWindow = tradingHouseWrapper.activityWindow
     self.tradingHouse = tradingHouseWrapper.tradingHouse
     self.guildSelection = tradingHouseWrapper.guildSelection
     self.key = key
@@ -134,18 +128,20 @@ end
 
 function ActivityBase:SetState(state, result)
     self.updateTime = GetGameTimeMilliseconds() + startTime
-    if(self.state == ActivityBase.STATE_QUEUED and state ~= self.state and not FINISHED_STATES[state]) then
+    if self.state == ActivityBase.STATE_QUEUED and state ~= self.state and not FINISHED_STATES[state] then
         self.executionTime = self.updateTime
     end
+    local oldState = self.state
     self.state = state
+    local oldResult = self.result
     self.result = result
     self.logEntry = nil -- force it to refresh
-    self.activityWindow:Refresh() -- TODO this needs to happen via a callback or something
+    AGS.internal:FireCallbacks(AGS.callback.ACTIVITY_STATE_CHANGED, state, result, oldState, oldResult)
 end
 
 function ActivityBase:ApplyGuildId()
     local promise = Promise:New()
-    if(self.guildSelection:ApplySelectedGuildId(self.guildId)) then
+    if self.guildSelection:ApplySelectedGuildId(self.guildId) then
         self:SetState(ActivityBase.STATE_PENDING)
         promise:Resolve(self)
     else
@@ -192,19 +188,19 @@ function ActivityBase:AddTooltipText(output)
     local queueTime, executionTime = self:GetFormattedDuration()
     output[#output + 1] = ActivityBase.TOOLTIP_LINE_TEMPLATE:format("Queue Time", queueTime)
 
-    if(self.executionTime) then
+    if self.executionTime then
         output[#output + 1] = ActivityBase.TOOLTIP_LINE_TEMPLATE:format("Execution Time", executionTime)
-    elseif(not FINISHED_STATES[self.state]) then
+    elseif not FINISHED_STATES[self.state] then
         output[#output + 1] = ActivityBase.TOOLTIP_LINE_TEMPLATE:format("Cooldown", executionTime)
     end
 
-    if(self.result) then
+    if self.result then
         output[#output + 1] = ActivityBase.TOOLTIP_LINE_TEMPLATE:format("Result", RESULT_TO_STRING[self.result] or tostring(self.result))
     end
 end
 
 local function FormatTimeMs(time)
-    if(time) then
+    if time then
         time = ZO_CommaDelimitDecimalNumber(time)
     else
         time = "-"
@@ -216,18 +212,18 @@ function ActivityBase:GetFormattedDuration()
     local updateTime, queueTime, executionTime
     local isFinished = FINISHED_STATES[self.state]
 
-    if(isFinished) then
+    if isFinished then
         updateTime = self.updateTime
     else
         updateTime = GetGameTimeMilliseconds() + startTime
     end
 
-    if(self.executionTime) then
+    if self.executionTime then
         queueTime = self.executionTime - self.creationTime
         executionTime = updateTime - self.executionTime
     else
         queueTime = updateTime - self.creationTime
-        if(not isFinished) then
+        if not isFinished then
             executionTime = GetTradingHouseCooldownRemaining()
         end
     end
@@ -257,7 +253,7 @@ end
 function ActivityBase:OnResponse(result)
     if result == TRADING_HOUSE_RESULT_SUCCESS then
         self:SetState(ActivityBase.STATE_SUCCEEDED, result)
-        if(self.responsePromise) then self.responsePromise:Resolve(self) end
+        if self.responsePromise then self.responsePromise:Resolve(self) end
     elseif RESULT_IS_PENDING[result] then
         self:SetState(ActivityBase.STATE_PENDING, result)
     else
@@ -267,7 +263,7 @@ end
 
 function ActivityBase:OnError(reason)
     self:SetState(ActivityBase.STATE_FAILED, reason)
-    if(self.responsePromise) then self.responsePromise:Reject(self) end
+    if self.responsePromise then self.responsePromise:Reject(self) end
 end
 
 function ActivityBase:OnSearchResults(guildId, numItems, page, hasMore)
@@ -276,17 +272,21 @@ function ActivityBase:OnSearchResults(guildId, numItems, page, hasMore)
 end
 
 function ActivityBase:OnRemove(reason)
-    if(self.state == ActivityBase.STATE_QUEUED) then
+    if self.CleanUp then
+        self.CleanUp()
+    end
+
+    if self.state == ActivityBase.STATE_QUEUED then
         self:SetState(ActivityBase.STATE_CANCELLED, reason or self.result)
-    elseif(self.state ~= ActivityBase.STATE_FAILED and self.state ~= ActivityBase.STATE_SUCCEEDED) then
+    elseif self.state ~= ActivityBase.STATE_FAILED and self.state ~= ActivityBase.STATE_SUCCEEDED then
         self:SetState(ActivityBase.STATE_FAILED, reason or ActivityBase.ERROR_USER_CANCELLED)
-        if(self.responsePromise) then self.responsePromise:Reject(self) end
+        if self.responsePromise then self.responsePromise:Reject(self) end
     end
 end
 
 function ActivityBase.ByPriority(a, b)
-    if(a.canExecute == b.canExecute) then
-        if(a.priority == b.priority) then
+    if a.canExecute == b.canExecute then
+        if a.priority == b.priority then
             return a.guildId < b.guildId
         end
         return a.priority < b.priority

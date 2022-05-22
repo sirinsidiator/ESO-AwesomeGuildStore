@@ -23,11 +23,11 @@ function PurchaseItemActivity:Initialize(tradingHouseWrapper, guildId, itemData)
 end
 
 function PurchaseItemActivity:Update()
-    self.canExecute = self.guildSelection:IsAppliedGuildId(self.guildId) or (GetTradingHouseCooldownRemaining() == 0)
+    self.canExecute = self.tradingHouseWrapper:IsConnected() and (self.guildSelection:IsAppliedGuildId(self.guildId) or (GetTradingHouseCooldownRemaining() == 0))
 end
 
 function PurchaseItemActivity:SetPendingItem()
-    if(not self.pendingPromise) then
+    if not self.pendingPromise then
         self.pendingPromise = Promise:New()
         SetPendingItemPurchaseByItemUniqueId(self.itemData.itemUniqueId, self.itemData.purchasePrice)
     end
@@ -35,13 +35,13 @@ function PurchaseItemActivity:SetPendingItem()
 end
 
 function PurchaseItemActivity:OnPendingPurchaseChanged()
-    if(self.pendingPromise) then
+    if self.pendingPromise then
         self.pendingPromise:Resolve(self)
     end
 end
 
 function PurchaseItemActivity:ConfirmPurchase()
-    if(not self.responsePromise) then
+    if not self.responsePromise then
         self.responsePromise = Promise:New()
         ConfirmPendingItemPurchase()
     end
@@ -75,7 +75,7 @@ function PurchaseItemActivity:GetErrorMessage()
 end
 
 function PurchaseItemActivity:GetLogEntry()
-    if(not self.logEntry) then
+    if not self.logEntry then
         local itemData = self.itemData
         local price = ZO_Currency_FormatPlatform(CURT_MONEY, itemData.purchasePrice, ZO_CURRENCY_FORMAT_AMOUNT_ICON)
         -- TRANSLATORS: log text shown to the user for each purchase item request. Placeholders are for the stackCount, itemLink, price, seller and guild name respectively

@@ -3,11 +3,13 @@ local AGS = AwesomeGuildStore
 local logger = AGS.internal.logger
 local gettext = AGS.internal.gettext
 
-local ActivityManager = ZO_Object:Subclass()
+local ActivityManager = ZO_InitializingObject:Subclass()
 AGS.class.ActivityManager = ActivityManager
 
 local RegisterForEvent = AGS.internal.RegisterForEvent
+local TradingHouseStatus = AGS.internal.TradingHouseStatus
 local ActivityBase = AGS.class.ActivityBase
+local StoreStatusActivity = AGS.class.StoreStatusActivity
 local RequestSearchActivity = AGS.class.RequestSearchActivity
 local RequestNewestActivity = AGS.class.RequestNewestActivity
 local RequestListingsActivity = AGS.class.RequestListingsActivity
@@ -18,17 +20,12 @@ local FetchGuildItemsActivity = AGS.class.FetchGuildItemsActivity
 
 local ByPriority = ActivityBase.ByPriority
 
-function ActivityManager:New(...)
-    local selector = ZO_Object.New(self)
-    selector:Initialize(...)
-    return selector
-end
-
 function ActivityManager:Initialize(tradingHouseWrapper, loadingIndicator, loadingOverlay)
     self.queue = {}
     self.lookup = {}
     self.tradingHouseWrapper = tradingHouseWrapper
     self.tradingHouse = tradingHouseWrapper.tradingHouse
+    self.ready = false
 
     RegisterForEvent(EVENT_TRADING_HOUSE_AWAITING_RESPONSE, function(_, responseType)
         logger:Verbose("EVENT_TRADING_HOUSE_AWAITING_RESPONSE", ActivityBase.RESULT_TO_STRING[responseType], responseType)
@@ -76,21 +73,21 @@ function ActivityManager:Initialize(tradingHouseWrapper, loadingIndicator, loadi
 
     RegisterForEvent(EVENT_TRADING_HOUSE_SEARCH_COOLDOWN_UPDATE, function(_, cooldown)
         -- TODO prehook?
-        if(cooldown == 0) then
+        if cooldown == 0 then
             self:HideLoading()
             self:RefreshStatusPanel()
             self:ExecuteNext()
         end
     end)
 
-    RegisterForEvent(EVENT_TRADING_HOUSE_STATUS_RECEIVED, function(_)
-        logger:Verbose("cooldown on status received: %d", GetTradingHouseCooldownRemaining())
-        -- TODO: queue is ready to do work
-        self:RefreshStatusPanel()
+    AGS:RegisterCallback(AGS.callback.TRADING_HOUSE_STATUS_CHANGED, function(newStatus, oldStatus)
+        if newStatus == TradingHouseStatus.CONNECTED then
+            self:RefreshStatusPanel()
+        end
     end)
 
     RegisterForEvent(EVENT_TRADING_HOUSE_CONFIRM_ITEM_PURCHASE, function(_, index)
-        if(self.currentActivity) then
+        if self.currentActivity then
             self.currentActivity:OnPendingPurchaseChanged()
         end
     end)
@@ -99,17 +96,23 @@ function ActivityManager:Initialize(tradingHouseWrapper, loadingIndicator, loadi
         self:ExecuteNext()
     end
 
+    local function RequestListings(guildId)
+        if guildId and tradingHouseWrapper:IsConnected() then
+            self:RequestListings(guildId)
+        end
+    end
+
     -- TODO find a proper place for this. handle it inside each tab?
     AGS:RegisterCallback(AGS.callback.STORE_TAB_CHANGED, function(oldTab, newTab)
-        if(oldTab == tradingHouseWrapper.searchTab) then
+        if oldTab == tradingHouseWrapper.searchTab then
             self:CancelSearch()
         end
 
-        if(newTab == tradingHouseWrapper.searchTab) then
+        if newTab == tradingHouseWrapper.searchTab then
             self:RemoveActivitiesByType(ActivityBase.ACTIVITY_TYPE_REQUEST_LISTINGS)
         else
             local guildId = GetSelectedTradingHouseGuildId()
-            self:RequestListings(guildId)
+            RequestListings(guildId)
         end
     end)
 
@@ -117,13 +120,23 @@ function ActivityManager:Initialize(tradingHouseWrapper, loadingIndicator, loadi
     AGS:RegisterCallback(AGS.callback.GUILD_SELECTION_CHANGED, function(guildData)
         self:CancelSearch()
 
-        if(self.tradingHouse:IsInListingsMode() or self.tradingHouse:IsInSellMode()) then
-            self:RequestListings(guildData.guildId)
+        if self.tradingHouse:IsInListingsMode() or self.tradingHouse:IsInSellMode() then
+            RequestListings(guildData.guildId)
         end
     end)
 end
 
-function ActivityManager:OnCloseTradingHouse()
+function ActivityManager:SetReady()
+    self.ready = true
+end
+
+function ActivityManager:OnConnectTradingHouse()
+    local activity = StoreStatusActivity:New(self.tradingHouseWrapper)
+    self:QueueActivity(activity)
+    self:ExecuteNext(true) -- need to force this to run early, even when we are not fully at a trading house yet
+end
+
+function ActivityManager:OnDisconnectTradingHouse()
     self:RemoveCurrentActivity(ActivityBase.ERROR_TRADING_HOUSE_CLOSED)
     self:ClearQueue(ActivityBase.ERROR_TRADING_HOUSE_CLOSED)
     self:RefreshStatusPanel()
@@ -143,27 +156,27 @@ function ActivityManager:SetActivityWindow(activityWindow)
 end
 
 function ActivityManager:SetStatusText(text)
-    if(not self.statusLine) then return end
+    if not self.statusLine then return end
     self.statusLine:SetStatusText(text)
 end
 
 function ActivityManager:RefreshStatusPanel()
-    if(not self.activityWindow) then return end
+    if not self.activityWindow then return end
     self.activityWindow:Refresh()
 end
 
 function ActivityManager:AddActivityToStatusPanel(activity)
-    if(not self.activityWindow) then return end
+    if not self.activityWindow then return end
     self.activityWindow:AddActivity(activity)
 end
 
 function ActivityManager:ShowLoading()
-    if(not self.statusLine) then return end
+    if not self.statusLine then return end
     self.statusLine:ShowLoading()
 end
 
 function ActivityManager:HideLoading()
-    if(not self.statusLine) then return end
+    if not self.statusLine then return end
     self.statusLine:HideLoading()
 end
 
@@ -176,7 +189,7 @@ end
 function ActivityManager:QueueActivity(activity)
     local queue, lookup = self.queue, self.lookup
     local key = activity:GetKey()
-    if(lookup[key]) then return false end
+    if lookup[key] then return false end
     queue[#queue + 1] = activity
     lookup[key] = activity
     zo_callLater(self.executeNext, 0)
@@ -199,7 +212,7 @@ function ActivityManager:ClearQueue(reason)
 end
 
 function ActivityManager:RemoveCurrentActivity(reason)
-    if(self.currentActivity) then
+    if self.currentActivity then
         self.currentActivity:OnRemove(reason)
         self:AddActivityToStatusPanel(self.currentActivity)
         self.lookup[self.currentActivity:GetKey()] = nil
@@ -214,7 +227,7 @@ function ActivityManager:RemoveActivitiesByType(activityType)
     local queue = self.queue
     for i = #queue, 1, -1 do
         local activity = queue[i]
-        if(activity:GetType() == activityType) then
+        if activity:GetType() == activityType then
             table.remove(queue, i)
             self.lookup[activity:GetKey()] = nil
             activity:OnRemove()
@@ -228,7 +241,7 @@ function ActivityManager:RemoveActivityByKey(key)
     local queue = self.queue
     for i = #queue, 1, -1 do
         local activity = queue[i]
-        if(activity:GetKey() == key) then
+        if activity:GetKey() == key then
             table.remove(queue, i)
             self.lookup[key] = nil
             activity:OnRemove()
@@ -247,7 +260,7 @@ function ActivityManager:GetActivitiesByType(activityType)
     local queue = self.queue
     for i = 1, #queue do
         local activity = queue[i]
-        if(activity:GetType() == activityType) then
+        if activity:GetType() == activityType then
             activities[#activities + 1] = queue[i]
         end
     end
@@ -265,8 +278,8 @@ function ActivityManager:IsReturningFromBank()
     return false
 end
 
-function ActivityManager:ExecuteNext()
-    if(self.currentActivity or not self.tradingHouseWrapper.search:IsAtTradingHouse()) then return false end
+function ActivityManager:ExecuteNext(force)
+    if self.currentActivity or (not force and not self.tradingHouseWrapper.search:IsAtTradingHouse()) then return false end
 
     local queue = self.queue
 
@@ -277,7 +290,7 @@ function ActivityManager:ExecuteNext()
     table.sort(queue, ByPriority)
 
     local activity = queue[1]
-    if(activity and activity:CanExecute()) then
+    if activity and activity:CanExecute() then
         table.remove(queue, 1)
 
         self.currentActivity = activity
@@ -309,7 +322,7 @@ end
 
 function ActivityManager:OnFailure(activity)
     local message
-    if(type(activity) == "string") then
+    if type(activity) == "string" then
         -- TRANSLATORS: Alert text when an activity fails unexpectedly
         message = gettext("Unknown Error")
         logger:Error(activity)
@@ -321,7 +334,7 @@ function ActivityManager:OnFailure(activity)
     self:HideLoading()
     self:RemoveCurrentActivity()
 
-    if(self.tradingHouseWrapper.search:IsAtTradingHouse()) then
+    if self.tradingHouseWrapper.search:IsAtTradingHouse() then
         -- TRANSLATORS: Status text when a server request has failed. Placeholder is for an explanation text
         self:SetStatusText(gettext("Request failed: <<1>>", message))
         ZO_Alert(UI_ALERT_CATEGORY_ERROR, SOUNDS.NEGATIVE_CLICK, message)
@@ -333,22 +346,39 @@ function ActivityManager:CanQueue(key)
     return not self.lookup[key]
 end
 
-function ActivityManager:RequestSearchResults(guildId, ignoreResultCount)
+function ActivityManager:RequestSearchResults(guildId)
+    if not self.ready then
+        logger:Warn("Tried to request search results before initialization was finished")
+        return
+    end
+
+    if not guildId then
+        logger:Warn("Tried to request search results without a guild id")
+        return
+    end
+
     -- TODO: should we use filter state too?
     local key = RequestSearchActivity.CreateKey(guildId)
-    if(not (self:CanQueue(key) and self.tradingHouseWrapper.searchTab.isOpen)) then return end
+    if not (self:CanQueue(key) and self.tradingHouseWrapper.searchTab.isOpen) then return end
 
-    local searchManager = self.tradingHouseWrapper.searchManager
-    if(ignoreResultCount or searchManager:IsResultCountBelowAutoSearchThreshold(searchManager:GetNumVisibleResults())) then
-        local activity = RequestSearchActivity:New(self.tradingHouseWrapper, guildId)
-        self:QueueActivity(activity)
-        return activity
-    end
+    local activity = RequestSearchActivity:New(self.tradingHouseWrapper, guildId)
+    self:QueueActivity(activity)
+    return activity
 end
 
 function ActivityManager:RequestNewestResults(guildId)
+    if not self.ready then
+        logger:Warn("Tried to request newest results before initialization was finished")
+        return
+    end
+
+    if not guildId then
+        logger:Warn("Tried to request newest results without a guild id")
+        return
+    end
+
     local key = RequestNewestActivity.CreateKey(guildId)
-    if(not (self:CanQueue(key) and self.tradingHouseWrapper.searchTab.isOpen)) then return end
+    if not (self:CanQueue(key) and self.tradingHouseWrapper.searchTab.isOpen) then return end
     -- TODO: check cooldown too
 
     local activity = RequestNewestActivity:New(self.tradingHouseWrapper, guildId) -- TODO handle pages
@@ -357,9 +387,19 @@ function ActivityManager:RequestNewestResults(guildId)
 end
 
 function ActivityManager:RequestListings(guildId)
+    if not self.ready then
+        logger:Warn("Tried to request listings before initialization was finished")
+        return
+    end
+
+    if not guildId then
+        logger:Warn("Tried to request listings without a guild id")
+        return
+    end
+
     local key = RequestListingsActivity.CreateKey(guildId)
-    if(not self:CanQueue(key)) then return end
-    if(self.tradingHouseWrapper.guildSelection:IsAppliedGuildId(GetSelectedTradingHouseGuildId()) and HasTradingHouseListings()) then return end
+    if not self:CanQueue(key) then return end
+    if self.tradingHouseWrapper.guildSelection:IsAppliedGuildId(GetSelectedTradingHouseGuildId()) and HasTradingHouseListings() then return end
 
     local activity = RequestListingsActivity:New(self.tradingHouseWrapper, guildId)
     self:QueueActivity(activity)
@@ -367,8 +407,18 @@ function ActivityManager:RequestListings(guildId)
 end
 
 function ActivityManager:PostItem(guildId, bagId, slotIndex, stackCount, price)
+    if not self.ready then
+        logger:Warn("Tried to post an item before initialization was finished")
+        return
+    end
+
+    if not guildId then
+        logger:Warn("Tried to post an item without a guild id")
+        return
+    end
+
     local key = PostItemActivity.CreateKey()
-    if(not self:CanQueue(key)) then return end
+    if not self:CanQueue(key) then return end
 
     local activity = PostItemActivity:New(self.tradingHouseWrapper, guildId, bagId, slotIndex, stackCount, price)
     self:QueueActivity(activity)
@@ -376,8 +426,18 @@ function ActivityManager:PostItem(guildId, bagId, slotIndex, stackCount, price)
 end
 
 function ActivityManager:PurchaseItem(guildId, itemData)
+    if not self.ready then
+        logger:Warn("Tried to purchase an item before initialization was finished")
+        return
+    end
+
+    if not guildId then
+        logger:Warn("Tried to purchase an item without a guild id")
+        return
+    end
+
     local key = PurchaseItemActivity.CreateKey(guildId, itemData.itemUniqueId, itemData.purchasePrice)
-    if(not self:CanQueue(key)) then return end
+    if not self:CanQueue(key) then return end
 
     local activity = PurchaseItemActivity:New(self.tradingHouseWrapper, guildId, itemData)
     self:QueueActivity(activity)
@@ -385,9 +445,19 @@ function ActivityManager:PurchaseItem(guildId, itemData)
 end
 
 function ActivityManager:CancelItem(guildId, listingIndex)
+    if not self.ready then
+        logger:Warn("Tried to cancel a listing before initialization was finished")
+        return
+    end
+
+    if not guildId then
+        logger:Warn("Tried to cancel a listing without a guild id")
+        return
+    end
+
     local uniqueId = select(9, GetTradingHouseListingItemInfo(listingIndex))
     local key = CancelItemActivity.CreateKey(guildId, uniqueId)
-    if(not self:CanQueue(key)) then return end
+    if not self:CanQueue(key) then return end
 
     local activity = CancelItemActivity:New(self.tradingHouseWrapper, guildId, listingIndex)
     self:QueueActivity(activity)
@@ -395,8 +465,18 @@ function ActivityManager:CancelItem(guildId, listingIndex)
 end
 
 function ActivityManager:FetchGuildItems(guildId)
+    if not self.ready then
+        logger:Warn("Tried to fetch guild items before initialization was finished")
+        return
+    end
+
+    if not guildId then
+        logger:Warn("Tried to fetch guild items without a guild id")
+        return
+    end
+
     local key = FetchGuildItemsActivity.CreateKey(guildId)
-    if(not self:CanQueue(key)) then return end
+    if not self:CanQueue(key) then return end
 
     local activity = FetchGuildItemsActivity:New(self.tradingHouseWrapper, guildId)
     self:QueueActivity(activity)

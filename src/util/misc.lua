@@ -11,12 +11,12 @@ AGS.internal.IsUnitGuildKiosk = IsUnitGuildKiosk -- TODO this is now an api func
 local guildKioskWithNamePattern = GetString(SI_GUILD_KIOSK_DISPLAY_CAPTION_WITH_OWNER):gsub("%(<<1>>%)", "%%((.+)%%)")
 
 local function GetUnitGuildKioskOwnerInfo(unitTag)
-    if(IsUnitGuildKiosk(unitTag)) then
+    if IsUnitGuildKiosk(unitTag) then
         local guildId = GetUnitGuildKioskOwner(unitTag)
         local caption = GetUnitCaption(unitTag)
-        if(caption and caption ~= "") then
+        if caption and caption ~= "" then
             return caption:match(guildKioskWithNamePattern), guildId
-        elseif(AGS.internal.guildIdMapping:HasGuildName(guildId)) then
+        elseif AGS.internal.guildIdMapping:HasGuildName(guildId) then
             return AGS.internal.guildIdMapping:GetGuildName(guildId), guildId
         end
     end
@@ -61,9 +61,9 @@ end
 local matchKioskName = KIOSK_MATCH_FUNCTIONS[GetCVar("language.2")] or DEFAULT_KIOSK_MATCH_FUNCTION
 
 local function GetKioskNameFromInfoText(infoText)
-    if(infoText) then
+    if infoText then
         local kioskName = matchKioskName(infoText)
-        if(not kioskName or kioskName == "") then
+        if not kioskName or kioskName == "" then
             -- TRANSLATORS: chat text when a kiosk name could not be matched. <<1>> is replaced by the label on the home tab in the guild menu
             chat:Print(gettext("Warning: Could not match kiosk name: '<<1>>' -- please report this to the author", infoText))
         end
@@ -91,9 +91,9 @@ AGS.internal.AdjustLinkStyle = AdjustLinkStyle
 
 
 local function ClampValue(value, min, max)
-    if(value < min) then
+    if value < min then
         return min
-    elseif(value > max) then
+    elseif value > max then
         return max
     end
     return value
@@ -106,7 +106,6 @@ local function IsAtGuildKiosk()
     local _, optionType = GetChatterOption(KIOSK_OPTION_INDEX)
     return optionType == CHATTER_START_TRADINGHOUSE
 end
-AGS.internal.KIOSK_OPTION_INDEX = KIOSK_OPTION_INDEX
 AGS.internal.IsAtGuildKiosk = IsAtGuildKiosk
 
 
@@ -116,3 +115,11 @@ local function ShowGuildDetails(guildId, closeCallback)
     MAIN_MENU_KEYBOARD:ShowSceneGroup("guildsSceneGroup", "linkGuildInfoKeyboard")
 end
 AGS.internal.ShowGuildDetails = ShowGuildDetails
+
+local TradingHouseStatus = {
+    ["DISCONNECTING"] = "disconnecting",
+    ["DISCONNECTED"] = "disconnected",
+    ["CONNECTING"] = "connecting",
+    ["CONNECTED"] = "connected",
+}
+AGS.internal.TradingHouseStatus = TradingHouseStatus

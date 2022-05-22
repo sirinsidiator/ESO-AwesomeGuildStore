@@ -89,6 +89,7 @@ local integrityCheckList = {
     ["data/CategoryDefinitions.lua"] = function() return AGS.data.CATEGORY_ID ~= nil end,
     ["backend/FilterRequest.lua"] = function() return AGS.class.FilterRequest ~= nil end,
     ["backend/activity/ActivityBase.lua"] = function() return AGS.class.ActivityBase ~= nil end,
+    ["backend/activity/StoreStatusActivity.lua"] = function() return AGS.class.StoreStatusActivity ~= nil end,
     ["backend/activity/RequestSearchActivity.lua"] = function() return AGS.class.RequestSearchActivity ~= nil end,
     ["backend/activity/RequestNewestActivity.lua"] = function() return AGS.class.RequestNewestActivity ~= nil end,
     ["backend/activity/RequestListingsActivity.lua"] = function() return AGS.class.RequestListingsActivity ~= nil end,

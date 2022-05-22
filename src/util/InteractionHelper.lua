@@ -6,14 +6,14 @@ local logger = AGS.internal.logger
 local RegisterForEvent = AGS.internal.RegisterForEvent
 local UnregisterForEvent = AGS.internal.UnregisterForEvent
 local IsAtGuildKiosk = AGS.internal.IsAtGuildKiosk
+local TradingHouseStatus = AGS.internal.TradingHouseStatus
 
 local Promise = LibPromises
 
-local KIOSK_OPTION_INDEX = AGS.internal.KIOSK_OPTION_INDEX
 local OPERATION_TIMEOUT = 5000
-local BANK_OPEN_WATCHDOG_INTERVAL = 100
+local WATCHDOG_INTERVAL = 50
 local CLOSE_TRADINGHOUSE_WATCHDOG_NAME = "AGS_CloseBankWatchdog"
-local function noop() end
+local UPDATE_HANDLE_PREFIX = "AGS_Interaction_"
 
 local InteractionHelper = ZO_InitializingObject:Subclass()
 AGS.class.InteractionHelper = InteractionHelper
@@ -21,31 +21,69 @@ AGS.class.InteractionHelper = InteractionHelper
 function InteractionHelper:Initialize(tradingHouseWrapper, saveData)
     self.tradingHouseWrapper = tradingHouseWrapper
     self.wasBankOpened = false
+    self.suppressBankScene = false
+    self.status = TradingHouseStatus.DISCONNECTED
 
     local INTERACT_WINDOW_SHOWN = "Shown"
     INTERACT_WINDOW:RegisterCallback(INTERACT_WINDOW_SHOWN, function()
         self:UpdateChatterIndices()
         if IsShiftKeyDown() or not saveData.skipGuildKioskDialog then return end
         if IsAtGuildKiosk() then
-            SelectChatterOption(KIOSK_OPTION_INDEX)
+            SelectChatterOption(self.tradingHouseChatterIndex)
+        end
+    end)
+
+    ZO_PreHook("EndInteraction", function(type)
+        if type == INTERACTION_CONVERSATION and self.status == TradingHouseStatus.CONNECTING then
+            -- it seems to somehow interfere with opening the trading house interaction, 
+            -- but not always, so we have to prevent it for more reliability
+            return true
         end
     end)
 
     ZO_PreHook(TRADING_HOUSE_SCENE, "OnSceneHidden", function()
-        if self.wasBankOpened then
-            self.wasBankOpened = false
-            SelectChatterOption(1) -- go back to the bank interaction
-            EVENT_MANAGER:RegisterForUpdate(CLOSE_TRADINGHOUSE_WATCHDOG_NAME, BANK_OPEN_WATCHDOG_INTERVAL, function()
-                if GetInteractionType() == INTERACTION_BANK then
-                    EVENT_MANAGER:UnregisterForUpdate(CLOSE_TRADINGHOUSE_WATCHDOG_NAME)
-                    EndInteraction(INTERACTION_BANK)
-                    tradingHouseWrapper.tradingHouse:CloseTradingHouse()
-                    tradingHouseWrapper:OnCloseTradingHouse()
-                end
-            end)
+        return true -- we handle ending interactions ourselves
+    end)
+
+    ZO_PreHook(ZO_InventoryManager, "GetBankInventoryType", function()
+        if self.suppressBankScene then
             return true
         end
     end)
+
+    SecurePostHook("SelectChatterOption", function(index)
+        if index == self.tradingHouseChatterIndex and not tradingHouseWrapper.activityManager:IsReturningFromBank() then
+            tradingHouseWrapper.activityManager:OnConnectTradingHouse()
+            SCENE_MANAGER:Show(TRADING_HOUSE_SCENE:GetName())
+        end
+    end)
+
+end
+
+function InteractionHelper:EndInteraction()
+    if self.wasBankOpened then
+        self.wasBankOpened = false
+        SelectChatterOption(self.bankChatterIndex)
+        EVENT_MANAGER:RegisterForUpdate(CLOSE_TRADINGHOUSE_WATCHDOG_NAME, WATCHDOG_INTERVAL, function()
+            if GetInteractionType() == INTERACTION_BANK then
+                EVENT_MANAGER:UnregisterForUpdate(CLOSE_TRADINGHOUSE_WATCHDOG_NAME)
+                EndInteraction(INTERACTION_BANK)
+                EndInteraction(INTERACTION_TRADINGHOUSE)
+            end
+        end)
+    else
+        EndInteraction(INTERACTION_TRADINGHOUSE)
+    end
+end
+
+function InteractionHelper:SetStatus(status)
+    local oldStatus = self.status
+    self.status = status
+    AGS.internal:FireCallbacks(AGS.callback.TRADING_HOUSE_STATUS_CHANGED, status, oldStatus)
+end
+
+function InteractionHelper:IsConnected()
+    return self.status == TradingHouseStatus.CONNECTED
 end
 
 function InteractionHelper:UpdateChatterIndices()
@@ -84,15 +122,14 @@ function InteractionHelper:OpenBank(activity)
     end
 
     local eventHandle, timeoutHandle
+    local updateHandle = UPDATE_HANDLE_PREFIX .. activity.key
 
-    local originalGetBankInventoryType = PLAYER_INVENTORY.GetBankInventoryType
-    PLAYER_INVENTORY.GetBankInventoryType = noop
     local function CleanUp()
         activity.CleanUp = nil
-        PLAYER_INVENTORY.GetBankInventoryType = originalGetBankInventoryType
+        self.suppressBankScene = false
         UnregisterForEvent(EVENT_OPEN_BANK, eventHandle)
         zo_removeCallLater(timeoutHandle)
-        EVENT_MANAGER:UnregisterForUpdate(activity.key)
+        EVENT_MANAGER:UnregisterForUpdate(updateHandle)
     end
     activity.CleanUp = CleanUp
 
@@ -112,15 +149,23 @@ function InteractionHelper:OpenBank(activity)
         promise:Reject(activity)
     end, OPERATION_TIMEOUT)
     -- the event doesn't fire reliabely when we switch between bank and store repeatedly, so we have to poll
-    EVENT_MANAGER:RegisterForUpdate(activity.key, BANK_OPEN_WATCHDOG_INTERVAL, function()
+    -- there are situations where we have the correct type available in the update early and the event still fires afterwards
+    -- we need to wait one interval for that to work correctly
+    local hasWaited = false
+    EVENT_MANAGER:RegisterForUpdate(updateHandle, WATCHDOG_INTERVAL, function()
         if GetInteractionType() == INTERACTION_BANK then
-            CleanUp()
-            promise:Resolve(activity)
+            if hasWaited then
+                CleanUp()
+                promise:Resolve(activity)
+            else
+                hasWaited = true
+            end
         end
     end)
 
-    SelectChatterOption(self.bankChatterIndex)
     self.wasBankOpened = true
+    self.suppressBankScene = true
+    SelectChatterOption(self.bankChatterIndex)
     return promise
 end
 
@@ -136,11 +181,8 @@ function InteractionHelper:CloseBank(activity)
 
     local eventHandle, timeoutHandle
 
-    local originalOpenTradingHouse = self.tradingHouseWrapper.tradingHouse.OpenTradingHouse
-    self.tradingHouseWrapper.tradingHouse.OpenTradingHouse = noop
     local function CleanUp()
         activity.CleanUp = nil
-        self.tradingHouseWrapper.tradingHouse.OpenTradingHouse = originalOpenTradingHouse
         UnregisterForEvent(EVENT_TRADING_HOUSE_STATUS_RECEIVED, eventHandle)
         zo_removeCallLater(timeoutHandle)
     end

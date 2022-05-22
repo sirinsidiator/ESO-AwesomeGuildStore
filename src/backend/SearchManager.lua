@@ -13,21 +13,15 @@ local AUTO_SEARCH_RESULT_COUNT_THRESHOLD = 20
 local SILENT = true
 local REQUIRES_FULL_UPDATE = true
 
-local SearchManager = ZO_Object:Subclass()
+local SearchManager = ZO_InitializingObject:Subclass()
 AGS.class.SearchManager = SearchManager
-
-function SearchManager:New(...)
-    local object = ZO_Object.New(self)
-    object:Initialize(...)
-    return object
-end
 
 function SearchManager:Initialize(tradingHouseWrapper, saveData)
     self.tradingHouseWrapper = tradingHouseWrapper
     self.activityManager = tradingHouseWrapper.activityManager
     self.itemDatabase = tradingHouseWrapper.itemDatabase
     self.searchPageHistory = AGS.class.SearchPageHistory:New()
-    if(not saveData) then
+    if not saveData then
         saveData = {
             searches = {},
             activeIndex = nil
@@ -61,39 +55,43 @@ function SearchManager:Initialize(tradingHouseWrapper, saveData)
     end)
 
     local function RequestRefreshResults()
-        self:RequestResultUpdate()
+        if tradingHouseWrapper:IsConnected() then
+            self:RequestResultUpdate()
+        end
     end
 
     self.requestNewestInterval = nil
 
     AGS:RegisterCallback(AGS.callback.FILTER_UPDATE, RequestRefreshResults)
     AGS:RegisterCallback(AGS.callback.GUILD_SELECTION_CHANGED, function(guildData)
-        self.activityManager:CancelRequestNewest()
-        local guildId = guildData.guildId
-        if(not self.itemDatabase:HasGuildSpecificItems(guildId)) then
-            self.activityManager:FetchGuildItems(guildId)
-        else
-            RequestRefreshResults()
+        if tradingHouseWrapper:IsConnected() then
+            self.activityManager:CancelRequestNewest()
+            local guildId = guildData.guildId
+            if not self.itemDatabase:HasGuildSpecificItems(guildId) then
+                self.activityManager:FetchGuildItems(guildId)
+            else
+                RequestRefreshResults()
+            end
         end
     end)
     AGS:RegisterCallback(AGS.callback.ITEM_DATABASE_UPDATE, function(itemDatabase, guildId, hasAnyResultAlreadyStored)
-        if(hasAnyResultAlreadyStored == nil) then
+        if hasAnyResultAlreadyStored == nil then
             RequestRefreshResults()
         end
     end)
     AGS:RegisterCallback(AGS.callback.CURRENT_ACTIVITY_CHANGED, function(currentActivity, previousActivity)
-        if(not currentActivity and previousActivity:GetState() == ActivityBase.STATE_SUCCEEDED) then
+        if not currentActivity and previousActivity:GetState() == ActivityBase.STATE_SUCCEEDED then
             local type = previousActivity:GetType()
-            if(type == ActivityBase.ACTIVITY_TYPE_REQUEST_SEARCH) then
+            if type == ActivityBase.ACTIVITY_TYPE_REQUEST_SEARCH then
                 RequestRefreshResults()
-            elseif(type == ActivityBase.ACTIVITY_TYPE_REQUEST_NEWEST) then
+            elseif type == ActivityBase.ACTIVITY_TYPE_REQUEST_NEWEST then
                 RequestRefreshResults()
                 self:RequestNewest()
             end
         end
     end)
     AGS:RegisterCallback(AGS.callback.STORE_TAB_CHANGED, function(oldTab, newTab)
-        if(newTab == tradingHouseWrapper.searchTab) then
+        if newTab == tradingHouseWrapper.searchTab then
             RequestRefreshResults()
         end
     end)
@@ -103,7 +101,7 @@ function SearchManager:Initialize(tradingHouseWrapper, saveData)
     end)
 
     AGS:RegisterCallback(AGS.callback.SEARCH_RESULT_UPDATE, function(searchResults, hasMorePages)
-        if(hasMorePages and self:IsResultCountBelowAutoSearchThreshold(#searchResults)) then
+        if hasMorePages and self:IsResultCountBelowAutoSearchThreshold(#searchResults) then
             self:RequestSearch()
         else
             self:RequestNewest()
@@ -136,10 +134,10 @@ function SearchManager:OnFiltersInitialized()
     for i = 1, #saveData.searches do
         self.searches[i] = SearchState:New(self, saveData.searches[i])
     end
-    if(#self.searches == 0) then
+    if #self.searches == 0 then
         self:GetOrCreateAutomaticSearch()
     end
-    if(not saveData.activeIndex or not self.searches[saveData.activeIndex]) then
+    if not saveData.activeIndex or not self.searches[saveData.activeIndex] then
         saveData.activeIndex = 1
     end
     self.activeSearch = self.searches[saveData.activeIndex]
@@ -147,7 +145,7 @@ function SearchManager:OnFiltersInitialized()
 
     AGS:RegisterCallback(AGS.callback.FILTER_VALUE_CHANGED, function(id)
         local filter = self.availableFilters[id]
-        if(filter == self.categoryFilter) then
+        if filter == self.categoryFilter then
             self:UpdateAttachedFilters(SILENT)
         end
         self.activeSearch:HandleFilterChanged(self.availableFilters[id], self.isChangingFromSearchItem)
@@ -175,7 +173,7 @@ end
 
 function SearchManager:GetFilter(filterId)
     local filter = self.availableFilters[filterId]
-    if(not filter) then
+    if not filter then
         logger:Debug("Filter with id %d is not registered", filterId)
     end
     return filter
@@ -186,20 +184,20 @@ function SearchManager:UpdateAttachedFilters(silent)
     local _, subcategory = self.categoryFilter:GetCurrentCategories()
     for filterId, filter in pairs(self.availableFilters) do
         local shouldAttach = (filter:IsPinned() or self.activeSearch:IsFilterActive(filterId)) and filter:CanFilter(subcategory)
-        if(filter:IsAttached() ~= shouldAttach) then
+        if filter:IsAttached() ~= shouldAttach then
             hasChanges = true
-            if(shouldAttach) then
+            if shouldAttach then
                 self:AttachFilter(filterId)
             else
                 self:DetachFilter(filterId)
             end
-            if(not silent) then
+            if not silent then
                 AGS.internal:FireCallbacks(AGS.callback.FILTER_ACTIVE_CHANGED, filter)
             end
         end
     end
 
-    if(hasChanges) then
+    if hasChanges then
         self:RequestFilterUpdate()
     end
 end
@@ -207,7 +205,7 @@ end
 function SearchManager:AttachFilter(filterId)
     local filter = self:GetFilter(filterId)
     local _, subcategory = self.categoryFilter:GetCurrentCategories()
-    if(filter and not filter:IsAttached() and filter:CanFilter(subcategory)) then
+    if filter and not filter:IsAttached() and filter:CanFilter(subcategory) then
         filter:Attach()
         self.activeFilters[#self.activeFilters + 1] = filter
         return true
@@ -217,9 +215,9 @@ end
 
 function SearchManager:DetachFilter(filterId)
     local filter = self:GetFilter(filterId)
-    if(filter and filter:IsAttached()) then
+    if filter and filter:IsAttached() then
         for i = 1, #self.activeFilters do
-            if(self.activeFilters[i] == filter) then
+            if self.activeFilters[i] == filter then
                 filter:Detach()
                 table.remove(self.activeFilters, i)
                 return true
@@ -230,11 +228,11 @@ function SearchManager:DetachFilter(filterId)
 end
 
 function SearchManager:SetActiveSearch(search)
-    if(search == self.activeSearch) then return false end
+    if search == self.activeSearch then return false end
 
     local searches = self.searches
     local index = search:GetIndex()
-    if(not searches[index] or search ~= searches[index]) then return false end
+    if not searches[index] or search ~= searches[index] then return false end
 
     self.activeSearch = search
     self.saveData.activeIndex = index
@@ -286,13 +284,13 @@ end
 function SearchManager:RemoveSearch(search)
     local searches = self.searches
     local index = search:GetIndex()
-    if(not searches[index] or search ~= searches[index]) then return false end
+    if not searches[index] or search ~= searches[index] then return false end
 
     table.remove(searches, index)
     table.remove(self.saveData.searches, index)
-    if(self.activeSearch == search) then
+    if self.activeSearch == search then
         local activeSearch
-        if(#self.searches == 0) then
+        if #self.searches == 0 then
             activeSearch = self:GetOrCreateAutomaticSearch()
             self.saveData.activeIndex = 1
         else
@@ -303,7 +301,7 @@ function SearchManager:RemoveSearch(search)
 
         self.activeSearch = activeSearch
         activeSearch:Apply()
-    elseif(self.saveData.activeIndex > index) then
+    elseif self.saveData.activeIndex > index then
         self.saveData.activeIndex = self.saveData.activeIndex - 1
     end
 
@@ -314,13 +312,13 @@ end
 function SearchManager:MoveSearch(search, newIndex)
     local searches = self.searches
     local index = search:GetIndex()
-    if(not searches[index] or search ~= searches[index]) then return false end
+    if not searches[index] or search ~= searches[index] then return false end
     local savedSearches = self.saveData.searches
 
     table.insert(searches, newIndex, table.remove(searches, index))
     table.insert(savedSearches, newIndex, table.remove(savedSearches, index))
 
-    if(self.activeSearch == search) then
+    if self.activeSearch == search then
         self.saveData.activeIndex = newIndex
     end
 
@@ -389,18 +387,23 @@ function SearchManager:UpdateSearchResults()
     ZO_ClearNumericallyIndexedTable(self.searchResults)
 
     local guildId = GetSelectedTradingHouseGuildId()
-    local activeSearch = self:GetActiveSearch()
-    local filterState = activeSearch:GetFilterState()
-    local view = self.itemDatabase:GetFilteredView(guildId, filterState)
-    ZO_ShallowTableCopy(view:GetItems(), self.searchResults)
+    if guildId then
+        local activeSearch = self:GetActiveSearch()
+        local filterState = activeSearch:GetFilterState()
+        local view = self.itemDatabase:GetFilteredView(guildId, filterState)
+        ZO_ShallowTableCopy(view:GetItems(), self.searchResults)
 
-    local page = self.searchPageHistory:GetNextPage(guildId, filterState)
-    self.hasMorePages = (page ~= false)
+        local page = self.searchPageHistory:GetNextPage(guildId, filterState)
+        self.hasMorePages = (page ~= false)
+    else
+        self.hasMorePages = false
+    end
+
     AGS.internal:FireCallbacks(AGS.callback.SEARCH_RESULT_UPDATE, self.searchResults, self.hasMorePages)
 end
 
 function SearchManager:RequestResultUpdate()
-    if(self.resultUpdateCallback) then -- TODO use the delay call lib we started but never finished
+    if self.resultUpdateCallback then -- TODO use the delay call lib we started but never finished
         zo_removeCallLater(self.resultUpdateCallback)
     end
     self.resultUpdateCallback = zo_callLater(function()
@@ -410,7 +413,7 @@ function SearchManager:RequestResultUpdate()
 end
 
 function SearchManager:RequestFilterUpdate()
-    if(self.updateCallback) then -- TODO use the delay call lib we started but never finished
+    if self.updateCallback then -- TODO use the delay call lib we started but never finished
         zo_removeCallLater(self.updateCallback)
     end
     self.updateCallback = zo_callLater(function()
@@ -449,11 +452,15 @@ function SearchManager:HasCurrentSearchMorePages(guildId)
 end
 
 function SearchManager:RequestSearch(ignoreResultCount)
-    if(ignoreResultCount or self:IsResultCountBelowAutoSearchThreshold(#self.searchResults)) then
+    if not self.tradingHouseWrapper:IsConnected() then
+        return false
+    end
+
+    if ignoreResultCount or self:IsResultCountBelowAutoSearchThreshold(#self.searchResults) then
         local guildId = GetSelectedTradingHouseGuildId()
-        if(self:HasCurrentSearchMorePages(guildId)) then
-            if(self.activityManager:RequestSearchResults(guildId, ignoreResultCount)) then
-                if(self.requestNewestInterval) then
+        if self:HasCurrentSearchMorePages(guildId) then
+            if self.activityManager:RequestSearchResults(guildId) then
+                if self.requestNewestInterval then
                     zo_removeCallLater(self.requestNewestInterval)
                 end
 
@@ -470,18 +477,24 @@ function SearchManager:RequestSearch(ignoreResultCount)
 end
 
 function SearchManager:RequestNewest(ignoreCooldown)
-    if(self.requestNewestInterval) then
+    if not self.tradingHouseWrapper:IsConnected() then
+        return
+    end
+
+    if self.requestNewestInterval then
         zo_removeCallLater(self.requestNewestInterval)
     end
 
     local guildId = GetSelectedTradingHouseGuildId()
-    if(ignoreCooldown) then
+    if not guildId then return end
+
+    if ignoreCooldown then
         self.activityManager:RequestNewestResults(guildId)
         return
     end
 
     local canRequest, cooldown = self.searchPageHistory:CanRequestNewest(guildId)
-    if(canRequest) then
+    if canRequest then
         self.activityManager:RequestNewestResults(guildId)
     else
         self.requestNewestInterval = zo_callLater(function()

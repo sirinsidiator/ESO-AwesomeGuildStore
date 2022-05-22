@@ -22,13 +22,13 @@ function RequestListingsActivity:Initialize(tradingHouseWrapper, guildId)
 end
 
 function RequestListingsActivity:Update()
-    self.canExecute = self.guildSelection:IsAppliedGuildId(self.guildId) or (GetTradingHouseCooldownRemaining() == 0)
+    self.canExecute = self.tradingHouseWrapper:IsConnected() and (self.guildSelection:IsAppliedGuildId(self.guildId) or (GetTradingHouseCooldownRemaining() == 0))
 end
 
 function RequestListingsActivity:RequestListings()
-    if(not self.responsePromise) then
+    if not self.responsePromise then
         self.responsePromise = Promise:New()
-        if(not HasTradingHouseListings()) then
+        if not HasTradingHouseListings() then
             RequestTradingHouseListings()
         else
             self:SetState(ActivityBase.STATE_SUCCEEDED, ActivityBase.RESULT_LISTINGS_ALREADY_LOADED)
@@ -43,7 +43,7 @@ function RequestListingsActivity:DoExecute()
 end
 
 function RequestListingsActivity:GetLogEntry()
-    if(not self.logEntry) then
+    if not self.logEntry then
         -- TRANSLATORS: log text shown to the user for each listings request. Placeholder is for the guild name
         self.logEntry = gettext("Request listings in <<1>>", GetGuildName(self.guildId))
     end

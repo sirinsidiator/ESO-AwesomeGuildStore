@@ -8,14 +8,8 @@ local SWITCH_GUILD_SHORTCUT_INDEX = 2
 local RESET_SEARCH_SHORTCUT_INDEX = 3
 local IGNORE_RESULT_COUNT = true
 
-local KeybindStripWrapper = ZO_Object:Subclass()
+local KeybindStripWrapper = ZO_InitializingObject:Subclass()
 AGS.class.KeybindStripWrapper = KeybindStripWrapper
-
-function KeybindStripWrapper:New(...)
-    local wrapper = ZO_Object.New(self)
-    wrapper:Initialize(...)
-    return wrapper
-end
 
 function KeybindStripWrapper:Initialize(tradingHouseWrapper)
     local tradingHouse = tradingHouseWrapper.tradingHouse
@@ -25,14 +19,18 @@ function KeybindStripWrapper:Initialize(tradingHouseWrapper)
     local browseKeybindStripDescriptor = tradingHouse.browseKeybindStripDescriptor
     local doSearchDescriptor = browseKeybindStripDescriptor[DO_SEARCH_SHORTCUT_INDEX]
     doSearchDescriptor.enabled = function()
+        if not tradingHouseWrapper:IsConnected() then
+            return false
+        end
+
         local guildId = GetSelectedTradingHouseGuildId()
-        if(not searchManager:HasCurrentSearchMorePages(guildId)) then
+        if not searchManager:HasCurrentSearchMorePages(guildId) then
             return false
         end
 
         -- TODO consolidate into one function together with the show more row state
         local activity = activityManager:GetCurrentActivity()
-        if(activity and activity:GetType() == ActivityBase.ACTIVITY_TYPE_REQUEST_SEARCH) then
+        if activity and activity:GetType() == ActivityBase.ACTIVITY_TYPE_REQUEST_SEARCH then
             return false
         else
             local searchActivities = activityManager:GetActivitiesByType(ActivityBase.ACTIVITY_TYPE_REQUEST_SEARCH)

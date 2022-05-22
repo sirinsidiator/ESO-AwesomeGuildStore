@@ -735,6 +735,10 @@ function SellTabWrapper:UpdateFragments()
     SCENE_MANAGER:RemoveFragment(CRAFT_BAG_FRAGMENT)
     ZO_PlayerInventoryInfoBar:SetParent(self:GetParentForInfoBar())
     SCENE_MANAGER:AddFragment(self.currentInventoryFragment)
+    if self.currentInventoryFragment == BANK_FRAGMENT then
+        -- need to trigger an update, otherwise bound items will show in the list
+        PLAYER_INVENTORY:UpdateList(INVENTORY_BANK, true)
+    end
 end
 
 function SellTabWrapper:OnOpen(tradingHouseWrapper)

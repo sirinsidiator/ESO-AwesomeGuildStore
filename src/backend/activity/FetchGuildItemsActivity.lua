@@ -25,14 +25,14 @@ function FetchGuildItemsActivity:Initialize(tradingHouseWrapper, guildId)
 end
 
 function FetchGuildItemsActivity:Update()
-    self.canExecute = (GetTradingHouseCooldownRemaining() == 0)
+    self.canExecute = self.tradingHouseWrapper:IsConnected() and (GetTradingHouseCooldownRemaining() == 0)
 end
 
 function FetchGuildItemsActivity:FetchGuildItems()
     local promise = Promise:New()
 
     local success, result = self.itemDatabase:UpdateGuildSpecificItems(self.guildId, self.pendingGuildName)
-    if(success) then
+    if success then
         self:SetState(ActivityBase.STATE_SUCCEEDED, result)
         promise:Resolve(self)
     else
@@ -52,7 +52,7 @@ function FetchGuildItemsActivity:GetErrorMessage()
 end
 
 function FetchGuildItemsActivity:GetLogEntry()
-    if(not self.logEntry) then
+    if not self.logEntry then
         -- TRANSLATORS: log text shown to the user for each time the guild items are fetched. Placeholder is for the guild name
         self.logEntry = gettext("Fetch guild items in <<1>>", self.pendingGuildName)
     end

@@ -2,16 +2,11 @@ local AGS = AwesomeGuildStore
 
 local RegisterForEvent = AGS.internal.RegisterForEvent
 local IsAtGuildKiosk = AGS.internal.IsAtGuildKiosk
+local TradingHouseStatus = AGS.internal.TradingHouseStatus
 local logger = AGS.internal.logger
 
-local GuildSelection = ZO_Object:Subclass()
+local GuildSelection = ZO_InitializingObject:Subclass()
 AGS.class.GuildSelection = GuildSelection
-
-function GuildSelection:New(...)
-    local object = ZO_Object.New(self)
-    object:Initialize(...)
-    return object
-end
 
 function GuildSelection:Initialize(tradingHouseWrapper)
     self.saveData = tradingHouseWrapper.saveData
@@ -27,7 +22,7 @@ function GuildSelection:Initialize(tradingHouseWrapper)
     end
 
     function GetCurrentTradingHouseGuildDetails()
-        if(not self.selectedGuildId or not self.guildById[self.selectedGuildId]) then
+        if not self.selectedGuildId or not self.guildById[self.selectedGuildId] then
             return self.originalGetCurrentTradingHouseGuildDetails()
         end
         local data = self.guildById[self.selectedGuildId]
@@ -38,15 +33,24 @@ function GuildSelection:Initialize(tradingHouseWrapper)
         return self:SetSelectedGuildId(guildId)
     end
 
-    RegisterForEvent(EVENT_TRADING_HOUSE_STATUS_RECEIVED, function()
-        if not tradingHouseWrapper.activityManager:IsReturningFromBank() then
-            self:UpdateGuildData()
-            self:TryReselectLastGuildId()
+    local function InitializeData()
+        self:UpdateGuildData()
+        self:TryReselectLastGuildId()
+    end
+
+    AGS:RegisterCallback(AGS.callback.TRADING_HOUSE_STATUS_CHANGED, function(newStatus, oldStatus)
+        if newStatus == TradingHouseStatus.CONNECTED then
+            InitializeData()
         end
     end)
+    if tradingHouseWrapper:IsConnected() then
+        InitializeData()
+    end
 
     local function UpdateGuildData()
-        self:UpdateGuildData()
+        if tradingHouseWrapper:IsConnected() then
+            self:UpdateGuildData()
+        end
     end
     RegisterForEvent(EVENT_GUILD_SELF_JOINED_GUILD, UpdateGuildData)
     RegisterForEvent(EVENT_GUILD_SELF_LEFT_GUILD, UpdateGuildData)
@@ -60,7 +64,7 @@ function GuildSelection:UpdateGuildData()
     ZO_ClearTable(guildById)
 
     local guildCount = GetNumTradingHouseGuilds()
-    if(guildCount > 0) then
+    if guildCount > 0 then
         local guildIndexById = {}
         for guildIndex = 1, GetNumGuilds() do
             guildIndexById[GetGuildId(guildIndex)] = guildIndex
@@ -82,7 +86,7 @@ function GuildSelection:UpdateGuildData()
             guilds[i] = guildData
             guildById[guildId] = guildData
 
-            if(i > 1) then
+            if i > 1 then
                 guildData.previous = guilds[i - 1]
                 guildData.previous.next = guildData
             end
@@ -98,7 +102,7 @@ end
 function GuildSelection:TryReselectLastGuildId()
     self.selectedGuildId = nil
     local lastGuild = self.guildById[self.saveData.lastGuildId or -1]
-    if(lastGuild) then
+    if lastGuild then
         self:SetSelectedGuildId(lastGuild.guildId)
     else
         local id = self.originalGetCurrentTradingHouseGuildDetails()
@@ -107,14 +111,14 @@ function GuildSelection:TryReselectLastGuildId()
 end
 
 function GuildSelection:SetSelectedGuildId(guildId)
-    if(not guildId) then return false end
-    if(guildId == self.selectedGuildId) then return true end
+    if not guildId then return false end
+    if guildId == self.selectedGuildId then return true end
 
     local guildData = self.guildById[guildId]
-    if(not guildData) then return false end
+    if not guildData then return false end
 
     self.selectedGuildId = guildId
-    if(not IsAtGuildKiosk()) then -- TODO: what happens in Cyrodiil?
+    if not IsAtGuildKiosk() then -- TODO: what happens in Cyrodiil?
         self.saveData.lastGuildId = guildId
     end
     AGS.internal:FireCallbacks(AGS.callback.GUILD_SELECTION_CHANGED, guildData)
@@ -140,7 +144,7 @@ end
 function GuildSelection:ApplySelectedGuildId(guildId)
     guildId = guildId or self.selectedGuildId
     local currentGuildId = self.originalGetSelectedTradingHouseGuildId()
-    if(currentGuildId == guildId) then return true end
+    if currentGuildId == guildId then return true end
 
     logger:Debug("Set selected trading house guild to %s", tostring(guildId))
     return self.originalSelectTradingHouseGuildId(guildId)

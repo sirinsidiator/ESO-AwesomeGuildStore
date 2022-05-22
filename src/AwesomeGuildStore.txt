@@ -43,6 +43,7 @@ backend/sort/SortOrderBase.lua
 data/CategoryDefinitions.lua
 backend/FilterRequest.lua
 backend/activity/ActivityBase.lua
+backend/activity/StoreStatusActivity.lua
 backend/activity/RequestSearchActivity.lua
 backend/activity/RequestNewestActivity.lua
 backend/activity/RequestListingsActivity.lua

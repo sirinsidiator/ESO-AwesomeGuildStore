@@ -31,7 +31,7 @@ function RequestSearchActivity:Initialize(tradingHouseWrapper, guildId)
 end
 
 function RequestSearchActivity:Update()
-    self.canExecute = (GetTradingHouseCooldownRemaining() == 0)
+    self.canExecute = self.tradingHouseWrapper:IsConnected() and (GetTradingHouseCooldownRemaining() == 0)
 end
 
 function RequestSearchActivity:PrepareFilters()
@@ -62,9 +62,9 @@ function RequestSearchActivity:SetSortOrder(field, order)
 end
 
 function RequestSearchActivity:RequestSearch()
-    if(not self.responsePromise) then
+    if not self.responsePromise then
         self.responsePromise = Promise:New()
-        if(self.state ~= ActivityBase.STATE_SUCCEEDED) then
+        if self.state ~= ActivityBase.STATE_SUCCEEDED then
             self.appliedValues:Apply()
             ExecuteTradingHouseSearch(self.pendingPage, self.sortField, self.sortOrder)
         else
@@ -79,7 +79,7 @@ function RequestSearchActivity:DoExecute()
 end
 
 function RequestSearchActivity:OnResponse(result)
-    if(result == TRADING_HOUSE_RESULT_SUCCESS) then
+    if result == TRADING_HOUSE_RESULT_SUCCESS then
         self.numItems, self.page, self.hasMore = GetTradingHouseSearchResultsInfo()
         local hasAnyResultAlreadyStored = self.itemDatabase:Update(self.guildId, self.pendingGuildName, self.numItems)
 
@@ -91,7 +91,7 @@ function RequestSearchActivity:OnResponse(result)
 end
 
 function RequestSearchActivity:HandleSearchResultsReceived(hasAnyResultAlreadyStored)
-    if(self.hasMore) then
+    if self.hasMore then
         self.searchManager.searchPageHistory:SetHighestSearchedPage(self.guildId, self.pendingFilterState, self.page)
     else
         self.searchManager.searchPageHistory:SetStateHasNoMorePages(self.guildId, self.pendingFilterState)
@@ -104,11 +104,11 @@ function RequestSearchActivity:GetErrorMessage()
 end
 
 function RequestSearchActivity:GetLogEntry()
-    if(not self.logEntry) then -- TODO: show filter state too
-        if(self.pendingFilterState and self.pendingPage) then
+    if not self.logEntry then -- TODO: show filter state too
+        if self.pendingFilterState and self.pendingPage then
             local category, subcategory = self.pendingFilterState:GetPendingCategories()
             local categoryLabel = category.label
-            if(not subcategory.isDefault) then
+            if not subcategory.isDefault then
                 categoryLabel = string.format("%s > %s", category.label, subcategory.label)
             end
             -- TRANSLATORS: log text shown to the user for an executed request of the search results. Placeholders are for the page, category and guild name
@@ -123,13 +123,13 @@ end
 
 function RequestSearchActivity:AddTooltipText(output)
     ActivityBase.AddTooltipText(self, output)
-    if(self.numItems) then -- TODO translate
+    if self.numItems then -- TODO translate
         output[#output + 1] = ActivityBase.TOOLTIP_LINE_TEMPLATE:format("Item Count", tostring(self.numItems))
     end
-    if(self.page) then
+    if self.page then
         output[#output + 1] = ActivityBase.TOOLTIP_LINE_TEMPLATE:format("Page", tostring(self.page + 1)) -- pages are zero based
     end
-    if(self.hasMore ~= nil) then
+    if self.hasMore ~= nil then
         output[#output + 1] = ActivityBase.TOOLTIP_LINE_TEMPLATE:format("Last Page", tostring(not self.hasMore))
     end
 end
