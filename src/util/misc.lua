@@ -109,11 +109,13 @@ end
 AGS.internal.IsAtGuildKiosk = IsAtGuildKiosk
 
 
+local GUILD_INFO_SCENE_NAME = "AGS_guildInfo"
 local function ShowGuildDetails(guildId, closeCallback)
     GUILD_BROWSER_GUILD_INFO_KEYBOARD.closeCallback = closeCallback
     GUILD_BROWSER_GUILD_INFO_KEYBOARD:SetGuildToShow(guildId)
-    MAIN_MENU_KEYBOARD:ShowSceneGroup("guildsSceneGroup", "linkGuildInfoKeyboard")
+    SCENE_MANAGER:Show(GUILD_INFO_SCENE_NAME)
 end
+AGS.internal.GUILD_INFO_SCENE_NAME = GUILD_INFO_SCENE_NAME
 AGS.internal.ShowGuildDetails = ShowGuildDetails
 
 local TradingHouseStatus = {

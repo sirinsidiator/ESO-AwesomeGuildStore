@@ -11,7 +11,7 @@ local TradingHouseStatus = AGS.internal.TradingHouseStatus
 local FOOTER_MIN_ALPHA = 0.6
 local FOOTER_MAX_ALPHA = 1
 local FOOTER_FADE_DURATION = 300
-local GUILD_INFO_SCENE_NAME = "AGS_guildInfo"
+local GUILD_INFO_SCENE_NAME = AGS.internal.GUILD_INFO_SCENE_NAME
 
 local TradingHouseWrapper = ZO_InitializingObject:Subclass()
 AGS.class.TradingHouseWrapper = TradingHouseWrapper
@@ -153,6 +153,8 @@ function TradingHouseWrapper:Initialize(saveData)
     RegisterForEvent(EVENT_CLOSE_TRADING_HOUSE, function()
         self:DisconnectTradingHouse()
     end)
+
+    self:InitializeGuildInfoScene()
 end
 
 function TradingHouseWrapper:OpenTradingHouse()
@@ -221,7 +223,6 @@ function TradingHouseWrapper:InitializeGuildSelector()
     self.guildSelection = AGS.class.GuildSelection:New(self)
     self.guildSelector = AGS.class.GuildSelector:New(self)
 
-    self:InitializeGuildInfoScene()
     local function GoBack()
         SCENE_MANAGER:PopScenes(1)
     end
@@ -247,7 +248,7 @@ function TradingHouseWrapper:InitializeGuildSelector()
 end
 
 function TradingHouseWrapper:InitializeGuildInfoScene()
-    local guildInfoScene = ZO_InteractScene:New(GUILD_INFO_SCENE_NAME, SCENE_MANAGER, ZO_TRADING_HOUSE_INTERACTION)
+    local guildInfoScene = ZO_Scene:New(GUILD_INFO_SCENE_NAME, SCENE_MANAGER)
     guildInfoScene:RegisterCallback("StateChange", function(oldState, state)
         if state == SCENE_SHOWING then
             GUILD_BROWSER_GUILD_INFO_KEYBOARD:RefreshInfoPanel()
