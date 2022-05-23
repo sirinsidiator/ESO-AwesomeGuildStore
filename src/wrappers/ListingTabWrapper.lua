@@ -76,9 +76,8 @@ function ListingTabWrapper:InitializeListingSortHeaders(tradingHouseWrapper)
     end
 
     local originalScrollListCommit = ZO_ScrollList_Commit
-    local noop = function() end
     tradingHouseWrapper:Wrap("RebuildListingsScrollList", function(originalRebuildListingsScrollList, tradingHouse)
-        ZO_ScrollList_Commit = noop
+        ZO_ScrollList_Commit = AGS.internal.Noop
         originalRebuildListingsScrollList(tradingHouse)
         ZO_ScrollList_Commit = originalScrollListCommit
         self:UpdateResultList()

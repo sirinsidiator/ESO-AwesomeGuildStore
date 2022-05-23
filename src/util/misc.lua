@@ -125,3 +125,8 @@ local TradingHouseStatus = {
     ["CONNECTED"] = "connected",
 }
 AGS.internal.TradingHouseStatus = TradingHouseStatus
+
+local function Noop()
+-- do nothing
+end
+AGS.internal.Noop = Noop

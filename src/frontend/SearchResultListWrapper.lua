@@ -112,13 +112,9 @@ function SearchResultListWrapper:InitializeResultList(tradingHouseWrapper, searc
         sortFilter:SortLocalResults(scrollData)
     end
 
-    local function Noop()
-    -- do nothing
-    end
-
-    tradingHouse.RebuildSearchResultsPage = Noop
-    tradingHouse.ClearSearchResults = Noop
-    tradingHouse.OnSearchStateChanged = Noop
+    tradingHouse.RebuildSearchResultsPage = AGS.internal.Noop
+    tradingHouse.ClearSearchResults = AGS.internal.Noop
+    tradingHouse.OnSearchStateChanged = AGS.internal.Noop
 
     self.list = list
 
