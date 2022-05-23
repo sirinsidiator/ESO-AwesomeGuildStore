@@ -118,7 +118,7 @@ function GuildSelection:SetSelectedGuildId(guildId)
     if not guildData then return false end
 
     self.selectedGuildId = guildId
-    if not IsAtGuildKiosk() then -- TODO: what happens in Cyrodiil?
+    if not IsAtGuildKiosk() then
         self.saveData.lastGuildId = guildId
     end
     AGS.internal:FireCallbacks(AGS.callback.GUILD_SELECTION_CHANGED, guildData)

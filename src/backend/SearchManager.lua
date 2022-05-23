@@ -69,9 +69,8 @@ function SearchManager:Initialize(tradingHouseWrapper, saveData)
             local guildId = guildData.guildId
             if not self.itemDatabase:HasGuildSpecificItems(guildId) then
                 self.activityManager:FetchGuildItems(guildId)
-            else
-                RequestRefreshResults()
             end
+            RequestRefreshResults()
         end
     end)
     AGS:RegisterCallback(AGS.callback.ITEM_DATABASE_UPDATE, function(itemDatabase, guildId, hasAnyResultAlreadyStored)
