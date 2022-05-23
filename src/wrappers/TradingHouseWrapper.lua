@@ -120,6 +120,11 @@ function TradingHouseWrapper:Initialize(saveData)
         return true
     end)
 
+    -- disable for better startup performance
+    self:PreHook("InitializeSearchTerms", function(self)
+        return true
+    end)
+
     -- TODO this is only needed until we have implemented the history feature
     ZO_PreHook(self.search, "GenerateSearchTableShortDescription", function(self)
         return true

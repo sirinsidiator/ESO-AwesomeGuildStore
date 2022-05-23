@@ -5,14 +5,8 @@ local BSTATE_DISABLED_PRESSED = BSTATE_DISABLED_PRESSED
 local ENABLED_DESATURATION = 0
 local DISABLED_DESATURATION = 1
 
-local SimpleIconButton = ZO_Object:Subclass()
+local SimpleIconButton = ZO_InitializingObject:Subclass()
 AwesomeGuildStore.class.SimpleIconButton = SimpleIconButton
-
-function SimpleIconButton:New(...)
-    local button = ZO_Object.New(self)
-    button:Initialize(...)
-    return button
-end
 
 function SimpleIconButton:Initialize(nameOrControl, parent, suffix)
     local clickHandler = {}

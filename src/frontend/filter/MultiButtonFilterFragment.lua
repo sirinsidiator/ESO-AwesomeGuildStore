@@ -16,11 +16,11 @@ function MultiButtonFilterFragment:New(...)
     return FilterFragment.New(self, ...)
 end
 
-function MultiButtonFilterFragment:Initialize(filterId)
-    FilterFragment.Initialize(self, filterId)
-
-    self:InitializeControls()
-    self:InitializeHandlers()
+function MultiButtonFilterFragment:OnAttach(filterArea)
+    if not self.buttons then
+        self:InitializeControls()
+        self:InitializeHandlers()
+    end
 end
 
 function MultiButtonFilterFragment:InitializeControls()
