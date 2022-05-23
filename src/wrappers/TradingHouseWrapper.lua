@@ -157,6 +157,26 @@ function TradingHouseWrapper:Initialize(saveData)
     self:InitializeGuildInfoScene()
 end
 
+function TradingHouseWrapper:OnBeforeOpenTradingHouse()
+    if not self.activityManager:IsReturningFromBank() then
+        if IsInGamepadPreferredMode() then
+            self.wasInGamepadMode = true
+            self:SetGamepadModeEnabled(false)
+        end
+
+        self.activityManager:OnConnectTradingHouse()
+        SCENE_MANAGER:Show(TRADING_HOUSE_SCENE:GetName())
+    end
+end
+
+function TradingHouseWrapper:SetGamepadModeEnabled(enable)
+    local accessibilityModeEnabled = GetSetting_Bool(SETTING_TYPE_ACCESSIBILITY, ACCESSIBILITY_SETTING_ACCESSIBILITY_MODE)
+    if not accessibilityModeEnabled and IsGamepadUISupported() and IsKeyboardUISupported() then
+        local mode = enable and INPUT_PREFERRED_MODE_ALWAYS_GAMEPAD or INPUT_PREFERRED_MODE_ALWAYS_KEYBOARD
+        SetSetting(SETTING_TYPE_GAMEPAD, GAMEPAD_SETTING_INPUT_PREFERRED_MODE, mode)
+    end
+end
+
 function TradingHouseWrapper:OpenTradingHouse()
     logger:Debug("OpenTradingHouse")
     self.ignoreModeChanges = false
@@ -179,6 +199,11 @@ function TradingHouseWrapper:CloseTradingHouse()
     end
     self.itemDatabase:ClearItemViewCache()
     self.interactionHelper:EndInteraction()
+
+    if self.wasInGamepadMode then
+        self.wasInGamepadMode = nil
+        self:SetGamepadModeEnabled(true)
+    end
 end
 
 function TradingHouseWrapper:ConnectTradingHouse()

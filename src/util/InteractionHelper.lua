@@ -52,9 +52,8 @@ function InteractionHelper:Initialize(tradingHouseWrapper, saveData)
     end)
 
     SecurePostHook("SelectChatterOption", function(index)
-        if index == self.tradingHouseChatterIndex and not tradingHouseWrapper.activityManager:IsReturningFromBank() then
-            tradingHouseWrapper.activityManager:OnConnectTradingHouse()
-            SCENE_MANAGER:Show(TRADING_HOUSE_SCENE:GetName())
+        if index == self.tradingHouseChatterIndex then
+            tradingHouseWrapper:OnBeforeOpenTradingHouse()
         end
     end)
 
