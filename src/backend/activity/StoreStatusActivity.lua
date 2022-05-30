@@ -27,7 +27,7 @@ end
 function StoreStatusActivity:DoExecute()
     self.canExecute = false
     self.interactionHelper:SetStatus(TradingHouseStatus.CONNECTING)
-    return self:WaitForStatus():Then(self.HandleStatusReceived)
+    return self:WaitForStatus():Then(self.WaitForInitialSetup):Then(self.HandleStatusReceived)
 end
 
 function StoreStatusActivity:WaitForStatus()
@@ -43,10 +43,35 @@ function StoreStatusActivity:WaitForStatus()
 
     eventHandle = RegisterForEvent(EVENT_TRADING_HOUSE_STATUS_RECEIVED, function()
         CleanUp()
-        self:SetState(ActivityBase.STATE_SUCCEEDED)
         promise:Resolve(self)
     end)
     self:SetState(ActivityBase.STATE_AWAITING_RESPONSE)
+
+    return promise
+end
+
+function StoreStatusActivity:WaitForInitialSetup()
+    local promise = Promise:New()
+
+    if not self.tradingHouseWrapper.initialized then
+        local onInit
+
+        local function CleanUp()
+            self.CleanUp = nil
+            AGS:UnregisterCallback(AGS.callback.AFTER_INITIAL_SETUP, onInit)
+        end
+        self.CleanUp = CleanUp
+
+        onInit = function()
+            CleanUp()
+            self:SetState(ActivityBase.STATE_SUCCEEDED)
+            promise:Resolve(self)
+        end
+        AGS:RegisterCallback(AGS.callback.AFTER_INITIAL_SETUP, onInit)
+    else
+        self:SetState(ActivityBase.STATE_SUCCEEDED)
+        promise:Resolve(self)
+    end
 
     return promise
 end

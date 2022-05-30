@@ -102,6 +102,7 @@ function TradingHouseWrapper:Initialize(saveData)
         self:InitializeGuildSelector()
         self:InitializeKeybindStripWrapper()
         activityManager:SetReady()
+        self.initialized = true
         logger:Debug("After Initial Setup")
         AGS.internal:FireCallbacks(AGS.callback.AFTER_INITIAL_SETUP, self)
     end)

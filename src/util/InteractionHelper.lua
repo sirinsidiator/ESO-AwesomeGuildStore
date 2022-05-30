@@ -78,6 +78,7 @@ end
 function InteractionHelper:SetStatus(status)
     local oldStatus = self.status
     self.status = status
+    logger:Verbose("TRADING_HOUSE_STATUS_CHANGED", status, oldStatus)
     AGS.internal:FireCallbacks(AGS.callback.TRADING_HOUSE_STATUS_CHANGED, status, oldStatus)
 end
 
