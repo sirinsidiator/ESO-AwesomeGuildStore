@@ -1,5 +1,7 @@
 local AGS = AwesomeGuildStore
 
+local SortOrderBase = AGS.class.SortOrderBase
+
 local logger = AGS.internal.logger
 
 
@@ -9,6 +11,8 @@ AGS.class.FilterRequest = FilterRequest
 function FilterRequest:Initialize(filterState, activeFilters)
     self.filterState = filterState
     self.activeFilters = activeFilters
+    self.sortField = SortOrderBase.SORT_FIELD_UNIT_PRICE
+    self.sortOrder = SortOrderBase.SORT_ORDER_UP
     self.values = {}
 end
 
@@ -25,6 +29,11 @@ function FilterRequest:SetFilterRange(type, min, max)
     values.min = min
     values.max = max
     self.values[type] = values
+end
+
+function FilterRequest:SetSortOrder(field, order)
+    self.sortField = field
+    self.sortOrder = order
 end
 
 function FilterRequest:Apply()

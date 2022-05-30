@@ -2,7 +2,6 @@ local AGS = AwesomeGuildStore
 
 local ActivityBase = AGS.class.ActivityBase
 local FilterRequest = AGS.class.FilterRequest
-local SortOrderBase = AGS.class.SortOrderBase
 
 local logger = AGS.internal.logger
 local gettext = AGS.internal.gettext
@@ -26,8 +25,6 @@ function RequestSearchActivity:Initialize(tradingHouseWrapper, guildId)
     self.searchManager = tradingHouseWrapper.searchManager
     self.itemDatabase = tradingHouseWrapper.itemDatabase
     self.pendingGuildName = tradingHouseWrapper:GetTradingGuildName(guildId)
-    self.sortField = SortOrderBase.SORT_FIELD_UNIT_PRICE
-    self.sortOrder = SortOrderBase.SORT_ORDER_UP
 end
 
 function RequestSearchActivity:Update()
@@ -56,17 +53,12 @@ function RequestSearchActivity:PrepareFilters()
     return promise
 end
 
-function RequestSearchActivity:SetSortOrder(field, order)
-    self.sortField = field
-    self.sortOrder = order
-end
-
 function RequestSearchActivity:RequestSearch()
     if not self.responsePromise then
         self.responsePromise = Promise:New()
         if self.state ~= ActivityBase.STATE_SUCCEEDED then
             self.appliedValues:Apply()
-            ExecuteTradingHouseSearch(self.pendingPage, self.sortField, self.sortOrder)
+            ExecuteTradingHouseSearch(self.pendingPage, self.appliedValues.sortField, self.appliedValues.sortOrder)
         else
             self.responsePromise:Resolve(self)
         end
