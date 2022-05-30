@@ -33,18 +33,8 @@ function GuildSelection:Initialize(tradingHouseWrapper)
         return self:SetSelectedGuildId(guildId)
     end
 
-    local function InitializeData()
-        self:UpdateGuildData()
-        self:TryReselectLastGuildId()
-    end
-
-    AGS:RegisterCallback(AGS.callback.TRADING_HOUSE_STATUS_CHANGED, function(newStatus, oldStatus)
-        if newStatus == TradingHouseStatus.CONNECTED then
-            InitializeData()
-        end
-    end)
     if tradingHouseWrapper:IsConnected() then
-        InitializeData()
+        self:OnConnectTradingHouse()
     end
 
     local function UpdateGuildData()
@@ -54,6 +44,11 @@ function GuildSelection:Initialize(tradingHouseWrapper)
     end
     RegisterForEvent(EVENT_GUILD_SELF_JOINED_GUILD, UpdateGuildData)
     RegisterForEvent(EVENT_GUILD_SELF_LEFT_GUILD, UpdateGuildData)
+end
+
+function GuildSelection:OnConnectTradingHouse()
+    self:UpdateGuildData()
+    self:TryReselectLastGuildId()
 end
 
 function GuildSelection:UpdateGuildData()

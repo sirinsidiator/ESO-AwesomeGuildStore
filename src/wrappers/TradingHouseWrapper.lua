@@ -213,6 +213,9 @@ end
 
 function TradingHouseWrapper:ConnectTradingHouse()
     logger:Debug("ConnectTradingHouse")
+    if self.guildSelection then
+        self.guildSelection:OnConnectTradingHouse()
+    end
     if AGS.internal.CollectGuildKiosk then
         AGS.internal.CollectGuildKiosk()
     end
