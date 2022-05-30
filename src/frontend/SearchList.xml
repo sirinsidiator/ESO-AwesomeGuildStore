@@ -32,7 +32,7 @@
             </Controls>
         </Control>
 
-        <Control name="AwesomeGuildStoreSearchListContainer">
+        <Control name="AwesomeGuildStoreSearchListContainer" hidden="true">
             <Anchor point="TOPLEFT" relativeTo="ZO_TradingHouse" relativePoint="TOPLEFT" offsetX="-240" offsetY="8" />
             <Anchor point="BOTTOMRIGHT" relativeTo="ZO_TradingHouse" relativePoint="BOTTOMLEFT" offsetX="10" />
             <Controls>
