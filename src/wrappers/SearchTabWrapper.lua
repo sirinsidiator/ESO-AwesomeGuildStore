@@ -343,12 +343,12 @@ function SearchTabWrapper:InitializePurchase(tradingHouseWrapper)
     end)
 
     tradingHouseWrapper:Wrap("CanBuyItem", function(originalCanBuyItem, tradingHouse, inventorySlot)
-        if(not originalCanBuyItem(tradingHouse, inventorySlot)) then
+        if not originalCanBuyItem(tradingHouse, inventorySlot) then
             return false
         end
 
         local entry = ZO_ScrollList_GetData(inventorySlot:GetParent())
-        if(entry.purchased or entry.soldout) then
+        if not entry or entry.purchased or entry.soldout then
             return false
         end
 
