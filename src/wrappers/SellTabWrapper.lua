@@ -305,8 +305,9 @@ function SellTabWrapper:InitializeListingInput(tradingHouseWrapper)
     local invoice = tradingHouse.invoice
     local profitLabel = tradingHouse.invoiceProfit
     local profitWarning = CreateControlFromVirtual("$(parent)ProfitWarning", invoice, "ZO_HelpIcon")
-    profitWarning:SetAnchor(RIGHT, profitLabel, LEFT, -3, 0)
     profitWarning:SetTexture("EsoUI/Art/Miscellaneous/ESO_Icon_Warning.dds")
+    profitWarning:SetAnchor(RIGHT, profitLabel, LEFT, -3, 0)
+    profitWarning:SetDrawLayer(DL_CONTROLS)
     profitWarning:SetHidden(true)
     -- TRANSLATORS: tooltip text for the profit warning icon on the sell tab
     ZO_HelpIcon_Initialize(profitWarning, gettext("Profit is below vendor price. You'll get more out of selling this item to a merchant."), RIGHT)
