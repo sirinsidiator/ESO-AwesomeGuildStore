@@ -133,6 +133,7 @@ function SellTabWrapper:Initialize(saveData)
     saveData.lastSoldPricePerUnit = self.lastSoldPricePerUnit
 
     self.currentInventoryFragment = INVENTORY_FRAGMENT
+    BACKPACK_TRADING_HOUSE_LAYOUT_FRAGMENT.layoutData.hiddenFilters[ITEM_TYPE_DISPLAY_CATEGORY_JUNK] = nil
 end
 
 function SellTabWrapper:RunInitialSetup(tradingHouseWrapper)
