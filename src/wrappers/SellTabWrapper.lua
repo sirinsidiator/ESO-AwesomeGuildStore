@@ -261,6 +261,7 @@ function SellTabWrapper:InitializeListingInput(tradingHouseWrapper)
     local defaultPriceButton = ToggleButton:New(buttonContainer, "$(parent)DefaultPriceButton", DEFAULT_PRICE_TEXTURE, 0, 0, LISTING_INPUT_BUTTON_SIZE, LISTING_INPUT_BUTTON_SIZE, defaultPriceButtonLabel)
     defaultPriceButton.control:ClearAnchors()
     defaultPriceButton.control:SetAnchor(TOPRIGHT, buttonContainer, TOPRIGHT, 0, 0)
+    defaultPriceButton.control:SetDrawLayer(DL_OVERLAY) -- need to set it on every button now
     defaultPriceButton.HandlePress = function(button)
         self:SetUnitPrice(self.pendingSellPrice * 3)
     end
@@ -270,6 +271,7 @@ function SellTabWrapper:InitializeListingInput(tradingHouseWrapper)
     local lastSellPriceButton = ToggleButton:New(buttonContainer, "$(parent)LastSellPriceButton", LAST_SELL_PRICE_TEXTURE, 0, 0, LISTING_INPUT_BUTTON_SIZE, LISTING_INPUT_BUTTON_SIZE, lastSellPriceButtonLabel)
     lastSellPriceButton.control:ClearAnchors()
     lastSellPriceButton.control:SetAnchor(RIGHT, defaultPriceButton.control, LEFT, 0, 0)
+    lastSellPriceButton.control:SetDrawLayer(DL_OVERLAY) -- need to set it on every button now
     lastSellPriceButton.HandlePress = function(button)
         local lastSoldPricePerUnit = self.lastSoldPricePerUnit[self.pendingItemIdentifier] or GetMasterMerchantLastUsedPrice(self.pendingItemLink)
         if(lastSoldPricePerUnit) then
@@ -283,6 +285,7 @@ function SellTabWrapper:InitializeListingInput(tradingHouseWrapper)
         local averagePriceButton = ToggleButton:New(buttonContainer, "$(parent)AveragePriceButton", AVERAGE_PRICE_TEXTURE, 0, 0, LISTING_INPUT_BUTTON_SIZE, LISTING_INPUT_BUTTON_SIZE, averagePriceButtonLabel)
         averagePriceButton.control:ClearAnchors()
         averagePriceButton.control:SetAnchor(RIGHT, lastSellPriceButton.control, LEFT, 0, 0)
+        averagePriceButton.control:SetDrawLayer(DL_OVERLAY) -- need to set it on every button now
         averagePriceButton.HandlePress = function(button)
             local mmPrice = GetMasterMerchantPrice(self.pendingItemLink)
             if(mmPrice) then
