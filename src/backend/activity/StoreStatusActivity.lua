@@ -2,6 +2,7 @@ local AGS = AwesomeGuildStore
 
 local ActivityBase = AGS.class.ActivityBase
 
+local logger = AGS.internal.logger
 local gettext = AGS.internal.gettext
 local RegisterForEvent = AGS.internal.RegisterForEvent
 local UnregisterForEvent = AGS.internal.UnregisterForEvent
@@ -25,6 +26,7 @@ function StoreStatusActivity:Initialize(tradingHouseWrapper)
 end
 
 function StoreStatusActivity:DoExecute()
+    logger:Debug("Execute StoreStatusActivity")
     self.canExecute = false
     self.interactionHelper:SetStatus(TradingHouseStatus.CONNECTING)
     return self:WaitForStatus():Then(self.WaitForInitialSetup):Then(self.HandleStatusReceived)

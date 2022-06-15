@@ -45,6 +45,7 @@ function CancelItemActivity:FinalizeCancellation()
 end
 
 function CancelItemActivity:DoExecute()
+    logger:Debug("Execute CancelItemActivity")
     return self:ApplyGuildId():Then(self.CancelListing):Then(self.FinalizeCancellation)
 end
 

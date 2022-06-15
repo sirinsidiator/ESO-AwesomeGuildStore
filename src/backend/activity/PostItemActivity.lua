@@ -158,6 +158,7 @@ function PostItemActivity:FinalizePosting()
 end
 
 function PostItemActivity:DoExecute()
+    logger:Debug("Execute PostItemActivity")
     self.step = STEP_BEGIN_EXECUTION
     return self:ApplyGuildId():Then(self.MoveItemIfNeeded):Then(self.SetPending):Then(self.PostItem):Then(self.FinalizePosting)
 end

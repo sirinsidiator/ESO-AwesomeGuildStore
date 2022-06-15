@@ -66,6 +66,7 @@ function PurchaseItemActivity:FailPurchase()
 end
 
 function PurchaseItemActivity:DoExecute()
+    logger:Debug("Execute PurchaseItemActivity")
     return self:ApplyGuildId():Then(self.SetPendingItem):Then(self.ConfirmPurchase):Then(self.FinalizePurchase, self.FailPurchase)
 end
 

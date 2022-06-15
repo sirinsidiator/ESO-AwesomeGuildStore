@@ -43,6 +43,7 @@ function FetchGuildItemsActivity:FetchGuildItems()
 end
 
 function FetchGuildItemsActivity:DoExecute()
+    logger:Debug("Execute FetchGuildItemsActivity")
     return self:ApplyGuildId():Then(self.FetchGuildItems)
 end
 

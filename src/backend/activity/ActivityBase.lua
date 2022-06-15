@@ -2,6 +2,8 @@ local AGS = AwesomeGuildStore
 
 local Promise = LibPromises
 
+local logger = AGS.internal.logger
+
 local ActivityBase = ZO_InitializingObject:Subclass()
 AGS.class.ActivityBase = ActivityBase
 
@@ -131,6 +133,7 @@ function ActivityBase:SetState(state, result)
     if self.state == ActivityBase.STATE_QUEUED and state ~= self.state and not FINISHED_STATES[state] then
         self.executionTime = self.updateTime
     end
+    logger:Verbose("set activity state")
     local oldState = self.state
     self.state = state
     local oldResult = self.result

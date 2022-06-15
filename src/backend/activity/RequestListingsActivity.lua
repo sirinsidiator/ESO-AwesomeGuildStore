@@ -39,6 +39,7 @@ function RequestListingsActivity:RequestListings()
 end
 
 function RequestListingsActivity:DoExecute()
+    logger:Debug("Execute RequestListingsActivity")
     return self:ApplyGuildId():Then(self.RequestListings)
 end
 

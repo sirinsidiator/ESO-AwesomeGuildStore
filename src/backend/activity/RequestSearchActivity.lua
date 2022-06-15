@@ -67,6 +67,7 @@ function RequestSearchActivity:RequestSearch()
 end
 
 function RequestSearchActivity:DoExecute()
+    logger:Debug("Execute RequestSearchActivity")
     return self:ApplyGuildId():Then(self.PrepareFilters):Then(self.RequestSearch)
 end
 
