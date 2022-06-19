@@ -4,824 +4,861 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: AwesomeGuildStore\n"
-"Report-Msgid-Bugs-To: insidiator@cmos.at\n"
-"POT-Creation-Date: 2022-05-28 18:40+0200\n"
-"PO-Revision-Date: 2022-05-28 15:18+0000\n"
-"Last-Translator: sirinsidiator <insidiator@cmos.at>\n"
-"Language-Team: German\n"
+"Report-Msgid-Bugs-To: https://weblate.sir.insidi.at/or/projects/"
+"awesomeguildstore/messages/\n"
+"POT-Creation-Date: 2022-06-19 20:46+0000\n"
+"PO-Revision-Date: 2022-06-19 20:52+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: German <https://weblate.sir.insidi.at/or/projects/"
+"awesomeguildstore/messages/de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.12.2\n"
+"X-Generator: Weblate 4.13\n"
 
 #. TRANSLATORS: label for an entry in the addon settings
-#: d:\projects\esoaddons\awesomeguildstore\src\settings.lua:64
+#: src/Settings.lua:64
 msgid "Minimize chat on open"
 msgstr "Chat minimieren"
 
 #. TRANSLATORS: tooltip text for an entry in the addon settings
-#: d:\projects\esoaddons\awesomeguildstore\src\settings.lua:66
+#: src/Settings.lua:66
 msgid "When activated, the chat window will get minimized when visiting a trading house. This defaults to true since it is the new default behavior added by ZOS."
-msgstr "Wenn aktiviert, wird der Chat beim Besuch eines Gildenladens minimiert. Dies ist das neue Standardverhalten, da ZOS es so hinzugefügt hat."
+msgstr ""
+"Wenn aktiviert, wird der Chat beim Besuch eines Gildenladens minimiert. Dies "
+"ist das neue Standardverhalten, da ZOS es so hinzugefügt hat."
 
 #. TRANSLATORS: label for an entry in the addon settings
-#: d:\projects\esoaddons\awesomeguildstore\src\settings.lua:81
+#: src/Settings.lua:81
 msgid "Single click item listing"
 msgstr "Mit einem Klick anbieten"
 
 #. TRANSLATORS: tooltip text for an entry in the addon settings
-#: d:\projects\esoaddons\awesomeguildstore\src\settings.lua:83
+#: src/Settings.lua:83
 msgid "Select items for sale with a single click in the sell tab."
 msgstr "Gegenstände werden im Verkaufsreiter mit einem Klick angeboten."
 
 #. TRANSLATORS: label for an entry in the addon settings
-#: d:\projects\esoaddons\awesomeguildstore\src\settings.lua:91
+#: src/Settings.lua:91
 msgid "Trader Tooltips"
 msgstr "Händler Kurzinfo"
 
 #. TRANSLATORS: tooltip text for an entry in the addon settings
-#: d:\projects\esoaddons\awesomeguildstore\src\settings.lua:93
+#: src/Settings.lua:93
 msgid "Show the currently hired trader for a guild that you are a member of, when hovering over the name or an entry in the drop down menu"
-msgstr "Zeigt den derzeit angeheuerten Händler einer Gilde der du angehörst, wenn du die Maus über den Namen oder einen Eintrag in der Selektion bewegst"
+msgstr ""
+"Zeigt den derzeit angeheuerten Händler einer Gilde der du angehörst, wenn du "
+"die Maus über den Namen oder einen Eintrag in der Selektion bewegst"
 
 #. TRANSLATORS: label for an entry in the addon settings
-#: d:\projects\esoaddons\awesomeguildstore\src\settings.lua:101
+#: src/Settings.lua:101
 msgid "Mail augmentation"
 msgstr "Postverbesserung"
 
 #. TRANSLATORS: tooltip text for an entry in the addon settings
-#: d:\projects\esoaddons\awesomeguildstore\src\settings.lua:103
+#: src/Settings.lua:103
 msgid "Adds more detailed information about a transaction to an incoming Guild Store Mail if the data is available in the Guild Activity Log."
-msgstr "Fügt detailiertere Informationen über eine Transaktion in die eintreffende Gildenladen Post ein, solange die Daten in den Gildenaufzeichnungen vorhanden sind."
+msgstr ""
+"Fügt detailiertere Informationen über eine Transaktion in die eintreffende "
+"Gildenladen Post ein, solange die Daten in den Gildenaufzeichnungen "
+"vorhanden sind."
 
 #. TRANSLATORS: label for an entry in the addon settings
-#: d:\projects\esoaddons\awesomeguildstore\src\settings.lua:112
+#: src/Settings.lua:112
 msgid "Show invoice on mails"
 msgstr "Zeige Rechnung in Nachrichten"
 
 #. TRANSLATORS: tooltip text for an entry in the addon settings
-#: d:\projects\esoaddons\awesomeguildstore\src\settings.lua:114
+#: src/Settings.lua:114
 msgid "Adds a detailed invoice to the mail which lists all deductions."
 msgstr "Zeigt eine detailierte Rechnung an, die alle Abzüge auflistet."
 
 #. TRANSLATORS: label for an entry in the addon settings
-#: d:\projects\esoaddons\awesomeguildstore\src\settings.lua:123
+#: src/Settings.lua:123
 msgid "Purchase notifications"
 msgstr "Kaufbenachrichtigung"
 
 #. TRANSLATORS: tooltip text for an entry in the addon settings
-#: d:\projects\esoaddons\awesomeguildstore\src\settings.lua:125
+#: src/Settings.lua:125
 msgid "Shows a message in chat after you have purchased an item in a guild store"
-msgstr "Zeigt eine Meldung im Chat, nachdem ein Kauf in einem Gildenladen abgeschlossen wurde"
+msgstr ""
+"Zeigt eine Meldung im Chat, nachdem ein Kauf in einem Gildenladen "
+"abgeschlossen wurde"
 
 #. TRANSLATORS: label for an entry in the addon settings
-#: d:\projects\esoaddons\awesomeguildstore\src\settings.lua:133
+#: src/Settings.lua:133
 msgid "Cancel notifications"
 msgstr "Abbruchbenachrichtigung"
 
 #. TRANSLATORS: tooltip text for an entry in the addon settings
-#: d:\projects\esoaddons\awesomeguildstore\src\settings.lua:135
+#: src/Settings.lua:135
 msgid "Shows a message in chat after you have cancelled an item listing from a guild store"
-msgstr "Zeigt eine Meldung im Chat, nachdem ein Angebot in einem Gildenladen abgeborchen wurde"
+msgstr ""
+"Zeigt eine Meldung im Chat, nachdem ein Angebot in einem Gildenladen "
+"abgeborchen wurde"
 
 #. TRANSLATORS: label for an entry in the addon settings
-#: d:\projects\esoaddons\awesomeguildstore\src\settings.lua:143
+#: src/Settings.lua:143
 msgid "Listed item notifications"
 msgstr "Angebotsbenachrichtigung"
 
 #. TRANSLATORS: tooltip text for an entry in the addon settings
-#: d:\projects\esoaddons\awesomeguildstore\src\settings.lua:145
+#: src/Settings.lua:145
 msgid "Shows a message in chat after you have created a new item listing in a guild store"
-msgstr "Zeigt eine Meldung im Chat, nachdem ein Angebot in einem Gildenladen erstellt wurde"
+msgstr ""
+"Zeigt eine Meldung im Chat, nachdem ein Angebot in einem Gildenladen "
+"erstellt wurde"
 
 #. TRANSLATORS: label for an entry in the addon settings
-#: d:\projects\esoaddons\awesomeguildstore\src\settings.lua:153
+#: src/Settings.lua:153
 msgid "Preferred banker store tab"
 msgstr "Bevorzugter Bank Laden-Reiter"
 
 #. TRANSLATORS: tooltip text for an entry in the addon settings
-#: d:\projects\esoaddons\awesomeguildstore\src\settings.lua:155
+#: src/Settings.lua:155
 msgid "Controls which tab should be opened first when visiting the guild store at a banker."
-msgstr "Legt fest welcher Reiter zuerst geöffnet werden soll wenn ein Gildenladen von der Bank aus besucht wird."
+msgstr ""
+"Legt fest welcher Reiter zuerst geöffnet werden soll wenn ein Gildenladen "
+"von der Bank aus besucht wird."
 
 #. TRANSLATORS: label for an entry in the addon settings
-#: d:\projects\esoaddons\awesomeguildstore\src\settings.lua:173
+#: src/Settings.lua:173
 msgid "Skip guild kiosk dialog"
 msgstr "Gildenkioskdialog überspringen"
 
 #. TRANSLATORS: tooltip text for an entry in the addon settings
-#: d:\projects\esoaddons\awesomeguildstore\src\settings.lua:175
+#: src/Settings.lua:175
 msgid "When activated, the dialog at guild traders (not at banks) is skipped and the store opened automatically. This can be suppressed by holding the shift key when talking to a trader."
-msgstr "Der Dialog bei Gildenläden (nicht in der Bank) wird übersprungen und der Laden automatisch geöffnet, wenn diese Option aktiv ist. Dies kann unterdrückt werden, indem die Shift Taste gedrückt gehalten wird während man den Händler anspricht."
+msgstr ""
+"Der Dialog bei Gildenläden (nicht in der Bank) wird übersprungen und der "
+"Laden automatisch geöffnet, wenn diese Option aktiv ist. Dies kann "
+"unterdrückt werden, indem die Shift Taste gedrückt gehalten wird während man "
+"den Händler anspricht."
 
 #. TRANSLATORS: label for an entry in the addon settings
-#: d:\projects\esoaddons\awesomeguildstore\src\settings.lua:183
+#: src/Settings.lua:183
 msgid "Clear sell price cache"
 msgstr "Verkaufsspeicher leeren"
 
 #. TRANSLATORS: tooltip text for an entry in the addon settings
-#: d:\projects\esoaddons\awesomeguildstore\src\settings.lua:185
+#: src/Settings.lua:185
 msgid "Pressing this button will remove all stored quantity and price values for the sell tab from your save data. While Master Merchant is active, it will take the last sell price from there when selecting an item if no data was found in AwesomeGuildStore's own data"
-msgstr "Dieser Schalter entfernt alle Stückzahl- und Stückpreiswerte aus den gespeicherten Daten für das Verkaufsfenster. Während Master Merchant aktiv ist, werden beim Selektieren eines Gegenstandes die zuletzt verwendenten Verkaufspreise von dort übernommen solange keine Daten in AwesomeGuildStore vorliegen"
+msgstr ""
+"Dieser Schalter entfernt alle Stückzahl- und Stückpreiswerte aus den "
+"gespeicherten Daten für das Verkaufsfenster. Während Master Merchant aktiv "
+"ist, werden beim Selektieren eines Gegenstandes die zuletzt verwendenten "
+"Verkaufspreise von dort übernommen solange keine Daten in AwesomeGuildStore "
+"vorliegen"
 
 #. TRANSLATORS: warning tooltip text for an entry in the addon settings
-#: d:\projects\esoaddons\awesomeguildstore\src\settings.lua:187
+#: src/Settings.lua:187
 msgid "The data cannot be restored after you have confirmed the action"
-msgstr "Die Daten können nicht wiederhergestellt werden sobald die Aktion bestätigt wird"
+msgstr ""
+"Die Daten können nicht wiederhergestellt werden sobald die Aktion bestätigt "
+"wird"
 
 #. TRANSLATORS: label for an entry in the addon settings
-#: d:\projects\esoaddons\awesomeguildstore\src\settings.lua:201
+#: src/Settings.lua:201
 msgid "Enable guild trader list"
 msgstr "Gildenhändlerliste aktivieren"
 
 #. TRANSLATORS: tooltip text for an entry in the addon settings
-#: d:\projects\esoaddons\awesomeguildstore\src\settings.lua:203
+#: src/Settings.lua:203
 msgid "When activated, the guild menu will show a new tab with a list of all kiosks in Tamriel. The list will get updated with the owning guilds whenever you visit a kiosk."
-msgstr "Wenn aktiv, wird im Gildenmenü ein neuer Reiter mit einer Liste aller Händler in Tamriel hinzugefügt. Die Liste wird mit den Gilden ergänzt, wann immer ihr einen Händler besucht."
+msgstr ""
+"Wenn aktiv, wird im Gildenmenü ein neuer Reiter mit einer Liste aller "
+"Händler in Tamriel hinzugefügt. Die Liste wird mit den Gilden ergänzt, wann "
+"immer ihr einen Händler besucht."
 
 #. TRANSLATORS: label for an entry in the addon settings
-#: d:\projects\esoaddons\awesomeguildstore\src\settings.lua:212
+#: src/Settings.lua:212
 msgid "Clear guild trader list"
 msgstr "Gildenhändlerliste leeren"
 
 #. TRANSLATORS: tooltip text for an entry in the addon settings
-#: d:\projects\esoaddons\awesomeguildstore\src\settings.lua:214
+#: src/Settings.lua:214
 msgid "Pressing this button will remove all stored data related to the guild trader list"
-msgstr "Dieser Schalter entfernt alle Daten die mit der Gildenhändlerliste zusammenhängen"
+msgstr ""
+"Dieser Schalter entfernt alle Daten die mit der Gildenhändlerliste "
+"zusammenhängen"
 
 #. TRANSLATORS: warning tooltip text for an entry in the addon settings
-#: d:\projects\esoaddons\awesomeguildstore\src\settings.lua:216
+#: src/Settings.lua:216
 msgid "The UI will reload and the data cannot be restored after you have confirmed the action"
-msgstr "Die Benutzeroberfläche wird neu geladen und die Daten können nicht wiederhergestellt werden sobald die Aktion bestätigt wird"
+msgstr ""
+"Die Benutzeroberfläche wird neu geladen und die Daten können nicht "
+"wiederhergestellt werden sobald die Aktion bestätigt wird"
 
 #. TRANSLATORS: Chat message when the addon was not installed correctly and some files are missing. Placeholder is for the filename.
-#: d:\projects\esoaddons\awesomeguildstore\src\startup.lua:214
+#: src/StartUp.lua:214
 msgid "The file '<<1>>' is missing. Please reinstall AwesomeGuildStore."
-msgstr "Die Datei '<<1>>' wurde nicht gefunden. Bitte installiere AwesomeGuildStore erneut."
+msgstr ""
+"Die Datei '<<1>>' wurde nicht gefunden. Bitte installiere AwesomeGuildStore "
+"erneut."
 
 #. TRANSLATORS: Chat message when a dependency does not fulfill the minimal version requirement. Placeholder is for the required library name and version.
-#: d:\projects\esoaddons\awesomeguildstore\src\startup.lua:223
+#: src/StartUp.lua:223
 msgid "Cannot start due to an outdated library. Please install <<1>> or newer."
-msgstr "Konnte wegen einer veralteten Bibliothek nicht starten. Bitte installiere <<1>> oder neuer."
+msgstr ""
+"Konnte wegen einer veralteten Bibliothek nicht starten. Bitte installiere "
+"<<1>> oder neuer."
 
 #. TRANSLATORS: keybind label in the controls menu
-#: d:\projects\esoaddons\awesomeguildstore\src\startup.lua:245
+#: src/StartUp.lua:245
 msgid "Suppress Local Filters"
 msgstr "Lokale Filter unterdrücken"
 
 #. TRANSLATORS: Status text when waiting for a server response
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\activity\activitymanager.lua:35
+#: src/backend/activity/ActivityManager.lua:35
 msgid "Waiting for response"
 msgstr "Warte auf Antwort"
 
 #. TRANSLATORS: Status text when a server request timed out
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\activity\activitymanager.lua:44
+#: src/backend/activity/ActivityManager.lua:44
 msgid "Request timed out"
 msgstr "Anfrage abgelaufen"
 
 #. TRANSLATORS: Status text when a server response timed out
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\activity\activitymanager.lua:53
+#: src/backend/activity/ActivityManager.lua:53
 msgid "Response timed out"
 msgstr "Zeitüberschreitung für Antwort"
 
 #. TRANSLATORS: Status text when a server request failed
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\activity\activitymanager.lua:62
+#: src/backend/activity/ActivityManager.lua:62
 msgid "Request failed"
 msgstr "Anfrage fehlgeschlagen"
 
 #. TRANSLATORS: Status text when a new activity was queued
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\activity\activitymanager.lua:185
+#: src/backend/activity/ActivityManager.lua:185
 msgid "<<1[No activity/One activity/$d activities]>> queued"
 msgstr "<<1[Keine Aktivität/Eine Aktivität/$d Aktivitäten]>> ausstehend"
 
 #. TRANSLATORS: Status text when the next activity can be executed
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\activity\activitymanager.lua:299
+#: src/backend/activity/ActivityManager.lua:299
 msgid "Execute next activity"
 msgstr "Führe nächste Aktivität aus"
 
 #. TRANSLATORS: Status text when a server request was successfully completed
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\activity\activitymanager.lua:317
+#: src/backend/activity/ActivityManager.lua:317
 msgid "Request finished"
 msgstr "Anfrage komplett"
 
 #. TRANSLATORS: Alert text when an activity fails unexpectedly
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\activity\activitymanager.lua:327
+#: src/backend/activity/ActivityManager.lua:327
 msgid "Unknown Error"
 msgstr "Unbekannter Fehler"
 
 #. TRANSLATORS: Status text when a server request has failed. Placeholder is for an explanation text
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\activity\activitymanager.lua:339
+#: src/backend/activity/ActivityManager.lua:339
 msgid "Request failed: <<1>>"
 msgstr "Anfrage fehlgeschlagen: <<1>>"
 
 #. TRANSLATORS: error text shown to the user when a listed item could not be cancelled
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\activity\cancelitemactivity.lua:53
+#: src/backend/activity/CancelItemActivity.lua:54
 msgid "Could not cancel listing"
 msgstr "Konnte Angebot nicht abbrechen"
 
 #. TRANSLATORS: log text shown to the user for each cancel item activity. First placeholder is for the item link and second for the guild name
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\activity\cancelitemactivity.lua:60
+#: src/backend/activity/CancelItemActivity.lua:61
 msgid "Cancel listing of <<1>>x <<t:2>> for <<3>> in <<4>>"
 msgstr "Angebot von <<1>>x <<t:2>> für <<3>> in <<4>> abbrechen"
 
 #. TRANSLATORS: error text shown to the user when guild items could not be fetched
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\activity\fetchguilditemsactivity.lua:51
+#: src/backend/activity/FetchGuildItemsActivity.lua:52
 msgid "Could not fetch guild items"
 msgstr "Gildengegenstände konnten nicht abgerufen werden"
 
 #. TRANSLATORS: log text shown to the user for each time the guild items are fetched. Placeholder is for the guild name
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\activity\fetchguilditemsactivity.lua:57
+#: src/backend/activity/FetchGuildItemsActivity.lua:58
 msgid "Fetch guild items in <<1>>"
 msgstr "Rufe Gildengegenstände in <<1>> ab"
 
 #. TRANSLATORS: error text shown to the user when an item could not be listed
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\activity\postitemactivity.lua:167
+#: src/backend/activity/PostItemActivity.lua:168
 msgid "Could not list item"
 msgstr "Konnte Gegenstand nicht verkaufen"
 
 #. TRANSLATORS: log text shown to the user for each post item request. Placeholders are for the stackCount, itemLink, price and guild name respectively
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\activity\postitemactivity.lua:174
+#: src/backend/activity/PostItemActivity.lua:175
 msgid "Post <<1>>x <<2>> for <<3>> to <<4>>"
 msgstr "Verkaufe <<1>>x <<2>> für <<3>> in <<4>>"
 
 #. TRANSLATORS: error text shown to the user when an item could not be listed
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\activity\purchaseitemactivity.lua:74
+#: src/backend/activity/PurchaseItemActivity.lua:75
 msgid "Could not purchase item"
 msgstr "Gegenstand konnte nicht gekauft werden"
 
 #. TRANSLATORS: log text shown to the user for each purchase item request. Placeholders are for the stackCount, itemLink, price, seller and guild name respectively
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\activity\purchaseitemactivity.lua:82
+#: src/backend/activity/PurchaseItemActivity.lua:83
 msgid "Purchase <<1>>x <<2>> for <<3>> from <<4>> in <<5>>"
 msgstr "Kaufe <<1>>x <<2>> für <<3>> von <<4>> in <<5>>"
 
 #. TRANSLATORS: log text shown to the user for each listings request. Placeholder is for the guild name
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\activity\requestlistingsactivity.lua:48
+#: src/backend/activity/RequestListingsActivity.lua:49
 msgid "Request listings in <<1>>"
 msgstr "Frage Angebote in <<1>> ab"
 
 #. TRANSLATORS: error text shown to the user when listings could not be requested
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\activity\requestlistingsactivity.lua:55
+#: src/backend/activity/RequestListingsActivity.lua:56
 msgid "Could not request listings"
 msgstr "Angebote konnten nicht abgefragt werden"
 
 #. TRANSLATORS: log text shown to the user for each executed request of the newest search results. Placeholders are for the page and guild name
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\activity\requestnewestactivity.lua:45
+#: src/backend/activity/RequestNewestActivity.lua:45
 msgid "Request page <<1>> of newest results in <<2>>"
 msgstr "Frage Seite <<1>> der neuesten Resultate in <<2>> ab"
 
 #. TRANSLATORS: log text shown to the user for each request of the newest search results. Placeholder is for the guild name
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\activity\requestnewestactivity.lua:48
+#: src/backend/activity/RequestNewestActivity.lua:48
 msgid "Request newest results in <<1>>"
 msgstr "Frage neueste Resultate in <<1>> ab"
 
 #. TRANSLATORS: error text shown to the user when search results could not be requested
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\activity\requestsearchactivity.lua:95
+#: src/backend/activity/RequestSearchActivity.lua:96
 msgid "Could not request search results"
 msgstr "Suchresultate konnten nicht abgefragt werden"
 
 #. TRANSLATORS: log text shown to the user for an executed request of the search results. Placeholders are for the page, category and guild name
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\activity\requestsearchactivity.lua:107
+#: src/backend/activity/RequestSearchActivity.lua:108
 msgid "Request page <<1>> of <<2>> in <<3>>"
 msgstr "Frage Seite <<1>> von <<2>> in <<3>> ab"
 
 #. TRANSLATORS: log text shown to the user for a queued request of the search results. Placeholder is for the guild name
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\activity\requestsearchactivity.lua:110
+#: src/backend/activity/RequestSearchActivity.lua:111
 msgid "Request search results in <<1>>"
 msgstr "Frage Suchergebnisse in <<1>> ab"
 
 #. TRANSLATORS: error text shown to the user when the trading house failed to initialize
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\activity\storestatusactivity.lua:63
+#: src/backend/activity/StoreStatusActivity.lua:90
 msgid "Store initialization failed"
 msgstr "Gildenladen Initialisierung fehlgeschlagen"
 
 #. TRANSLATORS: log text shown to the user for the initial wait for the trading house status
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\activity\storestatusactivity.lua:69
+#: src/backend/activity/StoreStatusActivity.lua:96
 msgid "Wait for trading house status"
 msgstr "Warte auf Gildenladen Status"
 
 #. TRANSLATORS: title of the collectible ownership filter in the left panel on the search tab
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\collectibleownershipfilter.lua:39
+#: src/backend/filter/CollectibleOwnershipFilter.lua:39
 msgid "Collectible Ownership"
 msgstr "Eigentümerschaft"
 
 #. TRANSLATORS: title of the crafted item filter in the left panel on the search tab
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\crafteditemfilter.lua:22
+#: src/backend/filter/CraftedItemFilter.lua:22
 msgid "Crafting"
 msgstr "Handwerk"
 
 #. TRANSLATORS: tooltip text for the crafted item filter
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\crafteditemfilter.lua:26
+#: src/backend/filter/CraftedItemFilter.lua:26
 msgid "Looted item"
 msgstr "Erbeuteter Gegenstand"
 
 #. TRANSLATORS: tooltip text for the crafted item filter
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\crafteditemfilter.lua:31
+#: src/backend/filter/CraftedItemFilter.lua:31
 msgid "Crafted item"
 msgstr "Hergestellter Gegenstand"
 
 #. TRANSLATORS: label of the furniture category filter
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\furniturecategoryfilter.lua:24
+#: src/backend/filter/FurnitureCategoryFilter.lua:24
 msgid "Furnishing Category"
 msgstr "Einrichtungskategorie"
 
 #. TRANSLATORS: label of the category filter
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\itemcategoryfilter.lua:925
+#: src/backend/filter/ItemCategoryFilter.lua:925
 msgid "Item Category"
 msgstr "Gegenstandskategorie"
 
 #. TRANSLATORS: title of the set item filter in the left panel on the search tab
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\itemsetfilter.lua:23
+#: src/backend/filter/ItemSetFilter.lua:23
 msgid "Itemset"
 msgstr "Set Gegenstand"
 
 #. TRANSLATORS: tooltip text for the set item filter
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\itemsetfilter.lua:27
+#: src/backend/filter/ItemSetFilter.lua:27
 msgid "Regular item"
 msgstr "Regulärer Gegenstand"
 
 #. TRANSLATORS: tooltip text for the set item filter
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\itemsetfilter.lua:33
+#: src/backend/filter/ItemSetFilter.lua:33
 msgid "Set item"
 msgstr "Set Gegenstand"
 
 #. TRANSLATORS: label of the level filter
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\levelfilter.lua:42
+#: src/backend/filter/LevelFilter.lua:42
 msgid "Level Range"
 msgstr "Level"
 
 #. TRANSLATORS: title of the motif knowledge filter in the left panel on the search tab
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\motifknowledgefilter.lua:23
+#: src/backend/filter/MotifKnowledgeFilter.lua:23
 msgid "Motif Knowledge"
 msgstr "Motivwissen"
 
 #. TRANSLATORS: tooltip text for the motif knowledge filter
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\motifknowledgefilter.lua:27
+#: src/backend/filter/MotifKnowledgeFilter.lua:27
 msgid "Unknown Motifs"
 msgstr "Unbekannte Motive"
 
 #. TRANSLATORS: tooltip text for the motif knowledge filter
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\motifknowledgefilter.lua:33
+#: src/backend/filter/MotifKnowledgeFilter.lua:33
 msgid "Known Motifs"
 msgstr "Bekannte Motive"
 
 #. TRANSLATORS: label of the price filter
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\pricefilter.lua:28
+#: src/backend/filter/PriceFilter.lua:28
 msgid "Price Range"
 msgstr "Preis"
 
 #. TRANSLATORS: label of the quality filter
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\qualityfilter.lua:27
+#: src/backend/filter/QualityFilter.lua:27
 msgid "Quality Range"
 msgstr "Qualität"
 
 #. TRANSLATORS: title of the recipe knowledge filter in the left panel on the search tab
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\recipeknowledgefilter.lua:21
+#: src/backend/filter/RecipeKnowledgeFilter.lua:21
 msgid "Recipe Knowledge"
 msgstr "Rezeptwissen"
 
 #. TRANSLATORS: tooltip text for the recipe knowledge filter
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\recipeknowledgefilter.lua:25
+#: src/backend/filter/RecipeKnowledgeFilter.lua:25
 msgid "Unknown Recipes"
 msgstr "Unbekannte Rezepte"
 
 #. TRANSLATORS: tooltip text for the recipe knowledge filter
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\recipeknowledgefilter.lua:31
+#: src/backend/filter/RecipeKnowledgeFilter.lua:31
 msgid "Known Recipes"
 msgstr "Bekannte Rezepte"
 
 #. TRANSLATORS: title of the rune knowledge filter in the left panel on the search tab
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\runeknowledgefilter.lua:22
+#: src/backend/filter/RuneKnowledgeFilter.lua:22
 msgid "Rune Knowledge"
 msgstr "Runensteinwissen"
 
 #. TRANSLATORS: tooltip text for the rune knowledge filter
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\runeknowledgefilter.lua:26
+#: src/backend/filter/RuneKnowledgeFilter.lua:26
 msgid "Unknown Rune"
 msgstr "Unbekannte Runensteine"
 
 #. TRANSLATORS: tooltip text for the rune knowledge filter
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\runeknowledgefilter.lua:32
+#: src/backend/filter/RuneKnowledgeFilter.lua:32
 msgid "Known Rune"
 msgstr "Bekannte Runensteine"
 
 #. TRANSLATORS: label of the recipe improvement filter
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\skillrequirementsfilter.lua:22
+#: src/backend/filter/SkillRequirementsFilter.lua:22
 msgid "Skill requirements"
 msgstr "Fähigkeiten"
 
 #. TRANSLATORS: tooltip text for the recipe skill requirement filter
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\skillrequirementsfilter.lua:26
+#: src/backend/filter/SkillRequirementsFilter.lua:26
 msgid "Can craft"
 msgstr "Kann hergestellt werden"
 
 #. TRANSLATORS: tooltip text for the recipe skill requirement filter
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\skillrequirementsfilter.lua:32
+#: src/backend/filter/SkillRequirementsFilter.lua:32
 msgid "Cannot craft"
 msgstr "Kann nicht hergestellt werden"
 
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\sortfilter.lua:14
+#: src/backend/filter/SortFilter.lua:14
 msgid "ascending"
 msgstr "aufsteigend"
 
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\sortfilter.lua:15
+#: src/backend/filter/SortFilter.lua:15
 msgid "descending"
 msgstr "absteigend"
 
 #. TRANSLATORS: label of the sort filter
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\sortfilter.lua:29
+#: src/backend/filter/SortFilter.lua:29
 msgid "Sort By"
 msgstr "Sortieren nach"
 
 #. TRANSLATORS: label of the text filter
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\textfilter.lua:27
+#: src/backend/filter/TextFilter.lua:27
 msgid "Text Search"
 msgstr "Textsuche"
 
 #. TRANSLATORS: title of the trait knowledge filter in the left panel on the search tab
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\traitknowledgefilter.lua:24
+#: src/backend/filter/TraitKnowledgeFilter.lua:24
 msgid "Trait Knowledge"
 msgstr "Eigenschaftenwissen"
 
 #. TRANSLATORS: tooltip text for the trait knowledge filter
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\traitknowledgefilter.lua:28
+#: src/backend/filter/TraitKnowledgeFilter.lua:28
 msgid "Known Trait"
 msgstr "Bekannte Eigenschaften"
 
 #. TRANSLATORS: tooltip text for the trait knowledge filter
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\traitknowledgefilter.lua:34
+#: src/backend/filter/TraitKnowledgeFilter.lua:34
 msgid "Unknown Trait"
 msgstr "Unbekannte Eigenschaften"
 
 #. TRANSLATORS: label of the unit price filter
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\unitpricefilter.lua:30
+#: src/backend/filter/UnitPriceFilter.lua:30
 msgid "Unit Price Range"
 msgstr "Stückpreis"
 
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\valuerangefilterbase.lua:108
+#: src/backend/filter/ValueRangeFilterBase.lua:108
 msgid "exactly <<1>>"
 msgstr "genau <<1>>"
 
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\valuerangefilterbase.lua:110
+#: src/backend/filter/ValueRangeFilterBase.lua:110
 msgid "<<1>> - <<2>>"
 msgstr "<<1>> - <<2>>"
 
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\valuerangefilterbase.lua:113
+#: src/backend/filter/ValueRangeFilterBase.lua:113
 msgid "over <<1>>"
 msgstr "über <<1>>"
 
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\valuerangefilterbase.lua:115
+#: src/backend/filter/ValueRangeFilterBase.lua:115
 msgid "under <<1>>"
 msgstr "unter <<1>>"
 
 #. TRANSLATORS: label of the writ voucher filter
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\filter\writvoucherfilter.lua:26
+#: src/backend/filter/WritVoucherFilter.lua:26
 msgid "Writ Voucher Range"
 msgstr "Schriebscheine"
 
 #. TRANSLATORS: label of the item name sort order
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\sort\sortorderitemname.lua:18
+#: src/backend/sort/SortOrderItemName.lua:18
 msgid "Item Name"
 msgstr "Name"
 
 #. TRANSLATORS: label of the item quality sort order
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\sort\sortorderitemquality.lua:18
+#: src/backend/sort/SortOrderItemQuality.lua:18
 msgid "Item Quality"
 msgstr "Qualität"
 
 #. TRANSLATORS: label of the purchase price sort order
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\sort\sortorderpurchaseprice.lua:18
+#: src/backend/sort/SortOrderPurchasePrice.lua:18
 msgid "Purchase Price"
 msgstr "Kaufpreis"
 
 #. TRANSLATORS: label of the seller name sort order
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\sort\sortordersellername.lua:18
+#: src/backend/sort/SortOrderSellerName.lua:18
 msgid "Seller Name"
 msgstr "Verkäufer"
 
 #. TRANSLATORS: label of the set name sort order
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\sort\sortordersetname.lua:18
+#: src/backend/sort/SortOrderSetName.lua:18
 msgid "Set Name"
 msgstr "Setname"
 
 #. TRANSLATORS: label of the time left sort order
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\sort\sortordertimeleft.lua:18
+#: src/backend/sort/SortOrderTimeLeft.lua:18
 msgid "Time Left"
 msgstr "Verbleibende Zeit"
 
 #. TRANSLATORS: label of the last seen sort order
-#: d:\projects\esoaddons\awesomeguildstore\src\backend\sort\sortorderunitprice.lua:18
+#: src/backend/sort/SortOrderUnitPrice.lua:18
 msgid "Unit Price"
 msgstr "Stückpreis"
 
 #. TRANSLATORS: title of the crafting material filter in the left panel on the search tab
-#: d:\projects\esoaddons\awesomeguildstore\src\data\craftingmaterialtypefilterdata.lua:18
+#: src/data/CraftingMaterialTypeFilterData.lua:18
 msgid "Material Type"
 msgstr "Materialtyp"
 
 #. TRANSLATORS: title of the alchemy and provisioning material filter in the left panel on the search tab
-#: d:\projects\esoaddons\awesomeguildstore\src\data\craftingmaterialtypefilterdata.lua:128
-#: d:\projects\esoaddons\awesomeguildstore\src\data\craftingmaterialtypefilterdata.lua:193
+#: src/data/CraftingMaterialTypeFilterData.lua:128
+#: src/data/CraftingMaterialTypeFilterData.lua:193
 msgid "Ingredient Type"
 msgstr "Zutatentyp"
 
 #. TRANSLATORS: title of the enchanting material filter in the left panel on the search tab
-#: d:\projects\esoaddons\awesomeguildstore\src\data\craftingmaterialtypefilterdata.lua:166
+#: src/data/CraftingMaterialTypeFilterData.lua:166
 msgid "Rune Type"
 msgstr "Runensteintyp"
 
 #. TRANSLATORS: title of the armor type filter in the left panel on the search tab
-#: d:\projects\esoaddons\awesomeguildstore\src\data\equiptypefilterdata.lua:17
+#: src/data/EquipTypeFilterData.lua:17
 msgid "Armor Type"
 msgstr "Rüstungstyp"
 
 #. TRANSLATORS: title text for the weapon enchantment filter in the left panel on the search tab
-#: d:\projects\esoaddons\awesomeguildstore\src\data\itemenchantmentfilterdata.lua:21
+#: src/data/ItemEnchantmentFilterData.lua:21
 msgid "Weapon Enchantment"
 msgstr "Waffenverzauberung"
 
 #. TRANSLATORS: title of the armor enchantment filter in the left panel on the search tab
-#: d:\projects\esoaddons\awesomeguildstore\src\data\itemenchantmentfilterdata.lua:109
+#: src/data/ItemEnchantmentFilterData.lua:109
 msgid "Armor Enchantment"
 msgstr "Rüstungsverzauberung"
 
 #. TRANSLATORS: title of the jewelry enchantment filter in the left panel on the search tab
-#: d:\projects\esoaddons\awesomeguildstore\src\data\itemenchantmentfilterdata.lua:146
+#: src/data/ItemEnchantmentFilterData.lua:146
 msgid "Jewelry Enchantment"
 msgstr "Schmuckverzauberung"
 
-#: d:\projects\esoaddons\awesomeguildstore\src\data\itemstylefilterdata.lua:33
+#: src/data/ItemStyleFilterData.lua:33
 msgid "Racial"
 msgstr "Rassen"
 
-#: d:\projects\esoaddons\awesomeguildstore\src\data\itemstylefilterdata.lua:57
+#: src/data/ItemStyleFilterData.lua:57
 msgid "Uncommon"
 msgstr "Ungewöhnlich"
 
-#: d:\projects\esoaddons\awesomeguildstore\src\data\itemstylefilterdata.lua:76
+#: src/data/ItemStyleFilterData.lua:76
 msgid "Organizations"
 msgstr "Organisationen"
 
-#: d:\projects\esoaddons\awesomeguildstore\src\data\itemstylefilterdata.lua:90
+#: src/data/ItemStyleFilterData.lua:90
 msgid "Events"
 msgstr "Veranstaltungen"
 
-#: d:\projects\esoaddons\awesomeguildstore\src\data\itemstylefilterdata.lua:194
+#: src/data/ItemStyleFilterData.lua:194
 msgid "New"
 msgstr "Neu"
 
 #. TRANSLATORS: title of the jewelry trait filter in the left panel on the search tab
-#: d:\projects\esoaddons\awesomeguildstore\src\data\itemtraitfilterdata.lua:181
-#: d:\projects\esoaddons\awesomeguildstore\src\data\itemtraitfilterdata.lua:383
+#: src/data/ItemTraitFilterData.lua:181 src/data/ItemTraitFilterData.lua:383
 msgid "Jewelry Trait"
 msgstr "Schmuckeigenschaften"
 
 #. TRANSLATORS: title of the glyph type filter in the left panel on the search tab
-#: d:\projects\esoaddons\awesomeguildstore\src\data\itemtypefilterdata.lua:22
+#: src/data/ItemTypeFilterData.lua:22
 msgid "Glyph Type"
 msgstr "Glyphentyp"
 
 #. TRANSLATORS: title of the recipe type filter in the left panel on the search tab
-#: d:\projects\esoaddons\awesomeguildstore\src\data\itemtypefilterdata.lua:50
+#: src/data/ItemTypeFilterData.lua:50
 msgid "Recipe Type"
 msgstr "Rezepttyp"
 
 #. TRANSLATORS: title of the drink type filter in the left panel on the search tab
-#: d:\projects\esoaddons\awesomeguildstore\src\data\itemtypefilterdata.lua:108
+#: src/data/ItemTypeFilterData.lua:108
 msgid "Drink Type"
 msgstr "Getränketyp"
 
 #. TRANSLATORS: title of the food type filter in the left panel on the search tab
-#: d:\projects\esoaddons\awesomeguildstore\src\data\itemtypefilterdata.lua:161
+#: src/data/ItemTypeFilterData.lua:161
 msgid "Food Type"
 msgstr "Nahrungstyp"
 
 #. TRANSLATORS: title of the siege type filter in the left panel on the search tab
-#: d:\projects\esoaddons\awesomeguildstore\src\data\itemtypefilterdata.lua:214
+#: src/data/ItemTypeFilterData.lua:214
 msgid "Siege Type"
 msgstr "Ausrüstungstyp"
 
 #. TRANSLATORS: title of the trophy type filter in the left panel on the search tab
-#: d:\projects\esoaddons\awesomeguildstore\src\data\itemtypefilterdata.lua:257
-#: d:\projects\esoaddons\awesomeguildstore\src\data\itemtypefilterdata.lua:305
+#: src/data/ItemTypeFilterData.lua:257 src/data/ItemTypeFilterData.lua:305
 msgid "Trophy Type"
 msgstr "Trophäentyp"
 
 #. TRANSLATORS: title for the weapon type filter in the left panel on the search tab
-#: d:\projects\esoaddons\awesomeguildstore\src\data\weapontypefilterdata.lua:13
+#: src/data/WeaponTypeFilterData.lua:13
 msgid "Weapon Type"
 msgstr "Waffentyp"
 
 #. TRANSLATORS: title of the master writ type filter in the left panel on the search tab
-#: d:\projects\esoaddons\awesomeguildstore\src\data\writtypefilterdata.lua:37
+#: src/data/WritTypeFilterData.lua:37
 msgid "Writ Type"
 msgstr "Schriebtyp"
 
-#: d:\projects\esoaddons\awesomeguildstore\src\frontend\activitywindow.lua:62
+#: src/frontend/ActivityWindow.lua:62
 msgid "Time"
 msgstr "Zeit"
 
-#: d:\projects\esoaddons\awesomeguildstore\src\frontend\activitywindow.lua:63
+#: src/frontend/ActivityWindow.lua:63
 msgid "Message"
 msgstr "Nachricht"
 
-#: d:\projects\esoaddons\awesomeguildstore\src\frontend\activitywindow.lua:64
+#: src/frontend/ActivityWindow.lua:64
 msgid "Queued"
 msgstr "Gereiht"
 
-#: d:\projects\esoaddons\awesomeguildstore\src\frontend\activitywindow.lua:65
+#: src/frontend/ActivityWindow.lua:65
 msgid "Active"
 msgstr "Aktiv"
 
 #. TRANSLATORS: Text when the activity list is empty
-#: d:\projects\esoaddons\awesomeguildstore\src\frontend\activitywindow.lua:71
+#: src/frontend/ActivityWindow.lua:71
 msgid "No activities queued"
 msgstr "Keine Aktivitäten angereiht"
 
 #. TRANSLATORS: tooltip text for the reset filter buttons. will automatically insert the filter title (e.g. "Reset Weapon Type Filter")
-#: d:\projects\esoaddons\awesomeguildstore\src\frontend\filterfragment.lua:74
+#: src/frontend/FilterFragment.lua:74
 msgid "Reset <<1>> Filter"
 msgstr "<<1>> zurücksetzen"
 
 #. TRANSLATORS: menu text for unpinning a filter from the filter area
-#: d:\projects\esoaddons\awesomeguildstore\src\frontend\filterfragment.lua:107
+#: src/frontend/FilterFragment.lua:107
 msgid "Unpin Filter"
 msgstr "Filter lösen"
 
 #. TRANSLATORS: menu text for removing a filter from the filter area
-#: d:\projects\esoaddons\awesomeguildstore\src\frontend\filterfragment.lua:112
+#: src/frontend/FilterFragment.lua:112
 msgid "Remove Filter"
 msgstr "Filter entfernen"
 
 #. TRANSLATORS: menu text for pinning a filter to the filter area
-#: d:\projects\esoaddons\awesomeguildstore\src\frontend\filterfragment.lua:117
+#: src/frontend/FilterFragment.lua:117
 msgid "Pin Filter"
 msgstr "Filter festhaften"
 
-#: d:\projects\esoaddons\awesomeguildstore\src\frontend\searchlist.lua:7
+#: src/frontend/SearchList.lua:7
 msgid "Set Active"
 msgstr "Aktiv setzen"
 
-#: d:\projects\esoaddons\awesomeguildstore\src\frontend\searchlist.lua:8
+#: src/frontend/SearchList.lua:8
 msgid "Rename"
 msgstr "Umbenennen"
 
-#: d:\projects\esoaddons\awesomeguildstore\src\frontend\searchlist.lua:9
+#: src/frontend/SearchList.lua:9
 msgid "Reset Label"
 msgstr "Bezeichnung zurücksetzen"
 
-#: d:\projects\esoaddons\awesomeguildstore\src\frontend\searchlist.lua:11
+#: src/frontend/SearchList.lua:11
 msgid "Unlock"
 msgstr "Entsperren"
 
-#: d:\projects\esoaddons\awesomeguildstore\src\frontend\searchlist.lua:12
+#: src/frontend/SearchList.lua:12
 msgid "Lock"
 msgstr "Sperren"
 
-#: d:\projects\esoaddons\awesomeguildstore\src\frontend\searchlist.lua:13
+#: src/frontend/SearchList.lua:13
 msgid "Duplicate"
 msgstr "Duplizieren"
 
-#: d:\projects\esoaddons\awesomeguildstore\src\frontend\searchlist.lua:14
+#: src/frontend/SearchList.lua:14
 msgid "Move Up"
 msgstr "Nach oben"
 
-#: d:\projects\esoaddons\awesomeguildstore\src\frontend\searchlist.lua:15
+#: src/frontend/SearchList.lua:15
 msgid "Move Down"
 msgstr "Nach unten"
 
-#: d:\projects\esoaddons\awesomeguildstore\src\frontend\searchlist.lua:16
+#: src/frontend/SearchList.lua:16
 msgid "Delete"
 msgstr "Löschen"
 
-#: d:\projects\esoaddons\awesomeguildstore\src\frontend\searchlist.lua:25
+#: src/frontend/SearchList.lua:25
 msgid "New Search"
 msgstr "Neue Suche"
 
-#: d:\projects\esoaddons\awesomeguildstore\src\frontend\searchlist.lua:52
+#: src/frontend/SearchList.lua:52
 msgid "Rename Search"
 msgstr "Suche umbenennen"
 
-#: d:\projects\esoaddons\awesomeguildstore\src\frontend\searchlist.lua:55
+#: src/frontend/SearchList.lua:55
 msgid "Enter the new name for your search."
 msgstr "Gebt den neuen Namen für eure Suche ein."
 
-#: d:\projects\esoaddons\awesomeguildstore\src\frontend\searchlist.lua:63
+#: src/frontend/SearchList.lua:63
 msgid "Save"
 msgstr "Speichern"
 
 #. TRANSLATORS: Label for the row at the end of the search result list which triggers the search for more results
 #. TRANSLATORS: Label for the keybind to show more results
-#: d:\projects\esoaddons\awesomeguildstore\src\frontend\searchresultlistwrapper.lua:37
-#: d:\projects\esoaddons\awesomeguildstore\src\wrappers\keybindstripwrapper.lua:48
+#: src/frontend/SearchResultListWrapper.lua:37
+#: src/wrappers/KeybindStripWrapper.lua:48
 msgid "Show More Results"
 msgstr "Mehr Ergebnisse anzeigen"
 
 #. TRANSLATORS: Label for the row at the end of the search result list when a search is already pending, but cannot start yet due to the request cooldown
-#: d:\projects\esoaddons\awesomeguildstore\src\frontend\searchresultlistwrapper.lua:39
+#: src/frontend/SearchResultListWrapper.lua:39
 msgid "Waiting For Cooldown ..."
 msgstr "Warte Auf Abklingzeit …"
 
 #. TRANSLATORS: Label for the row at the end of the search result list when a search is currently in progress
-#: d:\projects\esoaddons\awesomeguildstore\src\frontend\searchresultlistwrapper.lua:41
+#: src/frontend/SearchResultListWrapper.lua:41
 msgid "Requesting Results ..."
 msgstr "Frage Ergbenisse ab …"
 
 #. TRANSLATORS: Label for the result count below the search result list. First number indicates the visible results, second number the overall number of locally stored items for the current guild
-#: d:\projects\esoaddons\awesomeguildstore\src\frontend\searchresultlistwrapper.lua:43
+#: src/frontend/SearchResultListWrapper.lua:43
 #, lua-format
 msgid "Items:|cffffff %d / %d"
 msgstr "Gegenstände:|cffffff %d / %d"
 
 #. TRANSLATORS: Seller name label in the search result list
-#: d:\projects\esoaddons\awesomeguildstore\src\frontend\searchresultlistwrapper.lua:160
+#: src/frontend/SearchResultListWrapper.lua:160
 msgid "Seller:|cffffff <<1>>"
 msgstr "Verkäufer:|cffffff <<1>>"
 
 #. TRANSLATORS: Tooltip text when hovering over the activity status line
-#: d:\projects\esoaddons\awesomeguildstore\src\frontend\statusline.lua:40
+#: src/frontend/StatusLine.lua:40
 msgid "Click for more information"
 msgstr "Hier klicken für mehr Informationen"
 
 #. TRANSLATORS: tooltip text for the set to level filter's "set to level" button on the sell tab
-#: d:\projects\esoaddons\awesomeguildstore\src\frontend\filter\levelrangefilterfragment.lua:76
+#: src/frontend/filter/LevelRangeFilterFragment.lua:76
 msgid "Set To Character Level"
 msgstr "Auf Charakter-Level setzen"
 
 #. TRANSLATORS: tooltip text for removing entries in the list of a multi category filter on the search tab
-#: d:\projects\esoaddons\awesomeguildstore\src\frontend\filter\multicategoryfilterfragment.lua:14
+#: src/frontend/filter/MultiCategoryFilterFragment.lua:14
 msgid "Click to remove"
 msgstr "Zum Entfernen klicken"
 
 #. TRANSLATORS: label of button to add more values to the multi category filter
-#: d:\projects\esoaddons\awesomeguildstore\src\frontend\filter\multicategoryfilterfragment.lua:66
+#: src/frontend/filter/MultiCategoryFilterFragment.lua:66
 msgid "Add More"
 msgstr "Mehr hinzufügen"
 
 #. TRANSLATORS: sort header tooltip for the list on the guild kiosk tab
-#: d:\projects\esoaddons\awesomeguildstore\src\guildstorelist\guildlist.lua:66
+#: src/guildstorelist/GuildList.lua:66
 msgid "Number of weeks since last seen on a trader"
-msgstr "Anzahl der Wochen seit diese Gilde zuletzt mit einem Händler gesehen wurde"
+msgstr ""
+"Anzahl der Wochen seit diese Gilde zuletzt mit einem Händler gesehen wurde"
 
 #. TRANSLATORS: sort header tooltip for the list on the guild kiosk tab
-#: d:\projects\esoaddons\awesomeguildstore\src\guildstorelist\guildlist.lua:69
+#: src/guildstorelist/GuildList.lua:69
 msgid "Number of weeks with a kiosk"
 msgstr "Anzahl der Wochen mit Händler"
 
 #. TRANSLATORS: sort header label for the list on the guild kiosk tab
-#: d:\projects\esoaddons\awesomeguildstore\src\guildstorelist\guildlist.lua:71
-#: d:\projects\esoaddons\awesomeguildstore\src\guildstorelist\guildstorelist.lua:166
-#: d:\projects\esoaddons\awesomeguildstore\src\guildstorelist\guildstorelist.lua:189
-#: d:\projects\esoaddons\awesomeguildstore\src\guildstorelist\guildstorelist.lua:197
+#: src/guildstorelist/GuildList.lua:71
+#: src/guildstorelist/GuildStoreList.lua:166
+#: src/guildstorelist/GuildStoreList.lua:189
+#: src/guildstorelist/GuildStoreList.lua:197
 msgid "Guild"
 msgstr "Gilde"
 
 #. TRANSLATORS: sort header label for the list on the guild kiosk tab
-#: d:\projects\esoaddons\awesomeguildstore\src\guildstorelist\guildlist.lua:85
-#: d:\projects\esoaddons\awesomeguildstore\src\guildstorelist\guildstorelist.lua:168
-#: d:\projects\esoaddons\awesomeguildstore\src\guildstorelist\guildstorelist.lua:182
+#: src/guildstorelist/GuildList.lua:85
+#: src/guildstorelist/GuildStoreList.lua:168
+#: src/guildstorelist/GuildStoreList.lua:182
 msgid "Last Visited"
 msgstr "Letzter Besuch"
 
 #. TRANSLATORS: label for the detail view on the guild kiosk tab
-#: d:\projects\esoaddons\awesomeguildstore\src\guildstorelist\guildlist.lua:88
-#: d:\projects\esoaddons\awesomeguildstore\src\guildstorelist\guildstorelist.lua:185
+#: src/guildstorelist/GuildList.lua:88
+#: src/guildstorelist/GuildStoreList.lua:185
 msgid "Zone"
 msgstr "Region"
 
 #. TRANSLATORS: sort header label for the list on the guild kiosk tab
-#: d:\projects\esoaddons\awesomeguildstore\src\guildstorelist\guildlist.lua:90
-#: d:\projects\esoaddons\awesomeguildstore\src\guildstorelist\guildlist.lua:101
-#: d:\projects\esoaddons\awesomeguildstore\src\guildstorelist\guildstorelist.lua:164
-#: d:\projects\esoaddons\awesomeguildstore\src\guildstorelist\guildstorelist.lua:187
+#: src/guildstorelist/GuildList.lua:90 src/guildstorelist/GuildList.lua:101
+#: src/guildstorelist/GuildStoreList.lua:164
+#: src/guildstorelist/GuildStoreList.lua:187
 msgid "Location"
 msgstr "Ort"
 
-#: d:\projects\esoaddons\awesomeguildstore\src\guildstorelist\guildlist.lua:92
+#: src/guildstorelist/GuildList.lua:92
 msgid "Weeks w/ kiosk"
 msgstr "Wochen mit Händler"
 
-#: d:\projects\esoaddons\awesomeguildstore\src\guildstorelist\guildlist.lua:94
-#: d:\projects\esoaddons\awesomeguildstore\src\guildstorelist\guildstorelist.lua:191
+#: src/guildstorelist/GuildList.lua:94
+#: src/guildstorelist/GuildStoreList.lua:191
 msgid "History"
 msgstr "Verlauf"
 
 #. TRANSLATORS: sort header label for the history list on the guild kiosk tab
-#: d:\projects\esoaddons\awesomeguildstore\src\guildstorelist\guildlist.lua:99
-#: d:\projects\esoaddons\awesomeguildstore\src\guildstorelist\guildstorelist.lua:196
+#: src/guildstorelist/GuildList.lua:99
+#: src/guildstorelist/GuildStoreList.lua:196
 msgid "Week"
 msgstr "Woche"
 
 #. TRANSLATORS: sort header label for the list on the guild kiosk tab
-#: d:\projects\esoaddons\awesomeguildstore\src\guildstorelist\guildlist.lua:100
-#: d:\projects\esoaddons\awesomeguildstore\src\guildstorelist\guildstorelist.lua:162
+#: src/guildstorelist/GuildList.lua:100
+#: src/guildstorelist/GuildStoreList.lua:162
 msgid "Trader"
 msgstr "Händler"
 
 #. TRANSLATORS: label for a context menu entry for a row on the guild kiosk tab
-#: d:\projects\esoaddons\awesomeguildstore\src\guildstorelist\guildlist.lua:107
-#: d:\projects\esoaddons\awesomeguildstore\src\guildstorelist\guildstorelist.lua:235
+#: src/guildstorelist/GuildList.lua:107
+#: src/guildstorelist/GuildStoreList.lua:235
 msgid "Show Details"
 msgstr "Details anzeigen"
 
@@ -829,238 +866,245 @@ msgstr "Details anzeigen"
 #. TRANSLATORS: tooltip text for the open guild info button in the detail view on the guild kiosk tab
 #. TRANSLATORS: label for a context menu entry for a row on the guild kiosk tab
 #. TRANSLATORS: tooltip text for the open guild info button in the guild store
-#: d:\projects\esoaddons\awesomeguildstore\src\guildstorelist\guildlist.lua:109
-#: d:\projects\esoaddons\awesomeguildstore\src\guildstorelist\guildlist.lua:154
-#: d:\projects\esoaddons\awesomeguildstore\src\guildstorelist\guildstorelist.lua:238
-#: d:\projects\esoaddons\awesomeguildstore\src\wrappers\tradinghousewrapper.lua:269
+#: src/guildstorelist/GuildList.lua:109 src/guildstorelist/GuildList.lua:154
+#: src/guildstorelist/GuildStoreList.lua:238
+#: src/wrappers/TradingHouseWrapper.lua:273
 msgid "Open Guild Info"
 msgstr "Gildeninformation öffnen"
 
 #. TRANSLATORS: text for the last visited label in the guild list detail view. $d is a placeholder for the number of weeks
-#: d:\projects\esoaddons\awesomeguildstore\src\guildstorelist\guildlist.lua:185
+#: src/guildstorelist/GuildList.lua:185
 msgid "<<1[this week/1 week ago/$d weeks ago]>>"
 msgstr "<<1[Diese Woche/vor 1 Woche/vor $d Wochen]>>"
 
 #. TRANSLATORS: text for the last visited field of an unvisited kiosk on the guild kiosk tab
-#: d:\projects\esoaddons\awesomeguildstore\src\guildstorelist\guildlist.lua:207
-#: d:\projects\esoaddons\awesomeguildstore\src\guildstorelist\guildstorelist.lua:224
+#: src/guildstorelist/GuildList.lua:207
+#: src/guildstorelist/GuildStoreList.lua:224
 msgid "never"
 msgstr "niemals"
 
 #. TRANSLATORS: tooltip text for the store stats on the guild kiosk tab. <<1>> is replaced with the kiosk count
-#: d:\projects\esoaddons\awesomeguildstore\src\guildstorelist\guildlist.lua:342
+#: src/guildstorelist/GuildList.lua:342
 msgid "|cffffff<<1>>|r guilds visited this week"
 msgstr "|cffffff<<1>>|r Gilden besucht diese Woche"
 
 #. TRANSLATORS: tooltip text for the store stats on the guild kiosk tab. <<1>> is replaced with the kiosk count
-#: d:\projects\esoaddons\awesomeguildstore\src\guildstorelist\guildlist.lua:348
+#: src/guildstorelist/GuildList.lua:348
 msgid "|cffffff<<1>>|r guilds visited all time"
 msgstr "|cffffff<<1>>|r Gilden besucht insgesamt"
 
 #. TRANSLATORS: tooltip text for the store stats on the guild kiosk tab. <<1>> is replaced with the overall guild count
-#: d:\projects\esoaddons\awesomeguildstore\src\guildstorelist\guildlist.lua:354
+#: src/guildstorelist/GuildList.lua:354
 msgid "|cffffff<<1>>|r guilds stored"
 msgstr "|cffffff<<1>>|r Gilden gespeichert"
 
 #. TRANSLATORS: placeholder text when the list on the guild kiosk tab is not yet initialized
-#: d:\projects\esoaddons\awesomeguildstore\src\guildstorelist\guildlistcontrol.lua:51
-#: d:\projects\esoaddons\awesomeguildstore\src\guildstorelist\traderlistcontrol.lua:101
+#: src/guildstorelist/GuildListControl.lua:51
+#: src/guildstorelist/TraderListControl.lua:101
 msgid "Trader database is not initialized yet."
 msgstr "Händlerdatenbank ist noch nicht initialisiert."
 
 #. TRANSLATORS: placeholder text when no entry on the list on the guild kiosk tab matches the text filter
-#: d:\projects\esoaddons\awesomeguildstore\src\guildstorelist\guildlistcontrol.lua:54
-#: d:\projects\esoaddons\awesomeguildstore\src\guildstorelist\traderlistcontrol.lua:104
+#: src/guildstorelist/GuildListControl.lua:54
+#: src/guildstorelist/TraderListControl.lua:104
 msgid "No results match your filter text."
 msgstr "Keine Ergebnisse für eure Suche."
 
 #. TRANSLATORS: label for the search box on the guild kiosk tab
-#: d:\projects\esoaddons\awesomeguildstore\src\guildstorelist\guildlistcontrol.lua:112
-#: d:\projects\esoaddons\awesomeguildstore\src\guildstorelist\traderlistcontrol.lua:180
+#: src/guildstorelist/GuildListControl.lua:112
+#: src/guildstorelist/TraderListControl.lua:180
 msgid "Filter By:"
 msgstr "Suche nach:"
 
 #. TRANSLATORS: label on the guild kiosk tab showing how many kiosks the player has visited in the current trading week
-#: d:\projects\esoaddons\awesomeguildstore\src\guildstorelist\guildlistcontrol.lua:126
-#: d:\projects\esoaddons\awesomeguildstore\src\guildstorelist\traderlistcontrol.lua:194
+#: src/guildstorelist/GuildListControl.lua:126
+#: src/guildstorelist/TraderListControl.lua:194
 msgid "Current:"
 msgstr "Aktuell:"
 
 #. TRANSLATORS: label on the guild kiosk tab showing how many kiosks the player has visited at all times
-#: d:\projects\esoaddons\awesomeguildstore\src\guildstorelist\guildlistcontrol.lua:129
-#: d:\projects\esoaddons\awesomeguildstore\src\guildstorelist\traderlistcontrol.lua:197
+#: src/guildstorelist/GuildListControl.lua:129
+#: src/guildstorelist/TraderListControl.lua:197
 msgid "Visited:"
 msgstr "Besucht:"
 
 #. TRANSLATORS: label on the guild kiosk tab showing how many kiosks there are in the game
-#: d:\projects\esoaddons\awesomeguildstore\src\guildstorelist\guildlistcontrol.lua:132
-#: d:\projects\esoaddons\awesomeguildstore\src\guildstorelist\traderlistcontrol.lua:200
+#: src/guildstorelist/GuildListControl.lua:132
+#: src/guildstorelist/TraderListControl.lua:200
 msgid "Overall:"
 msgstr "Gesamt:"
 
 #. TRANSLATORS: tooltip for the last visited field of a joined guild on the guild kiosk tab
-#: d:\projects\esoaddons\awesomeguildstore\src\guildstorelist\guildstorelist.lua:395
+#: src/guildstorelist/GuildStoreList.lua:395
 msgid "You are a member of this guild."
 msgstr "Ihr seit Mitglied dieser Gilde."
 
 #. TRANSLATORS: tooltip text for the store stats on the guild kiosk tab. <<1>> is replaced with the kiosk count
-#: d:\projects\esoaddons\awesomeguildstore\src\guildstorelist\guildstorelist.lua:457
+#: src/guildstorelist/GuildStoreList.lua:457
 msgid "|cffffff<<1>>|r stores visited this week"
 msgstr "|cffffff<<1>>|r Händler besucht diese Woche"
 
 #. TRANSLATORS: tooltip text for the store stats on the guild kiosk tab. <<1>> is replaced with the kiosk count
-#: d:\projects\esoaddons\awesomeguildstore\src\guildstorelist\guildstorelist.lua:463
+#: src/guildstorelist/GuildStoreList.lua:463
 msgid "|cffffff<<1>>|r stores visited all time"
 msgstr "|cffffff<<1>>|r Händler besucht insgesamt"
 
 #. TRANSLATORS: tooltip text for the store stats on the guild kiosk tab. <<1>> is replaced with the kiosk count and <<2>> with the amount of distinct locations
-#: d:\projects\esoaddons\awesomeguildstore\src\guildstorelist\guildstorelist.lua:469
+#: src/guildstorelist/GuildStoreList.lua:469
 msgid "|cffffff<<1>>|r stores detected in |cffffff<<2>>|r locations"
 msgstr "|cffffff<<1>>|r Händler an |cffffff<<2>>|r Orten gefunden"
 
 #. TRANSLATORS: placeholder text when the history list of an entry on the guild kiosk tab is empty
-#: d:\projects\esoaddons\awesomeguildstore\src\guildstorelist\kioskhistorycontrol.lua:34
-#: d:\projects\esoaddons\awesomeguildstore\src\guildstorelist\ownerhistorycontrol.lua:34
+#: src/guildstorelist/KioskHistoryControl.lua:34
+#: src/guildstorelist/OwnerHistoryControl.lua:34
 msgid "No history data stored."
 msgstr "Kein Verlauf gespeichert."
 
 #. TRANSLATORS: label for the last visited field of a joined guild on the guild kiosk tab
-#: d:\projects\esoaddons\awesomeguildstore\src\guildstorelist\traderlistcontrol.lua:144
+#: src/guildstorelist/TraderListControl.lua:144
 msgid "joined"
 msgstr "beigetreten"
 
 #. TRANSLATORS: this is used to find guild store sell mails. it has to be exactly the same as the subject of the ingame mails, otherwise the detection will fail
-#: d:\projects\esoaddons\awesomeguildstore\src\history\mailbox.lua:30
+#: src/history/MailBox.lua:30
 msgid "Item Sold"
 msgstr "Gegenstand verkauft"
 
 #. TRANSLATORS: help text for the listing price in the guild store sell mail invoice
-#: d:\projects\esoaddons\awesomeguildstore\src\history\mailbox.lua:162
+#: src/history/MailBox.lua:162
 msgid "The price the item was listed for"
 msgstr "Der Preis zu dem der Gegenstand angeboten wurde"
 
 #. TRANSLATORS: help text for the tax amount in the guild store sell mail invoice
-#: d:\projects\esoaddons\awesomeguildstore\src\history\mailbox.lua:169
+#: src/history/MailBox.lua:169
 msgid "The amount that was deposited into the guild bank as tax"
 msgstr "Der Anteil der als Steuer in die Gildenbank deponiert wurde"
 
 #. TRANSLATORS: label for the commission line in the guild store sell mail invoice
-#: d:\projects\esoaddons\awesomeguildstore\src\history\mailbox.lua:173
+#: src/history/MailBox.lua:173
 msgid "Commission"
 msgstr "Provision"
 
 #. TRANSLATORS: help text for the commission in the guild store sell mail invoice
-#: d:\projects\esoaddons\awesomeguildstore\src\history\mailbox.lua:175
+#: src/history/MailBox.lua:175
 msgid "The amount that disappeared into the void"
 msgstr "Der Anteil der ins Nichts verschwunden ist"
 
 #. TRANSLATORS: help text for the received gold in the guild store sell mail invoice
-#: d:\projects\esoaddons\awesomeguildstore\src\history\mailbox.lua:182
+#: src/history/MailBox.lua:182
 msgid "The gold attached to this mail"
 msgstr "Das Gold das an diese Nachricht angehängt wurde"
 
 #. TRANSLATORS: help text for the listing fee in the guild store sell mail invoice
-#: d:\projects\esoaddons\awesomeguildstore\src\history\mailbox.lua:189
+#: src/history/MailBox.lua:189
 msgid "The fee that was taken from the inventory when the item was listed in the store"
-msgstr "Die Gebühr die aus dem Inventar verrechnet wurde, als der Gegenstand im Gildenladen angeboten wurde"
+msgstr ""
+"Die Gebühr die aus dem Inventar verrechnet wurde, als der Gegenstand im "
+"Gildenladen angeboten wurde"
 
 #. TRANSLATORS: help text for the profit in the guild store sell mail invoice
-#: d:\projects\esoaddons\awesomeguildstore\src\history\mailbox.lua:196
+#: src/history/MailBox.lua:196
 msgid "The resulting profit after subtracting all the fees"
 msgstr "Der resultierende Gewinn nach Abzug aller Kosten"
 
 #. TRANSLATORS: label for the load details button in guild store sell mails where the invoice can not be shown due to lack of data
-#: d:\projects\esoaddons\awesomeguildstore\src\history\mailbox.lua:218
+#: src/history/MailBox.lua:218
 msgid "Load Details"
 msgstr "Lade Details"
 
 #. TRANSLATORS: Mail body for item sold mails from the guild store. <<t:1>> is replaced by the itemlink, <<2>> by the item count, <<3>> by the buyer name and <<4>> by the sell price. e.g. You sold 1 Rosin to sirinsidiator for 5000g.
-#: d:\projects\esoaddons\awesomeguildstore\src\history\mailbox.lua:284
+#: src/history/MailBox.lua:284
 msgid "You sold <<2>> <<t:1>> to <<3>> for <<4>>."
 msgstr "Du hast <<2>> <<t:1>> an <<3>> verkauft für <<4>>."
 
 #. TRANSLATORS: chat text when a kiosk name could not be matched. <<1>> is replaced by the label on the home tab in the guild menu
-#: d:\projects\esoaddons\awesomeguildstore\src\util\misc.lua:68
+#: src/util/misc.lua:68
 msgid "Warning: Could not match kiosk name: '<<1>>' -- please report this to the author"
-msgstr "Warnung: Kioskname konnte nicht zugeordnet werden: '<<1>>' -- bitte benachrichtige den Author"
+msgstr ""
+"Warnung: Kioskname konnte nicht zugeordnet werden: '<<1>>' -- bitte "
+"benachrichtige den Author"
 
 #. TRANSLATORS: chat message when an item listing is cancelled on the listing tab. <<1>> is replaced with the item count, <<t:2>> with the item link, <<3>> with the price and <<4>> with the guild store name. e.g. You have cancelled your listing of 1x [Rosin] for 5000g in Imperial Trading Company
-#: d:\projects\esoaddons\awesomeguildstore\src\wrappers\listingtabwrapper.lua:237
+#: src/wrappers/ListingTabWrapper.lua:237
 msgid "You have cancelled your listing of <<1>>x <<t:2>> for <<3>> in <<4>>"
 msgstr "Du hast dein Angebot von <<1>>x <<t:2>> für <<3>> in <<4>> abgebrochen"
 
 #. TRANSLATORS: the overall price of all listed items in a store on the listing tab. <<1>> is replaced by the price
-#: d:\projects\esoaddons\awesomeguildstore\src\wrappers\listingtabwrapper.lua:248
-#: d:\projects\esoaddons\awesomeguildstore\src\wrappers\listingtabwrapper.lua:265
+#: src/wrappers/ListingTabWrapper.lua:248
+#: src/wrappers/ListingTabWrapper.lua:265
 msgid "Overall Price: <<1>>"
 msgstr "Gesamtpreis: <<1>>"
 
 #. TRANSLATORS: chat message when an item is bought from the store. <<1>> is replaced with the item count, <<t:2>> with the item link, <<3>> with the seller name, <<4>> with price and <<5>> with the guild store name. e.g. You have bought 1x [Rosin] from sirinsidiator for 5000g in Imperial Trading Company
-#: d:\projects\esoaddons\awesomeguildstore\src\wrappers\searchtabwrapper.lua:275
+#: src/wrappers/SearchTabWrapper.lua:275
 msgid "You have bought <<1>>x <<t:2>> from <<3>> for <<4>> in <<5>>"
 msgstr "Du hast <<1>>x <<t:2>> von <<3>> für <<4>> in <<5>> gekauft"
 
 #. TRANSLATORS: Alert message when they try to purchase an item which was already purchased by them earlier
-#: d:\projects\esoaddons\awesomeguildstore\src\wrappers\searchtabwrapper.lua:300
+#: src/wrappers/SearchTabWrapper.lua:300
 msgid "Item is already in your possession."
 msgstr "Gegenstand ist bereits in eurem Besitz."
 
 #. TRANSLATORS: Alert message when the item data for the item id could not be found while confirming a purchase
-#: d:\projects\esoaddons\awesomeguildstore\src\wrappers\searchtabwrapper.lua:321
+#: src/wrappers/SearchTabWrapper.lua:321
 msgid "Item not found in current guild."
 msgstr "Gegenstand konnte in der ausgewählten Gilde nicht gefunden werden."
 
 #. TRANSLATORS: the label for the listing repetition slider on the sell tab
-#: d:\projects\esoaddons\awesomeguildstore\src\wrappers\selltabwrapper.lua:189
+#: src/wrappers/SellTabWrapper.lua:190
 msgid "Listings:"
 msgstr "Auflistungen:"
 
 #. TRANSLATORS: tooltip text for the quantity selection buttons on the sell tab
-#: d:\projects\esoaddons\awesomeguildstore\src\wrappers\selltabwrapper.lua:215
+#: src/wrappers/SellTabWrapper.lua:216
 msgid "Select Full Quantity"
 msgstr "Volle Stückzahl wählen"
 
 #. TRANSLATORS: tooltip text for the quantity selection buttons on the sell tab
-#: d:\projects\esoaddons\awesomeguildstore\src\wrappers\selltabwrapper.lua:224
+#: src/wrappers/SellTabWrapper.lua:225
 msgid "Select Last Sold Quantity"
 msgstr "Zuletzt verkaufte Stückzahl wählen"
 
 #. TRANSLATORS: title text for the unit price selection on the sell tab
-#: d:\projects\esoaddons\awesomeguildstore\src\wrappers\selltabwrapper.lua:242
+#: src/wrappers/SellTabWrapper.lua:243
 msgid "Unit Price:"
 msgstr "Stückpreis:"
 
 #. TRANSLATORS: tooltip text for the unit price selection buttons on the sell tab
-#: d:\projects\esoaddons\awesomeguildstore\src\wrappers\selltabwrapper.lua:259
+#: src/wrappers/SellTabWrapper.lua:260
 msgid "Select Default Price"
 msgstr "Grundpreis wählen"
 
 #. TRANSLATORS: tooltip text for the unit price selection buttons on the sell tab
-#: d:\projects\esoaddons\awesomeguildstore\src\wrappers\selltabwrapper.lua:268
+#: src/wrappers/SellTabWrapper.lua:270
 msgid "Select Last Sell Price"
 msgstr "Zuletzt verkauften Preis wählen"
 
 #. TRANSLATORS: tooltip text for the unit price selection buttons on the sell tab
-#: d:\projects\esoaddons\awesomeguildstore\src\wrappers\selltabwrapper.lua:281
+#: src/wrappers/SellTabWrapper.lua:284
 msgid "Select Master Merchant Price"
 msgstr "Master Merchant Preis wählen"
 
 #. TRANSLATORS: tooltip text for the profit warning icon on the sell tab
-#: d:\projects\esoaddons\awesomeguildstore\src\wrappers\selltabwrapper.lua:312
+#: src/wrappers/SellTabWrapper.lua:317
 msgid "Profit is below vendor price. You'll get more out of selling this item to a merchant."
-msgstr "Der Profit liegt unter dem Händlerpreis. Ihr würdet mehr verdienen wenn ihr diesen Gegenstand an einen Händler verkauft."
+msgstr ""
+"Der Profit liegt unter dem Händlerpreis. Ihr würdet mehr verdienen wenn ihr "
+"diesen Gegenstand an einen Händler verkauft."
 
 #. TRANSLATORS: alert text when trying to list an item from the bank while not at a banker NPC
-#: d:\projects\esoaddons\awesomeguildstore\src\wrappers\selltabwrapper.lua:380
+#: src/wrappers/SellTabWrapper.lua:385
 msgid "Bank items can only be listed while at a banker NPC"
-msgstr "Gegenstände aus der Bank können nur angeboten werden, während man mit einem Bankangestellten spricht"
+msgstr ""
+"Gegenstände aus der Bank können nur angeboten werden, während man mit einem "
+"Bankangestellten spricht"
 
 #. TRANSLATORS: chat message when a item is listed on a store. <<1>> is replaced with the item count, <<t:2>> with the item link, <<3>> with the price and <<4>> with the guild store name. e.g. You have listed 1x [Rosin] for 5000g in Imperial Trading Company
-#: d:\projects\esoaddons\awesomeguildstore\src\wrappers\selltabwrapper.lua:703
+#: src/wrappers/SellTabWrapper.lua:708
 msgid "You have listed <<1>>x <<t:2>> for <<3>> in <<4>>"
 msgstr "Du hast <<1>>x <<t:2>> für <<3>> in <<4>> angeboten"
 
 #. TRANSLATORS: Footer text for the store interface. Place holders are for the version string and to make the Donate text clickable and colored
-#: d:\projects\esoaddons\awesomeguildstore\src\wrappers\tradinghousewrapper.lua:325
+#: src/wrappers/TradingHouseWrapper.lua:329
 msgid "AwesomeGuildStore - Version: <<1>> - <<2>>Donate<<3>>"
 msgstr "AwesomeGuildStore - Version: <<1>> - <<2>>Spenden<<3>>"
