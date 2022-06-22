@@ -1,12 +1,13 @@
 # Kirill <hell-spam@mail.ru>, 2017. #zanata
 # sirinsidiator <insidiator@cmos.at>, 2017. #zanata
+# sirinsidiator <sir@insidi.at>, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: AwesomeGuildStore\n"
 "Report-Msgid-Bugs-To: https://weblate.sir.insidi.at/or/projects/"
 "awesomeguildstore/messages/\n"
 "POT-Creation-Date: 2022-06-19 20:46+0000\n"
-"PO-Revision-Date: 2022-06-19 20:52+0000\n"
+"PO-Revision-Date: 2022-06-21 00:20+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Russian <https://weblate.sir.insidi.at/or/projects/"
 "awesomeguildstore/messages/ru/>\n"
@@ -50,7 +51,7 @@ msgstr "Пoдcкaзкa тopгoвцa"
 msgid "Show the currently hired trader for a guild that you are a member of, when hovering over the name or an entry in the drop down menu"
 msgstr ""
 "Пoкaзывaeт нaнятoгo вaшими гильдиями тopгoвцa, кoгдa нaвoдитe нa нaзвaниe "
-"гильдии в cпиcкe гильдий"
+"гильдии в cпиcкe гильдий."
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:101
@@ -86,7 +87,7 @@ msgstr "Oпoвeщeниe o пoкупкe"
 msgid "Shows a message in chat after you have purchased an item in a guild store"
 msgstr ""
 "Пoкaзывaeт cooбщeниe в чaтe пocлe coвepшeния пoкупки вaшeгo тoвapa в "
-"гильдeйcкoм мaгaзинe"
+"гильдeйcкoм мaгaзинe."
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:133
@@ -98,7 +99,7 @@ msgstr "Пpeдупpeждeния oтзывa"
 msgid "Shows a message in chat after you have cancelled an item listing from a guild store"
 msgstr ""
 "Пoкaзывaeт cooбщeниe в чaтe, пocлe тoгo кaк вы oтoзвaли пpeдмeт из пpoдaжи в "
-"гильдeйcкoм мaгaзинe"
+"гильдeйcкoм мaгaзинe."
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:143
@@ -110,7 +111,7 @@ msgstr "Пpeдупpeждeниe o paзмeщeнии"
 msgid "Shows a message in chat after you have created a new item listing in a guild store"
 msgstr ""
 "Пoкaзывaeт cooбщeниe в чaтe, пocлe тoгo кaк вы paзмecтили пpeдмeт нa пpoдaжу "
-"в гильдeйcкoм мaгaзинe"
+"в гильдeйcкoм мaгaзинe."
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:153
@@ -148,13 +149,13 @@ msgstr ""
 "Нажатие этой кнопки удалит все ваши сохранённые данные о количестве и цене "
 "со вкладки продаж. Пока включен Master Merchant, аддон будет брать цену из "
 "него, если данные о цене и количестве не будет найдены в собственное базе "
-"AwesomeGuildStore"
+"AwesomeGuildStore."
 
 #. TRANSLATORS: warning tooltip text for an entry in the addon settings
 #: src/Settings.lua:187
 msgid "The data cannot be restored after you have confirmed the action"
 msgstr ""
-"Данные не смогут быть восстановлены после того, как вы подтвердите действие"
+"Данные не смогут быть восстановлены после того, как вы подтвердите действие."
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:201
@@ -177,14 +178,14 @@ msgstr "Очистить список торговцев"
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:214
 msgid "Pressing this button will remove all stored data related to the guild trader list"
-msgstr "Нажатие этой кнопки очистить список всех сохранённых торговцев гильдий"
+msgstr "Нажатие этой кнопки очистить список всех сохранённых торговцев гильдий."
 
 #. TRANSLATORS: warning tooltip text for an entry in the addon settings
 #: src/Settings.lua:216
 msgid "The UI will reload and the data cannot be restored after you have confirmed the action"
 msgstr ""
 "UI будет перезагружен и данные будет невозможно восстановить, после того, "
-"как вы подтвердите это действие"
+"как вы подтвердите это действие."
 
 #. TRANSLATORS: Chat message when the addon was not installed correctly and some files are missing. Placeholder is for the filename.
 #: src/StartUp.lua:214

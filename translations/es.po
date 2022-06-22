@@ -1,11 +1,12 @@
 # sirinsidiator <insidiator@cmos.at>, 2020. #zanata
+# sirinsidiator <sir@insidi.at>, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: AwesomeGuildStore\n"
 "Report-Msgid-Bugs-To: https://weblate.sir.insidi.at/or/projects/"
 "awesomeguildstore/messages/\n"
 "POT-Creation-Date: 2022-06-19 20:46+0000\n"
-"PO-Revision-Date: 2022-06-19 20:52+0000\n"
+"PO-Revision-Date: 2022-06-21 00:10+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Spanish <https://weblate.sir.insidi.at/or/projects/"
 "awesomeguildstore/messages/es/>\n"
@@ -748,12 +749,12 @@ msgstr "Mostrar más resultados"
 #. TRANSLATORS: Label for the row at the end of the search result list when a search is already pending, but cannot start yet due to the request cooldown
 #: src/frontend/SearchResultListWrapper.lua:39
 msgid "Waiting For Cooldown ..."
-msgstr "Esperando por terminar..."
+msgstr "Esperando por terminar …"
 
 #. TRANSLATORS: Label for the row at the end of the search result list when a search is currently in progress
 #: src/frontend/SearchResultListWrapper.lua:41
 msgid "Requesting Results ..."
-msgstr "Esperando resultados..."
+msgstr "Esperando resultados …"
 
 #. TRANSLATORS: Label for the result count below the search result list. First number indicates the visible results, second number the overall number of locally stored items for the current guild
 #: src/frontend/SearchResultListWrapper.lua:43
@@ -941,7 +942,7 @@ msgstr "|cffffff<<1>>|r tiendas visitadas en total"
 #. TRANSLATORS: tooltip text for the store stats on the guild kiosk tab. <<1>> is replaced with the kiosk count and <<2>> with the amount of distinct locations
 #: src/guildstorelist/GuildStoreList.lua:469
 msgid "|cffffff<<1>>|r stores detected in |cffffff<<2>>|r locations"
-msgstr "|cffffff<<1>>|r tiendas detectadas en |cffffff<<2>>|r ubicaciones."
+msgstr "|cffffff<<1>>|r tiendas detectadas en |cffffff<<2>>|r ubicaciones"
 
 #. TRANSLATORS: placeholder text when the history list of an entry on the guild kiosk tab is empty
 #: src/guildstorelist/KioskHistoryControl.lua:34
@@ -1009,7 +1010,7 @@ msgstr "Has vendido <<2>>x [<<C:1>>] a <<3>> por <<4>>."
 msgid "Warning: Could not match kiosk name: '<<1>>' -- please report this to the author"
 msgstr ""
 "Advertencia: Podría no coincidir con el nombre de la tienda: '<<1>>' -- por "
-"favor informa de esto al autor."
+"favor informa de esto al autor"
 
 #. TRANSLATORS: chat message when an item listing is cancelled on the listing tab. <<1>> is replaced with the item count, <<t:2>> with the item link, <<3>> with the price and <<4>> with the guild store name. e.g. You have cancelled your listing of 1x [Rosin] for 5000g in Imperial Trading Company
 #: src/wrappers/ListingTabWrapper.lua:237

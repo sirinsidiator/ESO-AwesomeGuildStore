@@ -1,15 +1,16 @@
 # Marcio Luis Severo <mlsevero@hotmail.com>, 2018. #zanata
 # Marcio Luis Severo <mlsevero@hotmail.com>, 2019. #zanata
+# sirinsidiator <sir@insidi.at>, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: AwesomeGuildStore\n"
 "Report-Msgid-Bugs-To: https://weblate.sir.insidi.at/or/projects/"
 "awesomeguildstore/messages/\n"
 "POT-Creation-Date: 2022-06-19 20:46+0000\n"
-"PO-Revision-Date: 2022-06-19 20:52+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Breton <https://weblate.sir.insidi.at/or/projects/"
-"awesomeguildstore/messages/br/>\n"
+"PO-Revision-Date: 2022-06-21 00:21+0000\n"
+"Last-Translator: sirinsidiator <sir@insidi.at>\n"
+"Language-Team: Portuguese (Brazil) <https://weblate.sir.insidi.at/or/"
+"projects/awesomeguildstore/messages/br/>\n"
 "Language: br\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -68,7 +69,7 @@ msgstr ""
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:112
 msgid "Show invoice on mails"
-msgstr "Mostra fatura nas cartas."
+msgstr "Mostra fatura nas cartas"
 
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:114
@@ -149,12 +150,12 @@ msgstr ""
 "Pressionar este botão vai remover todos os dados de preço e quantidade "
 "armazenados na tabela de vendas de seus dados salvos. Enquanto o Master "
 "Merchant estiver ativo, ele terá o ultimo preço de venda de um item, se "
-"nenhum dado for encontrado na própria base de dados do AwesomeGuildStore. "
+"nenhum dado for encontrado na própria base de dados do AwesomeGuildStore."
 
 #. TRANSLATORS: warning tooltip text for an entry in the addon settings
 #: src/Settings.lua:187
 msgid "The data cannot be restored after you have confirmed the action"
-msgstr "Os dados não poderão ser restaurados depois que você confirmar a ação"
+msgstr "Os dados não poderão ser restaurados depois que você confirmar a ação."
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:201
@@ -179,7 +180,7 @@ msgstr "Limpa lista do vendedor da guilda"
 msgid "Pressing this button will remove all stored data related to the guild trader list"
 msgstr ""
 "Pressionar este botão vai remover todos os dados armazenados relacionados à "
-"lista do vendedor da guilda"
+"lista do vendedor da guilda."
 
 #. TRANSLATORS: warning tooltip text for an entry in the addon settings
 #: src/Settings.lua:216
@@ -246,7 +247,7 @@ msgstr "Erro Desconhecido"
 #. TRANSLATORS: Status text when a server request has failed. Placeholder is for an explanation text
 #: src/backend/activity/ActivityManager.lua:339
 msgid "Request failed: <<1>>"
-msgstr "Solicitação Falhou: <<1>>"
+msgstr "Solicitação Falhou : <<1>>"
 
 #. TRANSLATORS: error text shown to the user when a listed item could not be cancelled
 #: src/backend/activity/CancelItemActivity.lua:54
@@ -751,12 +752,12 @@ msgstr "Mostra Mais Resultados"
 #. TRANSLATORS: Label for the row at the end of the search result list when a search is already pending, but cannot start yet due to the request cooldown
 #: src/frontend/SearchResultListWrapper.lua:39
 msgid "Waiting For Cooldown ..."
-msgstr "Esperando Recarga"
+msgstr "Esperando Recarga …"
 
 #. TRANSLATORS: Label for the row at the end of the search result list when a search is currently in progress
 #: src/frontend/SearchResultListWrapper.lua:41
 msgid "Requesting Results ..."
-msgstr "Solicitando Resultados"
+msgstr "Solicitando Resultados …"
 
 #. TRANSLATORS: Label for the result count below the search result list. First number indicates the visible results, second number the overall number of locally stored items for the current guild
 #: src/frontend/SearchResultListWrapper.lua:43
@@ -900,31 +901,31 @@ msgstr "Base de dados do vendedor ainda não iniciada."
 #: src/guildstorelist/GuildListControl.lua:54
 #: src/guildstorelist/TraderListControl.lua:104
 msgid "No results match your filter text."
-msgstr "Seu filtro de texto não trouxe resultados"
+msgstr "Seu filtro de texto não trouxe resultados."
 
 #. TRANSLATORS: label for the search box on the guild kiosk tab
 #: src/guildstorelist/GuildListControl.lua:112
 #: src/guildstorelist/TraderListControl.lua:180
 msgid "Filter By:"
-msgstr "Filtrado Por:"
+msgstr "Filtrado Por :"
 
 #. TRANSLATORS: label on the guild kiosk tab showing how many kiosks the player has visited in the current trading week
 #: src/guildstorelist/GuildListControl.lua:126
 #: src/guildstorelist/TraderListControl.lua:194
 msgid "Current:"
-msgstr "Corrente:"
+msgstr "Corrente :"
 
 #. TRANSLATORS: label on the guild kiosk tab showing how many kiosks the player has visited at all times
 #: src/guildstorelist/GuildListControl.lua:129
 #: src/guildstorelist/TraderListControl.lua:197
 msgid "Visited:"
-msgstr "Visitado:"
+msgstr "Visitado :"
 
 #. TRANSLATORS: label on the guild kiosk tab showing how many kiosks there are in the game
 #: src/guildstorelist/GuildListControl.lua:132
 #: src/guildstorelist/TraderListControl.lua:200
 msgid "Overall:"
-msgstr "Global:"
+msgstr "Global :"
 
 #. TRANSLATORS: tooltip for the last visited field of a joined guild on the guild kiosk tab
 #: src/guildstorelist/GuildStoreList.lua:395
@@ -1011,8 +1012,8 @@ msgstr "Você vendeu <<2>> <<t:1>> para <<3>> por <<4>>."
 #: src/util/misc.lua:68
 msgid "Warning: Could not match kiosk name: '<<1>>' -- please report this to the author"
 msgstr ""
-"Alerta: Não foi possível coincidir o nome do quiosque: '<<1>>' -- por favor, "
-"reporte isso ao autor"
+"Alerta : Não foi possível coincidir o nome do quiosque : '<<1>>' -- por "
+"favor, reporte isso ao autor"
 
 #. TRANSLATORS: chat message when an item listing is cancelled on the listing tab. <<1>> is replaced with the item count, <<t:2>> with the item link, <<3>> with the price and <<4>> with the guild store name. e.g. You have cancelled your listing of 1x [Rosin] for 5000g in Imperial Trading Company
 #: src/wrappers/ListingTabWrapper.lua:237
@@ -1023,7 +1024,7 @@ msgstr "você cancelou sua listagem de <<1>>x <<t:2>> por <<3>> em <<4>>"
 #: src/wrappers/ListingTabWrapper.lua:248
 #: src/wrappers/ListingTabWrapper.lua:265
 msgid "Overall Price: <<1>>"
-msgstr "Preço Global: <<1>>"
+msgstr "Preço Global : <<1>>"
 
 #. TRANSLATORS: chat message when an item is bought from the store. <<1>> is replaced with the item count, <<t:2>> with the item link, <<3>> with the seller name, <<4>> with price and <<5>> with the guild store name. e.g. You have bought 1x [Rosin] from sirinsidiator for 5000g in Imperial Trading Company
 #: src/wrappers/SearchTabWrapper.lua:275
@@ -1038,12 +1039,12 @@ msgstr "Item já está em sua posse."
 #. TRANSLATORS: Alert message when the item data for the item id could not be found while confirming a purchase
 #: src/wrappers/SearchTabWrapper.lua:321
 msgid "Item not found in current guild."
-msgstr "Item não encontrado na guilda atual"
+msgstr "Item não encontrado na guilda atual."
 
 #. TRANSLATORS: the label for the listing repetition slider on the sell tab
 #: src/wrappers/SellTabWrapper.lua:190
 msgid "Listings:"
-msgstr "Listagens:"
+msgstr "Listagens :"
 
 #. TRANSLATORS: tooltip text for the quantity selection buttons on the sell tab
 #: src/wrappers/SellTabWrapper.lua:216
@@ -1058,7 +1059,7 @@ msgstr "Escolhe Última Quantidade Vendida"
 #. TRANSLATORS: title text for the unit price selection on the sell tab
 #: src/wrappers/SellTabWrapper.lua:243
 msgid "Unit Price:"
-msgstr "Preço Unitário:"
+msgstr "Preço Unitário :"
 
 #. TRANSLATORS: tooltip text for the unit price selection buttons on the sell tab
 #: src/wrappers/SellTabWrapper.lua:260
@@ -1095,4 +1096,4 @@ msgstr "Você listou <<1>>x <<t:2>> por <<3>> em <<4>>"
 #. TRANSLATORS: Footer text for the store interface. Place holders are for the version string and to make the Donate text clickable and colored
 #: src/wrappers/TradingHouseWrapper.lua:329
 msgid "AwesomeGuildStore - Version: <<1>> - <<2>>Donate<<3>>"
-msgstr "AwesomeGuildStore - Versão: <<1>> - <<2>>Dôe<<3>>"
+msgstr "AwesomeGuildStore - Versão : <<1>> - <<2>>Dôe<<3>>"

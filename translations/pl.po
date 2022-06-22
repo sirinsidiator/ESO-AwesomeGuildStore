@@ -1,10 +1,11 @@
+# sirinsidiator <sir@insidi.at>, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://weblate.sir.insidi.at/or/projects/"
 "awesomeguildstore/messages/\n"
 "POT-Creation-Date: 2022-06-19 20:46+0000\n"
-"PO-Revision-Date: 2022-06-19 20:52+0000\n"
+"PO-Revision-Date: 2022-06-21 00:20+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Polish <https://weblate.sir.insidi.at/or/projects/"
 "awesomeguildstore/messages/pl/>\n"
@@ -752,12 +753,12 @@ msgstr "Pokaż więcej wyników"
 #. TRANSLATORS: Label for the row at the end of the search result list when a search is already pending, but cannot start yet due to the request cooldown
 #: src/frontend/SearchResultListWrapper.lua:39
 msgid "Waiting For Cooldown ..."
-msgstr "Oczekiwanie na czas odnowienia..."
+msgstr "Oczekiwanie na czas odnowienia …"
 
 #. TRANSLATORS: Label for the row at the end of the search result list when a search is currently in progress
 #: src/frontend/SearchResultListWrapper.lua:41
 msgid "Requesting Results ..."
-msgstr "Zapytanie o wyniki..."
+msgstr "Zapytanie o wyniki …"
 
 #. TRANSLATORS: Label for the result count below the search result list. First number indicates the visible results, second number the overall number of locally stored items for the current guild
 #: src/frontend/SearchResultListWrapper.lua:43

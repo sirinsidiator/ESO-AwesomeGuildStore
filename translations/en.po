@@ -1,20 +1,23 @@
 # sirinsidiator <insidiator@cmos.at>, 2017. #zanata
 # sirinsidiator <insidiator@cmos.at>, 2019. #zanata
 # sirinsidiator <insidiator@cmos.at>, 2022.
+# sirinsidiator <sir@insidi.at>, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: AwesomeGuildStore\n"
-"Report-Msgid-Bugs-To: https://weblate.sir.insidi.at/or/projects/awesomeguildstore/messages/\n"
+"Report-Msgid-Bugs-To: https://weblate.sir.insidi.at/or/projects/"
+"awesomeguildstore/messages/\n"
 "POT-Creation-Date: 2022-06-19 20:46+0000\n"
-"PO-Revision-Date: 2022-05-28 14:43+0000\n"
-"Last-Translator: sirinsidiator <insidiator@cmos.at>\n"
-"Language-Team: English\n"
+"PO-Revision-Date: 2022-06-21 00:01+0000\n"
+"Last-Translator: sirinsidiator <sir@insidi.at>\n"
+"Language-Team: English <https://weblate.sir.insidi.at/or/projects/"
+"awesomeguildstore/messages/en/>\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.12.2\n"
+"X-Generator: Weblate 4.13\n"
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:64
@@ -44,7 +47,9 @@ msgstr "Trader Tooltips"
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:93
 msgid "Show the currently hired trader for a guild that you are a member of, when hovering over the name or an entry in the drop down menu"
-msgstr "Show the currently hired trader for a guild that you are a member of, when hovering over the name or an entry in the drop down menu"
+msgstr ""
+"Show the currently hired trader for a guild that you are a member of, when "
+"hovering over the name or an entry in the drop down menu."
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:101
@@ -74,7 +79,8 @@ msgstr "Purchase notifications"
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:125
 msgid "Shows a message in chat after you have purchased an item in a guild store"
-msgstr "Shows a message in chat after you have purchased an item in a guild store"
+msgstr ""
+"Shows a message in chat after you have purchased an item in a guild store."
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:133
@@ -84,7 +90,9 @@ msgstr "Cancel notifications"
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:135
 msgid "Shows a message in chat after you have cancelled an item listing from a guild store"
-msgstr "Shows a message in chat after you have cancelled an item listing from a guild store"
+msgstr ""
+"Shows a message in chat after you have cancelled an item listing from a "
+"guild store."
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:143
@@ -94,7 +102,9 @@ msgstr "Listed item notifications"
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:145
 msgid "Shows a message in chat after you have created a new item listing in a guild store"
-msgstr "Shows a message in chat after you have created a new item listing in a guild store"
+msgstr ""
+"Shows a message in chat after you have created a new item listing in a guild "
+"store."
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:153
@@ -124,12 +134,16 @@ msgstr "Clear sell price cache"
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:185
 msgid "Pressing this button will remove all stored quantity and price values for the sell tab from your save data. While Master Merchant is active, it will take the last sell price from there when selecting an item if no data was found in AwesomeGuildStore's own data"
-msgstr "Pressing this button will remove all stored quantity and price values for the sell tab from your save data. While Master Merchant is active, it will take the last sell price from there when selecting an item if no data was found in AwesomeGuildStore's own data"
+msgstr ""
+"Pressing this button will remove all stored quantity and price values for "
+"the sell tab from your save data. While Master Merchant is active, it will "
+"take the last sell price from there when selecting an item if no data was "
+"found in AwesomeGuildStore's own data."
 
 #. TRANSLATORS: warning tooltip text for an entry in the addon settings
 #: src/Settings.lua:187
 msgid "The data cannot be restored after you have confirmed the action"
-msgstr "The data cannot be restored after you have confirmed the action"
+msgstr "The data cannot be restored after you have confirmed the action."
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:201
@@ -149,12 +163,16 @@ msgstr "Clear guild trader list"
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:214
 msgid "Pressing this button will remove all stored data related to the guild trader list"
-msgstr "Pressing this button will remove all stored data related to the guild trader list"
+msgstr ""
+"Pressing this button will remove all stored data related to the guild trader "
+"list."
 
 #. TRANSLATORS: warning tooltip text for an entry in the addon settings
 #: src/Settings.lua:216
 msgid "The UI will reload and the data cannot be restored after you have confirmed the action"
-msgstr "The UI will reload and the data cannot be restored after you have confirmed the action"
+msgstr ""
+"The UI will reload and the data cannot be restored after you have confirmed "
+"the action."
 
 #. TRANSLATORS: Chat message when the addon was not installed correctly and some files are missing. Placeholder is for the filename.
 #: src/StartUp.lua:214
