@@ -28,9 +28,18 @@ function ItemNameMatcher:Initialize(searchManager)
     RegisterForEvent(EVENT_MATCH_TRADING_HOUSE_ITEM_NAMES_COMPLETE, function(_, id, numResults)
         local promise = self.pendingMatch
         if promise and promise.taskId == id then
+            local names = {}
+            local hashes = {}
+            for i = 1, numResults do
+                local name, hash = GetMatchTradingHouseItemNamesResult(id, i)
+                names[i] = name
+                hashes[i] = hash
+            end
             promise:Resolve({
                 id = id,
-                count = numResults
+                count = numResults,
+                names = names,
+                hashes = hashes,
             })
         end
     end)

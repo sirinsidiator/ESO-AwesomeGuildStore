@@ -89,12 +89,7 @@ function TextFilter:ApplyToSearch(request)
     if not result or result.count == 0 or result.count > GetMaxTradingHouseFilterExactTerms(TRADING_HOUSE_FILTER_TYPE_NAME_HASH) then return end
 
     logger:Verbose("Apply %d name hashes to search", result.count)
-    local hashes = {}
-    for hashIndex = 1, result.count do
-        local _, hash = GetMatchTradingHouseItemNamesResult(result.id, hashIndex)
-        hashes[hashIndex] = hash
-    end
-    request:SetFilterValues(TRADING_HOUSE_FILTER_TYPE_NAME_HASH, unpack(hashes))
+    request:SetFilterValues(TRADING_HOUSE_FILTER_TYPE_NAME_HASH, unpack(result.hashes))
 end
 
 function TextFilter:SetUpLocalFilter(searchTerm)
