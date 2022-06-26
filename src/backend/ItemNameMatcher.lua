@@ -46,25 +46,30 @@ function ItemNameMatcher:SetRelevantFilters()
     return self.searchManager:PrepareActiveFilters(filterState, true):Then(function(activeFilters)
         self.appliedValues = FilterRequest:New(filterState, activeFilters)
         self.appliedValues:Apply(activeFilters)
+        return self
     end)
+end
+
+function ItemNameMatcher:PrepareActiveFilters()
+    return self.searchManager:PrepareActiveFilters():Then(function() return self end)
 end
 
 function ItemNameMatcher:MatchText(text)
     if not self.pendingMatch or self.pendingMatch.text ~= text then
         self:CancelPendingMatch()
 
-        local promise = Promise:New()
-        promise.text = text
-
+        local promise
         if self:IsSearchTextLongEnough(text) then
-            self:SetRelevantFilters():Then()
-            self.searchManager:PrepareActiveFilters():Then(function()
+            promise = self:SetRelevantFilters():Then(self.PrepareActiveFilters):Then(function()
                 promise.taskId = MatchTradingHouseItemNames(text)
+                -- promise is resolved in the event handler above
             end)
         else
+            promise = Promise:New()
             promise:Reject(ItemNameMatcher.ERROR_INPUT_TOO_SHORT)
         end
 
+        promise.text = text
         self.pendingMatch = promise
         return promise
     else
