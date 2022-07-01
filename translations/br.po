@@ -1,5 +1,5 @@
-# Marcio Luis Severo <mlsevero@hotmail.com>, 2018. #zanata
-# Marcio Luis Severo <mlsevero@hotmail.com>, 2019. #zanata
+# Marcio Luis Severo <mlsevero@hotmail.com>, 2018. #zanata, 2022.
+# Marcio Luis Severo <mlsevero@hotmail.com>, 2019. #zanata, 2022.
 # sirinsidiator <sir@insidi.at>, 2022.
 msgid ""
 msgstr ""
@@ -7,8 +7,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: https://weblate.sir.insidi.at/or/projects/"
 "awesomeguildstore/messages/\n"
 "POT-Creation-Date: 2022-06-19 20:46+0000\n"
-"PO-Revision-Date: 2022-06-21 00:21+0000\n"
-"Last-Translator: sirinsidiator <sir@insidi.at>\n"
+"PO-Revision-Date: 2022-07-02 16:50+0000\n"
+"Last-Translator: mlsevero <mlsevero@hotmail.com>\n"
 "Language-Team: Portuguese (Brazil) <https://weblate.sir.insidi.at/or/"
 "projects/awesomeguildstore/messages/br/>\n"
 "Language: br\n"
@@ -193,11 +193,14 @@ msgstr ""
 #: src/StartUp.lua:214
 msgid "The file '<<1>>' is missing. Please reinstall AwesomeGuildStore."
 msgstr ""
+"O arquivo '<<1>>' está faltando. Por favor, reinstale o AwesomeGuildStore."
 
 #. TRANSLATORS: Chat message when a dependency does not fulfill the minimal version requirement. Placeholder is for the required library name and version.
 #: src/StartUp.lua:223
 msgid "Cannot start due to an outdated library. Please install <<1>> or newer."
 msgstr ""
+"Não é possível iniciar devido a biblioteca desatualizada. Por favor, instale "
+"<<1>> ou mais recente."
 
 #. TRANSLATORS: keybind label in the controls menu
 #: src/StartUp.lua:245
@@ -217,12 +220,12 @@ msgstr "Solicitação expirada"
 #. TRANSLATORS: Status text when a server response timed out
 #: src/backend/activity/ActivityManager.lua:53
 msgid "Response timed out"
-msgstr ""
+msgstr "Resposta expirou"
 
 #. TRANSLATORS: Status text when a server request failed
 #: src/backend/activity/ActivityManager.lua:62
 msgid "Request failed"
-msgstr ""
+msgstr "Falha de requisição"
 
 #. TRANSLATORS: Status text when a new activity was queued
 #: src/backend/activity/ActivityManager.lua:185
@@ -327,12 +330,12 @@ msgstr "Solicitar resultados da pesquisa em <<1>>"
 #. TRANSLATORS: error text shown to the user when the trading house failed to initialize
 #: src/backend/activity/StoreStatusActivity.lua:90
 msgid "Store initialization failed"
-msgstr ""
+msgstr "Inicialização de armazenagem falhou"
 
 #. TRANSLATORS: log text shown to the user for the initial wait for the trading house status
 #: src/backend/activity/StoreStatusActivity.lua:96
 msgid "Wait for trading house status"
-msgstr ""
+msgstr "Aguarde pelo status da loja"
 
 #. TRANSLATORS: title of the collectible ownership filter in the left panel on the search tab
 #: src/backend/filter/CollectibleOwnershipFilter.lua:39
@@ -966,12 +969,12 @@ msgstr "Item Vendido"
 #. TRANSLATORS: help text for the listing price in the guild store sell mail invoice
 #: src/history/MailBox.lua:162
 msgid "The price the item was listed for"
-msgstr ""
+msgstr "O preço pelo qual o item foi listado"
 
 #. TRANSLATORS: help text for the tax amount in the guild store sell mail invoice
 #: src/history/MailBox.lua:169
 msgid "The amount that was deposited into the guild bank as tax"
-msgstr ""
+msgstr "O valor que foi depositado no banco da guilda como imposto"
 
 #. TRANSLATORS: label for the commission line in the guild store sell mail invoice
 #: src/history/MailBox.lua:173
@@ -981,22 +984,22 @@ msgstr "Comissão"
 #. TRANSLATORS: help text for the commission in the guild store sell mail invoice
 #: src/history/MailBox.lua:175
 msgid "The amount that disappeared into the void"
-msgstr ""
+msgstr "A quantidade que desapareceu no vazio"
 
 #. TRANSLATORS: help text for the received gold in the guild store sell mail invoice
 #: src/history/MailBox.lua:182
 msgid "The gold attached to this mail"
-msgstr ""
+msgstr "O ouro anexado a este e-mail"
 
 #. TRANSLATORS: help text for the listing fee in the guild store sell mail invoice
 #: src/history/MailBox.lua:189
 msgid "The fee that was taken from the inventory when the item was listed in the store"
-msgstr ""
+msgstr "A taxa que foi retirada do inventário quando o item foi listado na loja"
 
 #. TRANSLATORS: help text for the profit in the guild store sell mail invoice
 #: src/history/MailBox.lua:196
 msgid "The resulting profit after subtracting all the fees"
-msgstr ""
+msgstr "O lucro resultante após subtrair todas as taxas"
 
 #. TRANSLATORS: label for the load details button in guild store sell mails where the invoice can not be shown due to lack of data
 #: src/history/MailBox.lua:218
@@ -1087,6 +1090,8 @@ msgstr ""
 #: src/wrappers/SellTabWrapper.lua:385
 msgid "Bank items can only be listed while at a banker NPC"
 msgstr ""
+"Os itens do banco só podem ser listados enquanto estiverem em um NPC de "
+"banqueiro"
 
 #. TRANSLATORS: chat message when a item is listed on a store. <<1>> is replaced with the item count, <<t:2>> with the item link, <<3>> with the price and <<4>> with the guild store name. e.g. You have listed 1x [Rosin] for 5000g in Imperial Trading Company
 #: src/wrappers/SellTabWrapper.lua:708
