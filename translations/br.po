@@ -4,13 +4,11 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: AwesomeGuildStore\n"
-"Report-Msgid-Bugs-To: https://weblate.sir.insidi.at/or/projects/"
-"awesomeguildstore/messages/\n"
-"POT-Creation-Date: 2022-06-19 20:46+0000\n"
+"Report-Msgid-Bugs-To: https://weblate.sir.insidi.at/or/projects/awesomeguildstore/messages/\n"
+"POT-Creation-Date: 2022-07-02 16:50+0000\n"
 "PO-Revision-Date: 2022-07-02 16:50+0000\n"
 "Last-Translator: mlsevero <mlsevero@hotmail.com>\n"
-"Language-Team: Portuguese (Brazil) <https://weblate.sir.insidi.at/or/"
-"projects/awesomeguildstore/messages/br/>\n"
+"Language-Team: Portuguese (Brazil) <https://weblate.sir.insidi.at/or/projects/awesomeguildstore/messages/br/>\n"
 "Language: br\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,10 +24,7 @@ msgstr "Minimiza o chat quando aberto"
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:66
 msgid "When activated, the chat window will get minimized when visiting a trading house. This defaults to true since it is the new default behavior added by ZOS."
-msgstr ""
-"Quando ativado, a janela de chat será minimizada enquanto estiver visitando "
-"a loja. Isto é marcado por padrão desde que se tornou o comportamento padrão "
-"adotado pela ZOS."
+msgstr "Quando ativado, a janela de chat será minimizada enquanto estiver visitando a loja. Isto é marcado por padrão desde que se tornou o comportamento padrão adotado pela ZOS."
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:81
@@ -49,9 +44,7 @@ msgstr "Dicas do Vendedor"
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:93
 msgid "Show the currently hired trader for a guild that you are a member of, when hovering over the name or an entry in the drop down menu"
-msgstr ""
-"Mostra o vendedor atualmente contratado pela guilda que você é membro, "
-"quando pairar sobre o nome ou numa entrada do menu de lista."
+msgstr "Mostra o vendedor atualmente contratado pela guilda que você é membro, quando pairar sobre o nome ou numa entrada do menu de lista."
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:101
@@ -61,10 +54,7 @@ msgstr "Aumento do correio"
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:103
 msgid "Adds more detailed information about a transaction to an incoming Guild Store Mail if the data is available in the Guild Activity Log."
-msgstr ""
-"Inclui informações mais detalhadas acerca de uma transação em um Correio "
-"enviado pela Loja da Guilda se os dados estiverem disponíveis no registro de "
-"Atividade da Guilda."
+msgstr "Inclui informações mais detalhadas acerca de uma transação em um Correio enviado pela Loja da Guilda se os dados estiverem disponíveis no registro de Atividade da Guilda."
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:112
@@ -74,8 +64,7 @@ msgstr "Mostra fatura nas cartas"
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:114
 msgid "Adds a detailed invoice to the mail which lists all deductions."
-msgstr ""
-"Inclui uma fatura detalhada na carta, com listagem de todas as deduções."
+msgstr "Inclui uma fatura detalhada na carta, com listagem de todas as deduções."
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:123
@@ -85,9 +74,7 @@ msgstr "Notificações de compras"
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:125
 msgid "Shows a message in chat after you have purchased an item in a guild store"
-msgstr ""
-"Mostra uma mensagem no chat depois que você tiver comprado um item na loja "
-"da guilda."
+msgstr "Mostra uma mensagem no chat depois que você tiver comprado um item na loja da guilda."
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:133
@@ -97,9 +84,7 @@ msgstr "Notificação de Cancelamento"
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:135
 msgid "Shows a message in chat after you have cancelled an item listing from a guild store"
-msgstr ""
-"Mostra uma mensagem no chat depois de você cancelar a listagem de um item "
-"para venda na loja da guilda."
+msgstr "Mostra uma mensagem no chat depois de você cancelar a listagem de um item para venda na loja da guilda."
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:143
@@ -109,9 +94,7 @@ msgstr "Notificação de itens listados"
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:145
 msgid "Shows a message in chat after you have created a new item listing in a guild store"
-msgstr ""
-"Mostra uma mensagem no chat após você ter colocado um novo item a venda na "
-"loja da guilda."
+msgstr "Mostra uma mensagem no chat após você ter colocado um novo item a venda na loja da guilda."
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:153
@@ -121,9 +104,7 @@ msgstr "Aba de quiosque de venda preferida"
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:155
 msgid "Controls which tab should be opened first when visiting the guild store at a banker."
-msgstr ""
-"Controla qual guia deve ser aberta primeiro ao visitar a loja da guilda em "
-"um banqueiro."
+msgstr "Controla qual guia deve ser aberta primeiro ao visitar a loja da guilda em um banqueiro."
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:173
@@ -133,10 +114,7 @@ msgstr "Pula o diálogo do quiosque da guilda"
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:175
 msgid "When activated, the dialog at guild traders (not at banks) is skipped and the store opened automatically. This can be suppressed by holding the shift key when talking to a trader."
-msgstr ""
-"Quando ativado, o dialogo com o vendedor da guilda (não no banco) é pulado e "
-"a loja aberta automaticamente. Isso pode ser suprimido pressionando a tecla "
-"shift quando conversar com o vendedor."
+msgstr "Quando ativado, o dialogo com o vendedor da guilda (não no banco) é pulado e a loja aberta automaticamente. Isso pode ser suprimido pressionando a tecla shift quando conversar com o vendedor."
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:183
@@ -146,11 +124,7 @@ msgstr "Limpa cache de preço de venda"
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:185
 msgid "Pressing this button will remove all stored quantity and price values for the sell tab from your save data. While Master Merchant is active, it will take the last sell price from there when selecting an item if no data was found in AwesomeGuildStore's own data"
-msgstr ""
-"Pressionar este botão vai remover todos os dados de preço e quantidade "
-"armazenados na tabela de vendas de seus dados salvos. Enquanto o Master "
-"Merchant estiver ativo, ele terá o ultimo preço de venda de um item, se "
-"nenhum dado for encontrado na própria base de dados do AwesomeGuildStore."
+msgstr "Pressionar este botão vai remover todos os dados de preço e quantidade armazenados na tabela de vendas de seus dados salvos. Enquanto o Master Merchant estiver ativo, ele terá o ultimo preço de venda de um item, se nenhum dado for encontrado na própria base de dados do AwesomeGuildStore."
 
 #. TRANSLATORS: warning tooltip text for an entry in the addon settings
 #: src/Settings.lua:187
@@ -165,10 +139,7 @@ msgstr "Ativar lista do vendedor da guilda"
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:203
 msgid "When activated, the guild menu will show a new tab with a list of all kiosks in Tamriel. The list will get updated with the owning guilds whenever you visit a kiosk."
-msgstr ""
-"Quando ativado, o menu da guilda mostrará uma nova aba com a lista de todos "
-"os quiosques de Tamriel. A lista será atualizada com as guildas "
-"proprietárias sempre que você visitar um quiosque."
+msgstr "Quando ativado, o menu da guilda mostrará uma nova aba com a lista de todos os quiosques de Tamriel. A lista será atualizada com as guildas proprietárias sempre que você visitar um quiosque."
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:212
@@ -178,29 +149,22 @@ msgstr "Limpa lista do vendedor da guilda"
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:214
 msgid "Pressing this button will remove all stored data related to the guild trader list"
-msgstr ""
-"Pressionar este botão vai remover todos os dados armazenados relacionados à "
-"lista do vendedor da guilda."
+msgstr "Pressionar este botão vai remover todos os dados armazenados relacionados à lista do vendedor da guilda."
 
 #. TRANSLATORS: warning tooltip text for an entry in the addon settings
 #: src/Settings.lua:216
 msgid "The UI will reload and the data cannot be restored after you have confirmed the action"
-msgstr ""
-"A IU será relida e os dados não poderão ser restaurados depois que você "
-"confirmar essa ação."
+msgstr "A IU será relida e os dados não poderão ser restaurados depois que você confirmar essa ação."
 
 #. TRANSLATORS: Chat message when the addon was not installed correctly and some files are missing. Placeholder is for the filename.
 #: src/StartUp.lua:214
 msgid "The file '<<1>>' is missing. Please reinstall AwesomeGuildStore."
-msgstr ""
-"O arquivo '<<1>>' está faltando. Por favor, reinstale o AwesomeGuildStore."
+msgstr "O arquivo '<<1>>' está faltando. Por favor, reinstale o AwesomeGuildStore."
 
 #. TRANSLATORS: Chat message when a dependency does not fulfill the minimal version requirement. Placeholder is for the required library name and version.
 #: src/StartUp.lua:223
 msgid "Cannot start due to an outdated library. Please install <<1>> or newer."
-msgstr ""
-"Não é possível iniciar devido a biblioteca desatualizada. Por favor, instale "
-"<<1>> ou mais recente."
+msgstr "Não é possível iniciar devido a biblioteca desatualizada. Por favor, instale <<1>> ou mais recente."
 
 #. TRANSLATORS: keybind label in the controls menu
 #: src/StartUp.lua:245
@@ -1014,9 +978,7 @@ msgstr "Você vendeu <<2>> <<t:1>> para <<3>> por <<4>>."
 #. TRANSLATORS: chat text when a kiosk name could not be matched. <<1>> is replaced by the label on the home tab in the guild menu
 #: src/util/misc.lua:68
 msgid "Warning: Could not match kiosk name: '<<1>>' -- please report this to the author"
-msgstr ""
-"Alerta : Não foi possível coincidir o nome do quiosque : '<<1>>' -- por "
-"favor, reporte isso ao autor"
+msgstr "Alerta : Não foi possível coincidir o nome do quiosque : '<<1>>' -- por favor, reporte isso ao autor"
 
 #. TRANSLATORS: chat message when an item listing is cancelled on the listing tab. <<1>> is replaced with the item count, <<t:2>> with the item link, <<3>> with the price and <<4>> with the guild store name. e.g. You have cancelled your listing of 1x [Rosin] for 5000g in Imperial Trading Company
 #: src/wrappers/ListingTabWrapper.lua:237
@@ -1082,16 +1044,12 @@ msgstr "Escolhe Preço do Master Merchant"
 #. TRANSLATORS: tooltip text for the profit warning icon on the sell tab
 #: src/wrappers/SellTabWrapper.lua:317
 msgid "Profit is below vendor price. You'll get more out of selling this item to a merchant."
-msgstr ""
-"O lucro está menor que preço no vendedor. Você ganhará mais vendendo este "
-"item para um mercador."
+msgstr "O lucro está menor que preço no vendedor. Você ganhará mais vendendo este item para um mercador."
 
 #. TRANSLATORS: alert text when trying to list an item from the bank while not at a banker NPC
 #: src/wrappers/SellTabWrapper.lua:385
 msgid "Bank items can only be listed while at a banker NPC"
-msgstr ""
-"Os itens do banco só podem ser listados enquanto estiverem em um NPC de "
-"banqueiro"
+msgstr "Os itens do banco só podem ser listados enquanto estiverem em um NPC de banqueiro"
 
 #. TRANSLATORS: chat message when a item is listed on a store. <<1>> is replaced with the item count, <<t:2>> with the item link, <<3>> with the price and <<4>> with the guild store name. e.g. You have listed 1x [Rosin] for 5000g in Imperial Trading Company
 #: src/wrappers/SellTabWrapper.lua:708

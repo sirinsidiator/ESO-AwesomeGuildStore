@@ -3,13 +3,11 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: AwesomeGuildStore\n"
-"Report-Msgid-Bugs-To: https://weblate.sir.insidi.at/or/projects/"
-"awesomeguildstore/messages/\n"
-"POT-Creation-Date: 2022-06-19 20:46+0000\n"
+"Report-Msgid-Bugs-To: https://weblate.sir.insidi.at/or/projects/awesomeguildstore/messages/\n"
+"POT-Creation-Date: 2022-07-02 16:50+0000\n"
 "PO-Revision-Date: 2022-06-21 00:10+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Spanish <https://weblate.sir.insidi.at/or/projects/"
-"awesomeguildstore/messages/es/>\n"
+"Language-Team: Spanish <https://weblate.sir.insidi.at/or/projects/awesomeguildstore/messages/es/>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,10 +23,7 @@ msgstr "Minimizar chat al abrir"
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:66
 msgid "When activated, the chat window will get minimized when visiting a trading house. This defaults to true since it is the new default behavior added by ZOS."
-msgstr ""
-"Al activarse, la ventana de chat se minimizará al visitar una tienda de "
-"clan. Está activado por defecto pues es el comportamiento usual del juego "
-"base."
+msgstr "Al activarse, la ventana de chat se minimizará al visitar una tienda de clan. Está activado por defecto pues es el comportamiento usual del juego base."
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:81
@@ -38,8 +33,7 @@ msgstr "Seleccionar objetos con un solo clic"
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:83
 msgid "Select items for sale with a single click in the sell tab."
-msgstr ""
-"Selecciona objetos para su venta con un solo clic en la pestaña de venta."
+msgstr "Selecciona objetos para su venta con un solo clic en la pestaña de venta."
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:91
@@ -49,9 +43,7 @@ msgstr "Cajas de información de clanes"
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:93
 msgid "Show the currently hired trader for a guild that you are a member of, when hovering over the name or an entry in the drop down menu"
-msgstr ""
-"Muestra la tienda contratada por un clan en el que perteneces al colocar el "
-"ratón sobre su nombre o en el menú desplegable."
+msgstr "Muestra la tienda contratada por un clan en el que perteneces al colocar el ratón sobre su nombre o en el menú desplegable."
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:101
@@ -61,10 +53,7 @@ msgstr "Detalles en correo"
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:103
 msgid "Adds more detailed information about a transaction to an incoming Guild Store Mail if the data is available in the Guild Activity Log."
-msgstr ""
-"Añade información más detallada sobre una transacción en los correos de las "
-"tiendas de clan si los datos están disponibles en el registro de actividad "
-"del clan."
+msgstr "Añade información más detallada sobre una transacción en los correos de las tiendas de clan si los datos están disponibles en el registro de actividad del clan."
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:112
@@ -84,8 +73,7 @@ msgstr "Notificaciones de compra"
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:125
 msgid "Shows a message in chat after you have purchased an item in a guild store"
-msgstr ""
-"Muestra un mensaje en el chat tras comprar un objeto en una tienda de clan."
+msgstr "Muestra un mensaje en el chat tras comprar un objeto en una tienda de clan."
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:133
@@ -95,9 +83,7 @@ msgstr "Notificaciones de cancelación"
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:135
 msgid "Shows a message in chat after you have cancelled an item listing from a guild store"
-msgstr ""
-"Muestra un mensaje en el chat tras cancelar un objeto en venta en una tienda "
-"de clan."
+msgstr "Muestra un mensaje en el chat tras cancelar un objeto en venta en una tienda de clan."
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:143
@@ -107,9 +93,7 @@ msgstr "Notificación de en venta"
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:145
 msgid "Shows a message in chat after you have created a new item listing in a guild store"
-msgstr ""
-"Muestra un mensaje en el chat tras poner un objeto en venta en una tienda de "
-"clan."
+msgstr "Muestra un mensaje en el chat tras poner un objeto en venta en una tienda de clan."
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:153
@@ -119,9 +103,7 @@ msgstr "Pestaña de tienda de clan preferida"
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:155
 msgid "Controls which tab should be opened first when visiting the guild store at a banker."
-msgstr ""
-"Controla cuál pestaña deberá mostrarse primero al visitar una tienda de clan "
-"desde un banquero."
+msgstr "Controla cuál pestaña deberá mostrarse primero al visitar una tienda de clan desde un banquero."
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:173
@@ -131,10 +113,7 @@ msgstr "Saltar diálogo de tienda de clan"
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:175
 msgid "When activated, the dialog at guild traders (not at banks) is skipped and the store opened automatically. This can be suppressed by holding the shift key when talking to a trader."
-msgstr ""
-"Al activarse, el dialogo de las tiendas de clan (no en bancos) se saltará y "
-"se abrirá la tienda automáticamente. Esto puede evitarse presionando la "
-"tecla shift al hablar con un comerciante."
+msgstr "Al activarse, el dialogo de las tiendas de clan (no en bancos) se saltará y se abrirá la tienda automáticamente. Esto puede evitarse presionando la tecla shift al hablar con un comerciante."
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:183
@@ -144,12 +123,7 @@ msgstr "Limpiar caché de precios"
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:185
 msgid "Pressing this button will remove all stored quantity and price values for the sell tab from your save data. While Master Merchant is active, it will take the last sell price from there when selecting an item if no data was found in AwesomeGuildStore's own data"
-msgstr ""
-"Presionar este botón eliminará todos los valores de cantidad y precio "
-"colocados a objetos específicos en la pestaña de venta de tus datos "
-"guardados. Mientras Master Merchant esté activo, utilizará el último precio "
-"de venta disponible allí al seleccionar un objeto si no se encontraron datos "
-"en AwesomeGuildStore."
+msgstr "Presionar este botón eliminará todos los valores de cantidad y precio colocados a objetos específicos en la pestaña de venta de tus datos guardados. Mientras Master Merchant esté activo, utilizará el último precio de venta disponible allí al seleccionar un objeto si no se encontraron datos en AwesomeGuildStore."
 
 #. TRANSLATORS: warning tooltip text for an entry in the addon settings
 #: src/Settings.lua:187
@@ -164,10 +138,7 @@ msgstr "Activar lista de tiendas de clan"
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:203
 msgid "When activated, the guild menu will show a new tab with a list of all kiosks in Tamriel. The list will get updated with the owning guilds whenever you visit a kiosk."
-msgstr ""
-"Al activarse, el menú de clanes mostrará una nueva pestaña con una lista de "
-"todas las tiendas de clan en Tamriel. La lista actualizará los clanes que la "
-"posean cuando que visites una tienda."
+msgstr "Al activarse, el menú de clanes mostrará una nueva pestaña con una lista de todas las tiendas de clan en Tamriel. La lista actualizará los clanes que la posean cuando que visites una tienda."
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:212
@@ -177,9 +148,7 @@ msgstr "Limpiar lista de tiendas"
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:214
 msgid "Pressing this button will remove all stored data related to the guild trader list"
-msgstr ""
-"Presionar este botón eliminará todos los datos relacionados con la lista de "
-"tiendas de clan."
+msgstr "Presionar este botón eliminará todos los datos relacionados con la lista de tiendas de clan."
 
 #. TRANSLATORS: warning tooltip text for an entry in the addon settings
 #: src/Settings.lua:216
@@ -1008,9 +977,7 @@ msgstr "Has vendido <<2>>x [<<C:1>>] a <<3>> por <<4>>."
 #. TRANSLATORS: chat text when a kiosk name could not be matched. <<1>> is replaced by the label on the home tab in the guild menu
 #: src/util/misc.lua:68
 msgid "Warning: Could not match kiosk name: '<<1>>' -- please report this to the author"
-msgstr ""
-"Advertencia: Podría no coincidir con el nombre de la tienda: '<<1>>' -- por "
-"favor informa de esto al autor"
+msgstr "Advertencia: Podría no coincidir con el nombre de la tienda: '<<1>>' -- por favor informa de esto al autor"
 
 #. TRANSLATORS: chat message when an item listing is cancelled on the listing tab. <<1>> is replaced with the item count, <<t:2>> with the item link, <<3>> with the price and <<4>> with the guild store name. e.g. You have cancelled your listing of 1x [Rosin] for 5000g in Imperial Trading Company
 #: src/wrappers/ListingTabWrapper.lua:237
@@ -1076,9 +1043,7 @@ msgstr "Usar precio de Master Merchant"
 #. TRANSLATORS: tooltip text for the profit warning icon on the sell tab
 #: src/wrappers/SellTabWrapper.lua:317
 msgid "Profit is below vendor price. You'll get more out of selling this item to a merchant."
-msgstr ""
-"El margen de ganancia está por debajo del precio por defecto. Obtendrás más "
-"si vendes este objeto a un mercader."
+msgstr "El margen de ganancia está por debajo del precio por defecto. Obtendrás más si vendes este objeto a un mercader."
 
 #. TRANSLATORS: alert text when trying to list an item from the bank while not at a banker NPC
 #: src/wrappers/SellTabWrapper.lua:385

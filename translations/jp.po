@@ -4,13 +4,11 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: AwesomeGuildStore\n"
-"Report-Msgid-Bugs-To: https://weblate.sir.insidi.at/or/projects/"
-"awesomeguildstore/messages/\n"
-"POT-Creation-Date: 2022-06-19 20:46+0000\n"
+"Report-Msgid-Bugs-To: https://weblate.sir.insidi.at/or/projects/awesomeguildstore/messages/\n"
+"POT-Creation-Date: 2022-07-02 16:50+0000\n"
 "PO-Revision-Date: 2022-06-21 00:18+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Japanese <https://weblate.sir.insidi.at/or/projects/"
-"awesomeguildstore/messages/jp/>\n"
+"Language-Team: Japanese <https://weblate.sir.insidi.at/or/projects/awesomeguildstore/messages/jp/>\n"
 "Language: jp\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,10 +24,7 @@ msgstr "商店でチャット欄を最小化"
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:66
 msgid "When activated, the chat window will get minimized when visiting a trading house. This defaults to true since it is the new default behavior added by ZOS."
-msgstr ""
-"有効化時、ギルド商人を訪れるとチャットウィンドウが最小化されます。これはZOSに"
-"よって追加された新しいデフォルトの動作であるため、デフォルトでtrueになります"
-"。"
+msgstr "有効化時、ギルド商人を訪れるとチャットウィンドウが最小化されます。これはZOSによって追加された新しいデフォルトの動作であるため、デフォルトでtrueになります。"
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:81
@@ -49,8 +44,7 @@ msgstr "トレーダーツールチップ"
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:93
 msgid "Show the currently hired trader for a guild that you are a member of, when hovering over the name or an entry in the drop down menu"
-msgstr "現在所属しているギルド用に雇われたトレーダーを、名前、エントリもしくはドロッ"
-"プダウン内エントリにカーソルを合わせた時表示します。"
+msgstr "現在所属しているギルド用に雇われたトレーダーを、名前、エントリもしくはドロップダウン内エントリにカーソルを合わせた時表示します。"
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:101
@@ -60,8 +54,7 @@ msgstr "メール添付"
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:103
 msgid "Adds more detailed information about a transaction to an incoming Guild Store Mail if the data is available in the Guild Activity Log."
-msgstr "ギルドアクティビティログにデータが存在している場合、取引に関するより詳細な情"
-"報を受信するギルドストアメールに追加します。"
+msgstr "ギルドアクティビティログにデータが存在している場合、取引に関するより詳細な情報を受信するギルドストアメールに追加します。"
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:112
@@ -91,8 +84,7 @@ msgstr "キャンセル通知"
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:135
 msgid "Shows a message in chat after you have cancelled an item listing from a guild store"
-msgstr "ギルドストアのアイテム販売リストからキャンセルした後、チャットにメッセージを"
-"表示します。"
+msgstr "ギルドストアのアイテム販売リストからキャンセルした後、チャットにメッセージを表示します。"
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:143
@@ -102,8 +94,7 @@ msgstr "アイテム販売リスト通知"
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:145
 msgid "Shows a message in chat after you have created a new item listing in a guild store"
-msgstr "ギルドストアで新しくアイテム販売リストを作成した後、チャットにメッセージを表"
-"示します。"
+msgstr "ギルドストアで新しくアイテム販売リストを作成した後、チャットにメッセージを表示します。"
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:153
@@ -123,10 +114,7 @@ msgstr "ギルドキオスクのダイアログをスキップ"
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:175
 msgid "When activated, the dialog at guild traders (not at banks) is skipped and the store opened automatically. This can be suppressed by holding the shift key when talking to a trader."
-msgstr ""
-"有効化時、ギルドトレーダーのダイアログ（銀行ではなく）がスキップされ、自動的"
-"にストアが開きます。これはShiftキーを押しながらトレーダーに話すと抑制すること"
-"ができます。"
+msgstr "有効化時、ギルドトレーダーのダイアログ（銀行ではなく）がスキップされ、自動的にストアが開きます。これはShiftキーを押しながらトレーダーに話すと抑制することができます。"
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:183
@@ -136,11 +124,7 @@ msgstr "販売価格ｷｬｯｼｭｸﾘｱ"
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:185
 msgid "Pressing this button will remove all stored quantity and price values for the sell tab from your save data. While Master Merchant is active, it will take the last sell price from there when selecting an item if no data was found in AwesomeGuildStore's own data"
-msgstr ""
-"このボタンを押すと、セーブデータの販売タブに保存されている、全ての数量、価格"
-"が削除されます。マスターマーチャントが有効になっている場合はAwesomeGuildStore"
-"のデータが存在しない場合、マスターマーチャントから最後に販売した価格を参照し"
-"ます。"
+msgstr "このボタンを押すと、セーブデータの販売タブに保存されている、全ての数量、価格が削除されます。マスターマーチャントが有効になっている場合はAwesomeGuildStoreのデータが存在しない場合、マスターマーチャントから最後に販売した価格を参照します。"
 
 #. TRANSLATORS: warning tooltip text for an entry in the addon settings
 #: src/Settings.lua:187
@@ -155,8 +139,7 @@ msgstr "ギルド商人リストを有効にする"
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:203
 msgid "When activated, the guild menu will show a new tab with a list of all kiosks in Tamriel. The list will get updated with the owning guilds whenever you visit a kiosk."
-msgstr "有効化時、ギルドメニューに新しく、タムリエルの全キオスク一覧タブを表示します"
-"。 あなたがキオスクを訪れるとリストが更新されます。"
+msgstr "有効化時、ギルドメニューに新しく、タムリエルの全キオスク一覧タブを表示します。 あなたがキオスクを訪れるとリストが更新されます。"
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:212
@@ -166,14 +149,12 @@ msgstr "ギルド商人ﾘｽﾄをｸﾘｱ"
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:214
 msgid "Pressing this button will remove all stored data related to the guild trader list"
-msgstr "このボタンを押すと、ギルド商人リストに関連する全てのセーブデータが削除されま"
-"す。"
+msgstr "このボタンを押すと、ギルド商人リストに関連する全てのセーブデータが削除されます。"
 
 #. TRANSLATORS: warning tooltip text for an entry in the addon settings
 #: src/Settings.lua:216
 msgid "The UI will reload and the data cannot be restored after you have confirmed the action"
-msgstr "UIがリロードされます。このデータは、アクションを承認した後復元することはでき"
-"ません。"
+msgstr "UIがリロードされます。このデータは、アクションを承認した後復元することはできません。"
 
 #. TRANSLATORS: Chat message when the addon was not installed correctly and some files are missing. Placeholder is for the filename.
 #: src/StartUp.lua:214
@@ -213,8 +194,7 @@ msgstr ""
 #. TRANSLATORS: Status text when a new activity was queued
 #: src/backend/activity/ActivityManager.lua:185
 msgid "<<1[No activity/One activity/$d activities]>> queued"
-msgstr "<<1[アクティビティ無し/1件のアクティビティ/$d件のアクティビティ]>>をキューに"
-"入れました"
+msgstr "<<1[アクティビティ無し/1件のアクティビティ/$d件のアクティビティ]>>をキューに入れました"
 
 #. TRANSLATORS: Status text when the next activity can be executed
 #: src/backend/activity/ActivityManager.lua:299
@@ -1064,8 +1044,7 @@ msgstr "マスターマーチャント価格を選択"
 #. TRANSLATORS: tooltip text for the profit warning icon on the sell tab
 #: src/wrappers/SellTabWrapper.lua:317
 msgid "Profit is below vendor price. You'll get more out of selling this item to a merchant."
-msgstr "利益がベンダー価格を下回っています。 "
-"このアイテムを商人に売るほうが儲かるでしょう。"
+msgstr "利益がベンダー価格を下回っています。 このアイテムを商人に売るほうが儲かるでしょう。"
 
 #. TRANSLATORS: alert text when trying to list an item from the bank while not at a banker NPC
 #: src/wrappers/SellTabWrapper.lua:385
