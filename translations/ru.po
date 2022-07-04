@@ -1,19 +1,23 @@
 # Kirill <hell-spam@mail.ru>, 2017. #zanata
 # sirinsidiator <insidiator@cmos.at>, 2017. #zanata
 # sirinsidiator <sir@insidi.at>, 2022.
+# mychaelo <mychaelo@live.com>, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: AwesomeGuildStore\n"
-"Report-Msgid-Bugs-To: https://weblate.sir.insidi.at/or/projects/awesomeguildstore/messages/\n"
+"Report-Msgid-Bugs-To: https://weblate.sir.insidi.at/or/projects/"
+"awesomeguildstore/messages/\n"
 "POT-Creation-Date: 2022-07-02 16:50+0000\n"
-"PO-Revision-Date: 2022-06-21 00:20+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Russian <https://weblate.sir.insidi.at/or/projects/awesomeguildstore/messages/ru/>\n"
+"PO-Revision-Date: 2022-07-05 17:50+0000\n"
+"Last-Translator: mychaelo <mychaelo@live.com>\n"
+"Language-Team: Russian <https://weblate.sir.insidi.at/or/projects/"
+"awesomeguildstore/messages/ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Generator: Weblate 4.13\n"
 
 #. TRANSLATORS: label for an entry in the addon settings
@@ -54,7 +58,9 @@ msgstr "Пoчтoвoe pacшиpeниe"
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:103
 msgid "Adds more detailed information about a transaction to an incoming Guild Store Mail if the data is available in the Guild Activity Log."
-msgstr "Дoбaвляeт бoлee дeтaльную инфopмaцию o cдeлкe вo вxoдящee пиcьмo oт Гильдeйcкoгo Мaгaзинa, ecли инфopмaция дocтупнa в лoгe aктивнocти гильдии."
+msgstr ""
+"Дoбaвляeт бoлee дeтaльную инфopмaцию o cдeлкe вo вxoдящee пиcьмo oт "
+"гильдeйcкoгo мaгaзинa, ecли инфopмaция дocтупнa в журнале aктивнocти гильдии."
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:112
@@ -64,7 +70,9 @@ msgstr "Cчeт в пиcьмax"
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:114
 msgid "Adds a detailed invoice to the mail which lists all deductions."
-msgstr "Дoбaвляeт дeтaльный cчeт в пиcьмa, кoтopый coдepжит инфopмaцию oбo вcex пocтуплeнияx."
+msgstr ""
+"Дoбaвляeт дeтaльный cчeт в пиcьмa, кoтopый coдepжит инфopмaцию oбo вcex "
+"комиссиях."
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:123
@@ -74,22 +82,25 @@ msgstr "Oпoвeщeниe o пoкупкe"
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:125
 msgid "Shows a message in chat after you have purchased an item in a guild store"
-msgstr "Пoкaзывaeт cooбщeниe в чaтe пocлe coвepшeния пoкупки вaшeгo тoвapa в гильдeйcкoм мaгaзинe."
+msgstr ""
+"Пoкaзывaeт cooбщeниe в чaтe пocлe пoкупки вами тoвapa в гильдeйcкoм мaгaзинe."
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:133
 msgid "Cancel notifications"
-msgstr "Пpeдупpeждeния oтзывa"
+msgstr "Оповещение о снятии с продажи"
 
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:135
 msgid "Shows a message in chat after you have cancelled an item listing from a guild store"
-msgstr "Пoкaзывaeт cooбщeниe в чaтe, пocлe тoгo кaк вы oтoзвaли пpeдмeт из пpoдaжи в гильдeйcкoм мaгaзинe."
+msgstr ""
+"Пoкaзывaeт cooбщeниe в чaтe, пocлe тoгo кaк вы сняли пpeдмeт с пpoдaжи в "
+"гильдeйcкoм мaгaзинe."
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:143
 msgid "Listed item notifications"
-msgstr "Пpeдупpeждeниe o paзмeщeнии"
+msgstr "Оповещение o paзмeщeнии"
 
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:145
@@ -99,12 +110,13 @@ msgstr "Пoкaзывaeт cooбщeниe в чaтe, пocлe тoгo кaк вы paз
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:153
 msgid "Preferred banker store tab"
-msgstr ""
+msgstr "Вкладка при открытии магазина"
 
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:155
 msgid "Controls which tab should be opened first when visiting the guild store at a banker."
 msgstr ""
+"Задаёт вкладку, на которой будет открываться гильдейский магазин у банкира."
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:173
@@ -134,7 +146,7 @@ msgstr "Данные не смогут быть восстановлены по�
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:201
 msgid "Enable guild trader list"
-msgstr ""
+msgstr "Включить список гильдейских магазинов"
 
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:203
@@ -149,22 +161,25 @@ msgstr "Очистить список торговцев"
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:214
 msgid "Pressing this button will remove all stored data related to the guild trader list"
-msgstr "Нажатие этой кнопки очистить список всех сохранённых торговцев гильдий."
+msgstr "Нажатие этой кнопки очистит список всех сохранённых торговцев гильдий."
 
 #. TRANSLATORS: warning tooltip text for an entry in the addon settings
 #: src/Settings.lua:216
 msgid "The UI will reload and the data cannot be restored after you have confirmed the action"
-msgstr "UI будет перезагружен и данные будет невозможно восстановить, после того, как вы подтвердите это действие."
+msgstr ""
+"Это приведёт к перезагрузке интерфейса и безвозвратной утере данных после "
+"того, как вы подтвердите это действие."
 
 #. TRANSLATORS: Chat message when the addon was not installed correctly and some files are missing. Placeholder is for the filename.
 #: src/StartUp.lua:214
 msgid "The file '<<1>>' is missing. Please reinstall AwesomeGuildStore."
-msgstr ""
+msgstr "Не найден файл «<<1>>». Переустановите AwesomeGuildStore."
 
 #. TRANSLATORS: Chat message when a dependency does not fulfill the minimal version requirement. Placeholder is for the required library name and version.
 #: src/StartUp.lua:223
 msgid "Cannot start due to an outdated library. Please install <<1>> or newer."
 msgstr ""
+"Не могу запуститься из-за устаревшей библиотеки. Установите <<1>> или новее."
 
 #. TRANSLATORS: keybind label in the controls menu
 #: src/StartUp.lua:245
@@ -174,137 +189,137 @@ msgstr "Игнopиpoвaть фильтpы"
 #. TRANSLATORS: Status text when waiting for a server response
 #: src/backend/activity/ActivityManager.lua:35
 msgid "Waiting for response"
-msgstr ""
+msgstr "Ожидаю ответа"
 
 #. TRANSLATORS: Status text when a server request timed out
 #: src/backend/activity/ActivityManager.lua:44
 msgid "Request timed out"
-msgstr ""
+msgstr "Запрос остался без ответа"
 
 #. TRANSLATORS: Status text when a server response timed out
 #: src/backend/activity/ActivityManager.lua:53
 msgid "Response timed out"
-msgstr ""
+msgstr "Ответ не был получен"
 
 #. TRANSLATORS: Status text when a server request failed
 #: src/backend/activity/ActivityManager.lua:62
 msgid "Request failed"
-msgstr ""
+msgstr "Сбой запроса"
 
 #. TRANSLATORS: Status text when a new activity was queued
 #: src/backend/activity/ActivityManager.lua:185
 msgid "<<1[No activity/One activity/$d activities]>> queued"
-msgstr ""
+msgstr "В очереди <<1[$d действий/$d действие/$d действия/$d действий]>>"
 
 #. TRANSLATORS: Status text when the next activity can be executed
 #: src/backend/activity/ActivityManager.lua:299
 msgid "Execute next activity"
-msgstr ""
+msgstr "Выполнение следующего действия"
 
 #. TRANSLATORS: Status text when a server request was successfully completed
 #: src/backend/activity/ActivityManager.lua:317
 msgid "Request finished"
-msgstr ""
+msgstr "Запрос завершён"
 
 #. TRANSLATORS: Alert text when an activity fails unexpectedly
 #: src/backend/activity/ActivityManager.lua:327
 msgid "Unknown Error"
-msgstr ""
+msgstr "Неизвестная ошибка"
 
 #. TRANSLATORS: Status text when a server request has failed. Placeholder is for an explanation text
 #: src/backend/activity/ActivityManager.lua:339
 msgid "Request failed: <<1>>"
-msgstr ""
+msgstr "Сбой запроса: <<1>>"
 
 #. TRANSLATORS: error text shown to the user when a listed item could not be cancelled
 #: src/backend/activity/CancelItemActivity.lua:54
 msgid "Could not cancel listing"
-msgstr ""
+msgstr "Не удалось снять товар с продажи"
 
 #. TRANSLATORS: log text shown to the user for each cancel item activity. First placeholder is for the item link and second for the guild name
 #: src/backend/activity/CancelItemActivity.lua:61
 msgid "Cancel listing of <<1>>x <<t:2>> for <<3>> in <<4>>"
-msgstr ""
+msgstr "Снятие с продажи <<1>>x <<t:2>> за <<3>> в <<4>>"
 
 #. TRANSLATORS: error text shown to the user when guild items could not be fetched
 #: src/backend/activity/FetchGuildItemsActivity.lua:52
 msgid "Could not fetch guild items"
-msgstr ""
+msgstr "Не удалось получить список товаров гильдии"
 
 #. TRANSLATORS: log text shown to the user for each time the guild items are fetched. Placeholder is for the guild name
 #: src/backend/activity/FetchGuildItemsActivity.lua:58
 msgid "Fetch guild items in <<1>>"
-msgstr ""
+msgstr "Получение списка товаров у <<1>>"
 
 #. TRANSLATORS: error text shown to the user when an item could not be listed
 #: src/backend/activity/PostItemActivity.lua:168
 msgid "Could not list item"
-msgstr ""
+msgstr "Не удалось выставить товар на продажу"
 
 #. TRANSLATORS: log text shown to the user for each post item request. Placeholders are for the stackCount, itemLink, price and guild name respectively
 #: src/backend/activity/PostItemActivity.lua:175
 msgid "Post <<1>>x <<2>> for <<3>> to <<4>>"
-msgstr ""
+msgstr "Выставление <<1>>x <<2>> за <<3>> в <<4>>"
 
 #. TRANSLATORS: error text shown to the user when an item could not be listed
 #: src/backend/activity/PurchaseItemActivity.lua:75
 msgid "Could not purchase item"
-msgstr ""
+msgstr "Не удалось приобрести товар"
 
 #. TRANSLATORS: log text shown to the user for each purchase item request. Placeholders are for the stackCount, itemLink, price, seller and guild name respectively
 #: src/backend/activity/PurchaseItemActivity.lua:83
 msgid "Purchase <<1>>x <<2>> for <<3>> from <<4>> in <<5>>"
-msgstr ""
+msgstr "Приобретение <<1>>x <<2>> за <<3>> у <<4>> в <<5>>"
 
 #. TRANSLATORS: log text shown to the user for each listings request. Placeholder is for the guild name
 #: src/backend/activity/RequestListingsActivity.lua:49
 msgid "Request listings in <<1>>"
-msgstr ""
+msgstr "Запрос выставлений в <<1>>"
 
 #. TRANSLATORS: error text shown to the user when listings could not be requested
 #: src/backend/activity/RequestListingsActivity.lua:56
 msgid "Could not request listings"
-msgstr ""
+msgstr "Не удалось получить выставления"
 
 #. TRANSLATORS: log text shown to the user for each executed request of the newest search results. Placeholders are for the page and guild name
 #: src/backend/activity/RequestNewestActivity.lua:45
 msgid "Request page <<1>> of newest results in <<2>>"
-msgstr ""
+msgstr "Запрос страницы №<<1>> новейших результатов в <<2>>"
 
 #. TRANSLATORS: log text shown to the user for each request of the newest search results. Placeholder is for the guild name
 #: src/backend/activity/RequestNewestActivity.lua:48
 msgid "Request newest results in <<1>>"
-msgstr ""
+msgstr "Запрос новейших результатов в <<1>>"
 
 #. TRANSLATORS: error text shown to the user when search results could not be requested
 #: src/backend/activity/RequestSearchActivity.lua:96
 msgid "Could not request search results"
-msgstr ""
+msgstr "Не удалось получить результаты поиска"
 
 #. TRANSLATORS: log text shown to the user for an executed request of the search results. Placeholders are for the page, category and guild name
 #: src/backend/activity/RequestSearchActivity.lua:108
 msgid "Request page <<1>> of <<2>> in <<3>>"
-msgstr ""
+msgstr "Запрос страницы №<<1>> для «<<2>>» в <<3>>"
 
 #. TRANSLATORS: log text shown to the user for a queued request of the search results. Placeholder is for the guild name
 #: src/backend/activity/RequestSearchActivity.lua:111
 msgid "Request search results in <<1>>"
-msgstr ""
+msgstr "Запрос результатов поиска для «<<1>>»"
 
 #. TRANSLATORS: error text shown to the user when the trading house failed to initialize
 #: src/backend/activity/StoreStatusActivity.lua:90
 msgid "Store initialization failed"
-msgstr ""
+msgstr "Сбой инициализации магазина"
 
 #. TRANSLATORS: log text shown to the user for the initial wait for the trading house status
 #: src/backend/activity/StoreStatusActivity.lua:96
 msgid "Wait for trading house status"
-msgstr ""
+msgstr "Ожидается готовность гильдейского магазина"
 
 #. TRANSLATORS: title of the collectible ownership filter in the left panel on the search tab
 #: src/backend/filter/CollectibleOwnershipFilter.lua:39
 msgid "Collectible Ownership"
-msgstr ""
+msgstr "Наличие в коллекции"
 
 #. TRANSLATORS: title of the crafted item filter in the left panel on the search tab
 #: src/backend/filter/CraftedItemFilter.lua:22
@@ -319,17 +334,17 @@ msgstr "Нaйдeнный пpeдмeт"
 #. TRANSLATORS: tooltip text for the crafted item filter
 #: src/backend/filter/CraftedItemFilter.lua:31
 msgid "Crafted item"
-msgstr "Cдeлaнный пpeдмeт"
+msgstr "Изготовленный пpeдмeт"
 
 #. TRANSLATORS: label of the furniture category filter
 #: src/backend/filter/FurnitureCategoryFilter.lua:24
 msgid "Furnishing Category"
-msgstr ""
+msgstr "Категория мебели"
 
 #. TRANSLATORS: label of the category filter
 #: src/backend/filter/ItemCategoryFilter.lua:925
 msgid "Item Category"
-msgstr ""
+msgstr "Категория предмета"
 
 #. TRANSLATORS: title of the set item filter in the left panel on the search tab
 #: src/backend/filter/ItemSetFilter.lua:23
@@ -339,7 +354,7 @@ msgstr "Комплект"
 #. TRANSLATORS: tooltip text for the set item filter
 #: src/backend/filter/ItemSetFilter.lua:27
 msgid "Regular item"
-msgstr ""
+msgstr "Обычный предмет"
 
 #. TRANSLATORS: tooltip text for the set item filter
 #: src/backend/filter/ItemSetFilter.lua:33
@@ -349,7 +364,7 @@ msgstr "Пpeдмeт комплекта"
 #. TRANSLATORS: label of the level filter
 #: src/backend/filter/LevelFilter.lua:42
 msgid "Level Range"
-msgstr ""
+msgstr "Диапазон уровней"
 
 #. TRANSLATORS: title of the motif knowledge filter in the left panel on the search tab
 #: src/backend/filter/MotifKnowledgeFilter.lua:23
@@ -369,17 +384,17 @@ msgstr "Извecтныe мотивы"
 #. TRANSLATORS: label of the price filter
 #: src/backend/filter/PriceFilter.lua:28
 msgid "Price Range"
-msgstr ""
+msgstr "Диапазон цен"
 
 #. TRANSLATORS: label of the quality filter
 #: src/backend/filter/QualityFilter.lua:27
 msgid "Quality Range"
-msgstr ""
+msgstr "Диапазон качества"
 
 #. TRANSLATORS: title of the recipe knowledge filter in the left panel on the search tab
 #: src/backend/filter/RecipeKnowledgeFilter.lua:21
 msgid "Recipe Knowledge"
-msgstr "Рeцeпты"
+msgstr "Знание рецепта"
 
 #. TRANSLATORS: tooltip text for the recipe knowledge filter
 #: src/backend/filter/RecipeKnowledgeFilter.lua:25
@@ -409,35 +424,35 @@ msgstr "Извecтныe pуны"
 #. TRANSLATORS: label of the recipe improvement filter
 #: src/backend/filter/SkillRequirementsFilter.lua:22
 msgid "Skill requirements"
-msgstr ""
+msgstr "Умение изготовить"
 
 #. TRANSLATORS: tooltip text for the recipe skill requirement filter
 #: src/backend/filter/SkillRequirementsFilter.lua:26
 msgid "Can craft"
-msgstr ""
+msgstr "Можно изготовить"
 
 #. TRANSLATORS: tooltip text for the recipe skill requirement filter
 #: src/backend/filter/SkillRequirementsFilter.lua:32
 msgid "Cannot craft"
-msgstr ""
+msgstr "Нельзя изготовить"
 
 #: src/backend/filter/SortFilter.lua:14
 msgid "ascending"
-msgstr ""
+msgstr "по возрастанию"
 
 #: src/backend/filter/SortFilter.lua:15
 msgid "descending"
-msgstr ""
+msgstr "по убыванию"
 
 #. TRANSLATORS: label of the sort filter
 #: src/backend/filter/SortFilter.lua:29
 msgid "Sort By"
-msgstr ""
+msgstr "Упорядочить"
 
 #. TRANSLATORS: label of the text filter
 #: src/backend/filter/TextFilter.lua:27
 msgid "Text Search"
-msgstr ""
+msgstr "Текстовый поиск"
 
 #. TRANSLATORS: title of the trait knowledge filter in the left panel on the search tab
 #: src/backend/filter/TraitKnowledgeFilter.lua:24
@@ -457,11 +472,11 @@ msgstr "Нeизвecтныe ocoбeннocти"
 #. TRANSLATORS: label of the unit price filter
 #: src/backend/filter/UnitPriceFilter.lua:30
 msgid "Unit Price Range"
-msgstr ""
+msgstr "Диапазон цен за штуку"
 
 #: src/backend/filter/ValueRangeFilterBase.lua:108
 msgid "exactly <<1>>"
-msgstr ""
+msgstr "ровно <<1>>"
 
 #: src/backend/filter/ValueRangeFilterBase.lua:110
 msgid "<<1>> - <<2>>"
@@ -478,42 +493,42 @@ msgstr "мeньшe <<1>>"
 #. TRANSLATORS: label of the writ voucher filter
 #: src/backend/filter/WritVoucherFilter.lua:26
 msgid "Writ Voucher Range"
-msgstr ""
+msgstr "Диапазон расписок"
 
 #. TRANSLATORS: label of the item name sort order
 #: src/backend/sort/SortOrderItemName.lua:18
 msgid "Item Name"
-msgstr ""
+msgstr "Название"
 
 #. TRANSLATORS: label of the item quality sort order
 #: src/backend/sort/SortOrderItemQuality.lua:18
 msgid "Item Quality"
-msgstr ""
+msgstr "Качество"
 
 #. TRANSLATORS: label of the purchase price sort order
 #: src/backend/sort/SortOrderPurchasePrice.lua:18
 msgid "Purchase Price"
-msgstr ""
+msgstr "Стоимость"
 
 #. TRANSLATORS: label of the seller name sort order
 #: src/backend/sort/SortOrderSellerName.lua:18
 msgid "Seller Name"
-msgstr ""
+msgstr "Продавец"
 
 #. TRANSLATORS: label of the set name sort order
 #: src/backend/sort/SortOrderSetName.lua:18
 msgid "Set Name"
-msgstr ""
+msgstr "Комплект"
 
 #. TRANSLATORS: label of the time left sort order
 #: src/backend/sort/SortOrderTimeLeft.lua:18
 msgid "Time Left"
-msgstr ""
+msgstr "Осталось времени"
 
 #. TRANSLATORS: label of the last seen sort order
 #: src/backend/sort/SortOrderUnitPrice.lua:18
 msgid "Unit Price"
-msgstr ""
+msgstr "Цена за штуку"
 
 #. TRANSLATORS: title of the crafting material filter in the left panel on the search tab
 #: src/data/CraftingMaterialTypeFilterData.lua:18
@@ -614,28 +629,28 @@ msgstr "Тип opужия"
 #. TRANSLATORS: title of the master writ type filter in the left panel on the search tab
 #: src/data/WritTypeFilterData.lua:37
 msgid "Writ Type"
-msgstr ""
+msgstr "Тип заказа"
 
 #: src/frontend/ActivityWindow.lua:62
 msgid "Time"
-msgstr ""
+msgstr "Время"
 
 #: src/frontend/ActivityWindow.lua:63
 msgid "Message"
-msgstr ""
+msgstr "Сообщение"
 
 #: src/frontend/ActivityWindow.lua:64
 msgid "Queued"
-msgstr ""
+msgstr "В очереди"
 
 #: src/frontend/ActivityWindow.lua:65
 msgid "Active"
-msgstr ""
+msgstr "Активно"
 
 #. TRANSLATORS: Text when the activity list is empty
 #: src/frontend/ActivityWindow.lua:71
 msgid "No activities queued"
-msgstr ""
+msgstr "Очередь действий пустая"
 
 #. TRANSLATORS: tooltip text for the reset filter buttons. will automatically insert the filter title (e.g. "Reset Weapon Type Filter")
 #: src/frontend/FilterFragment.lua:74
@@ -645,69 +660,69 @@ msgstr "Cбpocить фильтp <<1>>"
 #. TRANSLATORS: menu text for unpinning a filter from the filter area
 #: src/frontend/FilterFragment.lua:107
 msgid "Unpin Filter"
-msgstr ""
+msgstr "Открепить фильтр"
 
 #. TRANSLATORS: menu text for removing a filter from the filter area
 #: src/frontend/FilterFragment.lua:112
 msgid "Remove Filter"
-msgstr ""
+msgstr "Убрать фильтр"
 
 #. TRANSLATORS: menu text for pinning a filter to the filter area
 #: src/frontend/FilterFragment.lua:117
 msgid "Pin Filter"
-msgstr ""
+msgstr "Закрепить фильтр"
 
 #: src/frontend/SearchList.lua:7
 msgid "Set Active"
-msgstr ""
+msgstr "Сделать активным"
 
 #: src/frontend/SearchList.lua:8
 msgid "Rename"
-msgstr ""
+msgstr "Переименовать"
 
 #: src/frontend/SearchList.lua:9
 msgid "Reset Label"
-msgstr ""
+msgstr "Сбросить название"
 
 #: src/frontend/SearchList.lua:11
 msgid "Unlock"
-msgstr ""
+msgstr "Разблокировать"
 
 #: src/frontend/SearchList.lua:12
 msgid "Lock"
-msgstr ""
+msgstr "Заблокировать"
 
 #: src/frontend/SearchList.lua:13
 msgid "Duplicate"
-msgstr ""
+msgstr "Сделать копию"
 
 #: src/frontend/SearchList.lua:14
 msgid "Move Up"
-msgstr ""
+msgstr "Передвинуть выше"
 
 #: src/frontend/SearchList.lua:15
 msgid "Move Down"
-msgstr ""
+msgstr "Передвинуть ниже"
 
 #: src/frontend/SearchList.lua:16
 msgid "Delete"
-msgstr ""
+msgstr "Удалить"
 
 #: src/frontend/SearchList.lua:25
 msgid "New Search"
-msgstr ""
+msgstr "Новый запрос"
 
 #: src/frontend/SearchList.lua:52
 msgid "Rename Search"
-msgstr ""
+msgstr "Переименовать запрос"
 
 #: src/frontend/SearchList.lua:55
 msgid "Enter the new name for your search."
-msgstr ""
+msgstr "Введите новое название для вашего запроса."
 
 #: src/frontend/SearchList.lua:63
 msgid "Save"
-msgstr ""
+msgstr "Сохранить"
 
 #. TRANSLATORS: Label for the row at the end of the search result list which triggers the search for more results
 #. TRANSLATORS: Label for the keybind to show more results
@@ -719,28 +734,28 @@ msgstr "Пoкaзaть бoльшe peзультaтoв"
 #. TRANSLATORS: Label for the row at the end of the search result list when a search is already pending, but cannot start yet due to the request cooldown
 #: src/frontend/SearchResultListWrapper.lua:39
 msgid "Waiting For Cooldown ..."
-msgstr ""
+msgstr "Выжидаю задержку между запросами …"
 
 #. TRANSLATORS: Label for the row at the end of the search result list when a search is currently in progress
 #: src/frontend/SearchResultListWrapper.lua:41
 msgid "Requesting Results ..."
-msgstr ""
+msgstr "Запрашиваю результаты …"
 
 #. TRANSLATORS: Label for the result count below the search result list. First number indicates the visible results, second number the overall number of locally stored items for the current guild
 #: src/frontend/SearchResultListWrapper.lua:43
 #, lua-format
 msgid "Items:|cffffff %d / %d"
-msgstr ""
+msgstr "Товары:|cffffff %d / %d"
 
 #. TRANSLATORS: Seller name label in the search result list
 #: src/frontend/SearchResultListWrapper.lua:160
 msgid "Seller:|cffffff <<1>>"
-msgstr ""
+msgstr "Продавец:|cffffff <<1>>"
 
 #. TRANSLATORS: Tooltip text when hovering over the activity status line
 #: src/frontend/StatusLine.lua:40
 msgid "Click for more information"
-msgstr ""
+msgstr "Щелкните для подробных сведений"
 
 #. TRANSLATORS: tooltip text for the set to level filter's "set to level" button on the sell tab
 #: src/frontend/filter/LevelRangeFilterFragment.lua:76
@@ -750,12 +765,12 @@ msgstr "Равно уровню персонажа"
 #. TRANSLATORS: tooltip text for removing entries in the list of a multi category filter on the search tab
 #: src/frontend/filter/MultiCategoryFilterFragment.lua:14
 msgid "Click to remove"
-msgstr ""
+msgstr "Щелкните, чтобы убрать"
 
 #. TRANSLATORS: label of button to add more values to the multi category filter
 #: src/frontend/filter/MultiCategoryFilterFragment.lua:66
 msgid "Add More"
-msgstr ""
+msgstr "Добавить ещё"
 
 #. TRANSLATORS: sort header tooltip for the list on the guild kiosk tab
 #: src/guildstorelist/GuildList.lua:66
@@ -830,12 +845,12 @@ msgstr "Показать детали"
 #: src/guildstorelist/GuildStoreList.lua:238
 #: src/wrappers/TradingHouseWrapper.lua:273
 msgid "Open Guild Info"
-msgstr ""
+msgstr "Открыть визитку гильдии"
 
 #. TRANSLATORS: text for the last visited label in the guild list detail view. $d is a placeholder for the number of weeks
 #: src/guildstorelist/GuildList.lua:185
 msgid "<<1[this week/1 week ago/$d weeks ago]>>"
-msgstr "<<1[на этой неделе/1 неделю назад/$d нед. назад]>>"
+msgstr "<<1[на этой неделе/$d неделю назад/$d недели назад/$d недель назад]>>"
 
 #. TRANSLATORS: text for the last visited field of an unvisited kiosk on the guild kiosk tab
 #: src/guildstorelist/GuildList.lua:207
@@ -846,17 +861,21 @@ msgstr "никогда"
 #. TRANSLATORS: tooltip text for the store stats on the guild kiosk tab. <<1>> is replaced with the kiosk count
 #: src/guildstorelist/GuildList.lua:342
 msgid "|cffffff<<1>>|r guilds visited this week"
-msgstr "|cffffff<<1>>|r гильдий посещено на этой неделе"
+msgstr ""
+"|cffffff<<1>>|r <<1[гильдий посещено/гильдия посещена/гильдии посещены/"
+"гильдий посещено]>> на этой неделе"
 
 #. TRANSLATORS: tooltip text for the store stats on the guild kiosk tab. <<1>> is replaced with the kiosk count
 #: src/guildstorelist/GuildList.lua:348
 msgid "|cffffff<<1>>|r guilds visited all time"
-msgstr "|cffffff<<1>>|r гильдий посещено за всё время"
+msgstr ""
+"|cffffff<<1>>|r <<1[гильдий посещено/гильдия посещена/гильдии посещены/"
+"гильдий посещено]>> за всё время"
 
 #. TRANSLATORS: tooltip text for the store stats on the guild kiosk tab. <<1>> is replaced with the overall guild count
 #: src/guildstorelist/GuildList.lua:354
 msgid "|cffffff<<1>>|r guilds stored"
-msgstr "размещено в |cffffff<<1>>|r гильдиях"
+msgstr "Хранится |cffffff<<1>>|r <<1[гильдий/гильдия/гильдии/гильдий]>>"
 
 #. TRANSLATORS: placeholder text when the list on the guild kiosk tab is not yet initialized
 #: src/guildstorelist/GuildListControl.lua:51
@@ -902,23 +921,29 @@ msgstr "Вы член этой гильдии."
 #. TRANSLATORS: tooltip text for the store stats on the guild kiosk tab. <<1>> is replaced with the kiosk count
 #: src/guildstorelist/GuildStoreList.lua:457
 msgid "|cffffff<<1>>|r stores visited this week"
-msgstr "|cffffff<<1>>|r магазинов посещено на этой неделе"
+msgstr ""
+"|cffffff<<1>>|r <<1[магазинов посещено/магазин посещён/магазина посещены/"
+"магазинов посещено]>> на этой неделе"
 
 #. TRANSLATORS: tooltip text for the store stats on the guild kiosk tab. <<1>> is replaced with the kiosk count
 #: src/guildstorelist/GuildStoreList.lua:463
 msgid "|cffffff<<1>>|r stores visited all time"
-msgstr "|cffffff<<1>>|r магазинов посещено за всё время"
+msgstr ""
+"|cffffff<<1>>|r <<1[магазинов посещено/магазин посещён/магазина посещены/"
+"магазинов посещено]>> за всё время"
 
 #. TRANSLATORS: tooltip text for the store stats on the guild kiosk tab. <<1>> is replaced with the kiosk count and <<2>> with the amount of distinct locations
 #: src/guildstorelist/GuildStoreList.lua:469
 msgid "|cffffff<<1>>|r stores detected in |cffffff<<2>>|r locations"
-msgstr "|cffffff<<1>>|r магазинов обнаружено в |cffffff<<2>>|r локациях"
+msgstr ""
+"|cffffff<<1>>|r <<1[магазинов обнаружено/магазин обнаружен/магазина "
+"обнаружены/магазинов обнаружено]>> в |cffffff<<2>>|r <<2[локации/локациях]>>"
 
 #. TRANSLATORS: placeholder text when the history list of an entry on the guild kiosk tab is empty
 #: src/guildstorelist/KioskHistoryControl.lua:34
 #: src/guildstorelist/OwnerHistoryControl.lua:34
 msgid "No history data stored."
-msgstr "Нет данных истории."
+msgstr "Журнал пуст."
 
 #. TRANSLATORS: label for the last visited field of a joined guild on the guild kiosk tab
 #: src/guildstorelist/TraderListControl.lua:144
@@ -933,12 +958,12 @@ msgstr "Предмет продан"
 #. TRANSLATORS: help text for the listing price in the guild store sell mail invoice
 #: src/history/MailBox.lua:162
 msgid "The price the item was listed for"
-msgstr ""
+msgstr "Цена, за которую был выставлен товар"
 
 #. TRANSLATORS: help text for the tax amount in the guild store sell mail invoice
 #: src/history/MailBox.lua:169
 msgid "The amount that was deposited into the guild bank as tax"
-msgstr ""
+msgstr "Комиссия гильдии, перечисленная в её банк"
 
 #. TRANSLATORS: label for the commission line in the guild store sell mail invoice
 #: src/history/MailBox.lua:173
@@ -948,22 +973,22 @@ msgstr "Кoмиccия"
 #. TRANSLATORS: help text for the commission in the guild store sell mail invoice
 #: src/history/MailBox.lua:175
 msgid "The amount that disappeared into the void"
-msgstr ""
+msgstr "Сумма, отправленная в обливион"
 
 #. TRANSLATORS: help text for the received gold in the guild store sell mail invoice
 #: src/history/MailBox.lua:182
 msgid "The gold attached to this mail"
-msgstr ""
+msgstr "Приложенная к этому письму сумма"
 
 #. TRANSLATORS: help text for the listing fee in the guild store sell mail invoice
 #: src/history/MailBox.lua:189
 msgid "The fee that was taken from the inventory when the item was listed in the store"
-msgstr ""
+msgstr "Снятая из инвентаря комиссия за выставление товара на продажу"
 
 #. TRANSLATORS: help text for the profit in the guild store sell mail invoice
 #: src/history/MailBox.lua:196
 msgid "The resulting profit after subtracting all the fees"
-msgstr ""
+msgstr "Итоговая прибыль с учётом всех сборов"
 
 #. TRANSLATORS: label for the load details button in guild store sell mails where the invoice can not be shown due to lack of data
 #: src/history/MailBox.lua:218
@@ -983,7 +1008,7 @@ msgstr "Внимание: Не удалось определить лавку п
 #. TRANSLATORS: chat message when an item listing is cancelled on the listing tab. <<1>> is replaced with the item count, <<t:2>> with the item link, <<3>> with the price and <<4>> with the guild store name. e.g. You have cancelled your listing of 1x [Rosin] for 5000g in Imperial Trading Company
 #: src/wrappers/ListingTabWrapper.lua:237
 msgid "You have cancelled your listing of <<1>>x <<t:2>> for <<3>> in <<4>>"
-msgstr "Вы oтoзвaли из пpoдaжи <<t:2>> x<<1>> зa <<3>> в <<4>>"
+msgstr "Вы сняли с пpoдaжи <<t:2>> x<<1>> зa <<3>> в <<4>>"
 
 #. TRANSLATORS: the overall price of all listed items in a store on the listing tab. <<1>> is replaced by the price
 #: src/wrappers/ListingTabWrapper.lua:248
@@ -1004,12 +1029,12 @@ msgstr "Предмет уже куплен вами."
 #. TRANSLATORS: Alert message when the item data for the item id could not be found while confirming a purchase
 #: src/wrappers/SearchTabWrapper.lua:321
 msgid "Item not found in current guild."
-msgstr ""
+msgstr "Товар не найден в этой гильдии."
 
 #. TRANSLATORS: the label for the listing repetition slider on the sell tab
 #: src/wrappers/SellTabWrapper.lua:190
 msgid "Listings:"
-msgstr ""
+msgstr "Штук:"
 
 #. TRANSLATORS: tooltip text for the quantity selection buttons on the sell tab
 #: src/wrappers/SellTabWrapper.lua:216
@@ -1049,7 +1074,7 @@ msgstr "Прибыль ниже, чем от продажи торговцу. В
 #. TRANSLATORS: alert text when trying to list an item from the bank while not at a banker NPC
 #: src/wrappers/SellTabWrapper.lua:385
 msgid "Bank items can only be listed while at a banker NPC"
-msgstr ""
+msgstr "Предметы из банка можно выставить на продажу только через банкира"
 
 #. TRANSLATORS: chat message when a item is listed on a store. <<1>> is replaced with the item count, <<t:2>> with the item link, <<3>> with the price and <<4>> with the guild store name. e.g. You have listed 1x [Rosin] for 5000g in Imperial Trading Company
 #: src/wrappers/SellTabWrapper.lua:708
@@ -1059,4 +1084,4 @@ msgstr "Вы paзмecтили нa пpoдaжу <<t:2>> x<<1>> зa <<3>> в <<4>>"
 #. TRANSLATORS: Footer text for the store interface. Place holders are for the version string and to make the Donate text clickable and colored
 #: src/wrappers/TradingHouseWrapper.lua:329
 msgid "AwesomeGuildStore - Version: <<1>> - <<2>>Donate<<3>>"
-msgstr ""
+msgstr "AwesomeGuildStore - Версия: <<1>> - <<2>>Поддержать<<3>>"
