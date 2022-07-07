@@ -4,11 +4,13 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: AwesomeGuildStore\n"
-"Report-Msgid-Bugs-To: https://weblate.sir.insidi.at/or/projects/awesomeguildstore/messages/\n"
+"Report-Msgid-Bugs-To: https://weblate.sir.insidi.at/or/projects/"
+"awesomeguildstore/messages/\n"
 "POT-Creation-Date: 2022-07-02 16:50+0000\n"
-"PO-Revision-Date: 2022-07-02 16:50+0000\n"
+"PO-Revision-Date: 2022-07-08 14:50+0000\n"
 "Last-Translator: mlsevero <mlsevero@hotmail.com>\n"
-"Language-Team: Portuguese (Brazil) <https://weblate.sir.insidi.at/or/projects/awesomeguildstore/messages/br/>\n"
+"Language-Team: Portuguese (Brazil) <https://weblate.sir.insidi.at/or/"
+"projects/awesomeguildstore/messages/br/>\n"
 "Language: br\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -334,7 +336,7 @@ msgstr "Categoria de Item"
 #. TRANSLATORS: title of the set item filter in the left panel on the search tab
 #: src/backend/filter/ItemSetFilter.lua:23
 msgid "Itemset"
-msgstr "Itemset"
+msgstr "Conjunto"
 
 #. TRANSLATORS: tooltip text for the set item filter
 #: src/backend/filter/ItemSetFilter.lua:27
@@ -549,7 +551,7 @@ msgstr "Encantamento de Armadura"
 #. TRANSLATORS: title of the jewelry enchantment filter in the left panel on the search tab
 #: src/data/ItemEnchantmentFilterData.lua:146
 msgid "Jewelry Enchantment"
-msgstr "Encantamento de Jóia"
+msgstr "Encantamento de Joia"
 
 #: src/data/ItemStyleFilterData.lua:33
 msgid "Racial"
@@ -574,7 +576,7 @@ msgstr "Novo"
 #. TRANSLATORS: title of the jewelry trait filter in the left panel on the search tab
 #: src/data/ItemTraitFilterData.lua:181 src/data/ItemTraitFilterData.lua:383
 msgid "Jewelry Trait"
-msgstr "Característica de Jóia"
+msgstr "Característica de Joia"
 
 #. TRANSLATORS: title of the glyph type filter in the left panel on the search tab
 #: src/data/ItemTypeFilterData.lua:22
