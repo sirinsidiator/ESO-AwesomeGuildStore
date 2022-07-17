@@ -743,6 +743,12 @@ function SellTabWrapper:UpdateFragments()
     if self.currentInventoryFragment == BANK_FRAGMENT then
         -- need to trigger an update, otherwise bound items will show in the list
         PLAYER_INVENTORY:UpdateList(INVENTORY_BANK, true)
+    elseif self.currentInventoryFragment == CRAFT_BAG_FRAGMENT then
+        --2022-07-17 Baertram, fix for LibFilters3.0 to update the CraftBag's additionalFilter filterFunction from the
+        --fragment BACKPACK_MENU_BAR_LAYOUT_FRAGMENT -> Where vanilla UI code and LibFilters 3 read/write from/to
+        local layoutData = BACKPACK_MENU_BAR_LAYOUT_FRAGMENT.layoutData
+        local craftBag = PLAYER_INVENTORY.inventories[INVENTORY_CRAFT_BAG]
+        craftBag.additionalFilter = layoutData.additionalCraftBagFilter
     end
 end
 
