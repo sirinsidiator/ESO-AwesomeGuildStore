@@ -147,7 +147,7 @@ function SellTabWrapper:InitializeQuickListing(tradingHouseWrapper)
     ZO_PreHook("ZO_InventorySlot_OnSlotClicked", function(inventorySlot, button)
         if(self.isOpen and self.saveData.listWithSingleClick and button == MOUSE_BUTTON_INDEX_LEFT and not self.suppressNextClick) then
             ZO_InventorySlot_DoPrimaryAction(inventorySlot)
-            return true
+            if not FCOIS then return true end --fix for FCOItemSaver so that the inventory drag&drop protection works properly -> else InventoryLockSlot won't be called
         end
     end)
     RegisterForEvent(EVENT_GLOBAL_MOUSE_UP, function()
@@ -524,7 +524,7 @@ function SellTabWrapper:InitializeCraftingBag(tradingHouseWrapper)
                     tradingHouse:OnPendingPostItemUpdated(0, false)
                 end
 
-                return true
+                if not FCOIS then return true end --fix for FCOItemSaver so that the inventory drag&drop protection works properly -> else InventoryLockSlot won't be called
             end
         end
     end)
@@ -547,7 +547,7 @@ function SellTabWrapper:InitializeCraftingBag(tradingHouseWrapper)
             ClearCursor()
             draggedBagId = 0
             draggedSlotIndex = 0
-            return true
+            if not FCOIS then return true end --fix for FCOItemSaver so that the inventory drag&drop protection works properly -> else InventoryLockSlot won't be called
         end
     end)
 
