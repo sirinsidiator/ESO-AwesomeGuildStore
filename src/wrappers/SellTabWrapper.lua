@@ -5,7 +5,7 @@ local RegisterForEvent = AGS.internal.RegisterForEvent
 local UnregisterForEvent = AGS.internal.UnregisterForEvent
 local chat = AGS.internal.chat
 local ToggleButton = AGS.class.ToggleButton
-local GetItemLinkWritCount = AGS.internal.GetItemLinkWritCount
+local GetItemLinkWritVoucherCount = AGS.internal.GetItemLinkWritVoucherCount
 
 local SellTabWrapper = ZO_Object:Subclass()
 AGS.class.SellTabWrapper = SellTabWrapper
@@ -656,13 +656,16 @@ function SellTabWrapper:SetPendingItem(bagId, slotIndex)
 
         self.isMasterWrit = IsMasterWrit(bagId, slotIndex)
         if(self.isMasterWrit) then
-            self.currentStackCount = GetItemLinkWritCount(self.pendingItemLink) * self.pendingStackCount
+            self.currentStackCount = GetItemLinkWritVoucherCount(self.pendingItemLink) * self.pendingStackCount
+            -- apparently some writs can have 0 vouchers. when that's the case we set the stack count to 1 to avoid a division by zero further down
+            if self.currentStackCount < 1 then self.currentStackCount = 1 end
         else
             self.currentStackCount = self.lastSoldStackCount[self.pendingItemIdentifier] or self.pendingStackCount
             if(self.currentStackCount > self.pendingStackCount) then
                 self.currentStackCount = self.pendingStackCount
             end
         end
+
         self.currentPricePerUnit = self.lastSoldPricePerUnit[self.pendingItemIdentifier]
         if(not self.currentPricePerUnit) then
             self.currentPricePerUnit = GetMasterMerchantLastUsedPrice(self.pendingItemLink) or GetMasterMerchantPrice(self.pendingItemLink) or (sellPrice * 3)

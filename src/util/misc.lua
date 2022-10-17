@@ -74,13 +74,13 @@ end
 AGS.internal.GetKioskNameFromInfoText = GetKioskNameFromInfoText
 
 
-local function GetItemLinkWritCount(itemLink)
+local function GetItemLinkWritVoucherCount(itemLink)
     local data = itemLink:match("|H.-:.-:(.-)|h.-|h")
-    local writCount = select(21, zo_strsplit(":", data))
-    return tonumber(string.format("%.0f", (writCount / 10000)))
+    local rawVouchers = select(21, zo_strsplit(":", data))
+    return tonumber(string.format("%.0f", (rawVouchers / 10000)))
 end
 
-AGS.internal.GetItemLinkWritCount = GetItemLinkWritCount
+AGS.internal.GetItemLinkWritVoucherCount = GetItemLinkWritVoucherCount
 
 
 local function AdjustLinkStyle(link, linkStyle)

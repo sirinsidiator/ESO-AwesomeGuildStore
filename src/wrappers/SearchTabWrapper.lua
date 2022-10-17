@@ -3,7 +3,6 @@ local AGS = AwesomeGuildStore
 local gettext = AGS.internal.gettext
 local RegisterForEvent = AGS.internal.RegisterForEvent
 local ToggleButton = AGS.class.ToggleButton
-local GetItemLinkWritCount = AGS.internal.GetItemLinkWritCount
 local chat = AGS.internal.chat
 local logger = AGS.internal.logger
 local AdjustLinkStyle = AGS.internal.AdjustLinkStyle
