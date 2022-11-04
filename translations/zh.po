@@ -5,13 +5,11 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: AwesomeGuildStore\n"
-"Report-Msgid-Bugs-To: https://weblate.sir.insidi.at/or/projects/"
-"awesomeguildstore/messages/\n"
-"POT-Creation-Date: 2022-07-02 16:50+0000\n"
+"Report-Msgid-Bugs-To: https://weblate.sir.insidi.at/or/projects/awesomeguildstore/messages/\n"
+"POT-Creation-Date: 2022-11-04 11:58+0000\n"
 "PO-Revision-Date: 2022-11-04 11:58+0000\n"
 "Last-Translator: Simon Li <inabaddon@163.com>\n"
-"Language-Team: Chinese (Simplified) <https://weblate.sir.insidi.at/or/"
-"projects/awesomeguildstore/messages/zh/>\n"
+"Language-Team: Chinese (Simplified) <https://weblate.sir.insidi.at/or/projects/awesomeguildstore/messages/zh/>\n"
 "Language: zh\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,8 +25,7 @@ msgstr "启动时最小化聊天框"
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:66
 msgid "When activated, the chat window will get minimized when visiting a trading house. This defaults to true since it is the new default behavior added by ZOS."
-msgstr "启用该选项，聊天框会在访问公会商人时自动最小化。该选项默认启用，这是游戏内新"
-"的默认操作方式。"
+msgstr "启用该选项，聊天框会在访问公会商人时自动最小化。该选项默认启用，这是游戏内新的默认操作方式。"
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:81
@@ -118,8 +115,7 @@ msgstr "跳过公会商人对话"
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:175
 msgid "When activated, the dialog at guild traders (not at banks) is skipped and the store opened automatically. This can be suppressed by holding the shift key when talking to a trader."
-msgstr "启用该选项，公会商人（非银行）对话将被跳过，自动进入商店界面。你可以通过按住S"
-"hift键交互与公会商人进行对话。"
+msgstr "启用该选项，公会商人（非银行）对话将被跳过，自动进入商店界面。你可以通过按住Shift键交互与公会商人进行对话。"
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:183
@@ -129,10 +125,7 @@ msgstr "清除价格缓存"
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:185
 msgid "Pressing this button will remove all stored quantity and price values for the sell tab from your save data. While Master Merchant is active, it will take the last sell price from there when selecting an item if no data was found in AwesomeGuildStore's own data"
-msgstr ""
-"点击该按钮将清除你已保存数据中出售页面所有已记录的物品数量与报价。"
-"如果启用了Master Merchant，在找不到AwesomeGuildStore自己的数据时，"
-"系统会通过Master Merchant获取所选物品的最近售价。"
+msgstr "点击该按钮将清除你已保存数据中出售页面所有已记录的物品数量与报价。如果启用了Master Merchant，在找不到AwesomeGuildStore自己的数据时，系统会通过Master Merchant获取所选物品的最近售价。"
 
 #. TRANSLATORS: warning tooltip text for an entry in the addon settings
 #: src/Settings.lua:187
@@ -147,8 +140,7 @@ msgstr "开启公会商人列表"
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:203
 msgid "When activated, the guild menu will show a new tab with a list of all kiosks in Tamriel. The list will get updated with the owning guilds whenever you visit a kiosk."
-msgstr "启用该选项, 公会菜单将新增一个标签页，展示泰姆瑞尔所有公会商人的列表。当你访"
-"问公会商人时，该列表将自动更新该商人与对应公会的信息。"
+msgstr "启用该选项, 公会菜单将新增一个标签页，展示泰姆瑞尔所有公会商人的列表。当你访问公会商人时，该列表将自动更新该商人与对应公会的信息。"
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:212
@@ -1001,17 +993,17 @@ msgid "Overall Price: <<1>>"
 msgstr "总价：<<1>>"
 
 #. TRANSLATORS: chat message when an item is bought from the store. <<1>> is replaced with the item count, <<t:2>> with the item link, <<3>> with the seller name, <<4>> with price and <<5>> with the guild store name. e.g. You have bought 1x [Rosin] from sirinsidiator for 5000g in Imperial Trading Company
-#: src/wrappers/SearchTabWrapper.lua:275
+#: src/wrappers/SearchTabWrapper.lua:274
 msgid "You have bought <<1>>x <<t:2>> from <<3>> for <<4>> in <<5>>"
 msgstr "您以 <<4>> 在 <<3>> 从 <<5>> 公会购买了 <<1>>x <<t:2>>"
 
 #. TRANSLATORS: Alert message when they try to purchase an item which was already purchased by them earlier
-#: src/wrappers/SearchTabWrapper.lua:300
+#: src/wrappers/SearchTabWrapper.lua:299
 msgid "Item is already in your possession."
 msgstr "已拥有此物品。"
 
 #. TRANSLATORS: Alert message when the item data for the item id could not be found while confirming a purchase
-#: src/wrappers/SearchTabWrapper.lua:321
+#: src/wrappers/SearchTabWrapper.lua:320
 msgid "Item not found in current guild."
 msgstr "当前公会未找到物品。"
 
@@ -1061,7 +1053,7 @@ msgid "Bank items can only be listed while at a banker NPC"
 msgstr "银行物品只有在通过银行NPC访问公会商人时出售"
 
 #. TRANSLATORS: chat message when a item is listed on a store. <<1>> is replaced with the item count, <<t:2>> with the item link, <<3>> with the price and <<4>> with the guild store name. e.g. You have listed 1x [Rosin] for 5000g in Imperial Trading Company
-#: src/wrappers/SellTabWrapper.lua:708
+#: src/wrappers/SellTabWrapper.lua:711
 msgid "You have listed <<1>>x <<t:2>> for <<3>> in <<4>>"
 msgstr "您在 <<4>> 以 <<3>> 价格上架出售<<1>>x <<t:2>>"
 
