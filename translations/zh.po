@@ -1,771 +1,780 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR sirinsidiator
 # This file is distributed under the same license as the AwesomeGuildStore package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# Simon Li <inabaddon@163.com>, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: AwesomeGuildStore\n"
-"Report-Msgid-Bugs-To: https://weblate.sir.insidi.at/or/projects/awesomeguildstore/messages/\n"
+"Report-Msgid-Bugs-To: https://weblate.sir.insidi.at/or/projects/"
+"awesomeguildstore/messages/\n"
 "POT-Creation-Date: 2022-07-02 16:50+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2022-11-04 11:58+0000\n"
+"Last-Translator: Simon Li <inabaddon@163.com>\n"
+"Language-Team: Chinese (Simplified) <https://weblate.sir.insidi.at/or/"
+"projects/awesomeguildstore/messages/zh/>\n"
 "Language: zh\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 4.14.1\n"
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:64
 msgid "Minimize chat on open"
-msgstr ""
+msgstr "启动时最小化聊天框"
 
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:66
 msgid "When activated, the chat window will get minimized when visiting a trading house. This defaults to true since it is the new default behavior added by ZOS."
-msgstr ""
+msgstr "启用该选项，聊天框会在访问公会商人时自动最小化。该选项默认启用，这是游戏内新"
+"的默认操作方式。"
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:81
 msgid "Single click item listing"
-msgstr ""
+msgstr "单击上架物品"
 
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:83
 msgid "Select items for sale with a single click in the sell tab."
-msgstr ""
+msgstr "在出售界面单击要出售物品即可上架。"
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:91
 msgid "Trader Tooltips"
-msgstr ""
+msgstr "商人提示"
 
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:93
 msgid "Show the currently hired trader for a guild that you are a member of, when hovering over the name or an entry in the drop down menu"
-msgstr ""
+msgstr "在下拉框选项和指针悬停时，显示你所在公会当前雇佣的商人。"
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:101
 msgid "Mail augmentation"
-msgstr ""
+msgstr "邮件增强"
 
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:103
 msgid "Adds more detailed information about a transaction to an incoming Guild Store Mail if the data is available in the Guild Activity Log."
-msgstr ""
+msgstr "如果公会活动日志的数据可用，在收到的公会商人邮件中展示交易的更多详细信息。"
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:112
 msgid "Show invoice on mails"
-msgstr ""
+msgstr "邮件显示收据"
 
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:114
 msgid "Adds a detailed invoice to the mail which lists all deductions."
-msgstr ""
+msgstr "在邮件中展示包含各项金额扣除的详细收据。"
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:123
 msgid "Purchase notifications"
-msgstr ""
+msgstr "交易提醒"
 
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:125
 msgid "Shows a message in chat after you have purchased an item in a guild store"
-msgstr ""
+msgstr "在公会商店购买物品后，聊天框内显示提醒消息。"
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:133
 msgid "Cancel notifications"
-msgstr ""
+msgstr "下架提醒"
 
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:135
 msgid "Shows a message in chat after you have cancelled an item listing from a guild store"
-msgstr ""
+msgstr "在公会商店下架出售的物品后，聊天框内显示提醒消息。"
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:143
 msgid "Listed item notifications"
-msgstr ""
+msgstr "物品上架提醒"
 
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:145
 msgid "Shows a message in chat after you have created a new item listing in a guild store"
-msgstr ""
+msgstr "在公会商店上架物品出售时，聊天框内显示提醒消息。"
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:153
 msgid "Preferred banker store tab"
-msgstr ""
+msgstr "银行商店优先标签页"
 
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:155
 msgid "Controls which tab should be opened first when visiting the guild store at a banker."
-msgstr ""
+msgstr "控制你通过银行访问公会商人时优先展示的标签页。"
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:173
 msgid "Skip guild kiosk dialog"
-msgstr ""
+msgstr "跳过公会商人对话"
 
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:175
 msgid "When activated, the dialog at guild traders (not at banks) is skipped and the store opened automatically. This can be suppressed by holding the shift key when talking to a trader."
-msgstr ""
+msgstr "启用该选项，公会商人（非银行）对话将被跳过，自动进入商店界面。你可以通过按住S"
+"hift键交互与公会商人进行对话。"
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:183
 msgid "Clear sell price cache"
-msgstr ""
+msgstr "清除价格缓存"
 
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:185
 msgid "Pressing this button will remove all stored quantity and price values for the sell tab from your save data. While Master Merchant is active, it will take the last sell price from there when selecting an item if no data was found in AwesomeGuildStore's own data"
 msgstr ""
+"点击该按钮将清除你已保存数据中出售页面所有已记录的物品数量与报价。"
+"如果启用了Master Merchant，在找不到AwesomeGuildStore自己的数据时，"
+"系统会通过Master Merchant获取所选物品的最近售价。"
 
 #. TRANSLATORS: warning tooltip text for an entry in the addon settings
 #: src/Settings.lua:187
 msgid "The data cannot be restored after you have confirmed the action"
-msgstr ""
+msgstr "确认该操作后，数据将不可恢复。"
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:201
 msgid "Enable guild trader list"
-msgstr ""
+msgstr "开启公会商人列表"
 
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:203
 msgid "When activated, the guild menu will show a new tab with a list of all kiosks in Tamriel. The list will get updated with the owning guilds whenever you visit a kiosk."
-msgstr ""
+msgstr "启用该选项, 公会菜单将新增一个标签页，展示泰姆瑞尔所有公会商人的列表。当你访"
+"问公会商人时，该列表将自动更新该商人与对应公会的信息。"
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:212
 msgid "Clear guild trader list"
-msgstr ""
+msgstr "清除公会商人列表"
 
 #. TRANSLATORS: tooltip text for an entry in the addon settings
 #: src/Settings.lua:214
 msgid "Pressing this button will remove all stored data related to the guild trader list"
-msgstr ""
+msgstr "点击该按钮将清除所有公会商人列表相关的数据。"
 
 #. TRANSLATORS: warning tooltip text for an entry in the addon settings
 #: src/Settings.lua:216
 msgid "The UI will reload and the data cannot be restored after you have confirmed the action"
-msgstr ""
+msgstr "游戏界面将重载。确认该操作后，数据将不可恢复。"
 
 #. TRANSLATORS: Chat message when the addon was not installed correctly and some files are missing. Placeholder is for the filename.
 #: src/StartUp.lua:214
 msgid "The file '<<1>>' is missing. Please reinstall AwesomeGuildStore."
-msgstr ""
+msgstr "文件 '<<1>>' 丢失，请重新安装AwesomeGuildStore。"
 
 #. TRANSLATORS: Chat message when a dependency does not fulfill the minimal version requirement. Placeholder is for the required library name and version.
 #: src/StartUp.lua:223
 msgid "Cannot start due to an outdated library. Please install <<1>> or newer."
-msgstr ""
+msgstr "由于库文件已过期，无法启动。请安装 <<1>> 或更新版本。"
 
 #. TRANSLATORS: keybind label in the controls menu
 #: src/StartUp.lua:245
 msgid "Suppress Local Filters"
-msgstr ""
+msgstr "禁用本地过滤器"
 
 #. TRANSLATORS: Status text when waiting for a server response
 #: src/backend/activity/ActivityManager.lua:35
 msgid "Waiting for response"
-msgstr ""
+msgstr "等待响应"
 
 #. TRANSLATORS: Status text when a server request timed out
 #: src/backend/activity/ActivityManager.lua:44
 msgid "Request timed out"
-msgstr ""
+msgstr "请求超时"
 
 #. TRANSLATORS: Status text when a server response timed out
 #: src/backend/activity/ActivityManager.lua:53
 msgid "Response timed out"
-msgstr ""
+msgstr "响应超时"
 
 #. TRANSLATORS: Status text when a server request failed
 #: src/backend/activity/ActivityManager.lua:62
 msgid "Request failed"
-msgstr ""
+msgstr "请求失败"
 
 #. TRANSLATORS: Status text when a new activity was queued
 #: src/backend/activity/ActivityManager.lua:185
 msgid "<<1[No activity/One activity/$d activities]>> queued"
-msgstr ""
+msgstr "<<1[无动作/1 个动作/$d 个动作]>> 加入序列"
 
 #. TRANSLATORS: Status text when the next activity can be executed
 #: src/backend/activity/ActivityManager.lua:299
 msgid "Execute next activity"
-msgstr ""
+msgstr "执行下一动作"
 
 #. TRANSLATORS: Status text when a server request was successfully completed
 #: src/backend/activity/ActivityManager.lua:317
 msgid "Request finished"
-msgstr ""
+msgstr "请求完成"
 
 #. TRANSLATORS: Alert text when an activity fails unexpectedly
 #: src/backend/activity/ActivityManager.lua:327
 msgid "Unknown Error"
-msgstr ""
+msgstr "未知错误"
 
 #. TRANSLATORS: Status text when a server request has failed. Placeholder is for an explanation text
 #: src/backend/activity/ActivityManager.lua:339
 msgid "Request failed: <<1>>"
-msgstr ""
+msgstr "请求失败：<<1>>"
 
 #. TRANSLATORS: error text shown to the user when a listed item could not be cancelled
 #: src/backend/activity/CancelItemActivity.lua:54
 msgid "Could not cancel listing"
-msgstr ""
+msgstr "无法取消上架"
 
 #. TRANSLATORS: log text shown to the user for each cancel item activity. First placeholder is for the item link and second for the guild name
 #: src/backend/activity/CancelItemActivity.lua:61
 msgid "Cancel listing of <<1>>x <<t:2>> for <<3>> in <<4>>"
-msgstr ""
+msgstr "取消上架：在 <<4>> 以 <<3>> 的 <<1>>x <<t:2>>"
 
 #. TRANSLATORS: error text shown to the user when guild items could not be fetched
 #: src/backend/activity/FetchGuildItemsActivity.lua:52
 msgid "Could not fetch guild items"
-msgstr ""
+msgstr "无法获取公会物品"
 
 #. TRANSLATORS: log text shown to the user for each time the guild items are fetched. Placeholder is for the guild name
 #: src/backend/activity/FetchGuildItemsActivity.lua:58
 msgid "Fetch guild items in <<1>>"
-msgstr ""
+msgstr "在 <<1>> 内获取公会物品"
 
 #. TRANSLATORS: error text shown to the user when an item could not be listed
 #: src/backend/activity/PostItemActivity.lua:168
 msgid "Could not list item"
-msgstr ""
+msgstr "无法上架物品"
 
 #. TRANSLATORS: log text shown to the user for each post item request. Placeholders are for the stackCount, itemLink, price and guild name respectively
 #: src/backend/activity/PostItemActivity.lua:175
 msgid "Post <<1>>x <<2>> for <<3>> to <<4>>"
-msgstr ""
+msgstr "发布物品：在 <<4>> 以 <<3>> 的 <<1>>x <<2>>"
 
 #. TRANSLATORS: error text shown to the user when an item could not be listed
 #: src/backend/activity/PurchaseItemActivity.lua:75
 msgid "Could not purchase item"
-msgstr ""
+msgstr "无法购买物品"
 
 #. TRANSLATORS: log text shown to the user for each purchase item request. Placeholders are for the stackCount, itemLink, price, seller and guild name respectively
 #: src/backend/activity/PurchaseItemActivity.lua:83
 msgid "Purchase <<1>>x <<2>> for <<3>> from <<4>> in <<5>>"
-msgstr ""
+msgstr "在 <<5>> 从 <<4>> 处花费 <<3>> 购买了<<1>>x <<2>>"
 
 #. TRANSLATORS: log text shown to the user for each listings request. Placeholder is for the guild name
 #: src/backend/activity/RequestListingsActivity.lua:49
 msgid "Request listings in <<1>>"
-msgstr ""
+msgstr "请求 <<1>> 的商品列表"
 
 #. TRANSLATORS: error text shown to the user when listings could not be requested
 #: src/backend/activity/RequestListingsActivity.lua:56
 msgid "Could not request listings"
-msgstr ""
+msgstr "无法请求列表"
 
 #. TRANSLATORS: log text shown to the user for each executed request of the newest search results. Placeholders are for the page and guild name
 #: src/backend/activity/RequestNewestActivity.lua:45
 msgid "Request page <<1>> of newest results in <<2>>"
-msgstr ""
+msgstr "请求 <<2>> 公会最新结果的第 <<1>> 页"
 
 #. TRANSLATORS: log text shown to the user for each request of the newest search results. Placeholder is for the guild name
 #: src/backend/activity/RequestNewestActivity.lua:48
 msgid "Request newest results in <<1>>"
-msgstr ""
+msgstr "请求 <<1>> 的最新结果"
 
 #. TRANSLATORS: error text shown to the user when search results could not be requested
 #: src/backend/activity/RequestSearchActivity.lua:96
 msgid "Could not request search results"
-msgstr ""
+msgstr "无法请求搜索结果"
 
 #. TRANSLATORS: log text shown to the user for an executed request of the search results. Placeholders are for the page, category and guild name
 #: src/backend/activity/RequestSearchActivity.lua:108
 msgid "Request page <<1>> of <<2>> in <<3>>"
-msgstr ""
+msgstr "请求 <<3>> 公会 <<2>> 的第 <<1>> 页"
 
 #. TRANSLATORS: log text shown to the user for a queued request of the search results. Placeholder is for the guild name
 #: src/backend/activity/RequestSearchActivity.lua:111
 msgid "Request search results in <<1>>"
-msgstr ""
+msgstr "请求 <<1>> 中的搜索结果"
 
 #. TRANSLATORS: error text shown to the user when the trading house failed to initialize
 #: src/backend/activity/StoreStatusActivity.lua:90
 msgid "Store initialization failed"
-msgstr ""
+msgstr "商店初始化失败"
 
 #. TRANSLATORS: log text shown to the user for the initial wait for the trading house status
 #: src/backend/activity/StoreStatusActivity.lua:96
 msgid "Wait for trading house status"
-msgstr ""
+msgstr "等待商店状态"
 
 #. TRANSLATORS: title of the collectible ownership filter in the left panel on the search tab
 #: src/backend/filter/CollectibleOwnershipFilter.lua:39
 msgid "Collectible Ownership"
-msgstr ""
+msgstr "收藏状态"
 
 #. TRANSLATORS: title of the crafted item filter in the left panel on the search tab
 #: src/backend/filter/CraftedItemFilter.lua:22
 msgid "Crafting"
-msgstr ""
+msgstr "制造"
 
 #. TRANSLATORS: tooltip text for the crafted item filter
 #: src/backend/filter/CraftedItemFilter.lua:26
 msgid "Looted item"
-msgstr ""
+msgstr "战利物品"
 
 #. TRANSLATORS: tooltip text for the crafted item filter
 #: src/backend/filter/CraftedItemFilter.lua:31
 msgid "Crafted item"
-msgstr ""
+msgstr "制造物品"
 
 #. TRANSLATORS: label of the furniture category filter
 #: src/backend/filter/FurnitureCategoryFilter.lua:24
 msgid "Furnishing Category"
-msgstr ""
+msgstr "家具种类"
 
 #. TRANSLATORS: label of the category filter
 #: src/backend/filter/ItemCategoryFilter.lua:925
 msgid "Item Category"
-msgstr ""
+msgstr "物品种类"
 
 #. TRANSLATORS: title of the set item filter in the left panel on the search tab
 #: src/backend/filter/ItemSetFilter.lua:23
 msgid "Itemset"
-msgstr ""
+msgstr "套装"
 
 #. TRANSLATORS: tooltip text for the set item filter
 #: src/backend/filter/ItemSetFilter.lua:27
 msgid "Regular item"
-msgstr ""
+msgstr "普通物品"
 
 #. TRANSLATORS: tooltip text for the set item filter
 #: src/backend/filter/ItemSetFilter.lua:33
 msgid "Set item"
-msgstr ""
+msgstr "套装物品"
 
 #. TRANSLATORS: label of the level filter
 #: src/backend/filter/LevelFilter.lua:42
 msgid "Level Range"
-msgstr ""
+msgstr "等级范围"
 
 #. TRANSLATORS: title of the motif knowledge filter in the left panel on the search tab
 #: src/backend/filter/MotifKnowledgeFilter.lua:23
 msgid "Motif Knowledge"
-msgstr ""
+msgstr "样式状态"
 
 #. TRANSLATORS: tooltip text for the motif knowledge filter
 #: src/backend/filter/MotifKnowledgeFilter.lua:27
 msgid "Unknown Motifs"
-msgstr ""
+msgstr "未知样式"
 
 #. TRANSLATORS: tooltip text for the motif knowledge filter
 #: src/backend/filter/MotifKnowledgeFilter.lua:33
 msgid "Known Motifs"
-msgstr ""
+msgstr "已知样式"
 
 #. TRANSLATORS: label of the price filter
 #: src/backend/filter/PriceFilter.lua:28
 msgid "Price Range"
-msgstr ""
+msgstr "价格范围"
 
 #. TRANSLATORS: label of the quality filter
 #: src/backend/filter/QualityFilter.lua:27
 msgid "Quality Range"
-msgstr ""
+msgstr "品质范围"
 
 #. TRANSLATORS: title of the recipe knowledge filter in the left panel on the search tab
 #: src/backend/filter/RecipeKnowledgeFilter.lua:21
 msgid "Recipe Knowledge"
-msgstr ""
+msgstr "配方状态"
 
 #. TRANSLATORS: tooltip text for the recipe knowledge filter
 #: src/backend/filter/RecipeKnowledgeFilter.lua:25
 msgid "Unknown Recipes"
-msgstr ""
+msgstr "未知配方"
 
 #. TRANSLATORS: tooltip text for the recipe knowledge filter
 #: src/backend/filter/RecipeKnowledgeFilter.lua:31
 msgid "Known Recipes"
-msgstr ""
+msgstr "已知配方"
 
 #. TRANSLATORS: title of the rune knowledge filter in the left panel on the search tab
 #: src/backend/filter/RuneKnowledgeFilter.lua:22
 msgid "Rune Knowledge"
-msgstr ""
+msgstr "符文状态"
 
 #. TRANSLATORS: tooltip text for the rune knowledge filter
 #: src/backend/filter/RuneKnowledgeFilter.lua:26
 msgid "Unknown Rune"
-msgstr ""
+msgstr "未知符文"
 
 #. TRANSLATORS: tooltip text for the rune knowledge filter
 #: src/backend/filter/RuneKnowledgeFilter.lua:32
 msgid "Known Rune"
-msgstr ""
+msgstr "已知符文"
 
 #. TRANSLATORS: label of the recipe improvement filter
 #: src/backend/filter/SkillRequirementsFilter.lua:22
 msgid "Skill requirements"
-msgstr ""
+msgstr "技能要求"
 
 #. TRANSLATORS: tooltip text for the recipe skill requirement filter
 #: src/backend/filter/SkillRequirementsFilter.lua:26
 msgid "Can craft"
-msgstr ""
+msgstr "可制造"
 
 #. TRANSLATORS: tooltip text for the recipe skill requirement filter
 #: src/backend/filter/SkillRequirementsFilter.lua:32
 msgid "Cannot craft"
-msgstr ""
+msgstr "不可制造"
 
 #: src/backend/filter/SortFilter.lua:14
 msgid "ascending"
-msgstr ""
+msgstr "升序"
 
 #: src/backend/filter/SortFilter.lua:15
 msgid "descending"
-msgstr ""
+msgstr "降序"
 
 #. TRANSLATORS: label of the sort filter
 #: src/backend/filter/SortFilter.lua:29
 msgid "Sort By"
-msgstr ""
+msgstr "排序方式"
 
 #. TRANSLATORS: label of the text filter
 #: src/backend/filter/TextFilter.lua:27
 msgid "Text Search"
-msgstr ""
+msgstr "文字搜索"
 
 #. TRANSLATORS: title of the trait knowledge filter in the left panel on the search tab
 #: src/backend/filter/TraitKnowledgeFilter.lua:24
 msgid "Trait Knowledge"
-msgstr ""
+msgstr "特性状态"
 
 #. TRANSLATORS: tooltip text for the trait knowledge filter
 #: src/backend/filter/TraitKnowledgeFilter.lua:28
 msgid "Known Trait"
-msgstr ""
+msgstr "已知特性"
 
 #. TRANSLATORS: tooltip text for the trait knowledge filter
 #: src/backend/filter/TraitKnowledgeFilter.lua:34
 msgid "Unknown Trait"
-msgstr ""
+msgstr "未知特性"
 
 #. TRANSLATORS: label of the unit price filter
 #: src/backend/filter/UnitPriceFilter.lua:30
 msgid "Unit Price Range"
-msgstr ""
+msgstr "单价范围"
 
 #: src/backend/filter/ValueRangeFilterBase.lua:108
 msgid "exactly <<1>>"
-msgstr ""
+msgstr "就是 <<1>>"
 
 #: src/backend/filter/ValueRangeFilterBase.lua:110
 msgid "<<1>> - <<2>>"
-msgstr ""
+msgstr "<<1>> - <<2>>"
 
 #: src/backend/filter/ValueRangeFilterBase.lua:113
 msgid "over <<1>>"
-msgstr ""
+msgstr "高于 <<1>>"
 
 #: src/backend/filter/ValueRangeFilterBase.lua:115
 msgid "under <<1>>"
-msgstr ""
+msgstr "低于 <<1>>"
 
 #. TRANSLATORS: label of the writ voucher filter
 #: src/backend/filter/WritVoucherFilter.lua:26
 msgid "Writ Voucher Range"
-msgstr ""
+msgstr "委托券范围"
 
 #. TRANSLATORS: label of the item name sort order
 #: src/backend/sort/SortOrderItemName.lua:18
 msgid "Item Name"
-msgstr ""
+msgstr "物品名称"
 
 #. TRANSLATORS: label of the item quality sort order
 #: src/backend/sort/SortOrderItemQuality.lua:18
 msgid "Item Quality"
-msgstr ""
+msgstr "物品品质"
 
 #. TRANSLATORS: label of the purchase price sort order
 #: src/backend/sort/SortOrderPurchasePrice.lua:18
 msgid "Purchase Price"
-msgstr ""
+msgstr "交易价格"
 
 #. TRANSLATORS: label of the seller name sort order
 #: src/backend/sort/SortOrderSellerName.lua:18
 msgid "Seller Name"
-msgstr ""
+msgstr "卖家名字"
 
 #. TRANSLATORS: label of the set name sort order
 #: src/backend/sort/SortOrderSetName.lua:18
 msgid "Set Name"
-msgstr ""
+msgstr "套装名"
 
 #. TRANSLATORS: label of the time left sort order
 #: src/backend/sort/SortOrderTimeLeft.lua:18
 msgid "Time Left"
-msgstr ""
+msgstr "剩余时间"
 
 #. TRANSLATORS: label of the last seen sort order
 #: src/backend/sort/SortOrderUnitPrice.lua:18
 msgid "Unit Price"
-msgstr ""
+msgstr "单价"
 
 #. TRANSLATORS: title of the crafting material filter in the left panel on the search tab
 #: src/data/CraftingMaterialTypeFilterData.lua:18
 msgid "Material Type"
-msgstr ""
+msgstr "材料类型"
 
 #. TRANSLATORS: title of the alchemy and provisioning material filter in the left panel on the search tab
 #: src/data/CraftingMaterialTypeFilterData.lua:128
 #: src/data/CraftingMaterialTypeFilterData.lua:193
 msgid "Ingredient Type"
-msgstr ""
+msgstr "成分类型"
 
 #. TRANSLATORS: title of the enchanting material filter in the left panel on the search tab
 #: src/data/CraftingMaterialTypeFilterData.lua:166
 msgid "Rune Type"
-msgstr ""
+msgstr "符文类型"
 
 #. TRANSLATORS: title of the armor type filter in the left panel on the search tab
 #: src/data/EquipTypeFilterData.lua:17
 msgid "Armor Type"
-msgstr ""
+msgstr "护甲类型"
 
 #. TRANSLATORS: title text for the weapon enchantment filter in the left panel on the search tab
 #: src/data/ItemEnchantmentFilterData.lua:21
 msgid "Weapon Enchantment"
-msgstr ""
+msgstr "武器附魔"
 
 #. TRANSLATORS: title of the armor enchantment filter in the left panel on the search tab
 #: src/data/ItemEnchantmentFilterData.lua:109
 msgid "Armor Enchantment"
-msgstr ""
+msgstr "护甲附魔"
 
 #. TRANSLATORS: title of the jewelry enchantment filter in the left panel on the search tab
 #: src/data/ItemEnchantmentFilterData.lua:146
 msgid "Jewelry Enchantment"
-msgstr ""
+msgstr "首饰附魔"
 
 #: src/data/ItemStyleFilterData.lua:33
 msgid "Racial"
-msgstr ""
+msgstr "种族"
 
 #: src/data/ItemStyleFilterData.lua:57
 msgid "Uncommon"
-msgstr ""
+msgstr "稀有的"
 
 #: src/data/ItemStyleFilterData.lua:76
 msgid "Organizations"
-msgstr ""
+msgstr "组织"
 
 #: src/data/ItemStyleFilterData.lua:90
 msgid "Events"
-msgstr ""
+msgstr "事件"
 
 #: src/data/ItemStyleFilterData.lua:194
 msgid "New"
-msgstr ""
+msgstr "新的"
 
 #. TRANSLATORS: title of the jewelry trait filter in the left panel on the search tab
 #: src/data/ItemTraitFilterData.lua:181 src/data/ItemTraitFilterData.lua:383
 msgid "Jewelry Trait"
-msgstr ""
+msgstr "首饰特性"
 
 #. TRANSLATORS: title of the glyph type filter in the left panel on the search tab
 #: src/data/ItemTypeFilterData.lua:22
 msgid "Glyph Type"
-msgstr ""
+msgstr "附魔类型"
 
 #. TRANSLATORS: title of the recipe type filter in the left panel on the search tab
 #: src/data/ItemTypeFilterData.lua:50
 msgid "Recipe Type"
-msgstr ""
+msgstr "配方类型"
 
 #. TRANSLATORS: title of the drink type filter in the left panel on the search tab
 #: src/data/ItemTypeFilterData.lua:108
 msgid "Drink Type"
-msgstr ""
+msgstr "饮料类型"
 
 #. TRANSLATORS: title of the food type filter in the left panel on the search tab
 #: src/data/ItemTypeFilterData.lua:161
 msgid "Food Type"
-msgstr ""
+msgstr "食物类型"
 
 #. TRANSLATORS: title of the siege type filter in the left panel on the search tab
 #: src/data/ItemTypeFilterData.lua:214
 msgid "Siege Type"
-msgstr ""
+msgstr "攻城器具类型"
 
 #. TRANSLATORS: title of the trophy type filter in the left panel on the search tab
 #: src/data/ItemTypeFilterData.lua:257 src/data/ItemTypeFilterData.lua:305
 msgid "Trophy Type"
-msgstr ""
+msgstr "战利收藏类型"
 
 #. TRANSLATORS: title for the weapon type filter in the left panel on the search tab
 #: src/data/WeaponTypeFilterData.lua:13
 msgid "Weapon Type"
-msgstr ""
+msgstr "武器类型"
 
 #. TRANSLATORS: title of the master writ type filter in the left panel on the search tab
 #: src/data/WritTypeFilterData.lua:37
 msgid "Writ Type"
-msgstr ""
+msgstr "委托类型"
 
 #: src/frontend/ActivityWindow.lua:62
 msgid "Time"
-msgstr ""
+msgstr "时间"
 
 #: src/frontend/ActivityWindow.lua:63
 msgid "Message"
-msgstr ""
+msgstr "消息"
 
 #: src/frontend/ActivityWindow.lua:64
 msgid "Queued"
-msgstr ""
+msgstr "排队"
 
 #: src/frontend/ActivityWindow.lua:65
 msgid "Active"
-msgstr ""
+msgstr "活动的"
 
 #. TRANSLATORS: Text when the activity list is empty
 #: src/frontend/ActivityWindow.lua:71
 msgid "No activities queued"
-msgstr ""
+msgstr "无排队动作"
 
 #. TRANSLATORS: tooltip text for the reset filter buttons. will automatically insert the filter title (e.g. "Reset Weapon Type Filter")
 #: src/frontend/FilterFragment.lua:74
 msgid "Reset <<1>> Filter"
-msgstr ""
+msgstr "重置 <<1>> 过滤条件"
 
 #. TRANSLATORS: menu text for unpinning a filter from the filter area
 #: src/frontend/FilterFragment.lua:107
 msgid "Unpin Filter"
-msgstr ""
+msgstr "取消固定过滤条件"
 
 #. TRANSLATORS: menu text for removing a filter from the filter area
 #: src/frontend/FilterFragment.lua:112
 msgid "Remove Filter"
-msgstr ""
+msgstr "移除过滤条件"
 
 #. TRANSLATORS: menu text for pinning a filter to the filter area
 #: src/frontend/FilterFragment.lua:117
 msgid "Pin Filter"
-msgstr ""
+msgstr "固定过滤条件"
 
 #: src/frontend/SearchList.lua:7
 msgid "Set Active"
-msgstr ""
+msgstr "设为当前活动"
 
 #: src/frontend/SearchList.lua:8
 msgid "Rename"
-msgstr ""
+msgstr "重命名"
 
 #: src/frontend/SearchList.lua:9
 msgid "Reset Label"
-msgstr ""
+msgstr "重置标签"
 
 #: src/frontend/SearchList.lua:11
 msgid "Unlock"
-msgstr ""
+msgstr "解锁"
 
 #: src/frontend/SearchList.lua:12
 msgid "Lock"
-msgstr ""
+msgstr "锁定"
 
 #: src/frontend/SearchList.lua:13
 msgid "Duplicate"
-msgstr ""
+msgstr "重复"
 
 #: src/frontend/SearchList.lua:14
 msgid "Move Up"
-msgstr ""
+msgstr "上移"
 
 #: src/frontend/SearchList.lua:15
 msgid "Move Down"
-msgstr ""
+msgstr "下移"
 
 #: src/frontend/SearchList.lua:16
 msgid "Delete"
-msgstr ""
+msgstr "删除"
 
 #: src/frontend/SearchList.lua:25
 msgid "New Search"
-msgstr ""
+msgstr "新搜索"
 
 #: src/frontend/SearchList.lua:52
 msgid "Rename Search"
-msgstr ""
+msgstr "重命名搜索"
 
 #: src/frontend/SearchList.lua:55
 msgid "Enter the new name for your search."
-msgstr ""
+msgstr "为你的搜索输入新名字。"
 
 #: src/frontend/SearchList.lua:63
 msgid "Save"
-msgstr ""
+msgstr "保存"
 
 #. TRANSLATORS: Label for the row at the end of the search result list which triggers the search for more results
 #. TRANSLATORS: Label for the keybind to show more results
 #: src/frontend/SearchResultListWrapper.lua:37
 #: src/wrappers/KeybindStripWrapper.lua:48
 msgid "Show More Results"
-msgstr ""
+msgstr "显示更多结果"
 
 #. TRANSLATORS: Label for the row at the end of the search result list when a search is already pending, but cannot start yet due to the request cooldown
 #: src/frontend/SearchResultListWrapper.lua:39
 msgid "Waiting For Cooldown ..."
-msgstr ""
+msgstr "等待冷却中 …"
 
 #. TRANSLATORS: Label for the row at the end of the search result list when a search is currently in progress
 #: src/frontend/SearchResultListWrapper.lua:41
 msgid "Requesting Results ..."
-msgstr ""
+msgstr "请求结果中 …"
 
 #. TRANSLATORS: Label for the result count below the search result list. First number indicates the visible results, second number the overall number of locally stored items for the current guild
 #: src/frontend/SearchResultListWrapper.lua:43
 #, lua-format
 msgid "Items:|cffffff %d / %d"
-msgstr ""
+msgstr "物品：|cffffff %d / %d"
 
 #. TRANSLATORS: Seller name label in the search result list
 #: src/frontend/SearchResultListWrapper.lua:160
 msgid "Seller:|cffffff <<1>>"
-msgstr ""
+msgstr "卖家：|cffffff <<1>>"
 
 #. TRANSLATORS: Tooltip text when hovering over the activity status line
 #: src/frontend/StatusLine.lua:40
 msgid "Click for more information"
-msgstr ""
+msgstr "点击查看详情"
 
 #. TRANSLATORS: tooltip text for the set to level filter's "set to level" button on the sell tab
 #: src/frontend/filter/LevelRangeFilterFragment.lua:76
 msgid "Set To Character Level"
-msgstr ""
+msgstr "设置为角色等级"
 
 #. TRANSLATORS: tooltip text for removing entries in the list of a multi category filter on the search tab
 #: src/frontend/filter/MultiCategoryFilterFragment.lua:14
 msgid "Click to remove"
-msgstr ""
+msgstr "点击删除"
 
 #. TRANSLATORS: label of button to add more values to the multi category filter
 #: src/frontend/filter/MultiCategoryFilterFragment.lua:66
 msgid "Add More"
-msgstr ""
+msgstr "添加更多"
 
 #. TRANSLATORS: sort header tooltip for the list on the guild kiosk tab
 #: src/guildstorelist/GuildList.lua:66
 msgid "Number of weeks since last seen on a trader"
-msgstr ""
+msgstr "上一次雇佣商人距今的周数"
 
 #. TRANSLATORS: sort header tooltip for the list on the guild kiosk tab
 #: src/guildstorelist/GuildList.lua:69
 msgid "Number of weeks with a kiosk"
-msgstr ""
+msgstr "雇有商人的周数"
 
 #. TRANSLATORS: sort header label for the list on the guild kiosk tab
 #: src/guildstorelist/GuildList.lua:71
@@ -773,54 +782,54 @@ msgstr ""
 #: src/guildstorelist/GuildStoreList.lua:189
 #: src/guildstorelist/GuildStoreList.lua:197
 msgid "Guild"
-msgstr ""
+msgstr "公会"
 
 #. TRANSLATORS: sort header label for the list on the guild kiosk tab
 #: src/guildstorelist/GuildList.lua:85
 #: src/guildstorelist/GuildStoreList.lua:168
 #: src/guildstorelist/GuildStoreList.lua:182
 msgid "Last Visited"
-msgstr ""
+msgstr "上次访问"
 
 #. TRANSLATORS: label for the detail view on the guild kiosk tab
 #: src/guildstorelist/GuildList.lua:88
 #: src/guildstorelist/GuildStoreList.lua:185
 msgid "Zone"
-msgstr ""
+msgstr "区域"
 
 #. TRANSLATORS: sort header label for the list on the guild kiosk tab
 #: src/guildstorelist/GuildList.lua:90 src/guildstorelist/GuildList.lua:101
 #: src/guildstorelist/GuildStoreList.lua:164
 #: src/guildstorelist/GuildStoreList.lua:187
 msgid "Location"
-msgstr ""
+msgstr "地点"
 
 #: src/guildstorelist/GuildList.lua:92
 msgid "Weeks w/ kiosk"
-msgstr ""
+msgstr "有商人周数"
 
 #: src/guildstorelist/GuildList.lua:94
 #: src/guildstorelist/GuildStoreList.lua:191
 msgid "History"
-msgstr ""
+msgstr "历史"
 
 #. TRANSLATORS: sort header label for the history list on the guild kiosk tab
 #: src/guildstorelist/GuildList.lua:99
 #: src/guildstorelist/GuildStoreList.lua:196
 msgid "Week"
-msgstr ""
+msgstr "周"
 
 #. TRANSLATORS: sort header label for the list on the guild kiosk tab
 #: src/guildstorelist/GuildList.lua:100
 #: src/guildstorelist/GuildStoreList.lua:162
 msgid "Trader"
-msgstr ""
+msgstr "商人"
 
 #. TRANSLATORS: label for a context menu entry for a row on the guild kiosk tab
 #: src/guildstorelist/GuildList.lua:107
 #: src/guildstorelist/GuildStoreList.lua:235
 msgid "Show Details"
-msgstr ""
+msgstr "显示详情"
 
 #. TRANSLATORS: label for a context menu entry for a row on the guild kiosk tab
 #. TRANSLATORS: tooltip text for the open guild info button in the detail view on the guild kiosk tab
@@ -830,233 +839,233 @@ msgstr ""
 #: src/guildstorelist/GuildStoreList.lua:238
 #: src/wrappers/TradingHouseWrapper.lua:273
 msgid "Open Guild Info"
-msgstr ""
+msgstr "打开公会信息"
 
 #. TRANSLATORS: text for the last visited label in the guild list detail view. $d is a placeholder for the number of weeks
 #: src/guildstorelist/GuildList.lua:185
 msgid "<<1[this week/1 week ago/$d weeks ago]>>"
-msgstr ""
+msgstr "<<1[本周/1 周前/$d 周前]>>"
 
 #. TRANSLATORS: text for the last visited field of an unvisited kiosk on the guild kiosk tab
 #: src/guildstorelist/GuildList.lua:207
 #: src/guildstorelist/GuildStoreList.lua:224
 msgid "never"
-msgstr ""
+msgstr "从未"
 
 #. TRANSLATORS: tooltip text for the store stats on the guild kiosk tab. <<1>> is replaced with the kiosk count
 #: src/guildstorelist/GuildList.lua:342
 msgid "|cffffff<<1>>|r guilds visited this week"
-msgstr ""
+msgstr "本周访问了 |cffffff<<1>>|r 个公会商人"
 
 #. TRANSLATORS: tooltip text for the store stats on the guild kiosk tab. <<1>> is replaced with the kiosk count
 #: src/guildstorelist/GuildList.lua:348
 msgid "|cffffff<<1>>|r guilds visited all time"
-msgstr ""
+msgstr "历史总计访问了 |cffffff<<1>>|r 个公会商人"
 
 #. TRANSLATORS: tooltip text for the store stats on the guild kiosk tab. <<1>> is replaced with the overall guild count
 #: src/guildstorelist/GuildList.lua:354
 msgid "|cffffff<<1>>|r guilds stored"
-msgstr ""
+msgstr "保存了 |cffffff<<1>>|r 个公会"
 
 #. TRANSLATORS: placeholder text when the list on the guild kiosk tab is not yet initialized
 #: src/guildstorelist/GuildListControl.lua:51
 #: src/guildstorelist/TraderListControl.lua:101
 msgid "Trader database is not initialized yet."
-msgstr ""
+msgstr "商人数据库尚未初始化。"
 
 #. TRANSLATORS: placeholder text when no entry on the list on the guild kiosk tab matches the text filter
 #: src/guildstorelist/GuildListControl.lua:54
 #: src/guildstorelist/TraderListControl.lua:104
 msgid "No results match your filter text."
-msgstr ""
+msgstr "没有符合您过滤条件的结果。"
 
 #. TRANSLATORS: label for the search box on the guild kiosk tab
 #: src/guildstorelist/GuildListControl.lua:112
 #: src/guildstorelist/TraderListControl.lua:180
 msgid "Filter By:"
-msgstr ""
+msgstr "过滤条件："
 
 #. TRANSLATORS: label on the guild kiosk tab showing how many kiosks the player has visited in the current trading week
 #: src/guildstorelist/GuildListControl.lua:126
 #: src/guildstorelist/TraderListControl.lua:194
 msgid "Current:"
-msgstr ""
+msgstr "当前："
 
 #. TRANSLATORS: label on the guild kiosk tab showing how many kiosks the player has visited at all times
 #: src/guildstorelist/GuildListControl.lua:129
 #: src/guildstorelist/TraderListControl.lua:197
 msgid "Visited:"
-msgstr ""
+msgstr "访问过："
 
 #. TRANSLATORS: label on the guild kiosk tab showing how many kiosks there are in the game
 #: src/guildstorelist/GuildListControl.lua:132
 #: src/guildstorelist/TraderListControl.lua:200
 msgid "Overall:"
-msgstr ""
+msgstr "总计："
 
 #. TRANSLATORS: tooltip for the last visited field of a joined guild on the guild kiosk tab
 #: src/guildstorelist/GuildStoreList.lua:395
 msgid "You are a member of this guild."
-msgstr ""
+msgstr "您已加入该公会。"
 
 #. TRANSLATORS: tooltip text for the store stats on the guild kiosk tab. <<1>> is replaced with the kiosk count
 #: src/guildstorelist/GuildStoreList.lua:457
 msgid "|cffffff<<1>>|r stores visited this week"
-msgstr ""
+msgstr "本周访问了 |cffffff<<1>>|r 个商人"
 
 #. TRANSLATORS: tooltip text for the store stats on the guild kiosk tab. <<1>> is replaced with the kiosk count
 #: src/guildstorelist/GuildStoreList.lua:463
 msgid "|cffffff<<1>>|r stores visited all time"
-msgstr ""
+msgstr "历史总计访问了|cffffff<<1>>|r 个商人"
 
 #. TRANSLATORS: tooltip text for the store stats on the guild kiosk tab. <<1>> is replaced with the kiosk count and <<2>> with the amount of distinct locations
 #: src/guildstorelist/GuildStoreList.lua:469
 msgid "|cffffff<<1>>|r stores detected in |cffffff<<2>>|r locations"
-msgstr ""
+msgstr "在 |cffffff<<2>>|r 处地点检测到|cffffff<<1>>| 个商人"
 
 #. TRANSLATORS: placeholder text when the history list of an entry on the guild kiosk tab is empty
 #: src/guildstorelist/KioskHistoryControl.lua:34
 #: src/guildstorelist/OwnerHistoryControl.lua:34
 msgid "No history data stored."
-msgstr ""
+msgstr "未保存历史数据。"
 
 #. TRANSLATORS: label for the last visited field of a joined guild on the guild kiosk tab
 #: src/guildstorelist/TraderListControl.lua:144
 msgid "joined"
-msgstr ""
+msgstr "已加入"
 
 #. TRANSLATORS: this is used to find guild store sell mails. it has to be exactly the same as the subject of the ingame mails, otherwise the detection will fail
 #: src/history/MailBox.lua:30
 msgid "Item Sold"
-msgstr ""
+msgstr "物品已售出"
 
 #. TRANSLATORS: help text for the listing price in the guild store sell mail invoice
 #: src/history/MailBox.lua:162
 msgid "The price the item was listed for"
-msgstr ""
+msgstr "物品上架价格"
 
 #. TRANSLATORS: help text for the tax amount in the guild store sell mail invoice
 #: src/history/MailBox.lua:169
 msgid "The amount that was deposited into the guild bank as tax"
-msgstr ""
+msgstr "作为税被收入公会银行的金额"
 
 #. TRANSLATORS: label for the commission line in the guild store sell mail invoice
 #: src/history/MailBox.lua:173
 msgid "Commission"
-msgstr ""
+msgstr "佣金"
 
 #. TRANSLATORS: help text for the commission in the guild store sell mail invoice
 #: src/history/MailBox.lua:175
 msgid "The amount that disappeared into the void"
-msgstr ""
+msgstr "凭空消失的金额"
 
 #. TRANSLATORS: help text for the received gold in the guild store sell mail invoice
 #: src/history/MailBox.lua:182
 msgid "The gold attached to this mail"
-msgstr ""
+msgstr "该邮件所附的金币"
 
 #. TRANSLATORS: help text for the listing fee in the guild store sell mail invoice
 #: src/history/MailBox.lua:189
 msgid "The fee that was taken from the inventory when the item was listed in the store"
-msgstr ""
+msgstr "当物品上架商店时从物品栏中扣除的费用"
 
 #. TRANSLATORS: help text for the profit in the guild store sell mail invoice
 #: src/history/MailBox.lua:196
 msgid "The resulting profit after subtracting all the fees"
-msgstr ""
+msgstr "扣除各项费用后的最终收入"
 
 #. TRANSLATORS: label for the load details button in guild store sell mails where the invoice can not be shown due to lack of data
 #: src/history/MailBox.lua:218
 msgid "Load Details"
-msgstr ""
+msgstr "展示详情"
 
 #. TRANSLATORS: Mail body for item sold mails from the guild store. <<t:1>> is replaced by the itemlink, <<2>> by the item count, <<3>> by the buyer name and <<4>> by the sell price. e.g. You sold 1 Rosin to sirinsidiator for 5000g.
 #: src/history/MailBox.lua:284
 msgid "You sold <<2>> <<t:1>> to <<3>> for <<4>>."
-msgstr ""
+msgstr "您以 <<4>> 的价格将 <<2>> <<t:1>> 卖给了 <<3>>。"
 
 #. TRANSLATORS: chat text when a kiosk name could not be matched. <<1>> is replaced by the label on the home tab in the guild menu
 #: src/util/misc.lua:68
 msgid "Warning: Could not match kiosk name: '<<1>>' -- please report this to the author"
-msgstr ""
+msgstr "警告：商人名称不匹配：'<<1>>' --请将此报告给插件作者"
 
 #. TRANSLATORS: chat message when an item listing is cancelled on the listing tab. <<1>> is replaced with the item count, <<t:2>> with the item link, <<3>> with the price and <<4>> with the guild store name. e.g. You have cancelled your listing of 1x [Rosin] for 5000g in Imperial Trading Company
 #: src/wrappers/ListingTabWrapper.lua:237
 msgid "You have cancelled your listing of <<1>>x <<t:2>> for <<3>> in <<4>>"
-msgstr ""
+msgstr "您已取消上架于 <<4>> 售价 <<3>> 的 <<1>>x <<t:2>>"
 
 #. TRANSLATORS: the overall price of all listed items in a store on the listing tab. <<1>> is replaced by the price
 #: src/wrappers/ListingTabWrapper.lua:248
 #: src/wrappers/ListingTabWrapper.lua:265
 msgid "Overall Price: <<1>>"
-msgstr ""
+msgstr "总价：<<1>>"
 
 #. TRANSLATORS: chat message when an item is bought from the store. <<1>> is replaced with the item count, <<t:2>> with the item link, <<3>> with the seller name, <<4>> with price and <<5>> with the guild store name. e.g. You have bought 1x [Rosin] from sirinsidiator for 5000g in Imperial Trading Company
 #: src/wrappers/SearchTabWrapper.lua:275
 msgid "You have bought <<1>>x <<t:2>> from <<3>> for <<4>> in <<5>>"
-msgstr ""
+msgstr "您以 <<4>> 在 <<3>> 从 <<5>> 公会购买了 <<1>>x <<t:2>>"
 
 #. TRANSLATORS: Alert message when they try to purchase an item which was already purchased by them earlier
 #: src/wrappers/SearchTabWrapper.lua:300
 msgid "Item is already in your possession."
-msgstr ""
+msgstr "已拥有此物品。"
 
 #. TRANSLATORS: Alert message when the item data for the item id could not be found while confirming a purchase
 #: src/wrappers/SearchTabWrapper.lua:321
 msgid "Item not found in current guild."
-msgstr ""
+msgstr "当前公会未找到物品。"
 
 #. TRANSLATORS: the label for the listing repetition slider on the sell tab
 #: src/wrappers/SellTabWrapper.lua:190
 msgid "Listings:"
-msgstr ""
+msgstr "列表："
 
 #. TRANSLATORS: tooltip text for the quantity selection buttons on the sell tab
 #: src/wrappers/SellTabWrapper.lua:216
 msgid "Select Full Quantity"
-msgstr ""
+msgstr "选择全部数量"
 
 #. TRANSLATORS: tooltip text for the quantity selection buttons on the sell tab
 #: src/wrappers/SellTabWrapper.lua:225
 msgid "Select Last Sold Quantity"
-msgstr ""
+msgstr "选择上次售出数量"
 
 #. TRANSLATORS: title text for the unit price selection on the sell tab
 #: src/wrappers/SellTabWrapper.lua:243
 msgid "Unit Price:"
-msgstr ""
+msgstr "单价："
 
 #. TRANSLATORS: tooltip text for the unit price selection buttons on the sell tab
 #: src/wrappers/SellTabWrapper.lua:260
 msgid "Select Default Price"
-msgstr ""
+msgstr "选择默认价格"
 
 #. TRANSLATORS: tooltip text for the unit price selection buttons on the sell tab
 #: src/wrappers/SellTabWrapper.lua:270
 msgid "Select Last Sell Price"
-msgstr ""
+msgstr "选择上次售出价格"
 
 #. TRANSLATORS: tooltip text for the unit price selection buttons on the sell tab
 #: src/wrappers/SellTabWrapper.lua:284
 msgid "Select Master Merchant Price"
-msgstr ""
+msgstr "选择Master Merchant 提供的价格"
 
 #. TRANSLATORS: tooltip text for the profit warning icon on the sell tab
 #: src/wrappers/SellTabWrapper.lua:317
 msgid "Profit is below vendor price. You'll get more out of selling this item to a merchant."
-msgstr ""
+msgstr "利润低于NPC商人交易价格，将此物品卖给商人收益更高。"
 
 #. TRANSLATORS: alert text when trying to list an item from the bank while not at a banker NPC
 #: src/wrappers/SellTabWrapper.lua:385
 msgid "Bank items can only be listed while at a banker NPC"
-msgstr ""
+msgstr "银行物品只有在通过银行NPC访问公会商人时出售"
 
 #. TRANSLATORS: chat message when a item is listed on a store. <<1>> is replaced with the item count, <<t:2>> with the item link, <<3>> with the price and <<4>> with the guild store name. e.g. You have listed 1x [Rosin] for 5000g in Imperial Trading Company
 #: src/wrappers/SellTabWrapper.lua:708
 msgid "You have listed <<1>>x <<t:2>> for <<3>> in <<4>>"
-msgstr ""
+msgstr "您在 <<4>> 以 <<3>> 价格上架出售<<1>>x <<t:2>>"
 
 #. TRANSLATORS: Footer text for the store interface. Place holders are for the version string and to make the Donate text clickable and colored
 #: src/wrappers/TradingHouseWrapper.lua:329
 msgid "AwesomeGuildStore - Version: <<1>> - <<2>>Donate<<3>>"
-msgstr ""
+msgstr "AwesomeGuildStore - 版本：<<1>> - <<2>> 打赏 <<3>>"
