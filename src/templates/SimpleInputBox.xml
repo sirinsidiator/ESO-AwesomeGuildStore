@@ -1,6 +1,6 @@
 <GuiXml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sir.insidi.at/or/schema/esoui.xsd">
     <Controls>
-        <Backdrop name="AwesomeGuildStoreSimpleInputBoxTemplate" virtual="true" resizeToFitDescendents="true" mouseEnabled="true" inherits="ZO_SingleLineEditBackdrop_Keyboard">
+        <Backdrop name="AwesomeGuildStoreSimpleInputBoxTemplate" virtual="true" resizeToFitDescendents="true" mouseEnabled="true" tier="HIGH" inherits="ZO_SingleLineEditBackdrop_Keyboard">
             <Controls>
                 <Label name="$(parent)Virtual" font="ZoFontWinT1" hidden="true" excludeFromResizeToFitExtents="true" horizontalAlignment="RIGHT">
                     <Anchor point="TOPRIGHT" offsetY="3" offsetX="16" />
