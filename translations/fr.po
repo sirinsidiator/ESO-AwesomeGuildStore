@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: AwesomeGuildStore\n"
 "Report-Msgid-Bugs-To: https://weblate.sir.insidi.at/or/projects/awesomeguildstore/messages/\n"
-"POT-Creation-Date: 2022-11-04 11:58+0000\n"
+"POT-Creation-Date: 2022-11-15 12:28+0000\n"
 "PO-Revision-Date: 2022-06-21 00:13+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: French <https://weblate.sir.insidi.at/or/projects/awesomeguildstore/messages/fr/>\n"
@@ -978,7 +978,7 @@ msgid "You sold <<2>> <<t:1>> to <<3>> for <<4>>."
 msgstr "Vous avez vendu <<2>> <<t:1>> à <<3>> pour <<4>>."
 
 #. TRANSLATORS: chat text when a kiosk name could not be matched. <<1>> is replaced by the label on the home tab in the guild menu
-#: src/util/misc.lua:68
+#: src/util/misc.lua:74
 msgid "Warning: Could not match kiosk name: '<<1>>' -- please report this to the author"
 msgstr "Attention : Impossible de déterminer la boutique : '<<1>>' -- veuillez signaler l'erreur à l'auteur"
 
