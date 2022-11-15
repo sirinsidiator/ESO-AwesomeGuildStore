@@ -52,6 +52,12 @@ local KIOSK_MATCH_FUNCTIONS = {
         end
         return table.concat(parts, " ")
     end,
+    zh = function(infoText)
+        local kioskName = infoText:match("^.-的(.-)$")
+        if not kioskName then
+            kioskName = infoText:match("^(.-)在.-$")
+        end
+    end,
 }
 
 local DEFAULT_KIOSK_MATCH_FUNCTION = function(infoText)
