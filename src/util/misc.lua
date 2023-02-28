@@ -72,7 +72,9 @@ local function GetKioskNameFromInfoText(infoText)
         if not kioskName or kioskName == "" then
             -- TRANSLATORS: chat text when a kiosk name could not be matched. <<1>> is replaced by the label on the home tab in the guild menu
             chat:Print(gettext("Warning: Could not match kiosk name: '<<1>>' -- please report this to the author", infoText))
+            return
         end
+        kioskName = zo_strformat("<<1>>", kioskName)
         return IRREGULAR_KIOSK_NAMES[kioskName] or kioskName
     end
 end
