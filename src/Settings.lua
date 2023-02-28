@@ -5,14 +5,14 @@ local function LoadSettings()
     local gettext = AGS.internal.gettext
 
     local info = {
-        fullVersion = "@FULL_VERSION_NUMBER@",
-        version = "@VERSION_NUMBER@",
-        build = "@BUILD_NUMBER@",
+        fullVersion = "1.6.5.0001",
+        version = "1.6.5",
+        build = "0001",
     }
     AGS.info = info
 
     local defaultData = {
-        version = 27,
+        version = 28,
         listWithSingleClick = true,
         showTraderTooltip = true,
         augementMails = true,
@@ -223,6 +223,31 @@ local function LoadSettings()
                 end
             end,
         }
+		local charnames = {}
+		local charids = {}
+		if not ( LibLibCharacterKnowledge == nil ) then
+			local charlist = LibCharacterKnowledge.GetCharacterList()
+			local currentaccount = GetDisplayName()
+
+			for i = 1,#charlist do
+				if charlist[i].account == currentaccount then
+					charnames[i] = charlist[i].name
+					charids[i] = charlist[i].id
+				end
+			end
+		end
+		optionsData[#optionsData + 1] = { 
+			type = "dropdown",  
+			-- TRANSLATORS: label for an entry in the addon settings
+			name = gettext("Crafter"),
+            -- TRANSLATORS: tooltip text for an entry in the addon settings
+            tooltip = gettext("Select Crafter for motif/recipe filter\n\nRequires LibCharacterKnowledge"),
+		choices = charnames,  
+		choicesValues = charids, 
+		disabled = function() return LibCharacterKnowledge == nil end,
+		getFunc = function() return saveData.crafter end,  
+		setFunc = function(var) saveData.crafter = var end, 
+	}	
         LAM:RegisterOptionControls("AwesomeGuildStoreOptions", optionsData)
 
         AGS.OpenSettingsPanel = function()
@@ -301,6 +326,10 @@ local function LoadSettings()
             saveData.disableCustomSellTabFilter = nil
             saveData.version = 27
         end
+		if(saveData.version <= 27) then
+            saveData.crafter = GetCurrentCharacterId()
+            saveData.version = 28
+        end
     end
 
     AwesomeGuildStore_Data = AwesomeGuildStore_Data or {}
@@ -324,7 +353,12 @@ local function LoadSettings()
     UpgradeSettings(saveData)
     RepairSaveData(saveData)
 
-    CreateSettingsDialog(saveData)
+    if LibCharacterKnowledge == nil then 
+		CreateSettingsDialog(saveData)
+	else --Libcharacterknowledge initializes only post addonloaded...need to wait
+		LibCharacterKnowledge.RegisterForCallback("AwesomeGuildStore", LibCharacterKnowledge.EVENT_INITIALIZED, function( ) CreateSettingsDialog(saveData) end)
+	end
+	--CreateSettingsDialog(saveData)
 
     return saveData
 end

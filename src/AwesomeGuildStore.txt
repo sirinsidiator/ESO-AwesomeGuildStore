@@ -1,10 +1,10 @@
 ## Title: AwesomeGuildStore
 ## Author: sirinsidiator
-## Version: @VERSION_NUMBER@
-## APIVersion: @API_VERSION@
-## AddOnVersion: @BUILD_NUMBER@
+## Version: 1.6.5
+## APIVersion: 101036
+## AddOnVersion: 3079
 ## DependsOn: LibCustomMenu>=680 LibDebugLogger>=196 LibDateTime>=28 LibAddonMenu-2.0>=31 LibMapPing>=900 LibGPS>=17 LibPromises>=10 LibTextFilter>=10 LibGetText>=10 LibChatMessage>=87
-## OptionalDependsOn: LibFilters-3.0>=312 CraftedPotions>=20
+## OptionalDependsOn: LibFilters-3.0>=312 CraftedPotions>=20 LibCharacterKnowledge
 ## SavedVariables: AwesomeGuildStore_Data
 
 ; This Add-on is not created by, affiliated with or sponsored by ZeniMax Media Inc. or its affiliates. 
