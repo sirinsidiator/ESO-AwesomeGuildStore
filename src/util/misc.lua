@@ -36,6 +36,7 @@ local IRREGULAR_KIOSK_NAMES = {
     ["Eafildil"] = "Rinedel",
     ["Zagh"] = "Zagh gro-Stugh",
     ["Jaflinna"] = "Jaflinna Snow-born",
+    ["Var"] = "Var the Vague",
 }
 
 local CYRILLIC_LOWER_CASE = "абвгдежзийклмнопрстуфхцчшщъыьэюя"
