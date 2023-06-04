@@ -92,6 +92,27 @@ local function RemoveIncorrectFargraveStoreLocation(saveData)
     end
 end
 
+local function RemoveIncorrectVastyrStoreLocation(saveData)
+    local VASTYR_OUTLAWS_REFUGE_ID_PATTERN = ".+Ai$" -- ends with encoded id 2250
+    local storesToRemove = {}
+    for locationIndex, storeData in pairs(saveData.stores) do
+        if storeData:find(VASTYR_OUTLAWS_REFUGE_ID_PATTERN) then
+            storesToRemove[#storesToRemove + 1] = locationIndex
+        end
+    end
+
+    for i = 1, #storesToRemove do
+        logger:Warn("Remove incorrect store location entry '%s' for Vastyr Outlaw Refuge", storesToRemove[i])
+        saveData.stores[storesToRemove[i]] = nil
+    end
+end
+
+
+local function RemoveIncorrectNecromStoreLocation(saveData)
+    logger:Warn("Remove incorrect store location entry 'Outlaws Refuge' for Necrom Outlaw Refuge")
+    saveData.stores["Outlaws Refuge"] = nil
+end
+
 local function UpdateSaveData(saveData)
     local requiresRescan = false
     if(saveData.version == 1) then
@@ -110,12 +131,16 @@ local function UpdateSaveData(saveData)
         requiresRescan = true
         saveData.version = 6
     end
-    if GetAPIVersion() >= 101032 then -- TODO run without check after update
-        if(saveData.version < 7) then
-            RemoveIncorrectFargraveStoreLocation(saveData)
-            saveData.version = 7
-            requiresRescan = true
-        end
+    if(saveData.version < 7) then
+        RemoveIncorrectFargraveStoreLocation(saveData)
+        saveData.version = 7
+        requiresRescan = true
+    end
+    if(saveData.version < 8) then
+        RemoveIncorrectVastyrStoreLocation(saveData)
+        RemoveIncorrectNecromStoreLocation(saveData)
+        saveData.version = 8
+        requiresRescan = true
     end
     return requiresRescan
 end
@@ -124,7 +149,7 @@ local function InitializeSaveData(saveData)
     local requiresRescan = false
     if(not saveData.guildStoreList) then
         saveData.guildStoreList = {
-            version = 7,
+            version = 8,
             owners = {},
             stores = {},
             kiosks = {},

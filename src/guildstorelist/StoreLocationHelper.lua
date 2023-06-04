@@ -28,6 +28,7 @@ local TARGET_UNIT_TAG = "reticleover"
 local IRREGULAR_TOOLTIP_HEADER = { -- TODO exceptions in other languages
     -- English
     ["Orsinium Outlaw Refuge"] = "Orsinium Outlaws Refuge",
+    ["Outlaws Refuge"] = "Necrom Outlaws Refuge",
     -- French
     ["refuge des hors-la-loi d'Orsinium"] = "refuge de hors-la-loi d'Orsinium",
     -- German
@@ -39,6 +40,15 @@ local IRREGULAR_TOOLTIP_HEADER = { -- TODO exceptions in other languages
     ["Vivec Outlaws Refuge"] = "Vivec City Outlaws Refuge",
 }
 
+local IRREGULAR_TOOLTIP_KIOSK_NAME = {
+    -- English
+    ["Janne Jonnicent"] = "Thredis",
+}
+
+local FARGRAVE_CITY_DISTRICT_MAP_ID = 2035
+local FARGRAVE_THE_BAZAAR_ID = 2136
+local VASTYR_OUTLAWS_REFUGE_ID = 2250
+
 local SPECIAL_MAP_CLICK_TARGETS = { -- Some maps return 0/0 for all POIs under some circumstances
     [227] = { 0.5, 0.5 }, -- Betnikh - as long as we haven't been to the zone yet
     [1719] = { 0.56, 0.38 }, -- Western Skyrim - on first login with a char after the update
@@ -46,20 +56,22 @@ local SPECIAL_MAP_CLICK_TARGETS = { -- Some maps return 0/0 for all POIs under s
 
 local SPECIAL_PARENT_MAP_ID = { -- Some maps zoom out to the zone map instead of the expected parent map
     [1245] = 1287, -- "Vivec Outlaws Refuge" switches to "Vvardenfell" instead of "Vivec City"
-    [2170] = 2163 -- "Gonfalon Bay Outlaws Refuge" switches to "High Isle and Amenos" instead of "Gonfalon Bay"
+    [2170] = 2163, -- "Gonfalon Bay Outlaws Refuge" switches to "High Isle and Amenos" instead of "Gonfalon Bay"
+    [VASTYR_OUTLAWS_REFUGE_ID] = 2227, -- "Vastyr Outlaws Refuge" switches to "Galen" instead of "Vastyr"
 }
-
-local FARGRAVE_CITY_DISTRICT_MAP_ID = 2035
-local FARGRAVE_THE_BAZAAR_ID = 2136
 
 local function IsCoordinateOutsideCurrentMap(x, y)
     return x <= 0 or x > 1 or y <= 0 or y > 1
 end
 
 local function IsUndergroundKiosk()
-    if GetCurrentMapId() == FARGRAVE_THE_BAZAAR_ID then
+    local mapId = GetCurrentMapId()
+    if mapId == FARGRAVE_THE_BAZAAR_ID then
         -- The Bazaar is a sub map of Fargrave City District, but has no entrance pins
         return false
+    elseif mapId == VASTYR_OUTLAWS_REFUGE_ID then
+        -- Vastyr Outlaws Refuge uses an incorrect map content type
+        return true
     end
     return GetMapContentType() == MAP_CONTENT_DUNGEON
 end
@@ -82,6 +94,11 @@ end
 local function GetMapLocationName(locationIndex)
     local name = zo_strformat("<<1>>", GetMapLocationTooltipHeader(locationIndex))
     return IRREGULAR_TOOLTIP_HEADER[name] or name
+end
+
+local function SanitizeMapLocationTooltipKioskName(kioskName)
+    local name = zo_strformat("<<1>>", kioskName)
+    return IRREGULAR_TOOLTIP_KIOSK_NAME[name] or name
 end
 
 local function SafeGetMapName()
@@ -205,7 +222,7 @@ local function GetKioskNamesFromLocationTooltip(locationIndex)
         if IsMapLocationTooltipLineVisible(locationIndex, tooltipLineIndex) then
             local tooltipIcon, kioskName = GetMapLocationTooltipLineInfo(locationIndex, tooltipLineIndex)
             if tooltipIcon == KIOSK_TOOLTIP_ICON then
-                kiosks[#kiosks + 1] = zo_strformat("<<1>>", kioskName)
+                kiosks[#kiosks + 1] = SanitizeMapLocationTooltipKioskName(kioskName)
             end
         end
     end
