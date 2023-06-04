@@ -20,6 +20,7 @@ function MultiButtonFilterFragment:OnAttach(filterArea)
     if not self.buttons then
         self:InitializeControls()
         self:InitializeHandlers()
+        self:InitializeState()
     end
 end
 
@@ -121,6 +122,10 @@ function MultiButtonFilterFragment:InitializeHandlers()
     end
 
     self.OnValueChanged = OnFilterChanged
+end
+
+function MultiButtonFilterFragment:InitializeState()
+    self:OnValueChanged(self.filter.selection)
 end
 
 function MultiButtonFilterFragment:SetEnabled(enabled)
