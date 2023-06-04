@@ -34,6 +34,7 @@ function UnitPriceFilter:Initialize()
         precision = 2,
         steps = { MIN_VALUE, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30, 35, 40, 45, 50, 100, 200, 300, 400, 500, 700, 800, 900, 1000, 2000, 3000, 4000, 5000, 10000, 50000, 100000, MAX_VALUE },
         enabled = {
+            [SUB_CATEGORY_ID.ALL] = true,
             [SUB_CATEGORY_ID.CONSUMABLE_ALL] = true,
             [SUB_CATEGORY_ID.CONSUMABLE_FOOD] = true,
             [SUB_CATEGORY_ID.CONSUMABLE_DRINK] = true,
