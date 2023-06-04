@@ -113,18 +113,6 @@ function SearchTabWrapper:InitializeFilters(tradingHouseWrapper)
     AGS:RegisterFilter(AGS.class.GenericTradingHouseFilter:New(filterData))
     AGS:RegisterFilterFragment(AGS.class.MultiButtonFilterFragment:New(filterData.id))
 
-    filterData = AGS.data.COMPANION_WEAPON_TRAIT_FILTER
-    AGS:RegisterFilter(AGS.class.GenericTradingHouseFilter:New(filterData))
-    AGS:RegisterFilterFragment(AGS.class.MultiButtonFilterFragment:New(filterData.id))
-
-    filterData = AGS.data.COMPANION_ARMOR_TRAIT_FILTER
-    AGS:RegisterFilter(AGS.class.GenericTradingHouseFilter:New(filterData))
-    AGS:RegisterFilterFragment(AGS.class.MultiButtonFilterFragment:New(filterData.id))
-
-    filterData = AGS.data.COMPANION_JEWELRY_TRAIT_FILTER
-    AGS:RegisterFilter(AGS.class.GenericTradingHouseFilter:New(filterData))
-    AGS:RegisterFilterFragment(AGS.class.MultiButtonFilterFragment:New(filterData.id))
-
     filterData = AGS.data.WEAPON_ENCHANTMENT_FILTER
     AGS:RegisterFilter(AGS.class.GenericTradingHouseFilter:New(filterData))
     AGS:RegisterFilterFragment(AGS.class.MultiButtonFilterFragment:New(filterData.id))
@@ -218,6 +206,34 @@ function SearchTabWrapper:InitializeFilters(tradingHouseWrapper)
     AGS:RegisterFilterFragment(AGS.class.MultiButtonFilterFragment:New(filterData.id))
 
     filterData = AGS.data.MISC_TROPHY_TYPE_FILTER
+    AGS:RegisterFilter(AGS.class.GenericTradingHouseFilter:New(filterData))
+    AGS:RegisterFilterFragment(AGS.class.MultiButtonFilterFragment:New(filterData.id))
+
+    filterData = AGS.data.COMPANION_WEAPON_TYPE_FILTER
+    AGS:RegisterFilter(AGS.class.GenericTradingHouseFilter:New(filterData))
+    AGS:RegisterFilterFragment(AGS.class.MultiButtonFilterFragment:New(filterData.id))
+
+    filterData = AGS.data.COMPANION_WEAPON_TRAIT_FILTER
+    AGS:RegisterFilter(AGS.class.GenericTradingHouseFilter:New(filterData))
+    AGS:RegisterFilterFragment(AGS.class.MultiButtonFilterFragment:New(filterData.id))
+
+    filterData = AGS.data.COMPANION_ARMOR_WEIGHT_FILTER
+    AGS:RegisterFilter(AGS.class.GenericTradingHouseFilter:New(filterData))
+    AGS:RegisterFilterFragment(AGS.class.MultiButtonFilterFragment:New(filterData.id))
+
+    filterData = AGS.data.COMPANION_ARMOR_TYPE_FILTER
+    AGS:RegisterFilter(AGS.class.GenericTradingHouseFilter:New(filterData))
+    AGS:RegisterFilterFragment(AGS.class.MultiButtonFilterFragment:New(filterData.id))
+
+    filterData = AGS.data.COMPANION_ARMOR_TRAIT_FILTER
+    AGS:RegisterFilter(AGS.class.GenericTradingHouseFilter:New(filterData))
+    AGS:RegisterFilterFragment(AGS.class.MultiButtonFilterFragment:New(filterData.id))
+
+    filterData = AGS.data.COMPANION_JEWELRY_TYPE_FILTER
+    AGS:RegisterFilter(AGS.class.GenericTradingHouseFilter:New(filterData))
+    AGS:RegisterFilterFragment(AGS.class.MultiButtonFilterFragment:New(filterData.id))
+
+    filterData = AGS.data.COMPANION_JEWELRY_TRAIT_FILTER
     AGS:RegisterFilter(AGS.class.GenericTradingHouseFilter:New(filterData))
     AGS:RegisterFilterFragment(AGS.class.MultiButtonFilterFragment:New(filterData.id))
 

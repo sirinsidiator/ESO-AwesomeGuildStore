@@ -3,7 +3,7 @@ local AGS = AwesomeGuildStore
 local gettext = AGS.internal.gettext
 local logger = AGS.internal.logger
 
-local NEXT_UNASSIGNED_STYLE_ID = 133
+local NEXT_UNASSIGNED_STYLE_ID = 145
 local ICON_SIZE = "100%"
 
 local isValidStyleId = {}
@@ -15,9 +15,14 @@ for itemStyleIndex = 1, GetNumValidItemStyles() do
 end
 
 local newStyles = {
-    109, -- Ancestral Breton
-    130, -- Syrabanic Marine
-    132, -- Systres Guardian
+    135, -- Y'ffre's Will
+    138, -- Firesong
+    139, -- House Mornard
+    140, -- Scribes of Mora
+    141, -- Blessed Inheritor
+    142, -- Clan Dreamcarver
+    143, -- Dead Keeper
+    144, -- Kindred's Concord
 }
 -- automatically fill in new styles if there are any
 for styleId = NEXT_UNASSIGNED_STYLE_ID, GetHighestItemStyleId() do
@@ -188,6 +193,10 @@ local styleCategories = {
             129, -- Ascendant Order
             128, -- Dreadsails
             131, -- Steadfast Society
+            109, -- Ancestral Breton
+            130, -- Syrabanic Marine
+            132, -- Systres Guardian
+            136, -- Drowned Mariner
         },
     },
     {
