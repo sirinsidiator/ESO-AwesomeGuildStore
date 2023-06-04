@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://weblate.sir.insidi.at/or/projects/awesomeguildstore/messages/\n"
-"POT-Creation-Date: 2023-03-13 20:07+0000\n"
+"POT-Creation-Date: 2023-06-04 19:37+0000\n"
 "PO-Revision-Date: 2022-06-24 18:16+0000\n"
 "Last-Translator: Marcin Tajniacki <generaluploads@gmail.com>\n"
 "Language-Team: Polish <https://weblate.sir.insidi.at/or/projects/awesomeguildstore/messages/pl/>\n"
@@ -532,9 +532,23 @@ msgid "Rune Type"
 msgstr "Rodzaj runy"
 
 #. TRANSLATORS: title of the armor type filter in the left panel on the search tab
-#: src/data/EquipTypeFilterData.lua:17
+#: src/data/EquipTypeFilterData.lua:18
 msgid "Armor Type"
 msgstr "Rodzaj pancerza"
+
+#. TRANSLATORS: title of the armor weight filter in the left panel on the search tab
+#: src/data/EquipTypeFilterData.lua:123
+#, fuzzy
+#| msgid "Armor Type"
+msgid "Armor Weight"
+msgstr "Rodzaj pancerza"
+
+#. TRANSLATORS: title of the jewelry type filter in the left panel on the search tab
+#: src/data/EquipTypeFilterData.lua:153
+#, fuzzy
+#| msgid "Jewelry Trait"
+msgid "Jewelry Type"
+msgstr "Cecha biżuterii"
 
 #. TRANSLATORS: title text for the weapon enchantment filter in the left panel on the search tab
 #: src/data/ItemEnchantmentFilterData.lua:21
@@ -551,23 +565,23 @@ msgstr "Zaklęcie pancerza"
 msgid "Jewelry Enchantment"
 msgstr "Zaklęcie biżuterii"
 
-#: src/data/ItemStyleFilterData.lua:33
+#: src/data/ItemStyleFilterData.lua:38
 msgid "Racial"
 msgstr "Rasowe"
 
-#: src/data/ItemStyleFilterData.lua:57
+#: src/data/ItemStyleFilterData.lua:62
 msgid "Uncommon"
 msgstr "Nietypowe"
 
-#: src/data/ItemStyleFilterData.lua:76
+#: src/data/ItemStyleFilterData.lua:81
 msgid "Organizations"
 msgstr "Organizacje"
 
-#: src/data/ItemStyleFilterData.lua:90
+#: src/data/ItemStyleFilterData.lua:95
 msgid "Events"
 msgstr "Wydarzenia"
 
-#: src/data/ItemStyleFilterData.lua:194
+#: src/data/ItemStyleFilterData.lua:203
 msgid "New"
 msgstr "Nowe"
 
@@ -769,29 +783,29 @@ msgstr "Liczba tygodni ze stoiskiem"
 
 #. TRANSLATORS: sort header label for the list on the guild kiosk tab
 #: src/guildstorelist/GuildList.lua:71
-#: src/guildstorelist/GuildStoreList.lua:166
-#: src/guildstorelist/GuildStoreList.lua:189
-#: src/guildstorelist/GuildStoreList.lua:197
+#: src/guildstorelist/GuildStoreList.lua:191
+#: src/guildstorelist/GuildStoreList.lua:214
+#: src/guildstorelist/GuildStoreList.lua:222
 msgid "Guild"
 msgstr "Gildia"
 
 #. TRANSLATORS: sort header label for the list on the guild kiosk tab
 #: src/guildstorelist/GuildList.lua:85
-#: src/guildstorelist/GuildStoreList.lua:168
-#: src/guildstorelist/GuildStoreList.lua:182
+#: src/guildstorelist/GuildStoreList.lua:193
+#: src/guildstorelist/GuildStoreList.lua:207
 msgid "Last Visited"
 msgstr "Ostatnia wizyta"
 
 #. TRANSLATORS: label for the detail view on the guild kiosk tab
 #: src/guildstorelist/GuildList.lua:88
-#: src/guildstorelist/GuildStoreList.lua:185
+#: src/guildstorelist/GuildStoreList.lua:210
 msgid "Zone"
 msgstr "Region"
 
 #. TRANSLATORS: sort header label for the list on the guild kiosk tab
 #: src/guildstorelist/GuildList.lua:90 src/guildstorelist/GuildList.lua:101
-#: src/guildstorelist/GuildStoreList.lua:164
-#: src/guildstorelist/GuildStoreList.lua:187
+#: src/guildstorelist/GuildStoreList.lua:189
+#: src/guildstorelist/GuildStoreList.lua:212
 msgid "Location"
 msgstr "Lokacja"
 
@@ -800,25 +814,25 @@ msgid "Weeks w/ kiosk"
 msgstr "Tygodnie ze stoiskiem"
 
 #: src/guildstorelist/GuildList.lua:94
-#: src/guildstorelist/GuildStoreList.lua:191
+#: src/guildstorelist/GuildStoreList.lua:216
 msgid "History"
 msgstr "Historia"
 
 #. TRANSLATORS: sort header label for the history list on the guild kiosk tab
 #: src/guildstorelist/GuildList.lua:99
-#: src/guildstorelist/GuildStoreList.lua:196
+#: src/guildstorelist/GuildStoreList.lua:221
 msgid "Week"
 msgstr "Tydzień"
 
 #. TRANSLATORS: sort header label for the list on the guild kiosk tab
 #: src/guildstorelist/GuildList.lua:100
-#: src/guildstorelist/GuildStoreList.lua:162
+#: src/guildstorelist/GuildStoreList.lua:187
 msgid "Trader"
 msgstr "Kupiec"
 
 #. TRANSLATORS: label for a context menu entry for a row on the guild kiosk tab
 #: src/guildstorelist/GuildList.lua:107
-#: src/guildstorelist/GuildStoreList.lua:235
+#: src/guildstorelist/GuildStoreList.lua:260
 msgid "Show Details"
 msgstr "Pokaż szczegóły"
 
@@ -827,8 +841,8 @@ msgstr "Pokaż szczegóły"
 #. TRANSLATORS: label for a context menu entry for a row on the guild kiosk tab
 #. TRANSLATORS: tooltip text for the open guild info button in the guild store
 #: src/guildstorelist/GuildList.lua:109 src/guildstorelist/GuildList.lua:154
-#: src/guildstorelist/GuildStoreList.lua:238
-#: src/wrappers/TradingHouseWrapper.lua:273
+#: src/guildstorelist/GuildStoreList.lua:263
+#: src/wrappers/TradingHouseWrapper.lua:275
 msgid "Open Guild Info"
 msgstr "Otwórz informacje o gildii"
 
@@ -839,7 +853,7 @@ msgstr "<<1[ten tydzień/1 tydzień temu/$d tygodni(e) temu]>>"
 
 #. TRANSLATORS: text for the last visited field of an unvisited kiosk on the guild kiosk tab
 #: src/guildstorelist/GuildList.lua:207
-#: src/guildstorelist/GuildStoreList.lua:224
+#: src/guildstorelist/GuildStoreList.lua:249
 msgid "never"
 msgstr "nigdy"
 
@@ -895,22 +909,22 @@ msgid "Overall:"
 msgstr "Ogólnie:"
 
 #. TRANSLATORS: tooltip for the last visited field of a joined guild on the guild kiosk tab
-#: src/guildstorelist/GuildStoreList.lua:396
+#: src/guildstorelist/GuildStoreList.lua:421
 msgid "You are a member of this guild."
 msgstr "Jesteś członkiem tej gildii."
 
 #. TRANSLATORS: tooltip text for the store stats on the guild kiosk tab. <<1>> is replaced with the kiosk count
-#: src/guildstorelist/GuildStoreList.lua:458
+#: src/guildstorelist/GuildStoreList.lua:483
 msgid "|cffffff<<1>>|r stores visited this week"
 msgstr "Sklepy odwiedzone w tym tygodniu: |cffffff<<1>>|r"
 
 #. TRANSLATORS: tooltip text for the store stats on the guild kiosk tab. <<1>> is replaced with the kiosk count
-#: src/guildstorelist/GuildStoreList.lua:464
+#: src/guildstorelist/GuildStoreList.lua:489
 msgid "|cffffff<<1>>|r stores visited all time"
 msgstr "Sklepy odwiedzone od początku: |cffffff<<1>>|r"
 
 #. TRANSLATORS: tooltip text for the store stats on the guild kiosk tab. <<1>> is replaced with the kiosk count and <<2>> with the amount of distinct locations
-#: src/guildstorelist/GuildStoreList.lua:470
+#: src/guildstorelist/GuildStoreList.lua:495
 msgid "|cffffff<<1>>|r stores detected in |cffffff<<2>>|r locations"
 msgstr "Wykryte sklepy: |cffffff<<1>>|r w |cffffff<<2>>|r lokacjach"
 
@@ -992,17 +1006,17 @@ msgid "Overall Price: <<1>>"
 msgstr "Cena całkowita: <<1>>"
 
 #. TRANSLATORS: chat message when an item is bought from the store. <<1>> is replaced with the item count, <<t:2>> with the item link, <<3>> with the seller name, <<4>> with price and <<5>> with the guild store name. e.g. You have bought 1x [Rosin] from sirinsidiator for 5000g in Imperial Trading Company
-#: src/wrappers/SearchTabWrapper.lua:274
+#: src/wrappers/SearchTabWrapper.lua:290
 msgid "You have bought <<1>>x <<t:2>> from <<3>> for <<4>> in <<5>>"
 msgstr "Kupiono <<1>>x <<t:2>> od <<3>> za <<4>> w <<5>>"
 
 #. TRANSLATORS: Alert message when they try to purchase an item which was already purchased by them earlier
-#: src/wrappers/SearchTabWrapper.lua:299
+#: src/wrappers/SearchTabWrapper.lua:315
 msgid "Item is already in your possession."
 msgstr "Przedmiot jest już w twoim posiadaniu."
 
 #. TRANSLATORS: Alert message when the item data for the item id could not be found while confirming a purchase
-#: src/wrappers/SearchTabWrapper.lua:320
+#: src/wrappers/SearchTabWrapper.lua:336
 msgid "Item not found in current guild."
 msgstr "W tej gildii nie ma takiego przedmiotu."
 
@@ -1052,11 +1066,11 @@ msgid "Bank items can only be listed while at a banker NPC"
 msgstr "Przedmioty z banku mogą być wymienione tylko u NPC bankiera"
 
 #. TRANSLATORS: chat message when a item is listed on a store. <<1>> is replaced with the item count, <<t:2>> with the item link, <<3>> with the price and <<4>> with the guild store name. e.g. You have listed 1x [Rosin] for 5000g in Imperial Trading Company
-#: src/wrappers/SellTabWrapper.lua:711
+#: src/wrappers/SellTabWrapper.lua:713
 msgid "You have listed <<1>>x <<t:2>> for <<3>> in <<4>>"
 msgstr "Wystawiono <<1>>x <<t:2>> za <<3>> w <<4>>"
 
 #. TRANSLATORS: Footer text for the store interface. Place holders are for the version string and to make the Donate text clickable and colored
-#: src/wrappers/TradingHouseWrapper.lua:329
+#: src/wrappers/TradingHouseWrapper.lua:331
 msgid "AwesomeGuildStore - Version: <<1>> - <<2>>Donate<<3>>"
 msgstr "AwesomeGuildStore - Wersja: <<1>> - <<2>>Dotacja<<3>>"
