@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://weblate.sir.insidi.at/or/projects/awesomeguildstore/messages/\n"
-"POT-Creation-Date: 2022-11-04 11:58+0000\n"
+"POT-Creation-Date: 2023-03-13 20:07+0000\n"
 "PO-Revision-Date: 2022-06-24 18:16+0000\n"
 "Last-Translator: Marcin Tajniacki <generaluploads@gmail.com>\n"
 "Language-Team: Polish <https://weblate.sir.insidi.at/or/projects/awesomeguildstore/messages/pl/>\n"
@@ -895,22 +895,22 @@ msgid "Overall:"
 msgstr "Ogólnie:"
 
 #. TRANSLATORS: tooltip for the last visited field of a joined guild on the guild kiosk tab
-#: src/guildstorelist/GuildStoreList.lua:395
+#: src/guildstorelist/GuildStoreList.lua:396
 msgid "You are a member of this guild."
 msgstr "Jesteś członkiem tej gildii."
 
 #. TRANSLATORS: tooltip text for the store stats on the guild kiosk tab. <<1>> is replaced with the kiosk count
-#: src/guildstorelist/GuildStoreList.lua:457
+#: src/guildstorelist/GuildStoreList.lua:458
 msgid "|cffffff<<1>>|r stores visited this week"
 msgstr "Sklepy odwiedzone w tym tygodniu: |cffffff<<1>>|r"
 
 #. TRANSLATORS: tooltip text for the store stats on the guild kiosk tab. <<1>> is replaced with the kiosk count
-#: src/guildstorelist/GuildStoreList.lua:463
+#: src/guildstorelist/GuildStoreList.lua:464
 msgid "|cffffff<<1>>|r stores visited all time"
 msgstr "Sklepy odwiedzone od początku: |cffffff<<1>>|r"
 
 #. TRANSLATORS: tooltip text for the store stats on the guild kiosk tab. <<1>> is replaced with the kiosk count and <<2>> with the amount of distinct locations
-#: src/guildstorelist/GuildStoreList.lua:469
+#: src/guildstorelist/GuildStoreList.lua:470
 msgid "|cffffff<<1>>|r stores detected in |cffffff<<2>>|r locations"
 msgstr "Wykryte sklepy: |cffffff<<1>>|r w |cffffff<<2>>|r lokacjach"
 
@@ -976,7 +976,7 @@ msgid "You sold <<2>> <<t:1>> to <<3>> for <<4>>."
 msgstr "Sprzedano <<2>> <<t:1>> dla <<3>> za <<4>>."
 
 #. TRANSLATORS: chat text when a kiosk name could not be matched. <<1>> is replaced by the label on the home tab in the guild menu
-#: src/util/misc.lua:68
+#: src/util/misc.lua:75
 msgid "Warning: Could not match kiosk name: '<<1>>' -- please report this to the author"
 msgstr "Uwaga: Nie udało się dopasować nazwy stoiska: '<<1>>' -- proszę zgłosić to do autora"
 

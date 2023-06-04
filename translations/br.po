@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: AwesomeGuildStore\n"
 "Report-Msgid-Bugs-To: https://weblate.sir.insidi.at/or/projects/awesomeguildstore/messages/\n"
-"POT-Creation-Date: 2022-11-04 11:58+0000\n"
+"POT-Creation-Date: 2023-03-13 20:07+0000\n"
 "PO-Revision-Date: 2022-07-08 14:50+0000\n"
 "Last-Translator: mlsevero <mlsevero@hotmail.com>\n"
 "Language-Team: Portuguese (Brazil) <https://weblate.sir.insidi.at/or/projects/awesomeguildstore/messages/br/>\n"
@@ -895,22 +895,22 @@ msgid "Overall:"
 msgstr "Global :"
 
 #. TRANSLATORS: tooltip for the last visited field of a joined guild on the guild kiosk tab
-#: src/guildstorelist/GuildStoreList.lua:395
+#: src/guildstorelist/GuildStoreList.lua:396
 msgid "You are a member of this guild."
 msgstr "Você é membro dessa guilda."
 
 #. TRANSLATORS: tooltip text for the store stats on the guild kiosk tab. <<1>> is replaced with the kiosk count
-#: src/guildstorelist/GuildStoreList.lua:457
+#: src/guildstorelist/GuildStoreList.lua:458
 msgid "|cffffff<<1>>|r stores visited this week"
 msgstr "|cffffff<<1>>|r lojas visitadas essa semana"
 
 #. TRANSLATORS: tooltip text for the store stats on the guild kiosk tab. <<1>> is replaced with the kiosk count
-#: src/guildstorelist/GuildStoreList.lua:463
+#: src/guildstorelist/GuildStoreList.lua:464
 msgid "|cffffff<<1>>|r stores visited all time"
 msgstr "|cffffff<<1>>|r lojas visitadas todo tempo"
 
 #. TRANSLATORS: tooltip text for the store stats on the guild kiosk tab. <<1>> is replaced with the kiosk count and <<2>> with the amount of distinct locations
-#: src/guildstorelist/GuildStoreList.lua:469
+#: src/guildstorelist/GuildStoreList.lua:470
 msgid "|cffffff<<1>>|r stores detected in |cffffff<<2>>|r locations"
 msgstr "|cffffff<<1>>|r lojas detectadas em |cffffff<<2>>|r locações"
 
@@ -976,7 +976,7 @@ msgid "You sold <<2>> <<t:1>> to <<3>> for <<4>>."
 msgstr "Você vendeu <<2>> <<t:1>> para <<3>> por <<4>>."
 
 #. TRANSLATORS: chat text when a kiosk name could not be matched. <<1>> is replaced by the label on the home tab in the guild menu
-#: src/util/misc.lua:68
+#: src/util/misc.lua:75
 msgid "Warning: Could not match kiosk name: '<<1>>' -- please report this to the author"
 msgstr "Alerta : Não foi possível coincidir o nome do quiosque : '<<1>>' -- por favor, reporte isso ao autor"
 

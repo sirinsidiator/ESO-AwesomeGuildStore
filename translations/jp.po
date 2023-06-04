@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: AwesomeGuildStore\n"
 "Report-Msgid-Bugs-To: https://weblate.sir.insidi.at/or/projects/awesomeguildstore/messages/\n"
-"POT-Creation-Date: 2022-11-04 11:58+0000\n"
+"POT-Creation-Date: 2023-03-13 20:07+0000\n"
 "PO-Revision-Date: 2022-06-21 00:18+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Japanese <https://weblate.sir.insidi.at/or/projects/awesomeguildstore/messages/jp/>\n"
@@ -895,22 +895,22 @@ msgid "Overall:"
 msgstr "全体:"
 
 #. TRANSLATORS: tooltip for the last visited field of a joined guild on the guild kiosk tab
-#: src/guildstorelist/GuildStoreList.lua:395
+#: src/guildstorelist/GuildStoreList.lua:396
 msgid "You are a member of this guild."
 msgstr "あなたはこのギルドのメンバーです。"
 
 #. TRANSLATORS: tooltip text for the store stats on the guild kiosk tab. <<1>> is replaced with the kiosk count
-#: src/guildstorelist/GuildStoreList.lua:457
+#: src/guildstorelist/GuildStoreList.lua:458
 msgid "|cffffff<<1>>|r stores visited this week"
 msgstr "今週は|cffffff<<1>>|r店を訪問しました"
 
 #. TRANSLATORS: tooltip text for the store stats on the guild kiosk tab. <<1>> is replaced with the kiosk count
-#: src/guildstorelist/GuildStoreList.lua:463
+#: src/guildstorelist/GuildStoreList.lua:464
 msgid "|cffffff<<1>>|r stores visited all time"
 msgstr "全部で |cffffff<<1>>|r店を訪問しました"
 
 #. TRANSLATORS: tooltip text for the store stats on the guild kiosk tab. <<1>> is replaced with the kiosk count and <<2>> with the amount of distinct locations
-#: src/guildstorelist/GuildStoreList.lua:469
+#: src/guildstorelist/GuildStoreList.lua:470
 msgid "|cffffff<<1>>|r stores detected in |cffffff<<2>>|r locations"
 msgstr "|cffffff<<2>>|r箇所で |cffffff<<1>>|r店"
 
@@ -976,7 +976,7 @@ msgid "You sold <<2>> <<t:1>> to <<3>> for <<4>>."
 msgstr "<<3>>に<<2>> <<t:1>>を<<4>>で販売しました。"
 
 #. TRANSLATORS: chat text when a kiosk name could not be matched. <<1>> is replaced by the label on the home tab in the guild menu
-#: src/util/misc.lua:68
+#: src/util/misc.lua:75
 msgid "Warning: Could not match kiosk name: '<<1>>' -- please report this to the author"
 msgstr "警告:商店名が合致しません: '<<1>>' -- これを作者に報告してください"
 
