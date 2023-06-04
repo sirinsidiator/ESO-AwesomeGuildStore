@@ -82,6 +82,8 @@ function TradingHouseWrapper:Initialize(saveData)
     end)
 
     SecurePostHook(tradingHouse, "RunInitialSetup", function()
+        if self.initialized then return end
+
         logger:Debug("Before Initial Setup")
         AGS.internal:FireCallbacks(AGS.callback.BEFORE_INITIAL_SETUP, self)
 
