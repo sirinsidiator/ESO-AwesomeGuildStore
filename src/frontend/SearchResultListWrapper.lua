@@ -219,6 +219,10 @@ function SearchResultListWrapper:InitializeResultList(tradingHouseWrapper, searc
 
         SetSellerName(rowControl, result)
     end
+
+    AGS:RegisterCallback(AGS.callback.GUILD_SELECTION_CHANGED, function()
+        ZO_ScrollList_ResetToTop(list.list)
+    end)
 end
 
 function SearchResultListWrapper:InitializeShowMoreRow(tradingHouseWrapper, searchManager)
