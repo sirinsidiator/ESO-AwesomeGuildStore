@@ -573,6 +573,7 @@ function SellTabWrapper:InitializeCraftingBag(tradingHouseWrapper)
 end
 
 function SellTabWrapper:ClearPendingItem()
+    self:UnsetPendingItem()
     self.pendingTotalStackCount = 0
     self.pendingIcon, self.pendingStackCount, self.pendingSellPrice = "", 0, 0
     self.pendingBagId, self.pendingSlotIndex, self.currentRepetitions = 0, 0, 0
@@ -581,6 +582,7 @@ function SellTabWrapper:ClearPendingItem()
 end
 
 function SellTabWrapper:UnsetPendingItem()
+    if not self.tradingHouse or not self.tradingHouse.pendingItemSlot then return end
     local bagId, slotIndex = ZO_Inventory_GetBagAndIndex(self.tradingHouse.pendingItem)
     PLAYER_INVENTORY:OnInventorySlotUnlocked(bagId, slotIndex)
     self.tradingHouse:OnPendingPostItemUpdated(0, false)
@@ -762,7 +764,6 @@ function SellTabWrapper:OnClose(tradingHouseWrapper)
     end
     ZO_PlayerInventoryInfoBar:SetParent(ZO_PlayerInventory)
     ZO_PlayerBankInfoBar:SetHidden(false)
-    self:UnsetPendingItem()
     self.isOpen = false
     self.suppressNextInventorySlotEvent = false
     self.dragFinalized = true
