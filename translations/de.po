@@ -1,21 +1,23 @@
 # sirinsidiator <insidiator@cmos.at>, 2017. #zanata
 # sirinsidiator <insidiator@cmos.at>, 2019. #zanata
 # sirinsidiator <insidiator@cmos.at>, 2022.
-# sirinsidiator <sir@insidi.at>, 2022.
+# sirinsidiator <sir@insidi.at>, 2022, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: AwesomeGuildStore\n"
-"Report-Msgid-Bugs-To: https://weblate.sir.insidi.at/or/projects/awesomeguildstore/messages/\n"
+"Report-Msgid-Bugs-To: https://weblate.sir.insidi.at/or/projects/"
+"awesomeguildstore/messages/\n"
 "POT-Creation-Date: 2023-06-04 19:37+0000\n"
-"PO-Revision-Date: 2022-06-21 00:10+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: German <https://weblate.sir.insidi.at/or/projects/awesomeguildstore/messages/de/>\n"
+"PO-Revision-Date: 2023-06-04 19:45+0000\n"
+"Last-Translator: sirinsidiator <sir@insidi.at>\n"
+"Language-Team: German <https://weblate.sir.insidi.at/or/projects/"
+"awesomeguildstore/messages/de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.13\n"
+"X-Generator: Weblate 4.14.1\n"
 
 #. TRANSLATORS: label for an entry in the addon settings
 #: src/Settings.lua:64
@@ -539,17 +541,13 @@ msgstr "Rüstungstyp"
 
 #. TRANSLATORS: title of the armor weight filter in the left panel on the search tab
 #: src/data/EquipTypeFilterData.lua:123
-#, fuzzy
-#| msgid "Armor Type"
 msgid "Armor Weight"
-msgstr "Rüstungstyp"
+msgstr "Rüstungsart"
 
 #. TRANSLATORS: title of the jewelry type filter in the left panel on the search tab
 #: src/data/EquipTypeFilterData.lua:153
-#, fuzzy
-#| msgid "Jewelry Trait"
 msgid "Jewelry Type"
-msgstr "Schmuckeigenschaften"
+msgstr "Schmuckart"
 
 #. TRANSLATORS: title text for the weapon enchantment filter in the left panel on the search tab
 #: src/data/ItemEnchantmentFilterData.lua:21
