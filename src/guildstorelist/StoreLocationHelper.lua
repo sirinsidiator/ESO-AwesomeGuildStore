@@ -41,8 +41,10 @@ local IRREGULAR_TOOLTIP_HEADER = { -- TODO exceptions in other languages
 }
 
 local IRREGULAR_TOOLTIP_KIOSK_NAME = {
-    -- English
-    ["Janne Jonnicent"] = "Thredis",
+    [2274] = { -- Telvanni Peninsula
+        -- English
+        ["Janne Jonnicent"] = "Thredis",
+    }
 }
 
 local FARGRAVE_CITY_DISTRICT_MAP_ID = 2035
@@ -98,7 +100,11 @@ end
 
 local function SanitizeMapLocationTooltipKioskName(kioskName)
     local name = zo_strformat("<<1>>", kioskName)
-    return IRREGULAR_TOOLTIP_KIOSK_NAME[name] or name
+    local replacement = IRREGULAR_TOOLTIP_KIOSK_NAME[GetCurrentMapId()]
+    if replacement then
+        return replacement[name] or name
+    end
+    return name
 end
 
 local function SafeGetMapName()
