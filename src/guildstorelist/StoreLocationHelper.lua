@@ -31,9 +31,11 @@ local IRREGULAR_TOOLTIP_HEADER = { -- TODO exceptions in other languages
     ["Outlaws Refuge"] = "Necrom Outlaws Refuge",
     -- French
     ["refuge des hors-la-loi d'Orsinium"] = "refuge de hors-la-loi d'Orsinium",
+    ["refuge de hors-la-loi"] = "refuge de hors-la-loi de Necrom",
     -- German
     ["Knurr'Kha-Unterschlupf"] = "Knurr'kha-Unterschlupf",
     ["Sturmfeste-Unterschlupf"] = "Sturmfeste-Unterschlupft",
+    ["Gesetzlosenunterschlupf"] = "Nekrom-Gesetzlosenunterschlupf",
     -- Japanese
     ["オルシニウム無法者の隠れ家"] = "オルシニウムの無法者の隠れ家",
     -- already fixed, but we keep them to correct the save data
