@@ -24,7 +24,7 @@ function GuildSelector:Initialize(tradingHouseWrapper)
     self.selectedItemText = GetControl(comboBoxControl, "SelectedItemText")
 
     self:InitializeComboBox(comboBoxControl, self.comboBox)
-    self:InitializeHiredTraderTooltip(comboBoxControl, self.comboBox)
+    self:InitializeHiredTraderTooltip(self.comboBox)
 
     AGS:RegisterCallback(AGS.callback.AVAILABLE_GUILDS_CHANGED, function(guilds)
         self:SetupGuildList(guilds)
@@ -95,43 +95,24 @@ function GuildSelector:InitializeComboBox(comboBoxControl, comboBox)
     end)
 end
 
-function GuildSelector:InitializeHiredTraderTooltip(comboBoxControl, comboBox)
+function GuildSelector:InitializeHiredTraderTooltip(comboBox)
     local traderTooltip = HiredTraderTooltip:New(self.tradingHouseWrapper.saveData)
-    local function GuildSelectorShowTooltip(control)
-        local guildId = self.guildIdByMenuIndex[control.menuIndex]
-        if not guildId then
-            guildId = self.selectedGuildData.guildId
-        end
+    local function GuildSelectorShowTooltip(comboBox, control)
+        local guildId = self.guildIdByMenuIndex[control.m_data.m_index]
+        traderTooltip:Show(control, guildId)
+    end
+    local function GuildSelectorShowSelectedTooltip(control)
+        local guildId = self.selectedGuildData.guildId
         traderTooltip:Show(control, guildId)
     end
     local function GuildSelectorHideTooltip()
         traderTooltip:Hide()
     end
-
-    local hooked = false
-    local originalZO_Menu_EnterItem, originalZO_Menu_ExitItem
-    ZO_PreHook(comboBox, "ShowDropdownInternal", function(comboBox)
-        if not hooked then
-            hooked = true
-            originalZO_Menu_EnterItem = ZO_Menu_EnterItem
-            originalZO_Menu_ExitItem = ZO_Menu_ExitItem
-            ZO_PreHook("ZO_Menu_EnterItem", GuildSelectorShowTooltip)
-            ZO_PreHook("ZO_Menu_ExitItem", GuildSelectorHideTooltip)
-        end
-    end)
-
-    ZO_PreHook(comboBox, "HideDropdownInternal", function(comboBox)
-        if hooked then
-            hooked = false
-            ZO_Menu_EnterItem = originalZO_Menu_EnterItem
-            ZO_Menu_ExitItem = originalZO_Menu_ExitItem
-            GuildSelectorHideTooltip()
-        end
-    end)
+    comboBox:SetEntryMouseOverCallbacks(GuildSelectorShowTooltip, GuildSelectorHideTooltip)
 
     self.traderTooltip = traderTooltip
 
-    self.selectedItemText:SetHandler("OnMouseEnter", GuildSelectorShowTooltip)
+    self.selectedItemText:SetHandler("OnMouseEnter", GuildSelectorShowSelectedTooltip)
     self.selectedItemText:SetHandler("OnMouseExit", GuildSelectorHideTooltip)
 end
 

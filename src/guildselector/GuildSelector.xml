@@ -6,37 +6,28 @@
             <Dimensions x="460" y="50" />
             <Anchor point="LEFT" offsetX="0" offsetY="0" />
             <Controls>
-                <Control name="$(parent)ComboBox" resizeToFitDescendents="true" mouseEnabled="true">
+                <Control name="$(parent)ComboBox" resizeToFitDescendents="true" inherits="ZO_ComboBox">
                     <Anchor point="LEFT" offsetX="50" />
-                    <OnInitialized>
-                        ZO_ComboBox:New(self)
-                    </OnInitialized>
-
-                    <OnMouseUp>
-                        if(button == 1 and upInside) then
-                        ZO_ComboBox_DropdownClicked(self)
-                        end
-                    </OnMouseUp>
+                    <Dimensions x="460" y="50" />
 
                     <Controls>
-                        <Label name="$(parent)SelectedItemText" inherits="ZO_TooltipIfTruncatedLabel" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_SELECTED">
+                        <Backdrop name="$(parent)BG" override="true" hidden="true" />
+
+                        <Label name="$(parent)SelectedItemText" override="true" inherits="ZO_TooltipIfTruncatedLabel">
                             <Dimensions y="35" />
                             <DimensionConstraints maxX="450" />
                             <Anchor point="TOPLEFT" />
+                            <Anchor point="NONE" />
 
                             <OnMouseUp>
-                                if(button == 1 and upInside) then
-                                ZO_ComboBox_DropdownClicked(self:GetParent())
+                                if button == MOUSE_BUTTON_INDEX_LEFT and upInside then
+                                    ZO_ComboBox_DropdownClicked(self:GetParent())
                                 end
                             </OnMouseUp>
                         </Label>
 
-                        <Button name="$(parent)OpenDropdown" inherits="ZO_DropdownButton">
-                            <Dimensions x="16" y="16" />
+                        <Button name="$(parent)OpenDropdown" override="true">
                             <Anchor point="LEFT" relativeTo="$(parent)SelectedItemText" relativePoint="RIGHT" offsetX="3" />
-                            <OnClicked>
-                                ZO_ComboBox_DropdownClicked(self:GetParent())
-                            </OnClicked>
                         </Button>
                     </Controls>
                 </Control>
