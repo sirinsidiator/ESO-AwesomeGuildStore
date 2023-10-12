@@ -42,6 +42,7 @@ function TradingHouseWrapper:Initialize(saveData)
     self.sellTab = sellTab
     local listingTab = AGS.class.ListingTabWrapper:New(saveData)
     self.listingTab = listingTab
+    self.lastGamepadMode = GetSetting(SETTING_TYPE_GAMEPAD, GAMEPAD_SETTING_INPUT_PREFERRED_MODE)
 
     self.modeToTab =
         {
@@ -180,7 +181,11 @@ end
 function TradingHouseWrapper:SetGamepadModeEnabled(enable)
     local accessibilityModeEnabled = GetSetting_Bool(SETTING_TYPE_ACCESSIBILITY, ACCESSIBILITY_SETTING_ACCESSIBILITY_MODE)
     if not accessibilityModeEnabled and IsGamepadUISupported() and IsKeyboardUISupported() then
-        local mode = enable and INPUT_PREFERRED_MODE_ALWAYS_GAMEPAD or INPUT_PREFERRED_MODE_ALWAYS_KEYBOARD
+        local mode = self.lastGamepadMode
+        if not enable then
+            self.lastGamepadMode = GetSetting(SETTING_TYPE_GAMEPAD, GAMEPAD_SETTING_INPUT_PREFERRED_MODE)
+            mode = INPUT_PREFERRED_MODE_ALWAYS_KEYBOARD
+        end
         SetSetting(SETTING_TYPE_GAMEPAD, GAMEPAD_SETTING_INPUT_PREFERRED_MODE, mode)
     end
 end
