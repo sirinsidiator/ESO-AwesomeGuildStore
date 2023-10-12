@@ -4,7 +4,7 @@
 
         <Control name="AwesomeGuildStoreTextSearchInputTemplate" virtual="true" resizeToFitDescendents="true">
             <Controls>
-                <Backdrop name="$(parent)Input" inherits="AwesomeGuildStoreSimpleInputBoxTemplate">
+                <Backdrop name="$(parent)Input" inherits="AwesomeGuildStoreSimpleInputBoxTemplate" resizeToFitConstrains="X">
                     <Anchor point="TOPLEFT" />
                     <Anchor point="TOPRIGHT" />
                 </Backdrop>

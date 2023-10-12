@@ -6,7 +6,7 @@
             <Dimensions x="460" y="50" />
             <Anchor point="LEFT" offsetX="0" offsetY="0" />
             <Controls>
-                <Control name="$(parent)ComboBox" resizeToFitDescendents="true" inherits="ZO_ComboBox">
+                <Control name="$(parent)ComboBox" inherits="ZO_ComboBox">
                     <Anchor point="LEFT" offsetX="50" />
                     <Dimensions x="460" y="50" />
 

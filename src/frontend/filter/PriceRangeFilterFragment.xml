@@ -4,7 +4,7 @@
 
         <Control name="AwesomeGuildStorePriceInputTemplate" virtual="true" resizeToFitDescendents="true">
             <Controls>
-                <Control name="$(parent)MinPrice" resizeToFitDescendents="true">
+                <Control name="$(parent)MinPrice" resizeToFitDescendents="true" resizeToFitConstrains="Y">
                     <Dimensions x="115" />
                     <Anchor point="TOPLEFT" />
 
@@ -14,7 +14,7 @@
                             <Anchor point="RIGHT" />
                         </Texture>
 
-                        <Backdrop name="$(parent)Input" inherits="AwesomeGuildStoreSimpleInputBoxTemplate">
+                        <Backdrop name="$(parent)Input" inherits="AwesomeGuildStoreSimpleInputBoxTemplate" resizeToFitConstrains="X">
                             <Anchor point="TOPLEFT" />
                             <Anchor point="RIGHT" relativeTo="$(parent)Currency" relativePoint="LEFT" offsetX="-2" />
                         </Backdrop>
@@ -26,7 +26,7 @@
                     <Anchor point="LEFT" relativeTo="$(parent)MinPrice" relativePoint="RIGHT" offsetX="4" />
                 </Texture>
 
-                <Control name="$(parent)MaxPrice" resizeToFitDescendents="true">
+                <Control name="$(parent)MaxPrice" resizeToFitDescendents="true" resizeToFitConstrains="Y">
                     <Dimensions x="115" />
                     <Anchor point="LEFT" relativeTo="$(parent)RangeDivider" relativePoint="RIGHT" offsetX="4" />
 
@@ -36,7 +36,7 @@
                             <Anchor point="RIGHT" />
                         </Texture>
 
-                        <Backdrop name="$(parent)Input" inherits="AwesomeGuildStoreSimpleInputBoxTemplate">
+                        <Backdrop name="$(parent)Input" inherits="AwesomeGuildStoreSimpleInputBoxTemplate" resizeToFitConstrains="X">
                             <Anchor point="TOPLEFT" />
                             <Anchor point="RIGHT" relativeTo="$(parent)Currency" relativePoint="LEFT" offsetX="-2" />
                         </Backdrop>
