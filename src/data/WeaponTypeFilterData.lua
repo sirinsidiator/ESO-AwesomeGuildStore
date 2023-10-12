@@ -157,6 +157,11 @@ local COMPANION_WEAPON_TYPE_FILTER = {
             label = GetString("SI_WEAPONTYPE", WEAPONTYPE_LIGHTNING_STAFF),
             icon = "EsoUI/Art/TradingHouse/Tradinghouse_Weapons_Staff_Lightning_%s.dds",
         },
+        {
+            id = WEAPONTYPE_HEALING_STAFF,
+            label = GetString("SI_WEAPONTYPE", WEAPONTYPE_HEALING_STAFF),
+            icon = "EsoUI/Art/Inventory/inventory_tabIcon_healStaff_%s.dds",
+        }
     }
 }
 
