@@ -147,7 +147,7 @@ function SellTabWrapper:InitializeQuickListing(tradingHouseWrapper)
     ZO_PreHook("ZO_InventorySlot_OnSlotClicked", function(inventorySlot, button)
         if(self.isOpen and self.saveData.listWithSingleClick and button == MOUSE_BUTTON_INDEX_LEFT and not self.suppressNextClick) then
             ZO_InventorySlot_DoPrimaryAction(inventorySlot)
-            return true
+            if not FCOIS then return true end --fix for FCOItemSaver so that the inventory drag&drop protection works properly -> else InventoryLockSlot won't be called
         end
     end)
     RegisterForEvent(EVENT_GLOBAL_MOUSE_UP, function()
@@ -524,7 +524,7 @@ function SellTabWrapper:InitializeCraftingBag(tradingHouseWrapper)
                     tradingHouse:OnPendingPostItemUpdated(0, false)
                 end
 
-                return true
+                if not FCOIS then return true end --fix for FCOItemSaver so that the inventory drag&drop protection works properly -> else InventoryLockSlot won't be called
             end
         end
     end)
@@ -547,7 +547,7 @@ function SellTabWrapper:InitializeCraftingBag(tradingHouseWrapper)
             ClearCursor()
             draggedBagId = 0
             draggedSlotIndex = 0
-            return true
+            if not FCOIS then return true end --fix for FCOItemSaver so that the inventory drag&drop protection works properly -> else InventoryLockSlot won't be called
         end
     end)
 
@@ -748,6 +748,12 @@ function SellTabWrapper:UpdateFragments()
     if self.currentInventoryFragment == BANK_FRAGMENT then
         -- need to trigger an update, otherwise bound items will show in the list
         PLAYER_INVENTORY:UpdateList(INVENTORY_BANK, true)
+    elseif self.currentInventoryFragment == CRAFT_BAG_FRAGMENT then
+        --2022-07-17 Baertram, fix for LibFilters3.0 to update the CraftBag's additionalFilter filterFunction from the
+        --fragment BACKPACK_MENU_BAR_LAYOUT_FRAGMENT -> Where vanilla UI code and LibFilters 3 read/write from/to
+        local layoutData = BACKPACK_MENU_BAR_LAYOUT_FRAGMENT.layoutData
+        local craftBag = PLAYER_INVENTORY.inventories[INVENTORY_CRAFT_BAG]
+        craftBag.additionalFilter = layoutData.additionalCraftBagFilter
     end
 end
 
